@@ -68,7 +68,7 @@ llama-server の起動は3ステップで行います:
 
 ### ttyd-gpu.sh の動作
 
-1. nvtop があれば使用、なければ `watch -n 1 nvidia-smi` / `rocm-smi` で代替
+1. NVIDIAサーバは `nvtop`、MI25は `watch -n 1 rocm-smi` を使用
 2. 既存の ttyd (port 7681) を停止後、サーバ側でバックグラウンド起動
 3. ブラウザから `http://<server-ip>:7681` でアクセス可能
 
