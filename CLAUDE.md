@@ -4,6 +4,10 @@
 
 **応答言語**: Claudeは日本語で応答してください。
 
+## 必読ドキュメント
+
+- [REPORT.md](REPORT.md) — レポート作成ルール
+
 ---
 
 ## GPUサーバとLLM
@@ -74,3 +78,4 @@ ssh t120h-p100 "docker ps | grep chrome-novnc-cdp"
 |------|------|
 | GPUサーバ使用 | **必ず Skill `gpu-server` を使用**（ロック管理のため） |
 | スクリプト実行 | **プロジェクトルートからの相対パス**（`.claude/skills/...`）で実行すること。フルパス（`/home/ubuntu/projects/...`）は使用しない |
+| レポート作成 | plan mode でまとまった作業を行った場合は、完了時にレポートを作成すること。フォーマットは [REPORT.md](REPORT.md) に従う |
