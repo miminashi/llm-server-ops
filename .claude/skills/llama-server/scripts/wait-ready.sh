@@ -7,18 +7,19 @@ NOTIFY_SCRIPT="$(cd "$SKILL_DIR/../discord-notify/scripts" && pwd)/notify.sh"
 
 usage() {
   cat <<'EOF'
-Usage: wait-ready.sh <server> <hf-model> [ctx-size] [sampling-opts]
+Usage: wait-ready.sh <server> <hf-model> [ctx-size|fit] [fit-ctx]
 
 start.sh をバックグラウンドで実行した後、ヘルスチェックとDiscord通知を行う。
 
 Arguments:
-  server         GPUサーバ名 (mi25, t120h-p100, t120h-m10)
-  hf-model       HuggingFaceモデル (例: unsloth/gpt-oss-20b-GGUF:Q8_0)
-  ctx-size       コンテキストサイズ (省略時: 65536)
-  sampling-opts  サンプリングオプション (省略時: --temp 1.0 --top-p 1.0 --top-k 0)
+  server     GPUサーバ名 (mi25, t120h-p100, t120h-m10)
+  hf-model   HuggingFaceモデル (例: unsloth/gpt-oss-20b-GGUF:Q8_0)
+  ctx-size   コンテキストサイズ or "fit" (省略時: 65536)
+  fit-ctx    fitモード時のctx-size (省略時: 8192、"fit"指定時のみ有効)
 
 Examples:
   wait-ready.sh t120h-p100 "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M" 131072
+  wait-ready.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 16384
 EOF
   exit 1
 }
@@ -29,8 +30,25 @@ fi
 
 SERVER="$1"
 HF_MODEL="$2"
-CTX_SIZE="${3:-65536}"
-SAMPLING_OPTS="${4:---temp 1.0 --top-p 1.0 --top-k 0}"
+CTX_SIZE_ARG="${3:-65536}"
+FIT_CTX="${4:-8192}"
+
+# fitモード判定
+if [ "$CTX_SIZE_ARG" = "fit" ]; then
+  CTX_SIZE_DISPLAY="fit (MoE CPUオフロード, ctx-size: $FIT_CTX)"
+else
+  CTX_SIZE_DISPLAY="$CTX_SIZE_ARG"
+fi
+
+# モデル別サンプリングパラメータ
+case "$HF_MODEL" in
+  *Qwen3.5*)
+    SAMPLING_OPTS="--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0"
+    ;;
+  *)
+    SAMPLING_OPTS="--temp 1.0 --top-p 1.0 --top-k 0"
+    ;;
+esac
 
 # --- IPアドレス解決 ---
 IP=$(ssh -G "$SERVER" | grep '^hostname ' | awk '{print $2}')
@@ -52,7 +70,7 @@ for i in $(seq 1 $MAX_RETRIES); do
       NOTIFY_MSG="llama-server 起動完了
 - サーバ: ${SERVER}
 - モデル: ${HF_MODEL}
-- ctx-size: ${CTX_SIZE}
+- ctx-size: ${CTX_SIZE_DISPLAY}
 - サンプリング: ${SAMPLING_OPTS}
 - エンドポイント: http://${IP}:8000/v1
 - GPU監視: http://${IP}:7681
