@@ -17,6 +17,47 @@ if [ -n "$ENV_FILE" ]; then
   source "$ENV_FILE"
 fi
 
+# HF_TOKENが未設定の場合、対話的にセットアップ
+if [ -z "${HF_TOKEN:-}" ]; then
+  if [ -t 0 ]; then
+    echo "==> HF_TOKEN が設定されていません。HuggingFace トークンを入力してください。"
+    echo "    トークンは https://huggingface.co/settings/tokens で取得できます。"
+    while true; do
+      read -rp "HF_TOKEN: " HF_TOKEN_INPUT
+      if [ -z "$HF_TOKEN_INPUT" ]; then
+        echo "    スキップします（認証なしでダウンロードを試みます）"
+        break
+      fi
+      # トークンの有効性を検証
+      HTTP_CODE=$(curl -sS -o /dev/null -w '%{http_code}' \
+        -H "Authorization: Bearer $HF_TOKEN_INPUT" \
+        https://huggingface.co/api/whoami)
+      if [ "$HTTP_CODE" = "200" ]; then
+        echo "    トークンは有効です。保存します..."
+        HF_TOKEN="$HF_TOKEN_INPUT"
+        # 永続化先を決定
+        SAVE_TARGET=""
+        if [ -n "$ENV_FILE" ]; then
+          SAVE_TARGET="$ENV_FILE"
+        elif [ -f "$PROJECT_ROOT/.env" ]; then
+          SAVE_TARGET="$PROJECT_ROOT/.env"
+        else
+          SAVE_TARGET="${HOME}/.config/gpu-server/.env"
+          mkdir -p "${HOME}/.config/gpu-server"
+        fi
+        echo "HF_TOKEN=$HF_TOKEN" >> "$SAVE_TARGET"
+        chmod 600 "$SAVE_TARGET"
+        echo "    保存完了: $SAVE_TARGET"
+        break
+      else
+        echo "    トークンが無効です（HTTP $HTTP_CODE）。再入力してください（空入力でスキップ）。"
+      fi
+    done
+  else
+    echo "WARNING: HF_TOKEN が未設定です。認証が必要なモデルのダウンロードは失敗する可能性があります。" >&2
+  fi
+fi
+
 usage() {
   cat <<'EOF'
 Usage: start.sh <server> <hf-model> [ctx-size|fit] [fit-ctx]
