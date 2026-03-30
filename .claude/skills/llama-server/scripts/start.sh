@@ -5,10 +5,16 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKILL_DIR="$(dirname "$SCRIPT_DIR")"
 PROJECT_ROOT="$(dirname "$(dirname "$(dirname "$SKILL_DIR")")")"
 
-# .envからHF_TOKENを読み込み
+# .envからHF_TOKENを読み込み（プロジェクトルート → ~/.config/gpu-server/.env の順）
+ENV_FILE=""
 if [ -f "$PROJECT_ROOT/.env" ]; then
-  # shellcheck disable=SC1091
-  source "$PROJECT_ROOT/.env"
+  ENV_FILE="$PROJECT_ROOT/.env"
+elif [ -f "${LLM_SERVER_ENV:-${HOME}/.config/gpu-server/.env}" ]; then
+  ENV_FILE="${LLM_SERVER_ENV:-${HOME}/.config/gpu-server/.env}"
+fi
+if [ -n "$ENV_FILE" ]; then
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
 fi
 
 usage() {
