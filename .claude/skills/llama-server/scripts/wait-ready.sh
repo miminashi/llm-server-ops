@@ -55,7 +55,12 @@ IP=$(ssh -G "$SERVER" | grep '^hostname ' | awk '{print $2}')
 HEALTH_URL="http://${IP}:8000/health"
 
 echo "==> ヘルスチェック中... ($HEALTH_URL)"
-MAX_RETRIES=30
+# fitモードまたは大コンテキスト（>65536）時はリトライ上限を引き上げ（300秒）
+if [ "$CTX_SIZE_ARG" = "fit" ] || { [ "$CTX_SIZE_ARG" != "fit" ] && [ "$CTX_SIZE_ARG" -gt 65536 ] 2>/dev/null; }; then
+  MAX_RETRIES=60
+else
+  MAX_RETRIES=30
+fi
 RETRY_INTERVAL=5
 
 for i in $(seq 1 $MAX_RETRIES); do
@@ -75,7 +80,7 @@ for i in $(seq 1 $MAX_RETRIES); do
 - エンドポイント: http://${IP}:8000/v1
 - GPU監視: http://${IP}:7681
 - サーバログ: http://${IP}:7682"
-      "$NOTIFY_SCRIPT" "$NOTIFY_MSG" || echo "WARNING: Discord通知の送信に失敗しました" >&2
+      ("$NOTIFY_SCRIPT" "$NOTIFY_MSG" || echo "WARNING: Discord通知の送信に失敗しました" >&2) || true
     fi
 
     exit 0

@@ -114,7 +114,7 @@ esac
 
 # --- 既存プロセス確認 ---
 echo "==> $SERVER の既存 llama-server プロセスを確認中..."
-EXISTING=$(ssh "$SERVER" "ps aux | grep '[l]lama-server'" || true)
+EXISTING=$(ssh "$SERVER" "pgrep -a -f './build/bin/llama-server'" || true)
 if [ -n "$EXISTING" ]; then
   echo "WARNING: $SERVER で llama-server が既に起動中です:" >&2
   echo "$EXISTING" >&2
