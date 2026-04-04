@@ -24,14 +24,19 @@ if [ -z "${HF_TOKEN:-}" ]; then
     echo "    トークンは https://huggingface.co/settings/tokens で取得できます。"
     while true; do
       read -rp "HF_TOKEN: " HF_TOKEN_INPUT
+      # CR・前後空白を除去（ペースト時の不可視文字対策）
+      HF_TOKEN_INPUT="${HF_TOKEN_INPUT%$'\r'}"
+      HF_TOKEN_INPUT="${HF_TOKEN_INPUT#"${HF_TOKEN_INPUT%%[![:space:]]*}"}"
+      HF_TOKEN_INPUT="${HF_TOKEN_INPUT%"${HF_TOKEN_INPUT##*[![:space:]]}"}"
       if [ -z "$HF_TOKEN_INPUT" ]; then
         echo "    スキップします（認証なしでダウンロードを試みます）"
         break
       fi
       # トークンの有効性を検証
-      HTTP_CODE=$(curl -sS -o /dev/null -w '%{http_code}' \
+      RESPONSE=$(curl -sS -w '\n%{http_code}' \
         -H "Authorization: Bearer $HF_TOKEN_INPUT" \
         https://huggingface.co/api/whoami)
+      HTTP_CODE=$(echo "$RESPONSE" | tail -1)
       if [ "$HTTP_CODE" = "200" ]; then
         echo "    トークンは有効です。保存します..."
         HF_TOKEN="$HF_TOKEN_INPUT"
@@ -50,7 +55,8 @@ if [ -z "${HF_TOKEN:-}" ]; then
         echo "    保存完了: $SAVE_TARGET"
         break
       else
-        echo "    トークンが無効です（HTTP $HTTP_CODE）。再入力してください（空入力でスキップ）。"
+        BODY=$(echo "$RESPONSE" | sed '$d')
+        echo "    トークンが無効です（HTTP $HTTP_CODE: $BODY）。再入力してください（空入力でスキップ）。"
       fi
     done
   else
