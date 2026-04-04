@@ -35,7 +35,7 @@ if [ -z "${HF_TOKEN:-}" ]; then
       # トークンの有効性を検証
       RESPONSE=$(curl -sS -w '\n%{http_code}' \
         -H "Authorization: Bearer $HF_TOKEN_INPUT" \
-        https://huggingface.co/api/whoami)
+        https://huggingface.co/api/whoami-v2)
       HTTP_CODE=$(echo "$RESPONSE" | tail -1)
       if [ "$HTTP_CODE" = "200" ]; then
         echo "    トークンは有効です。保存します..."
