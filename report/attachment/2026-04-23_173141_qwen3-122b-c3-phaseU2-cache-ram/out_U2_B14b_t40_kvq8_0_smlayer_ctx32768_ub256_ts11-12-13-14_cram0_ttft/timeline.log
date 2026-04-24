@@ -1,0 +1,23 @@
+[17:57:21] ==== measure_phaseU2_ttft start tag=U2_B14b_t40_kvq8_0_smlayer_ctx32768_ub256_ts11-12-13-14_cram0_ttft pid=1353001 n_hits=4 ====
+[17:57:48] Run 0 (miss): prompt_ms=9453.145 predicted_ms=13455.828 eval_tps=19.025213461408693 prompt_n=395 predicted_n=256 cache_n=0 wall_ms=23091.9
+[17:57:48] Run 0 (miss) STREAM: ttft_ms=327.2
+[17:57:48] cooldown 10s before hit run 1
+[17:58:13] Run 1 (hit): prompt_ms=173.764 predicted_ms=14228.655 eval_tps=17.99186219639172 prompt_n=4 predicted_n=256 cache_n=391 wall_ms=14583.4
+[17:58:13] Run 1 (hit) STREAM: ttft_ms=330.5
+[17:58:13] cooldown 10s before hit run 2
+[17:58:38] Run 2 (hit): prompt_ms=173.366 predicted_ms=14231.339 eval_tps=17.988468969785625 prompt_n=4 predicted_n=256 cache_n=391 wall_ms=14618.6
+[17:58:39] Run 2 (hit) STREAM: ttft_ms=368.2
+[17:58:39] cooldown 10s before hit run 3
+[17:59:04] Run 3 (hit): prompt_ms=173.254 predicted_ms=14230.827 eval_tps=17.989116163101414 prompt_n=4 predicted_n=256 cache_n=391 wall_ms=14599.9
+[17:59:04] Run 3 (hit) STREAM: ttft_ms=356.0
+[17:59:04] cooldown 10s before hit run 4
+[17:59:29] Run 4 (hit): prompt_ms=172.138 predicted_ms=14226.367 eval_tps=17.994755793942332 prompt_n=4 predicted_n=256 cache_n=391 wall_ms=14599.6
+[17:59:29] Run 4 (hit) STREAM: ttft_ms=354.8
+[17:59:31] ==== summary (run / kind / prompt_n / cache_n / prompt_ms / eval_tps) ====
+run	kind	prompt_n	cache_n	prompt_ms	predicted_ms	eval_tps	predicted_n	wall_ms
+0	miss	395	0	9453.145	13455.828	19.025213461408693	256	23091.9
+1	hit	4	391	173.764	14228.655	17.99186219639172	256	14583.4
+2	hit	4	391	173.366	14231.339	17.988468969785625	256	14618.6
+3	hit	4	391	173.254	14230.827	17.989116163101414	256	14599.9
+4	hit	4	391	172.138	14226.367	17.994755793942332	256	14599.6
+[17:59:31] ==== measure_phaseU2_ttft end tag=U2_B14b_t40_kvq8_0_smlayer_ctx32768_ub256_ts11-12-13-14_cram0_ttft ====

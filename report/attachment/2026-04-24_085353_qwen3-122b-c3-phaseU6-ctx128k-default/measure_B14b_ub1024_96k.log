@@ -1,0 +1,12 @@
+[12:51:49] [measure] ==== measure_phaseU6 cell=B14b_ub1024_96k ====
+[12:51:49] [measure] /health wait
+[12:51:49] [measure] /health OK
+[12:51:49] [measure] B14b_ub1024_96k warmup1: start (prompt_tag=96k prompt_bytes=588000)
+curl: (52) Empty reply from server
+[13:06:07] [measure] B14b_ub1024_96k warmup1: curl FAILED
+[13:06:08] [measure] B14b_ub1024_96k warmup1: eval= prompt= prompt_n= pred_n= wall=856s min_gpu=62
+[13:06:23] [measure] B14b_ub1024_96k eval1: start (prompt_tag=96k prompt_bytes=588000)
+curl: (7) Failed to connect to 10.1.4.14 port 8000 after 36 ms: Couldn't connect to server
+[13:06:25] [measure] B14b_ub1024_96k eval1: curl FAILED
+[13:06:26] [measure] B14b_ub1024_96k eval1: eval= prompt= prompt_n= pred_n= wall=1s min_gpu=16270
+[13:06:26] [measure] ==== measure_phaseU6 cell=B14b_ub1024_96k end ====

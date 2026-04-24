@@ -1,0 +1,36 @@
+You are an experienced Python developer. Write clean, idiomatic Python 3.11+ code.
+
+Task: Implement two sorting algorithms in a single file `sorting.py`, then write pytest tests for them.
+
+Requirements:
+
+1. Implement `quicksort(items: list[int]) -> list[int]`:
+   - Uses the Lomuto partition scheme with the last element as pivot.
+   - Returns a new list (does not mutate the input).
+   - Includes a Google-style docstring with Args, Returns, and Raises sections.
+   - Full PEP 484 type hints on parameters and return value.
+   - Raises `TypeError` if the input is not a list or contains non-int elements.
+   - Handles empty lists, single-element lists, lists with duplicate values, and lists of negative numbers correctly.
+
+2. Implement `mergesort(items: list[int]) -> list[int]`:
+   - Classical recursive top-down merge sort.
+   - Same interface, same docstring structure, same type hints, same error handling, same edge-case handling as `quicksort`.
+
+3. Write `test_sorting.py` with pytest test cases covering:
+   - Empty list.
+   - Single-element list.
+   - Already-sorted list of 10 elements.
+   - Reverse-sorted list of 10 elements.
+   - List with duplicates (e.g. `[3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]`).
+   - List of negative numbers only.
+   - Mixed positive and negative numbers.
+   - TypeError when input is a string, a tuple, or a list containing a float.
+   - Property-based test using `hypothesis`: for any list of ints, `sorted(xs) == quicksort(xs) == mergesort(xs)`.
+
+4. Write a small benchmark harness `bench.py` that:
+   - Generates a list of 10,000 random integers in the range [-1_000_000, 1_000_000] with a fixed seed (42).
+   - Measures wall-clock time of `quicksort`, `mergesort`, and `sorted(list)` (built-in timsort) using `time.perf_counter()`.
+   - Repeats each measurement 5 times and prints the mean and standard deviation in milliseconds.
+   - Uses a simple tabular `print` format (no external deps beyond the stdlib).
+
+Output the three files in order, each preceded by a `# === filename ===` comment header. Do not include any prose commentary, markdown fences, or explanations between or after the files. Start directly with the first file header.

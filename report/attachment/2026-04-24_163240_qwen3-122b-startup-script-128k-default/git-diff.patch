@@ -1,0 +1,230 @@
+diff --git a/.claude/skills/llama-server/SKILL.md b/.claude/skills/llama-server/SKILL.md
+index 986cfe9..154d71f 100644
+--- a/.claude/skills/llama-server/SKILL.md
++++ b/.claude/skills/llama-server/SKILL.md
+@@ -17,7 +17,7 @@ llama-server の起動・管理と llama.cpp のビルドに関するスキル
+ 1. unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M — thinking対応、128k ctx
+ 2. unsloth/gpt-oss-20b-GGUF:Q8_0 — 汎用、64k ctx
+ 3. bartowski/browser-use_bu-30b-a3b-preview-GGUF:Q8_0 — browser-use専用、24k ctx
+-4. unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M — 大規模MoE、fitモード（MoE CPUオフロード）
++4. unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M — 大規模MoE、fitモード（128k ctx、B14b OT、eval 10-17.7 t/s）
+ ```
+ 
+ ## モデル一覧
+@@ -27,7 +27,7 @@ llama-server の起動・管理と llama.cpp のビルドに関するスキル
+ | `unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M` | 131072 | t120h-p100, mi25 | thinking対応MoEモデル |
+ | `unsloth/gpt-oss-20b-GGUF:Q8_0` | 65536 | t120h-p100, mi25 | thinking無効化推奨 |
+ | `bartowski/browser-use_bu-30b-a3b-preview-GGUF:Q8_0` | 24576 | t120h-p100 | browser-use専用 |
+-| `unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M` | fit 16384 | t120h-p100 | 大規模MoE、fitモード（MoE CPUオフロード） |
++| `unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M` | fit (128k default) | t120h-p100 | 大規模MoE、Phase U-6 確定プロファイル自動適用 |
+ 
+ ### モデル別サンプリングパラメータ
+ 
+@@ -42,24 +42,38 @@ llama-server の起動・管理と llama.cpp のビルドに関するスキル
+ 
+ ## fitモード（MoE CPUオフロード）
+ 
+-モデルサイズがVRAMを超えるMoEモデル向けのモード。ctx-size引数に `fit` を指定すると、`-ot 'ffn_.*_exps.weight=CPU'` でMoEエキスパート重みのみをメインメモリ（RAM）にオフロードし、アテンション・ルーティング層はGPUに残す。
++モデルサイズがVRAMを超えるMoEモデル向けのモード。ctx-size引数に `fit` を指定するとMoEエキスパート重みの一部を CPU (RAM) にオフロードし、アテンション・ルーティング層はGPUに残す。
+ 
+-- `-ngl 999`: 全レイヤーをGPUにロード
+-- `-ot 'ffn_.*_exps.weight=CPU'`: エキスパートFFN重みのみCPUにオフロード（速度への影響が最小限）
+-- `--ctx-size`: 第4引数で指定（デフォルト8192）
++**挙動はモデルプロファイルで自動切替**:
++
++| モデル | OT パターン | fit-ctx default | プロファイル追加設定 |
++|--------|------------|----------------|---------------------|
++| Qwen3.5-122B-A10B | `blk.N.ffn_.*_exps.weight=CPU` を N ∈ {2,3,20-23,31-38} (14 層) ぶんカンマ連結 (B14b) | **131072 (128k)** | `-b 2048 -ub 512`, `--tensor-split 11,12,13,14`, `--threads 40`, `numactl --cpunodebind=1 --membind=1` |
++| その他 MoE | `ffn_.*_exps.weight=CPU` (全層) | 8192 | サーバ共通設定のみ |
++
++> **OT 表現の実装ノート**: 意味的には `blk\.([2-3]|2[0-3]|3[1-8])\.ffn_.*_exps\.weight=CPU` と等価だが、 `ssh ... bash -c '$CMD'` 経由で渡す際に `()` / `|` が bash のメタキャラとして解釈されて syntax error になるため、llama.cpp 側の `parse_tensor_buffer_overrides` がサポートするカンマ列挙表現 (`pat1,pat2,...`) に分解している。各パターンの `.` は std::regex で「任意 1 文字」となるが、対象テンソル名 (`blk.N.ffn_{gate,up,down}_exps.weight`) では誤マッチしない。
++
++### Qwen3.5-122B-A10B プロファイル (Phase U-6 確定、2026-04-24)
++
++- **eval 実測**: 1k=17.69 t/s、32k=14.36、96k=10.03 (baseline B14b_ts_alt 18.664 @ ctx=32k 比 -5.2〜-46.3%)
++- **PP 実測**: 1k=64 t/s、32k=61、96k=53 (96k prompt 処理 ~30 分/run)
++- **OT=B14b**: CPU offload = layer {2, 3, 20-23, 31-38} の 14 層のみ、残り 34 層は GPU
++- **tensor-split=11,12,13,14**: ctx=128k でフィットする唯一の割付 (min_gpu_free=956 MiB)
++- **-ub 1024 は禁忌**: 32k 以下では 1k eval 17.96 t/s と最速だが 96k で CUDA OOM crash
++- **サーバは t120h-p100 限定**: mi25/t120h-m10 では VRAM 足りず (4×P100=64 GB の層分散前提)
+ 
+ ### fitモード起動例
+ 
+ ```bash
+-# デフォルトctx-size (8192) で起動
++# Qwen3.5-122B-A10B: 128k default で起動 (プロファイル自動適用)
+ .claude/skills/llama-server/scripts/start.sh t120h-p100 \
+   "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit
+ 
+-# ctx-sizeを16384に指定して起動
++# 短 ctx (32k) を明示指定したい場合 (プロファイルは適用される)
+ .claude/skills/llama-server/scripts/start.sh t120h-p100 \
+-  "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 16384
++  "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 32768
+ 
+-# ヘルスチェック
++# ヘルスチェック (start.sh と同じ引数)
+ .claude/skills/llama-server/scripts/wait-ready.sh t120h-p100 \
+   "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit
+ ```
+@@ -161,6 +175,7 @@ tmux split-window -v -b -d -l 3 \
+ |--------|--------------|------|
+ | mi25 | `-b 4096 -ub 4096` | ROCm標準設定 |
+ | t120h-p100 | `--flash-attn 1 --poll 0 -b 8192 -ub 8192` | Flash Attention有効、マルチGPUポーリング無効 |
++| t120h-p100 × Qwen3.5-122B-A10B | `--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 --threads 40` + `numactl --cpunodebind=1 --membind=1` | Phase U-6 確定 128k fit プロファイル |
+ | t120h-m10 | `CUDA_VISIBLE_DEVICES=0..14 -b 4096 -ub 4096` | GPU 15は使用不可 |
+ 
+ ## server-scripts/ について
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index f568efa..27de3d8 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -72,13 +72,15 @@ Arguments:
+   server     GPUサーバ名 (mi25, t120h-p100, t120h-m10)
+   hf-model   HuggingFaceモデル (例: unsloth/gpt-oss-20b-GGUF:Q8_0)
+   ctx-size   コンテキストサイズ or "fit" (省略時: 65536)
+-  fit-ctx    fitモード時のctx-size (省略時: 8192、"fit"指定時のみ有効)
++  fit-ctx    fitモード時のctx-size ("fit"指定時のみ有効)
++             - Qwen3.5-122B-A10B: 省略時 131072 (Phase U-6 確定 128k default)
++             - その他 MoE       : 省略時 8192
+ 
+ Examples:
+   start.sh t120h-p100 "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M" 131072
+   start.sh mi25 "unsloth/gpt-oss-20b-GGUF:Q8_0"
+-  start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit
+-  start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 16384
++  start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit         # 128k default
++  start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 32768   # 短 ctx 指定
+ EOF
+   exit 1
+ }
+@@ -91,7 +93,7 @@ fi
+ SERVER="$1"
+ HF_MODEL="${2:-}"
+ CTX_SIZE_ARG="${3:-65536}"
+-FIT_CTX="${4:-8192}"
++FIT_CTX_ARG="${4:-}"
+ 
+ # fitモード判定
+ if [ "$CTX_SIZE_ARG" = "fit" ]; then
+@@ -108,6 +110,27 @@ if [ -z "$HF_MODEL" ]; then
+   exit 1
+ fi
+ 
++# --- モデルプロファイル判定 ---
++# Phase U-6 (2026-04-24) で確定した Qwen3.5-122B-A10B 向け ctx=128k 専用 default 構成を
++# モデル名で自動適用する。他モデルは従来挙動。
++MODEL_PROFILE="generic"
++case "$HF_MODEL" in
++  *Qwen3.5-122B-A10B*)
++    MODEL_PROFILE="qwen3_122b"
++    ;;
++esac
++
++# fit 時の ctx-size default はプロファイル依存 (qwen3_122b: 131072、その他: 8192)
++if [ -z "$FIT_CTX_ARG" ]; then
++  if [ "$MODEL_PROFILE" = "qwen3_122b" ]; then
++    FIT_CTX=131072
++  else
++    FIT_CTX=8192
++  fi
++else
++  FIT_CTX="$FIT_CTX_ARG"
++fi
++
+ # --- サーバ名バリデーション ---
+ case "$SERVER" in
+   mi25|t120h-p100|t120h-m10) ;;
+@@ -146,6 +169,7 @@ ssh "$SERVER" "cd ~/llama.cpp && ./update_and_build.sh"
+ # --- サーバ別パラメータ設定 ---
+ SERVER_OPTS=""
+ ENV_PREFIX=""
++THREADS_OPT="--threads -1"
+ 
+ case "$SERVER" in
+   mi25)
+@@ -160,6 +184,15 @@ case "$SERVER" in
+     ;;
+ esac
+ 
++# --- モデルプロファイル上書き (サーバ別 default を上書き) ---
++# Phase U-6 (2026-04-24) 確定構成: Qwen3.5-122B-A10B × t120h-p100 × ctx=128k
++# -b 2048 / -ub 512 / tensor-split 11,12,13,14 / threads 40 / numactl node1
++if [ "$MODEL_PROFILE" = "qwen3_122b" ] && [ "$SERVER" = "t120h-p100" ]; then
++  SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14"
++  ENV_PREFIX="numactl --cpunodebind=1 --membind=1"
++  THREADS_OPT="--threads 40"
++fi
++
+ # --- モデル別サンプリングパラメータ ---
+ case "$HF_MODEL" in
+   *Qwen3.5*)
+@@ -204,7 +237,19 @@ MODEL_OPT="-m '$MODEL_PATH'"
+ 
+ # --- fitモード分岐 ---
+ if [ "$FIT_MODE" = true ]; then
+-  NGL_OPTS="-ngl 999 -ot 'ffn_.*_exps.weight=CPU'"
++  if [ "$MODEL_PROFILE" = "qwen3_122b" ]; then
++    # Phase U-6 確定 OT=B14b: CPU offload = layer {2,3,20-23,31-38}、他は GPU
++    # llama.cpp の -ot はカンマ区切りで複数パターンを OR 合成できる (parse_tensor_buffer_overrides)。
++    # 単一 regex の `(|)` は bash のメタキャラで outer ssh パイプラインを通らないため使えない。
++    OT_PATTERNS=""
++    for L in 2 3 20 21 22 23 31 32 33 34 35 36 37 38; do
++      [ -n "$OT_PATTERNS" ] && OT_PATTERNS+=","
++      OT_PATTERNS+="blk.$L.ffn_.*_exps.weight=CPU"
++    done
++    NGL_OPTS="-ngl 999 --split-mode layer -ot '$OT_PATTERNS'"
++  else
++    NGL_OPTS="-ngl 999 -ot 'ffn_.*_exps.weight=CPU'"
++  fi
+   CTX_OPTS="--ctx-size $FIT_CTX"
+ else
+   NGL_OPTS="--n-gpu-layers 99 --split-mode layer"
+@@ -223,7 +268,7 @@ fi
+ LAUNCH_CMD="${ENV_PREFIX:+$ENV_PREFIX }./build/bin/llama-server \
+   $MODEL_OPT \
+   $CHAT_TEMPLATE_OPTS $NGL_OPTS \
+-  $SERVER_OPTS --n-predict 32768 --threads -1 \
++  $SERVER_OPTS --n-predict 32768 $THREADS_OPT \
+   $CTX_OPTS --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0 \
+   --defrag-thold 0.1 $SAMPLING_OPTS \
+   --port 8000 --host 0.0.0.0 \
+diff --git a/.claude/skills/llama-server/scripts/wait-ready.sh b/.claude/skills/llama-server/scripts/wait-ready.sh
+index 6040ab4..5f354bb 100755
+--- a/.claude/skills/llama-server/scripts/wait-ready.sh
++++ b/.claude/skills/llama-server/scripts/wait-ready.sh
+@@ -15,11 +15,13 @@ Arguments:
+   server     GPUサーバ名 (mi25, t120h-p100, t120h-m10)
+   hf-model   HuggingFaceモデル (例: unsloth/gpt-oss-20b-GGUF:Q8_0)
+   ctx-size   コンテキストサイズ or "fit" (省略時: 65536)
+-  fit-ctx    fitモード時のctx-size (省略時: 8192、"fit"指定時のみ有効)
++  fit-ctx    fitモード時のctx-size ("fit"指定時のみ有効)
++             - Qwen3.5-122B-A10B: 省略時 131072 (Phase U-6 確定 128k default)
++             - その他 MoE       : 省略時 8192
+ 
+ Examples:
+   wait-ready.sh t120h-p100 "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M" 131072
+-  wait-ready.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 16384
++  wait-ready.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit
+ EOF
+   exit 1
+ }
+@@ -31,7 +33,17 @@ fi
+ SERVER="$1"
+ HF_MODEL="$2"
+ CTX_SIZE_ARG="${3:-65536}"
+-FIT_CTX="${4:-8192}"
++FIT_CTX_ARG="${4:-}"
++
++# fit 時の ctx-size default は start.sh と同じロジックで決定
++if [ -z "$FIT_CTX_ARG" ]; then
++  case "$HF_MODEL" in
++    *Qwen3.5-122B-A10B*) FIT_CTX=131072 ;;
++    *)                    FIT_CTX=8192 ;;
++  esac
++else
++  FIT_CTX="$FIT_CTX_ARG"
++fi
+ 
+ # fitモード判定
+ if [ "$CTX_SIZE_ARG" = "fit" ]; then

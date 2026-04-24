@@ -1,0 +1,280 @@
+[batch_U4] === Round 1 ===
+[batch_U4] starting llama-server with MODEL=/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.5-122B-A10B-GGUF/snapshots/51eab4d59d53f573fb9206cb3ce613f1d0aa392b/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf ALIAS=unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M
+[start_phaseU4] MODEL_PATH=/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.5-122B-A10B-GGUF/snapshots/51eab4d59d53f573fb9206cb3ce613f1d0aa392b/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf
+[start_phaseU4] MODEL_ALIAS=unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M
+[start_phaseU4] OT_TAG=B14b OT_REGEX=blk\.([2-3]|2[0-3]|3[1-8])\.ffn_.*_exps\.weight=CPU TS=11,12,13,14
+[start_phaseU4] THREADS=40 SPLIT_MODE=layer K=q8_0 V=q8_0 FA=1 CTX=32768 b=256 ub=256
+[start_phaseU4] remote log: /tmp/llama-server_phaseU4_B14b_t40_smlayer_kq8_0_vq8_0_fa1_ctx32768_b256_ub256_ts11-12-13-14_unsloth_r1.log
+[start_phaseU4] waiting for /health (max 300s) or OOM/reject...
+[start_phaseU4] /health OK after 4*5s
+[start_phaseU4] PID=1394251
+1394251
+[batch_U4] start returned, server should be healthy
+[batch_U4] measure model=unsloth prompt=1k round=1 pid=1394251
+[05:26:18] ==== measure_phaseU4 start tag=U4_unsloth_1k_r1_warmup pid=1394251 alias=unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M ====
+[05:26:18] /health OK
+[05:26:22] Run 1: dmon start (30s)
+[05:26:22] Run 1: eval (marker=U4_unsloth_1k_r1_warmup_r1_1776975982856376804)
+[05:27:00] Run 1: eval=18.566329772393477 prompt=45.53495162354912 prompt_ms=23674.122 prompt_n=1078 predicted_n=256
+[05:27:11] cooldown 60s
+[05:28:11] Run 2: dmon start (30s)
+[05:28:11] Run 2: eval (marker=U4_unsloth_1k_r1_warmup_r2_1776976091019262166)
+[05:28:48] Run 2: eval=18.790124439067075 prompt=45.60534538645664 prompt_ms=23637.58 prompt_n=1078 predicted_n=256
+[05:29:06] ==== summary (tag=U4_unsloth_1k_r1_warmup) ====
+run1: eval=18.566329772393477 prompt=45.53495162354912 prompt_ms=23674.122 prompt_n=1078 predicted_n=256
+run2: eval=18.790124439067075 prompt=45.60534538645664 prompt_ms=23637.58 prompt_n=1078 predicted_n=256
+[05:29:06] ==== measure_phaseU4 end ====
+[05:29:06] ==== measure_phaseU4 start tag=U4_unsloth_1k_r1 pid=1394251 alias=unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M ====
+[05:29:06] /health OK
+[05:29:10] Run 1: dmon start (30s)
+[05:29:10] Run 1: eval (marker=U4_unsloth_1k_r1_r1_1776976150694639165)
+[05:29:48] Run 1: eval=18.77085507990665 prompt=45.611946205737375 prompt_ms=23568.387 prompt_n=1075 predicted_n=256
+[05:30:00] cooldown 60s
+[05:31:00] Run 2: dmon start (30s)
+[05:31:00] Run 2: eval (marker=U4_unsloth_1k_r1_r2_1776976260899276209)
+[05:31:38] Run 2: eval=18.789379714134267 prompt=45.54711105055111 prompt_ms=23601.936 prompt_n=1075 predicted_n=256
+[05:31:50] cooldown 60s
+[05:32:50] Run 3: dmon start (30s)
+[05:32:50] Run 3: eval (marker=U4_unsloth_1k_r1_r3_1776976370483430124)
+[05:33:28] Run 3: eval=18.791536820328098 prompt=45.582218067196926 prompt_ms=23583.758 prompt_n=1075 predicted_n=256
+[05:33:40] cooldown 60s
+[05:34:40] Run 4: dmon start (30s)
+[05:34:40] Run 4: eval (marker=U4_unsloth_1k_r1_r4_1776976480705088453)
+[05:35:18] Run 4: eval=18.790489927526693 prompt=45.60619134380912 prompt_ms=23571.361 prompt_n=1075 predicted_n=256
+[05:35:32] cooldown 60s
+[05:36:32] Run 5: dmon start (30s)
+[05:36:32] Run 5: eval (marker=U4_unsloth_1k_r1_r5_1776976592258385271)
+[05:37:10] Run 5: eval=18.79184994531645 prompt=45.57382168460092 prompt_ms=23588.103 prompt_n=1075 predicted_n=256
+[05:37:25] ==== summary (tag=U4_unsloth_1k_r1) ====
+run1: eval=18.77085507990665 prompt=45.611946205737375 prompt_ms=23568.387 prompt_n=1075 predicted_n=256
+run2: eval=18.789379714134267 prompt=45.54711105055111 prompt_ms=23601.936 prompt_n=1075 predicted_n=256
+run3: eval=18.791536820328098 prompt=45.582218067196926 prompt_ms=23583.758 prompt_n=1075 predicted_n=256
+run4: eval=18.790489927526693 prompt=45.60619134380912 prompt_ms=23571.361 prompt_n=1075 predicted_n=256
+run5: eval=18.79184994531645 prompt=45.57382168460092 prompt_ms=23588.103 prompt_n=1075 predicted_n=256
+[05:37:25] ==== measure_phaseU4 end ====
+[batch_U4] measure model=unsloth prompt=code round=1 pid=1394251
+[05:37:26] ==== measure_phaseU4 start tag=U4_unsloth_code_r1_warmup pid=1394251 alias=unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M ====
+[05:37:26] /health OK
+[05:37:30] Run 1: dmon start (30s)
+[05:37:30] Run 1: eval (marker=U4_unsloth_code_r1_warmup_r1_1776976650868408676)
+[05:38:00] Run 1: eval=18.86727791242414 prompt=41.659747900319275 prompt_ms=15290.539 prompt_n=637 predicted_n=256
+[05:38:21] cooldown 60s
+[05:39:21] Run 2: dmon start (30s)
+[05:39:21] Run 2: eval (marker=U4_unsloth_code_r1_warmup_r2_1776976761936255763)
+[05:39:51] Run 2: eval=18.871358592597666 prompt=41.55396702415472 prompt_ms=15329.463 prompt_n=637 predicted_n=256
+[05:40:16] ==== summary (tag=U4_unsloth_code_r1_warmup) ====
+run1: eval=18.86727791242414 prompt=41.659747900319275 prompt_ms=15290.539 prompt_n=637 predicted_n=256
+run2: eval=18.871358592597666 prompt=41.55396702415472 prompt_ms=15329.463 prompt_n=637 predicted_n=256
+[05:40:16] ==== measure_phaseU4 end ====
+[05:40:16] ==== measure_phaseU4 start tag=U4_unsloth_code_r1 pid=1394251 alias=unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M ====
+[05:40:17] /health OK
+[05:40:21] Run 1: dmon start (30s)
+[05:40:21] Run 1: eval (marker=U4_unsloth_code_r1_r1_1776976821212578267)
+[05:40:50] Run 1: eval=18.864718304804622 prompt=41.50759241953518 prompt_ms=15274.314 prompt_n=634 predicted_n=256
+[05:41:13] cooldown 60s
+[05:42:13] Run 2: dmon start (30s)
+[05:42:13] Run 2: eval (marker=U4_unsloth_code_r1_r2_1776976933418303250)
+[05:42:42] Run 2: eval=18.87029165952274 prompt=41.442822044391406 prompt_ms=15298.186 prompt_n=634 predicted_n=256
+[05:43:05] cooldown 60s
+[05:44:05] Run 3: dmon start (30s)
+[05:44:05] Run 3: eval (marker=U4_unsloth_code_r1_r3_1776977045436331602)
+[05:44:35] Run 3: eval=18.86833059791676 prompt=41.341566434560505 prompt_ms=15335.655 prompt_n=634 predicted_n=256
+[05:44:57] cooldown 60s
+[05:45:57] Run 4: dmon start (30s)
+[05:45:57] Run 4: eval (marker=U4_unsloth_code_r1_r4_1776977157117340655)
+[05:46:26] Run 4: eval=18.871937318629442 prompt=41.35818990989329 prompt_ms=15329.491 prompt_n=634 predicted_n=256
+[05:46:49] cooldown 60s
+[05:47:49] Run 5: dmon start (30s)
+[05:47:49] Run 5: eval (marker=U4_unsloth_code_r1_r5_1776977269316004391)
+[05:48:18] Run 5: eval=18.86825828287057 prompt=41.44466153864156 prompt_ms=15297.507 prompt_n=634 predicted_n=256
+[05:48:43] ==== summary (tag=U4_unsloth_code_r1) ====
+run1: eval=18.864718304804622 prompt=41.50759241953518 prompt_ms=15274.314 prompt_n=634 predicted_n=256
+run2: eval=18.87029165952274 prompt=41.442822044391406 prompt_ms=15298.186 prompt_n=634 predicted_n=256
+run3: eval=18.86833059791676 prompt=41.341566434560505 prompt_ms=15335.655 prompt_n=634 predicted_n=256
+run4: eval=18.871937318629442 prompt=41.35818990989329 prompt_ms=15329.491 prompt_n=634 predicted_n=256
+run5: eval=18.86825828287057 prompt=41.44466153864156 prompt_ms=15297.507 prompt_n=634 predicted_n=256
+[05:48:43] ==== measure_phaseU4 end ====
+[batch_U4] measure model=unsloth prompt=repetitive round=1 pid=1394251
+[05:48:44] ==== measure_phaseU4 start tag=U4_unsloth_repetitive_r1_warmup pid=1394251 alias=unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M ====
+[05:48:44] /health OK
+[05:48:49] Run 1: dmon start (30s)
+[05:48:49] Run 1: eval (marker=U4_unsloth_repetitive_r1_warmup_r1_1776977329051854652)
+[05:49:14] Run 1: eval=18.886776504584432 prompt=43.16316396849427 prompt_ms=11236.433 prompt_n=485 predicted_n=256
+[05:49:41] cooldown 60s
+[05:50:41] Run 2: dmon start (30s)
+[05:50:41] Run 2: eval (marker=U4_unsloth_repetitive_r1_warmup_r2_1776977441796417949)
+[05:51:07] Run 2: eval=18.887650206620563 prompt=43.064108072620115 prompt_ms=11262.279 prompt_n=485 predicted_n=256
+[05:51:38] ==== summary (tag=U4_unsloth_repetitive_r1_warmup) ====
+run1: eval=18.886776504584432 prompt=43.16316396849427 prompt_ms=11236.433 prompt_n=485 predicted_n=256
+run2: eval=18.887650206620563 prompt=43.064108072620115 prompt_ms=11262.279 prompt_n=485 predicted_n=256
+[05:51:38] ==== measure_phaseU4 end ====
+[05:51:38] ==== measure_phaseU4 start tag=U4_unsloth_repetitive_r1 pid=1394251 alias=unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M ====
+[05:51:38] /health OK
+[05:51:42] Run 1: dmon start (30s)
+[05:51:42] Run 1: eval (marker=U4_unsloth_repetitive_r1_r1_1776977502752306086)
+[05:52:08] Run 1: eval=18.8884278276124 prompt=43.10084659183632 prompt_ms=11183.075 prompt_n=482 predicted_n=256
+[05:52:37] cooldown 60s
+[05:53:37] Run 2: dmon start (30s)
+[05:53:37] Run 2: eval (marker=U4_unsloth_repetitive_r1_r2_1776977617908196890)
+[05:54:03] Run 2: eval=18.886426767732658 prompt=42.840788697142294 prompt_ms=11250.96 prompt_n=482 predicted_n=256
+[05:54:30] cooldown 60s
+[05:55:30] Run 3: dmon start (30s)
+[05:55:30] Run 3: eval (marker=U4_unsloth_repetitive_r1_r3_1776977730239394557)
+[05:55:55] Run 3: eval=18.890177012027067 prompt=42.907673191659676 prompt_ms=11233.422 prompt_n=482 predicted_n=256
+[05:56:21] cooldown 60s
+[05:57:21] Run 4: dmon start (30s)
+[05:57:21] Run 4: eval (marker=U4_unsloth_repetitive_r1_r4_1776977841767144831)
+[05:57:47] Run 4: eval=18.89300147874637 prompt=42.838336649601246 prompt_ms=11251.604 prompt_n=482 predicted_n=256
+[05:58:14] cooldown 60s
+[05:59:14] Run 5: dmon start (30s)
+[05:59:14] Run 5: eval (marker=U4_unsloth_repetitive_r1_r5_1776977954016277497)
+[05:59:39] Run 5: eval=18.886231701012065 prompt=42.85739309147715 prompt_ms=11246.601 prompt_n=482 predicted_n=256
+[06:00:10] ==== summary (tag=U4_unsloth_repetitive_r1) ====
+run1: eval=18.8884278276124 prompt=43.10084659183632 prompt_ms=11183.075 prompt_n=482 predicted_n=256
+run2: eval=18.886426767732658 prompt=42.840788697142294 prompt_ms=11250.96 prompt_n=482 predicted_n=256
+run3: eval=18.890177012027067 prompt=42.907673191659676 prompt_ms=11233.422 prompt_n=482 predicted_n=256
+run4: eval=18.89300147874637 prompt=42.838336649601246 prompt_ms=11251.604 prompt_n=482 predicted_n=256
+run5: eval=18.886231701012065 prompt=42.85739309147715 prompt_ms=11246.601 prompt_n=482 predicted_n=256
+[06:00:10] ==== measure_phaseU4 end ====
+[batch_U4] stopping llama-server on t120h-p100
+[batch_U4] server stopped
+[batch_U4] starting llama-server with MODEL=/home/llm/models/Qwen3.5-122B-A10B-Q4_K_M-fused.gguf ALIAS=local/Qwen3.5-122B-A10B-fused:Q4_K_M
+[start_phaseU4] MODEL_PATH=/home/llm/models/Qwen3.5-122B-A10B-Q4_K_M-fused.gguf
+[start_phaseU4] MODEL_ALIAS=local/Qwen3.5-122B-A10B-fused:Q4_K_M
+[start_phaseU4] OT_TAG=B14b OT_REGEX=blk\.([2-3]|2[0-3]|3[1-8])\.ffn_.*_exps\.weight=CPU TS=11,12,13,14
+[start_phaseU4] THREADS=40 SPLIT_MODE=layer K=q8_0 V=q8_0 FA=1 CTX=32768 b=256 ub=256
+[start_phaseU4] remote log: /tmp/llama-server_phaseU4_B14b_t40_smlayer_kq8_0_vq8_0_fa1_ctx32768_b256_ub256_ts11-12-13-14_fused_r1.log
+[start_phaseU4] waiting for /health (max 300s) or OOM/reject...
+[start_phaseU4] /health OK after 4*5s
+[start_phaseU4] PID=1398779
+1398779
+[batch_U4] start returned, server should be healthy
+[batch_U4] measure model=fused prompt=1k round=1 pid=1398779
+[06:00:39] ==== measure_phaseU4 start tag=U4_fused_1k_r1_warmup pid=1398779 alias=local/Qwen3.5-122B-A10B-fused:Q4_K_M ====
+[06:00:39] /health OK
+[06:00:43] Run 1: dmon start (30s)
+[06:00:43] Run 1: eval (marker=U4_fused_1k_r1_warmup_r1_1776978043571534939)
+[06:01:23] Run 1: eval=15.644906577601517 prompt=45.393379150159234 prompt_ms=23725.927 prompt_n=1077 predicted_n=256
+[06:01:31] cooldown 60s
+[06:02:31] Run 2: dmon start (30s)
+[06:02:31] Run 2: eval (marker=U4_fused_1k_r1_warmup_r2_1776978151311587457)
+[06:03:12] Run 2: eval=15.64982059253522 prompt=45.40985429255305 prompt_ms=23717.319 prompt_n=1077 predicted_n=256
+[06:03:24] ==== summary (tag=U4_fused_1k_r1_warmup) ====
+run1: eval=15.644906577601517 prompt=45.393379150159234 prompt_ms=23725.927 prompt_n=1077 predicted_n=256
+run2: eval=15.64982059253522 prompt=45.40985429255305 prompt_ms=23717.319 prompt_n=1077 predicted_n=256
+[06:03:24] ==== measure_phaseU4 end ====
+[06:03:24] ==== measure_phaseU4 start tag=U4_fused_1k_r1 pid=1398779 alias=local/Qwen3.5-122B-A10B-fused:Q4_K_M ====
+[06:03:24] /health OK
+[06:03:28] Run 1: dmon start (30s)
+[06:03:28] Run 1: eval (marker=U4_fused_1k_r1_r1_1776978208660829621)
+[06:04:09] Run 1: eval=15.636607203174133 prompt=45.43096088681913 prompt_ms=23640.266 prompt_n=1074 predicted_n=256
+[06:04:16] cooldown 60s
+[06:05:16] Run 2: dmon start (30s)
+[06:05:16] Run 2: eval (marker=U4_fused_1k_r1_r2_1776978316215804035)
+[06:05:56] Run 2: eval=15.654393072148347 prompt=45.46202625520908 prompt_ms=23624.112 prompt_n=1074 predicted_n=256
+[06:06:06] cooldown 60s
+[06:07:06] Run 3: dmon start (30s)
+[06:07:06] Run 3: eval (marker=U4_fused_1k_r1_r3_1776978426496215707)
+[06:07:47] Run 3: eval=15.653382264827957 prompt=45.474411159301944 prompt_ms=23617.678 prompt_n=1074 predicted_n=256
+[06:07:53] cooldown 60s
+[06:08:53] Run 4: dmon start (30s)
+[06:08:53] Run 4: eval (marker=U4_fused_1k_r1_r4_1776978533315674652)
+[06:09:33] Run 4: eval=15.656058891733277 prompt=45.40741229921912 prompt_ms=23652.526 prompt_n=1074 predicted_n=256
+[06:09:41] cooldown 60s
+[06:10:41] Run 5: dmon start (30s)
+[06:10:41] Run 5: eval (marker=U4_fused_1k_r1_r5_1776978641216030336)
+[06:11:21] Run 5: eval=15.651418455651308 prompt=45.39740482396036 prompt_ms=23657.74 prompt_n=1074 predicted_n=256
+[06:11:33] ==== summary (tag=U4_fused_1k_r1) ====
+run1: eval=15.636607203174133 prompt=45.43096088681913 prompt_ms=23640.266 prompt_n=1074 predicted_n=256
+run2: eval=15.654393072148347 prompt=45.46202625520908 prompt_ms=23624.112 prompt_n=1074 predicted_n=256
+run3: eval=15.653382264827957 prompt=45.474411159301944 prompt_ms=23617.678 prompt_n=1074 predicted_n=256
+run4: eval=15.656058891733277 prompt=45.40741229921912 prompt_ms=23652.526 prompt_n=1074 predicted_n=256
+run5: eval=15.651418455651308 prompt=45.39740482396036 prompt_ms=23657.74 prompt_n=1074 predicted_n=256
+[06:11:33] ==== measure_phaseU4 end ====
+[batch_U4] measure model=fused prompt=code round=1 pid=1398779
+[06:11:34] ==== measure_phaseU4 start tag=U4_fused_code_r1_warmup pid=1398779 alias=local/Qwen3.5-122B-A10B-fused:Q4_K_M ====
+[06:11:34] /health OK
+[06:11:38] Run 1: dmon start (30s)
+[06:11:38] Run 1: eval (marker=U4_fused_code_r1_warmup_r1_1776978698551284579)
+[06:12:10] Run 1: eval=15.704729491555701 prompt=41.3737355233397 prompt_ms=15372.071 prompt_n=636 predicted_n=256
+[06:12:28] cooldown 60s
+[06:13:28] Run 2: dmon start (30s)
+[06:13:28] Run 2: eval (marker=U4_fused_code_r1_warmup_r2_1776978808524922909)
+[06:14:00] Run 2: eval=15.705319133925268 prompt=41.26027833431218 prompt_ms=15414.341 prompt_n=636 predicted_n=256
+[06:14:23] ==== summary (tag=U4_fused_code_r1_warmup) ====
+run1: eval=15.704729491555701 prompt=41.3737355233397 prompt_ms=15372.071 prompt_n=636 predicted_n=256
+run2: eval=15.705319133925268 prompt=41.26027833431218 prompt_ms=15414.341 prompt_n=636 predicted_n=256
+[06:14:23] ==== measure_phaseU4 end ====
+[06:14:23] ==== measure_phaseU4 start tag=U4_fused_code_r1 pid=1398779 alias=local/Qwen3.5-122B-A10B-fused:Q4_K_M ====
+[06:14:23] /health OK
+[06:14:27] Run 1: dmon start (30s)
+[06:14:27] Run 1: eval (marker=U4_fused_code_r1_r1_1776978867955789821)
+[06:15:00] Run 1: eval=15.709309054268912 prompt=41.28398004177182 prompt_ms=15332.824 prompt_n=633 predicted_n=256
+[06:15:18] cooldown 60s
+[06:16:18] Run 2: dmon start (30s)
+[06:16:18] Run 2: eval (marker=U4_fused_code_r1_r2_1776978978250209684)
+[06:16:50] Run 2: eval=15.706958225442586 prompt=41.15358237383615 prompt_ms=15381.407 prompt_n=633 predicted_n=256
+[06:17:07] cooldown 60s
+[06:18:07] Run 3: dmon start (30s)
+[06:18:07] Run 3: eval (marker=U4_fused_code_r1_r3_1776979087855663803)
+[06:18:40] Run 3: eval=15.706596844299279 prompt=41.1855638677812 prompt_ms=15369.463 prompt_n=633 predicted_n=256
+[06:18:58] cooldown 60s
+[06:19:58] Run 4: dmon start (30s)
+[06:19:58] Run 4: eval (marker=U4_fused_code_r1_r4_1776979198775275248)
+[06:20:31] Run 4: eval=15.70219703791547 prompt=41.09872140124695 prompt_ms=15401.939 prompt_n=633 predicted_n=256
+[06:20:48] cooldown 60s
+[06:21:48] Run 5: dmon start (30s)
+[06:21:48] Run 5: eval (marker=U4_fused_code_r1_r5_1776979308666212982)
+[06:22:20] Run 5: eval=15.708946600995088 prompt=41.14557336356482 prompt_ms=15384.401 prompt_n=633 predicted_n=256
+[06:22:42] ==== summary (tag=U4_fused_code_r1) ====
+run1: eval=15.709309054268912 prompt=41.28398004177182 prompt_ms=15332.824 prompt_n=633 predicted_n=256
+run2: eval=15.706958225442586 prompt=41.15358237383615 prompt_ms=15381.407 prompt_n=633 predicted_n=256
+run3: eval=15.706596844299279 prompt=41.1855638677812 prompt_ms=15369.463 prompt_n=633 predicted_n=256
+run4: eval=15.70219703791547 prompt=41.09872140124695 prompt_ms=15401.939 prompt_n=633 predicted_n=256
+run5: eval=15.708946600995088 prompt=41.14557336356482 prompt_ms=15384.401 prompt_n=633 predicted_n=256
+[06:22:42] ==== measure_phaseU4 end ====
+[batch_U4] measure model=fused prompt=repetitive round=1 pid=1398779
+[06:22:43] ==== measure_phaseU4 start tag=U4_fused_repetitive_r1_warmup pid=1398779 alias=local/Qwen3.5-122B-A10B-fused:Q4_K_M ====
+[06:22:43] /health OK
+[06:22:47] Run 1: dmon start (30s)
+[06:22:47] Run 1: eval (marker=U4_fused_repetitive_r1_warmup_r1_1776979367730912015)
+[06:23:16] Run 1: eval=15.722756700412452 prompt=42.659750851189834 prompt_ms=11345.589 prompt_n=484 predicted_n=256
+[06:23:38] cooldown 60s
+[06:24:38] Run 2: dmon start (30s)
+[06:24:38] Run 2: eval (marker=U4_fused_repetitive_r1_warmup_r2_1776979478815627272)
+[06:25:07] Run 2: eval=15.72384409169802 prompt=42.59231245720419 prompt_ms=11363.553 prompt_n=484 predicted_n=256
+[06:25:34] ==== summary (tag=U4_fused_repetitive_r1_warmup) ====
+run1: eval=15.722756700412452 prompt=42.659750851189834 prompt_ms=11345.589 prompt_n=484 predicted_n=256
+run2: eval=15.72384409169802 prompt=42.59231245720419 prompt_ms=11363.553 prompt_n=484 predicted_n=256
+[06:25:34] ==== measure_phaseU4 end ====
+[06:25:34] ==== measure_phaseU4 start tag=U4_fused_repetitive_r1 pid=1398779 alias=local/Qwen3.5-122B-A10B-fused:Q4_K_M ====
+[06:25:34] /health OK
+[06:25:38] Run 1: dmon start (30s)
+[06:25:38] Run 1: eval (marker=U4_fused_repetitive_r1_r1_1776979538700512230)
+[06:26:06] Run 1: eval=15.722720005994287 prompt=42.522268938764405 prompt_ms=11311.72 prompt_n=481 predicted_n=256
+[06:26:30] cooldown 60s
+[06:27:30] Run 2: dmon start (30s)
+[06:27:30] Run 2: eval (marker=U4_fused_repetitive_r1_r2_1776979650094778516)
+[06:27:58] Run 2: eval=15.72403242074366 prompt=42.36607388220505 prompt_ms=11353.424 prompt_n=481 predicted_n=256
+[06:28:21] cooldown 60s
+[06:29:21] Run 3: dmon start (30s)
+[06:29:21] Run 3: eval (marker=U4_fused_repetitive_r1_r3_1776979761513295847)
+[06:29:49] Run 3: eval=15.722782772866285 prompt=42.367656126134065 prompt_ms=11353.0 prompt_n=481 predicted_n=256
+[06:30:12] cooldown 60s
+[06:31:12] Run 4: dmon start (30s)
+[06:31:12] Run 4: eval (marker=U4_fused_repetitive_r1_r4_1776979872755661337)
+[06:31:41] Run 4: eval=15.722447700137547 prompt=42.34785301227498 prompt_ms=11358.309 prompt_n=481 predicted_n=256
+[06:32:04] cooldown 60s
+[06:33:04] Run 5: dmon start (30s)
+[06:33:04] Run 5: eval (marker=U4_fused_repetitive_r1_r5_1776979984593940138)
+[06:33:32] Run 5: eval=15.724131898932159 prompt=42.314004219964204 prompt_ms=11367.395 prompt_n=481 predicted_n=256
+[06:34:00] ==== summary (tag=U4_fused_repetitive_r1) ====
+run1: eval=15.722720005994287 prompt=42.522268938764405 prompt_ms=11311.72 prompt_n=481 predicted_n=256
+run2: eval=15.72403242074366 prompt=42.36607388220505 prompt_ms=11353.424 prompt_n=481 predicted_n=256
+run3: eval=15.722782772866285 prompt=42.367656126134065 prompt_ms=11353.0 prompt_n=481 predicted_n=256
+run4: eval=15.722447700137547 prompt=42.34785301227498 prompt_ms=11358.309 prompt_n=481 predicted_n=256
+run5: eval=15.724131898932159 prompt=42.314004219964204 prompt_ms=11367.395 prompt_n=481 predicted_n=256
+[06:34:00] ==== measure_phaseU4 end ====
+[batch_U4] stopping llama-server on t120h-p100
+[batch_U4] server stopped
+[batch_U4] all rounds done

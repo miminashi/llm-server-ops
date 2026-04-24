@@ -1,0 +1,9 @@
+[start_phaseU6] OT_TAG=B14b OT_REGEX=blk\.([2-3]|2[0-3]|3[1-8])\.ffn_.*_exps\.weight=CPU TS=11,12,13,14 EXTRA_TAG=
+[start_phaseU6] EXTRA_ARGS=(none)
+[start_phaseU6] THREADS=40 CACHE_TYPE=q8_0 FA=1 CTX=131072 -b 2048 -ub 256
+[start_phaseU6] remote log: /tmp/llama-server_phaseU6_B14b_t40_smlayer_kq8_0_vq8_0_fa1_ctx131072_b2048_ub256_ts11-12-13-14.log
+[start_phaseU6] waiting for /health (max 300s) or OOM/param reject...
+[start_phaseU6] /health OK after 4*5s (elapsed=22s)
+[start_phaseU6] PID=1433095
+STARTUP_SEC=22
+REMOTE_LOG=/tmp/llama-server_phaseU6_B14b_t40_smlayer_kq8_0_vq8_0_fa1_ctx131072_b2048_ub256_ts11-12-13-14.log

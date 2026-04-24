@@ -1,0 +1,43 @@
+[11:16:32] ==== measure_phaseT5 start tag=U1_B14b_OFF_prompt1k_t40_kvq8_0_smlayer_ctx32768_ub256_eval pid=1281101 ====
+[11:16:32] wait /health
+[11:16:32] /health OK
+[11:16:33] numastat -p (pre)
+[11:16:34] snap_extras (pre)
+[11:16:39] Run 1: dmon start (background, 30s)
+[11:16:39] Run 1: eval request (prompt bytes=6200, marker=U1_B14b_OFF_prompt1k_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r1_1776910599074381468)
+[11:17:17] Run 1: eval=18.545378730681836 prompt=45.39212423058901 prompt_n=1097 predicted_n=256
+[11:17:17] Run 1: timings={"cache_n":0,"prompt_n":1097,"prompt_ms":24167.188,"prompt_per_token_ms":22.030253418413853,"prompt_per_second":45.39212423058901,"predicted_n":256,"predicted_ms":13803.978,"predicted_per_token_ms":53.9217890625,"predicted_per_second":18.545378730681836}
+[11:17:29] Run 1: status snapshot
+[11:17:31] cooldown 60s before run 2
+[11:18:31] Run 2: dmon start (background, 30s)
+[11:18:31] Run 2: eval request (prompt bytes=6200, marker=U1_B14b_OFF_prompt1k_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r2_1776910711459385688)
+[11:19:10] Run 2: eval=18.540711310043932 prompt=45.429805091227564 prompt_n=1097 predicted_n=256
+[11:19:10] Run 2: timings={"cache_n":0,"prompt_n":1097,"prompt_ms":24147.143,"prompt_per_token_ms":22.011980856882406,"prompt_per_second":45.429805091227564,"predicted_n":256,"predicted_ms":13807.453,"predicted_per_token_ms":53.93536328125,"predicted_per_second":18.540711310043932}
+[11:19:21] Run 2: status snapshot
+[11:19:23] cooldown 60s before run 3
+[11:20:23] Run 3: dmon start (background, 30s)
+[11:20:23] Run 3: eval request (prompt bytes=6200, marker=U1_B14b_OFF_prompt1k_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r3_1776910823569802747)
+[11:21:02] Run 3: eval=18.539900291547173 prompt=45.473035008392195 prompt_n=1097 predicted_n=256
+[11:21:02] Run 3: timings={"cache_n":0,"prompt_n":1097,"prompt_ms":24124.187,"prompt_per_token_ms":21.991054694621695,"prompt_per_second":45.473035008392195,"predicted_n":256,"predicted_ms":13808.057,"predicted_per_token_ms":53.93772265625,"predicted_per_second":18.539900291547173}
+[11:21:13] Run 3: status snapshot
+[11:21:15] cooldown 60s before run 4
+[11:22:15] Run 4: dmon start (background, 30s)
+[11:22:15] Run 4: eval request (prompt bytes=6200, marker=U1_B14b_OFF_prompt1k_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r4_1776910935239993039)
+[11:22:53] Run 4: eval=18.54176547158228 prompt=45.47377392321565 prompt_n=1097 predicted_n=256
+[11:22:53] Run 4: timings={"cache_n":0,"prompt_n":1097,"prompt_ms":24123.795,"prompt_per_token_ms":21.990697356426615,"prompt_per_second":45.47377392321565,"predicted_n":256,"predicted_ms":13806.668,"predicted_per_token_ms":53.932296875,"predicted_per_second":18.54176547158228}
+[11:23:05] Run 4: status snapshot
+[11:23:07] cooldown 60s before run 5
+[11:24:07] Run 5: dmon start (background, 30s)
+[11:24:07] Run 5: eval request (prompt bytes=6200, marker=U1_B14b_OFF_prompt1k_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r5_1776911047410466454)
+[11:24:46] Run 5: eval=18.542787518415125 prompt=45.422111575007364 prompt_n=1097 predicted_n=256
+[11:24:46] Run 5: timings={"cache_n":0,"prompt_n":1097,"prompt_ms":24151.233,"prompt_per_token_ms":22.015709206927987,"prompt_per_second":45.422111575007364,"predicted_n":256,"predicted_ms":13805.907,"predicted_per_token_ms":53.92932421875,"predicted_per_second":18.542787518415125}
+[11:24:58] Run 5: status snapshot
+[11:25:00] numastat -p (post)
+[11:25:01] snap_extras (post)
+[11:25:06] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=18.545378730681836 prompt=45.39212423058901 prompt_n=1097 predicted_n=256
+run2: eval=18.540711310043932 prompt=45.429805091227564 prompt_n=1097 predicted_n=256
+run3: eval=18.539900291547173 prompt=45.473035008392195 prompt_n=1097 predicted_n=256
+run4: eval=18.54176547158228 prompt=45.47377392321565 prompt_n=1097 predicted_n=256
+run5: eval=18.542787518415125 prompt=45.422111575007364 prompt_n=1097 predicted_n=256
+[11:25:06] ==== measure_phaseT5 end tag=U1_B14b_OFF_prompt1k_t40_kvq8_0_smlayer_ctx32768_ub256_eval ====

@@ -1,0 +1,19 @@
+Generate a single valid Python literal: a list containing exactly 50 employee dictionaries.
+
+Schema for each dict (use exactly these keys in this order):
+- "id": int, sequential starting from 1001 (i.e. 1001, 1002, ..., 1050).
+- "name": str, a realistic English-looking full name (first + space + last). Use a diverse set of first and last names; do not repeat the exact same full name.
+- "department": str, exactly one of: "engineering", "sales", "marketing", "hr", "finance". Distribute across all five departments so each appears at least 5 times.
+- "salary": float, between 50000.0 and 150000.0, rounded to 2 decimal places (e.g. 72345.67).
+- "hire_date": str, ISO 8601 date in the form "YYYY-MM-DD", between "2015-01-01" and "2025-12-31".
+- "is_manager": bool, True for roughly 15% of entries, False otherwise.
+- "skills": list of 2 to 4 distinct lowercase strings drawn from a fixed pool: "python", "go", "rust", "typescript", "java", "sql", "aws", "gcp", "azure", "kubernetes", "terraform", "react", "postgres", "kafka", "spark".
+
+Output requirements:
+- Output a single Python literal list.
+- Do NOT wrap in markdown code fences.
+- Do NOT include any prose, preamble, explanation, or trailing text.
+- Do NOT assign the literal to a variable.
+- Use double-quoted strings throughout.
+- Use 2-space indentation. One dict per line segment is fine, but the entire output must be a single parseable Python literal.
+- Start directly with `[` and end with `]`.

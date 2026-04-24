@@ -1,0 +1,42 @@
+[16:47:34] ==== measure_phaseT5 start tag=U1ext_B18tsBal_ON_repetitive_t40_kvq8_0_smlayer_ctx32768_ub256_eval pid=1342961 ====
+[16:47:34] wait /health
+[16:47:34] /health OK
+[16:47:35] numastat -p (pre)
+[16:47:36] snap_extras (pre)
+[16:47:41] Run 1: dmon start (background, 30s)
+[16:47:41] Run 1: eval request (prompt bytes=1459, marker=U1ext_B18tsBal_ON_repetitive_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r1_1776930461012063059)
+[16:48:13] Run 1: eval=13.868931231987995 prompt=38.04603389645975 prompt_n=506 predicted_n=256
+[16:48:13] Run 1: timings={"cache_n":0,"prompt_n":506,"prompt_ms":13299.678,"prompt_per_token_ms":26.28394861660079,"prompt_per_second":38.04603389645975,"predicted_n":256,"predicted_ms":18458.524,"predicted_per_token_ms":72.103609375,"predicted_per_second":13.868931231987995,"draft_n":1,"draft_n_accepted":1}
+[16:48:33] Run 1: status snapshot
+[16:48:36] cooldown 60s before run 2
+[16:49:36] Run 2: dmon start (background, 30s)
+[16:49:36] Run 2: eval request (prompt bytes=1459, marker=U1ext_B18tsBal_ON_repetitive_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r2_1776930576033393454)
+[16:50:10] Run 2: eval=12.438037559472402 prompt=37.98810777030978 prompt_n=506 predicted_n=256
+[16:50:10] Run 2: timings={"cache_n":0,"prompt_n":506,"prompt_ms":13319.958,"prompt_per_token_ms":26.32402766798419,"prompt_per_second":37.98810777030978,"predicted_n":256,"predicted_ms":20582.025,"predicted_per_token_ms":80.39853515625,"predicted_per_second":12.438037559472402,"draft_n":26,"draft_n_accepted":26}
+[16:50:28] Run 2: status snapshot
+[16:50:31] cooldown 60s before run 3
+[16:51:31] Run 3: dmon start (background, 30s)
+[16:51:31] Run 3: eval request (prompt bytes=1459, marker=U1ext_B18tsBal_ON_repetitive_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r3_1776930691015654077)
+[16:52:10] Run 3: eval=10.03247779550095 prompt=37.975275393920306 prompt_n=506 predicted_n=256
+[16:52:10] Run 3: timings={"cache_n":0,"prompt_n":506,"prompt_ms":13324.459,"prompt_per_token_ms":26.332922924901187,"prompt_per_second":37.975275393920306,"predicted_n":256,"predicted_ms":25517.126,"predicted_per_token_ms":99.6762734375,"predicted_per_second":10.03247779550095,"draft_n":32,"draft_n_accepted":32}
+[16:52:20] Run 3: status snapshot
+[16:52:22] cooldown 60s before run 4
+[16:53:22] Run 4: dmon start (background, 30s)
+[16:53:22] Run 4: eval request (prompt bytes=1459, marker=U1ext_B18tsBal_ON_repetitive_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r4_1776930802754555561)
+[17:12:17] Run 4: curl FAILED (timeout or error)
+[17:12:17] Run 4: eval=n/a prompt=n/a prompt_n=n/a predicted_n=n/a
+[17:12:17] Run 4: timings={}
+[17:12:17] Run 4: status snapshot
+[17:12:19] cooldown 60s before run 5
+[17:13:19] Run 5: dmon start (background, 30s)
+[17:13:19] Run 5: eval request (prompt bytes=1459, marker=U1ext_B18tsBal_ON_repetitive_t40_kvq8_0_smlayer_ctx32768_ub256_eval_r5_1776931999781923800)
+[17:13:19] Run 5: curl FAILED (timeout or error)
+[17:13:19] Run 5: eval=n/a prompt=n/a prompt_n=n/a predicted_n=n/a
+[17:13:19] Run 5: timings={}
+[17:14:24] Run 5: status snapshot
+[17:14:27] numastat -p (post)
+[17:14:28] snap_extras (post)
+[17:14:32] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=13.868931231987995 prompt=38.04603389645975 prompt_n=506 predicted_n=256
+run2: eval=12.438037559472402 prompt=37.98810777030978 prompt_n=506 predicted_n=256
+run3: eval=10.03247779550095 prompt=37.975275393920306 prompt_n=506 predicted_n=256

@@ -1,0 +1,23 @@
+[12:51:07] ==== measure_phaseT5 start tag=U1_B14b_ON_code_retry_t40_kvq8_0_smlayer_ctx32768_ub256_warmup pid=1305747 ====
+[12:51:07] wait /health
+[12:51:08] /health OK
+[12:51:09] numastat -p (pre)
+[12:51:10] snap_extras (pre)
+[12:51:14] Run 1: dmon start (background, 30s)
+[12:51:14] Run 1: eval request (prompt bytes=33, marker=U1_B14b_ON_code_retry_t40_kvq8_0_smlayer_ctx32768_ub256_warmup_r1_1776916274514837840)
+[12:51:31] Run 1: eval=19.122152760006376 prompt=24.636665181001103 prompt_n=77 predicted_n=256
+[12:51:31] Run 1: timings={"cache_n":0,"prompt_n":77,"prompt_ms":3125.423,"prompt_per_token_ms":40.58990909090909,"prompt_per_second":24.636665181001103,"predicted_n":256,"predicted_ms":13387.614,"predicted_per_token_ms":52.2953671875,"predicted_per_second":19.122152760006376}
+[12:52:09] Run 1: status snapshot
+[12:52:11] cooldown 60s before run 2
+[12:53:11] Run 2: dmon start (background, 30s)
+[12:53:11] Run 2: eval request (prompt bytes=33, marker=U1_B14b_ON_code_retry_t40_kvq8_0_smlayer_ctx32768_ub256_warmup_r2_1776916391350974727)
+[12:53:19] Run 2: curl FAILED (timeout or error)
+[12:53:19] Run 2: eval=n/a prompt=n/a prompt_n=n/a predicted_n=n/a
+[12:53:19] Run 2: timings={}
+[12:54:13] Run 2: status snapshot
+[12:54:16] numastat -p (post)
+[12:54:17] snap_extras (post)
+[12:54:21] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=19.122152760006376 prompt=24.636665181001103 prompt_n=77 predicted_n=256
+run2: eval=n/a prompt=n/a prompt_n=n/a predicted_n=n/a
+[12:54:21] ==== measure_phaseT5 end tag=U1_B14b_ON_code_retry_t40_kvq8_0_smlayer_ctx32768_ub256_warmup ====
