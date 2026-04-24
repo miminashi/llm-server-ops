@@ -45,37 +45,11 @@ ssh t120h-p100 "docker ps | grep chrome-novnc-cdp"
 
 ---
 
-## Discord通知
-
-レポート作成時や汎用的な通知をDiscordに送信してください。
-
-```bash
-# メッセージのみ送信
-.claude/skills/discord-notify/scripts/notify.sh "メッセージ"
-
-# レポートURL付きで送信
-.claude/skills/discord-notify/scripts/notify.sh "1行要約" "レポートパス"
-```
-
-**例**:
-```bash
-# 汎用通知
-.claude/skills/discord-notify/scripts/notify.sh "デプロイ完了しました"
-
-# レポート通知
-.claude/skills/discord-notify/scripts/notify.sh \
-  "P100で50回テスト、成功率92%を達成" \
-  "report/2026-01-02_1200_test_results.md"
-```
-
-詳細は `.claude/skills/discord-notify/SKILL.md` を参照してください。
-
----
-
 ## 重要な制約
 
 | 制約 | 説明 |
 |------|------|
 | GPUサーバ使用 | **必ず Skill `gpu-server` を使用**（ロック管理のため） |
 | スクリプト実行 | **プロジェクトルートからの相対パス**（`.claude/skills/...`）で実行すること。フルパス（`/home/ubuntu/projects/...`）は使用しない |
-| レポート作成 | plan mode でまとまった作業を行った場合は、完了時にレポートを作成すること。フォーマットは [REPORT.md](REPORT.md) に従う |
+| レポート作成 | plan mode で計画を立てた場合は、**必ず**対になるレポートを作成すること（ユーザから明示的に不要と指示された場合を除く）。フォーマットは [REPORT.md](REPORT.md) に従う |
+| sudo実行 | **Claudeはsudoを直接実行しない**。sudo権限が必要な操作が発生した場合は、コマンドをユーザに提示して実行を依頼すること（sshリモート先のsudoも同様） |
