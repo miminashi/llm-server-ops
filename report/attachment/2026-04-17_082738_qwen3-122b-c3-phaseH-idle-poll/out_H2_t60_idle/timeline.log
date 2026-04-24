@@ -1,0 +1,26 @@
+[10:51:39] ==== measure_phaseH start tag=H2_t60_idle pid=111205 ====
+[10:51:39] wait /health
+[10:51:40] /health OK
+[10:51:44] numastat -p (pre)
+[10:51:49] snap_extras (pre)
+[10:52:04] Run 1: dmon start (background, 20s)
+[10:52:04] Run 1: eval request
+[10:52:23] Run 1: eval done, predicted_per_second=14.345751897842106
+[10:52:40] Run 1: status snapshot
+[10:52:44] cooldown 60s before run 2
+[10:53:44] Run 2: dmon start (background, 20s)
+[10:53:44] Run 2: eval request
+[10:54:03] Run 2: eval done, predicted_per_second=14.342711356239501
+[10:54:19] Run 2: status snapshot
+[10:54:23] cooldown 60s before run 3
+[10:55:23] Run 3: dmon start (background, 20s)
+[10:55:23] Run 3: eval request
+[10:55:42] Run 3: eval done, predicted_per_second=14.336170887156975
+[10:55:58] Run 3: status snapshot
+[10:56:02] numastat -p (post)
+[10:56:06] snap_extras (post)
+[10:56:21] ==== summary (predicted_per_second / prompt_per_second) ====
+run1: eval=14.345751897842106 prompt=32.637430781448884
+run2: eval=14.342711356239501 prompt=32.76140415378203
+run3: eval=14.336170887156975 prompt=33.02764413814362
+[10:56:21] ==== measure_phaseH end tag=H2_t60_idle ====

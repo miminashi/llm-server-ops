@@ -1,0 +1,26 @@
+[08:29:11] ==== measure_phaseH start tag=G1e_idle88m pid=70510 ====
+[08:29:11] wait /health
+[08:29:12] /health OK
+[08:29:16] numastat -p (pre)
+[08:29:20] snap_extras (pre)
+[08:29:35] Run 1: dmon start (background, 20s)
+[08:29:35] Run 1: eval request
+[08:29:53] Run 1: eval done, predicted_per_second=14.87479950978239
+[08:30:10] Run 1: status snapshot
+[08:30:14] cooldown 60s before run 2
+[08:31:14] Run 2: dmon start (background, 20s)
+[08:31:14] Run 2: eval request
+[08:31:32] Run 2: eval done, predicted_per_second=14.875110662688506
+[08:31:50] Run 2: status snapshot
+[08:31:53] cooldown 60s before run 3
+[08:32:53] Run 3: dmon start (background, 20s)
+[08:32:53] Run 3: eval request
+[08:33:12] Run 3: eval done, predicted_per_second=14.86946094428628
+[08:33:31] Run 3: status snapshot
+[08:33:35] numastat -p (post)
+[08:33:39] snap_extras (post)
+[08:33:54] ==== summary (predicted_per_second / prompt_per_second) ====
+run1: eval=14.87479950978239 prompt=32.91747588794891
+run2: eval=14.875110662688506 prompt=32.93168870040579
+run3: eval=14.86946094428628 prompt=33.26391032049778
+[08:33:54] ==== measure_phaseH end tag=G1e_idle88m ====

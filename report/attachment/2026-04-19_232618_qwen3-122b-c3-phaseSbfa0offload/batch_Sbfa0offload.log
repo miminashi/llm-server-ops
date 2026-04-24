@@ -1,0 +1,75 @@
+[batchSbfa0offload] start at 2026-04-19 23:29:56, TIMEBOX=2400s
+[batchSbfa0offload] === Stage 1: pilot escalation ===
+[batchSbfa0offload] [escalation] trying OT_TAG=X1
+[batchSbfa0offload] -- run: ctx=32768 ub=1584 OT_TAG=X1 max_iter=75 at 23:29:56
+[batchSbfa0offload] FAIL: X1_ctx32768_ub1584 not healthy
+[batchSbfa0offload] [escalation] X1 FAILED, escalating
+[batchSbfa0offload] [escalation] trying OT_TAG=X2
+[batchSbfa0offload] -- run: ctx=32768 ub=1584 OT_TAG=X2 max_iter=75 at 23:30:31
+[batchSbfa0offload] FAIL: X2_ctx32768_ub1584 not healthy
+[batchSbfa0offload] [escalation] X2 FAILED, escalating
+[batchSbfa0offload] [escalation] trying OT_TAG=X3
+[batchSbfa0offload] -- run: ctx=32768 ub=1584 OT_TAG=X3 max_iter=75 at 23:31:06
+[batchSbfa0offload] FAIL: X3_ctx32768_ub1584 not healthy
+[batchSbfa0offload] [escalation] X3 FAILED, escalating
+[batchSbfa0offload] [escalation] trying OT_TAG=X4
+[batchSbfa0offload] -- run: ctx=32768 ub=1584 OT_TAG=X4 max_iter=75 at 23:31:37
+[batchSbfa0offload] /health OK after 4*5s (X4_ctx32768_ub1584)
+[batchSbfa0offload] OK (X4_ctx32768_ub1584): sched_reserve:      CUDA0 compute buffer size =  6838.70 MiB
+[batchSbfa0offload] [escalation] X4 SUCCESS, adopting as FINAL_OT_TAG
+[batchSbfa0offload] FINAL_OT_TAG=X4 STAGE2_CTX=32768 (remaining: 2258s)
+[batchSbfa0offload] === Stage 2: main scan (ctx=32768) ===
+[batchSbfa0offload] -- run: ctx=32768 ub=1585 OT_TAG=X4 max_iter=75 at 23:32:18
+[batchSbfa0offload] /health OK after 4*5s (X4_ctx32768_ub1585)
+[batchSbfa0offload] OK (X4_ctx32768_ub1585): sched_reserve:      CUDA0 compute buffer size =  6842.98 MiB
+[batchSbfa0offload] -- run: ctx=32768 ub=1586 OT_TAG=X4 max_iter=75 at 23:33:00
+[batchSbfa0offload] /health OK after 4*5s (X4_ctx32768_ub1586)
+[batchSbfa0offload] OK (X4_ctx32768_ub1586): sched_reserve:      CUDA0 compute buffer size =  6847.27 MiB
+[batchSbfa0offload] Stage 2 done: 3/3 conditions OK (remaining: 2175s)
+[batchSbfa0offload] === Stage 3: extended (ctx=65k, 131k) ===
+[batchSbfa0offload] -- run: ctx=65536 ub=1584 OT_TAG=X4 max_iter=90 at 23:33:41
+[batchSbfa0offload] FAIL: X4_ctx65536_ub1584 not healthy
+[batchSbfa0offload] -- run: ctx=65536 ub=1585 OT_TAG=X4 max_iter=90 at 23:34:12
+[batchSbfa0offload] FAIL: X4_ctx65536_ub1585 not healthy
+[batchSbfa0offload] -- run: ctx=65536 ub=1586 OT_TAG=X4 max_iter=90 at 23:34:44
+[batchSbfa0offload] FAIL: X4_ctx65536_ub1586 not healthy
+[batchSbfa0offload] -- run: ctx=131072 ub=1584 OT_TAG=X4 max_iter=120 at 23:35:14
+[batchSbfa0offload] FAIL: X4_ctx131072_ub1584 not healthy
+[batchSbfa0offload] -- run: ctx=131072 ub=1585 OT_TAG=X4 max_iter=120 at 23:35:46
+[batchSbfa0offload] FAIL: X4_ctx131072_ub1585 not healthy
+[batchSbfa0offload] -- run: ctx=131072 ub=1586 OT_TAG=X4 max_iter=120 at 23:36:16
+[batchSbfa0offload] FAIL: X4_ctx131072_ub1586 not healthy
+[batchSbfa0offload] Stage 3 done (remaining: 1988s)
+[batchSbfa0offload] === Stage 4: baseline comparison (ctx=16k × X4) ===
+[batchSbfa0offload] -- run: ctx=16384 ub=1584 OT_TAG=X4 max_iter=60 at 23:36:48
+[batchSbfa0offload] /health OK after 4*5s (X4_ctx16384_ub1584)
+[batchSbfa0offload] OK (X4_ctx16384_ub1584): sched_reserve:      CUDA0 compute buffer size =  3571.70 MiB
+[batchSbfa0offload] -- run: ctx=16384 ub=1585 OT_TAG=X4 max_iter=60 at 23:37:29
+[batchSbfa0offload] /health OK after 4*5s (X4_ctx16384_ub1585)
+[batchSbfa0offload] OK (X4_ctx16384_ub1585): sched_reserve:      CUDA0 compute buffer size =  3573.92 MiB
+[batchSbfa0offload] -- run: ctx=16384 ub=1586 OT_TAG=X4 max_iter=60 at 23:38:10
+[batchSbfa0offload] /health OK after 4*5s (X4_ctx16384_ub1586)
+[batchSbfa0offload] OK (X4_ctx16384_ub1586): sched_reserve:      CUDA0 compute buffer size =  3576.14 MiB
+[batchSbfa0offload] end at 2026-04-19 23:38:51
+[batchSbfa0offload] failures recorded in batch_Sbfa0offload_failures.tsv:
+X1_ctx32768_ub1584	fail_timeout_or_oom
+X2_ctx32768_ub1584	fail_timeout_or_oom
+X3_ctx32768_ub1584	fail_timeout_or_oom
+X4_ctx65536_ub1584	fail_timeout_or_oom
+X4_ctx65536_ub1585	fail_timeout_or_oom
+X4_ctx65536_ub1586	fail_timeout_or_oom
+X4_ctx131072_ub1584	fail_timeout_or_oom
+X4_ctx131072_ub1585	fail_timeout_or_oom
+X4_ctx131072_ub1586	fail_timeout_or_oom
+[batchSbfa0offload] OOM alloc size records:
+tag	ctx	ub	ot_tag	device	alloc_MiB
+X1_ctx32768_ub1584	32768	1584	X1	1	6744.41
+X2_ctx32768_ub1584	32768	1584	X2	2	6725.85
+X3_ctx32768_ub1584	32768	1584	X3	2	6725.85
+X4_ctx65536_ub1584	65536	1584	X4	1	13247.45
+X4_ctx65536_ub1585	65536	1585	X4	1	13255.81
+X4_ctx65536_ub1586	65536	1586	X4	1	13264.18
+X4_ctx131072_ub1584	131072	1584	X4	0	26440.70
+X4_ctx131072_ub1585	131072	1585	X4	0	26457.36
+X4_ctx131072_ub1586	131072	1586	X4	0	26474.02
+[batchSbfa0offload] wrote summary_state.txt

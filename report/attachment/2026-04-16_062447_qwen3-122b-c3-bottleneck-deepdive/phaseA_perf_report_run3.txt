@@ -1,0 +1,200 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 100K of event 'cycles'
+# Event count (approx.): 1661314358280
+#
+# Overhead  Command          Shared Object           Symbol                                                                      
+# ........  ...............  ......................  ............................................................................
+#
+    41.22%  llama-server     libgomp.so.1.0.0        [.] 0x0000000000020600
+            |
+            ---0x7f00b4c0a602
+               |          
+                --41.20%--0
+
+    24.04%  llama-server     libggml-cpu.so.0.9.11   [.] ggml_vec_dot_q4_K_q8_K
+            |          
+             --24.04%--ggml_vec_dot_q4_K_q8_K
+                       |          
+                        --24.03%--ggml_graph_compute_thread.isra.0
+                                  |          
+                                   --4.50%--0
+
+    16.94%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000207b8
+            |
+            ---0x7f00b4c0a7ba
+               |          
+                --16.94%--0
+
+     8.58%  llama-server     libggml-cpu.so.0.9.11   [.] ggml_vec_dot_q5_K_q8_K
+            |          
+             --8.58%--ggml_vec_dot_q5_K_q8_K
+                       |          
+                        --8.57%--ggml_graph_compute_thread.isra.0
+
+     2.07%  llama-server     libgomp.so.1.0.0        [.] 0x0000000000020602
+            |          
+             --2.07%--0x7f00b4c0a606
+                       0
+
+     1.09%  llama-server     libggml-cpu.so.0.9.11   [.] ggml_graph_compute_thread.isra.0
+            |          
+             --1.08%--ggml_graph_compute_thread.isra.0
+
+     0.98%  llama-server     libgomp.so.1.0.0        [.] 0x000000000002060b
+            |
+            ---0x7f00b4c0a60d
+               0
+
+     0.79%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000207ba
+            |
+            ---0x7f00b4c0a7be
+               0
+
+     0.65%  swapper          [unknown]               [k] 0xffffffff821458df
+            |
+            ---0xffffffff821458e8
+               0xffffffff824a77d7
+               0xffffffff824a7dae
+               0xffffffff81b11052
+               0xffffffff81b11173
+               0xffffffff81b113a0
+               |          
+                --0.65%--0xffffffff81a84c8a
+                          0xffffffff81a00107
+
+     0.61%  llama-server     libgomp.so.1.0.0        [.] 0x0000000000020606
+            |
+            ---0x7f00b4c0a60b
+               0
+
+     0.54%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000207c3
+            |
+            ---0x7f00b4c0a7c6
+               0
+
+     0.31%  llama-server     libgomp.so.1.0.0        [.] 0x000000000002060f
+     0.29%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000208ea
+     0.27%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000207be
+     0.14%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000207c8
+     0.11%  llama-server     libggml-cpu.so.0.9.11   [.] ggml_graph_compute._omp_fn.0
+     0.08%  llama-server     libgomp.so.1.0.0        [.] GOMP_single_start
+     0.07%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000206ba
+     0.06%  llama-server     libgomp.so.1.0.0        [.] 0x000000000002091a
+     0.05%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf4c
+     0.04%  llama-server     libggml-base.so.0.9.11  [.] quantize_row_q8_K_ref
+     0.03%  llama-server     libcuda.so.575.51.03    [.] 0x000000000028064f
+     0.03%  llama-server     [unknown]               [.] 0000000000000000
+     0.03%  swapper          [unknown]               [.] 0000000000000000
+     0.02%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000206b4
+     0.02%  llama-server     libggml-base.so.0.9.11  [.] ggml_row_size
+     0.02%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf51
+     0.02%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000208e4
+     0.02%  llama-server     libggml-cpu.so.0.9.11   [.] ggml_vec_swiglu_f32
+     0.01%  llama-server     libgomp.so.1.0.0        [.] 0x000000000001dbe8
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf0f
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf0b
+     0.01%  swapper          [unknown]               [k] 0xffffffff81a9cf44
+     0.01%  llama-server     llama-server            [.] common_sampler_sample
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf54
+     0.01%  llama-server     [unknown]               [k] 0xffffffff82801206
+     0.01%  llama-server     [unknown]               [k] 0xffffffff82801210
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf78
+     0.01%  llama-server     libc.so.6               [.] 0x00000000001afafa
+     0.01%  llama-server     libggml-base.so.0.9.11  [.] ggml_can_fuse_subgraph_ext
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf4e
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf3b
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf70
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf14
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x0000000000442fec
+     0.01%  llama-server     libc.so.6               [.] pthread_mutex_unlock
+     0.01%  llama-server     libc.so.6               [.] 0x00000000001aeea5
+     0.01%  llama-server     [unknown]               [k] 0xffffffff827d4dce
+     0.01%  llama-server     [unknown]               [k] 0xffffffff82801189
+     0.01%  llama-server     [unknown]               [k] 0xffffffff82801247
+     0.01%  llama-server     libggml-base.so.0.9.11  [.] ggml_is_empty
+     0.01%  llama-server     libggml-base.so.0.9.11  [.] ggml_type_size
+     0.01%  llama-server     libc.so.6               [.] pthread_mutex_lock
+     0.01%  llama-server     libgomp.so.1.0.0        [.] 0x000000000001dc1a
+     0.01%  llama-server     [unknown]               [k] 0xffffffff81b7cd45
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf61
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000002746bd
+     0.01%  llama-server     libggml-cuda.so.0.9.11  [.] ggml_cuda_graph_evaluate_and_capture
+     0.01%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf48
+     0.01%  llama-server     [vdso]                  [.] 0x00000000000006e5
+     0.01%  swapper          [unknown]               [k] 0xffffffff82145892
+     0.00%  swapper          [unknown]               [k] 0xffffffff824a7819
+     0.00%  swapper          [unknown]               [k] 0xffffffff827e6ef9
+     0.00%  llama-server     [unknown]               [k] 0xffffffff828015af
+     0.00%  llama-server     libgomp.so.1.0.0        [.] GOMP_barrier
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81a9cda8
+     0.00%  llama-server     libggml-base.so.0.9.11  [.] ggml_is_contiguous_1
+     0.00%  swapper          [unknown]               [k] 0xffffffff81b1890c
+     0.00%  llama-server     [unknown]               [k] 0xffffffff8280021e
+     0.00%  llama-server     [unknown]               [k] 0xffffffff828001a7
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000002eb483
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x0000000000414b4d
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bd017
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x000000000035d761
+     0.00%  llama-server     libc.so.6               [.] pthread_rwlock_unlock
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf1b
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81a90339
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81d852ba
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81d84030
+     0.00%  :1796            [unknown]               [.] 0x00005578866acd80
+     0.00%  llama-server     libggml-base.so.0.9.11  [.] ggml_get_glu_op
+     0.00%  llama-server     [unknown]               [k] 0xffffffff8280009d
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x000000000044318d
+     0.00%  llama-server     [unknown]               [k] 0xffffffff828000a0
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b10518
+     0.00%  llama-server     [unknown]               [k] 0xffffffff827e704c
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b7d18d
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81ca6c06
+     0.00%  llama-server     libggml-cpu.so.0.9.11   [.] ggml_is_numa
+     0.00%  llama-server     libggml-cpu.so.0.9.11   [.] 0x0000000000015a54
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81a51351
+     0.00%  llama-server     libggml-base.so.0.9.11  [.] 0x0000000000018a84
+     0.00%  llama-server     libggml-cpu.so.0.9.11   [.] ggml_cpu_extra_compute_forward
+     0.00%  llama-server     libggml-base.so.0.9.11  [.] ggml_is_contiguous_0
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b0fea5
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b171c7
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b40bf2
+     0.00%  llama-server     libgomp.so.1.0.0        [.] 0x00000000000207ca
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b1890c
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf2b
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b92008
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b1a235
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000002746a0
+     0.00%  llama-server     libggml-cuda.so.0.9.11  [.] ggml_cuda_can_fuse
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bd014
+     0.00%  llama-server     libggml-base.so.0.9.11  [.] ggml_blck_size
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81a9cdbe
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x000000000027793b
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000002746c3
+     0.00%  llama-server     libggml-cuda.so.0.9.11  [.] launch_bin_bcast_pack<&(op_add(float, float)), float, float, float, 0ul>
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcef4
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004430c7
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf5d
+     0.00%  llama-server     libc.so.6               [.] clock_gettime
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf84
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x0000000000276230
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcef8
+     0.00%  llama-server     libcudart.so.12.9.37    [.] 0x000000000004be30
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000002746ce
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b3511f
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000004bcf04
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x00000000002746ae
+     0.00%  llama-server     libc.so.6               [.] 0x00000000000a407d
+     0.00%  swapper          [unknown]               [k] 0xffffffff82801247
+     0.00%  swapper          [unknown]               [k] 0xffffffff824a882f
+     0.00%  swapper          [unknown]               [k] 0xffffffff827e704c
+     0.00%  swapper          [unknown]               [k] 0xffffffff81ca6bfd
+     0.00%  swapper          [unknown]               [k] 0xffffffff81b80123
+     0.00%  perf             [unknown]               [k] 0xffffffff8280010d
+     0.00%  swapper          [unknown]               [k] 0xffffffff821458ca
+     0.00%  llama-server     [unknown]               [k] 0xffffffff81b420a4
+     0.00%  swapper          [unknown]               [k] 0xffffffff81a4dc40
+     0.00%  llama-server     libcuda.so.575.51.03    [.] 0x000000000029982e

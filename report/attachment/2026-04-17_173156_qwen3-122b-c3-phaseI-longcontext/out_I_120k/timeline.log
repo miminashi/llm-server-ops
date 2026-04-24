@@ -1,0 +1,14 @@
+[18:42:31] ==== measure_phaseI start tag=I_120k pid=123590 ====
+[18:42:31] wait /health
+[18:42:31] /health OK
+[18:42:35] numastat -p (pre)
+[18:42:39] snap_extras (pre)
+[18:42:54] Run 1: dmon start (background, 30s)
+[18:42:55] Run 1: eval request (prompt bytes=735000, marker=I_120k_r1_1776418974918024741)
+[19:02:36] Run 1: eval=7.995956544724789 prompt=105.31636858710318 prompt_n=120243 predicted_n=256
+[19:02:36] Run 1: status snapshot
+[19:02:44] numastat -p (post)
+[19:02:48] snap_extras (post)
+[19:03:03] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=7.995956544724789 prompt=105.31636858710318 prompt_n=120243 predicted_n=256
+[19:03:03] ==== measure_phaseI end tag=I_120k ====

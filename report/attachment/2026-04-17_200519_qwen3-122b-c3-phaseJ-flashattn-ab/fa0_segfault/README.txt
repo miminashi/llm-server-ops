@@ -1,0 +1,1 @@
+fa0 launch attempted at 2026-04-17 20:34:32, resulted in Segmentation fault (core dumped) during model init phase. Likely cause: --cache-type-k q8_0 --cache-type-v q8_0 is only supported with --flash-attn 1 on CUDA (P100 CC 6.0).

@@ -1,0 +1,20 @@
+[18:23:36] ==== measure_phaseI start tag=I_32k pid=123590 ====
+[18:23:36] wait /health
+[18:23:36] /health OK
+[18:23:40] numastat -p (pre)
+[18:23:45] snap_extras (pre)
+[18:24:00] Run 1: dmon start (background, 30s)
+[18:24:00] Run 1: eval request (prompt bytes=196000, marker=I_32k_r1_1776417840499572396)
+[18:27:55] Run 1: eval=12.563822747232965 prompt=151.63818747730932 prompt_n=32101 predicted_n=256
+[18:27:55] Run 1: status snapshot
+[18:28:02] cooldown 60s before run 2
+[18:29:02] Run 2: dmon start (background, 30s)
+[18:29:02] Run 2: eval request (prompt bytes=196000, marker=I_32k_r2_1776418142902711577)
+[18:32:47] Run 2: eval=12.553633067995625 prompt=159.3179514178069 prompt_n=32101 predicted_n=256
+[18:32:47] Run 2: status snapshot
+[18:32:55] numastat -p (post)
+[18:32:59] snap_extras (post)
+[18:33:14] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=12.563822747232965 prompt=151.63818747730932 prompt_n=32101 predicted_n=256
+run2: eval=12.553633067995625 prompt=159.3179514178069 prompt_n=32101 predicted_n=256
+[18:33:14] ==== measure_phaseI end tag=I_32k ====

@@ -1,0 +1,27 @@
+# Phase Sb-fa0-offload 候補 L (FA tile 量子化副作用) 判定結果
+
+candidate_L_status: support
+FINAL_OT_TAG: X4
+STAGE2_CTX: 32768
+delta_fa1_reference_ctx32k_ub1586: +0.2400 MiB
+delta_fa0_measured_ctx32768: +0.0100 MiB
+cond_L_1 |delta_fa0| <= 0.1: True
+cond_L_2 |delta_fa0 - 0.24| <= 0.05: False
+cond_L_3 slope_fa0(stage2)/slope_fa0(16k) ratio: 1.932
+
+## fa=1 (Sbctx) vs fa=0 (Sbfa0 既存) vs fa=0-offload (本 Phase) slope 対比
+     ctx    OT    fa1_d_pre   fa1_d_step    fa0_d_pre   fa0_d_step    delta_of_delta
+   16384    X4      +0.0100      +0.0100      +2.2200      +2.2200           -0.0000
+   32768    X4        NA         +0.2400      +4.2800      +4.2900           +0.0100
+
+## Phase Sb-fa0 既存値 (現 OT = MoE のみ, fa=0 × ctx=16k) との baseline 比較
+  Sb-fa0 original: delta_1584_1585=+2.1200, delta_1585_1586=+2.1200 (ctx=16k)
+  Sb-fa0-offload (OT=X4): delta_1584_1585=+2.2200 (Δ vs Sbfa0=+0.1000), delta_1585_1586=+2.2200 (Δ vs Sbfa0=+0.1000)
+  -> OT 拡張が slope に 0.1 MiB/ub 以上の影響: 補正必要
+
+## 解釈ガイド
+- support (cond1 True & cond2 False): δ 項は fa=1 固有 = FA tile 量子化副作用。次 Phase は tensor-dump で確定
+- reject (cond1 False & cond2 True): δ 項は fa 共通 = FA 無関係。新候補 M の設計要 (例: KV-cache 参照 pattern)
+- ambiguous: cond 両立 (数値精度不足、ctx 選択ミス等)
+- partial: cond いずれも不成立 (δ_fa0 が 0 でも 0.24 でもない中間値) → FA 以外の混合要因
+- not_conclusive: Stage 2 の stage2_ctx で slope を取れず (fa=0 全 OT 案 OOM)

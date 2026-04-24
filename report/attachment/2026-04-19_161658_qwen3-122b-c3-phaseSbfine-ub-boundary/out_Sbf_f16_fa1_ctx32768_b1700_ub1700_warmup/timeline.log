@@ -1,0 +1,26 @@
+[16:39:08] ==== measure_phaseI start tag=Sbf_f16_fa1_ctx32768_b1700_ub1700_warmup pid=248088 ====
+[16:39:08] wait /health
+[16:39:08] /health OK
+[16:39:09] numastat -p (pre)
+[16:39:10] snap_extras (pre)
+[16:39:15] Run 1: dmon start (background, 30s)
+[16:39:15] Run 1: eval request (prompt bytes=33, marker=Sbf_f16_fa1_ctx32768_b1700_ub1700_warmup_r1_1776584355217669919)
+[16:39:39] Run 1: eval=14.782356080049462 prompt=10.753783373022474 prompt_n=70 predicted_n=256
+[16:40:07] Run 1: status snapshot
+[16:40:09] cooldown 60s before run 2
+[16:41:09] Run 2: dmon start (background, 30s)
+[16:41:09] Run 2: eval request (prompt bytes=33, marker=Sbf_f16_fa1_ctx32768_b1700_ub1700_warmup_r2_1776584469571390164)
+[16:41:33] Run 2: eval=14.777923029880615 prompt=10.936831827930513 prompt_n=70 predicted_n=256
+[16:42:01] Run 2: status snapshot
+[16:42:03] cooldown 60s before run 3
+[16:43:03] Run 3: dmon start (background, 30s)
+[16:43:03] Run 3: eval request (prompt bytes=33, marker=Sbf_f16_fa1_ctx32768_b1700_ub1700_warmup_r3_1776584583125842866)
+[16:43:27] Run 3: eval=14.77182947492378 prompt=10.980288812968034 prompt_n=70 predicted_n=256
+[16:43:56] Run 3: status snapshot
+[16:43:58] numastat -p (post)
+[16:44:00] snap_extras (post)
+[16:44:05] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=14.782356080049462 prompt=10.753783373022474 prompt_n=70 predicted_n=256
+run2: eval=14.777923029880615 prompt=10.936831827930513 prompt_n=70 predicted_n=256
+run3: eval=14.77182947492378 prompt=10.980288812968034 prompt_n=70 predicted_n=256
+[16:44:05] ==== measure_phaseI end tag=Sbf_f16_fa1_ctx32768_b1700_ub1700_warmup ====

@@ -1,0 +1,86 @@
+=== Phase Sb-alloc Step 5: runtime log の VMM/非VMM 判定 ===
+
+ソース: report/attachment/2026-04-19_181540_qwen3-122b-c3-phaseSbfine3-ub1tok/startup_logs/
+
+1. VMM 状態
+---------------
+fa1_ctx32768_b1586_ub1586.log:2-5
+    Device 0: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16269 MiB
+    Device 1: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16269 MiB
+    Device 2: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16269 MiB
+    Device 3: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16269 MiB
+
+=> 全 4 GPU で VMM 有効 ⇒ ggml-cuda.cu:L504-509 の granularity-based 量子化 path 使用
+   cuMemGetAllocationGranularity() は P100 CC 6.0 で通常 2 MiB を返す
+
+2. graph 不変性 (ub=1585/1586/1588/1592 で比較)
+---------------
+ub=1585: graph nodes = 4473, graph splits = 136 (bs=1585), 77 (bs=1)
+ub=1586: graph nodes = 4473, graph splits = 136 (bs=1586), 77 (bs=1)
+ub=1588: graph nodes = 4473, graph splits = 136 (bs=1588), 77 (bs=1)
+ub=1592: graph nodes = 4473, graph splits = 136 (bs=1592), 77 (bs=1)
+
+=> graph nodes / splits は ub に不変
+⇒ **候補 H (graph splits 境界) 棄却**
+⇒ step の原因は splits 数ではなく、**既存 node の tensor shape / sched 配置の微差**
+
+3. compute buffer size の ub 依存
+---------------
+                CUDA0       CUDA1       CUDA2       CUDA3     CUDA_Host
+ub=1585 :     980.12 MiB   452.02 MiB  452.02 MiB  1557.14 MiB  235.33 MiB
+ub=1586 :     980.36 MiB   452.31 MiB  452.31 MiB  1558.12 MiB  235.48 MiB
+ub=1588 :     980.93 MiB   452.88 MiB  452.88 MiB  1560.09 MiB  235.78 MiB
+ub=1592 :     982.07 MiB   454.02 MiB  454.02 MiB  1564.02 MiB  236.37 MiB
+
+CUDA0 の 1 tok 差分:
+  1585→1586: +0.24 MiB  (step 境界)
+  1586→1588: +0.57 MiB (= 0.285 × 2 tok)
+  1588→1592: +1.14 MiB (= 0.285 × 4 tok)
+
+CUDA3 の 1 tok 差分:
+  1585→1586: +0.98 MiB
+  1586→1588: +1.97 MiB (= 0.985 × 2 tok)
+  1588→1592: +3.93 MiB (= 0.983 × 2 tok)
+
+=> CUDA3 は 0.98 MiB/tok で純比例 (step なし、Phase Sb-src の既定値と整合)
+=> CUDA0 のみ 1585→1586 の 1 token で slope が 0→0.285 に切り替わる
+
+4. VMM granularity 2 MiB 仮説の再検証
+---------------
+2 MiB / 0.28125 MiB/tok = 7.11 tokens/block
+=> 7 token ごとに 1 block 境界を跨ぐべき
+   (例: 1579, 1586, 1593, 1600, ...)
+   Phase Sb-fine3 で計測された ub=1586, 1588, 1592 の CUDA0 値は
+   平均 0.285 MiB/tok で線形に増加 ⇒ 7 token 周期の 2 MiB step は**観測されない**
+
+⇒ **VMM 単独での block 境界跨ぎ仮説** も単純形では**棄却**
+
+5. 残る仮説の方向性
+---------------
+(i) VMM 2 MiB block + 9 層の配置が「ずれて」累積すると、
+    9 層 × 0.03 MiB/tok = 0.28 MiB/tok として線形に見える
+    (= 9 層が同期せず、個々の層が独立に 2 MiB 境界を跨ぐタイミングが分散)
+
+(ii) ggml-alloc.c:303 の chunk->max_size 更新機構:
+    各 tensor が chunk 内の異なる offset に配置され、max_size が
+    最末尾 tensor の end で決定される。9 SSM 出力の末尾位置は
+    線形に伸びる (step しない)。
+    ⇒ max_size 増加は常に線形 ⇒ step は graph node の新規追加/削除で発生すべき
+
+(iii) 但し graph nodes = 4473 固定確認済 ⇒ node 追加削除ではない
+
+(iv) 残る可能性:
+    - sched が ub=1586 で tensor を CUDA0 から他 GPU へ割り振る境界がある
+      (ggml_backend_sched_split で backend assignment が変わる)
+    - build_graph 内で n_tokens に応じた tensor の reshape 違いが発生
+      (例: GQA batching/unbatching の閾値)
+    - fused_gdn_ch (chunked) path に n_tokens ≥ 閾値 で切り替わる
+      (llama-context.cpp:513 の n_tokens_ch=16*n_seqs=16 から推測、実体は要確認)
+
+6. 結論
+---------------
+- VMM 有効確認 ⇒ 量子化単位は device granularity (通常 2 MiB)
+- graph node/splits は ub 不変 ⇒ step は tensor 量の微差に由来
+- allocator 側の簡単な量子化では step を説明できない
+- 真因は **build_graph 内の ub 依存離散処理 + VMM granularity の相互作用** の可能性が高い
+- 次 Phase では **debug ビルドでの backend_sched_reserve_size per-node dump** が必要

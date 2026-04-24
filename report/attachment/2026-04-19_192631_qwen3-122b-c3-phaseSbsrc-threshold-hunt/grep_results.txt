@@ -1,0 +1,139 @@
+=== 1. qwen35moe build graph (src/models/qwen35moe.cpp) ===
+35:        if (hparams.is_recurrent(il)) {
+37:            cur = build_layer_attn_linear(inp->get_recr(), cur, il);
+40:            cur = build_layer_attn(inp->get_attn(), cur, inp_pos, sections, il);
+117:ggml_tensor * llm_build_qwen35moe ::build_layer_attn(
+198:ggml_tensor * llm_build_qwen35moe ::build_layer_attn_linear(
+204:    const int64_t d_inner      = hparams.ssm_d_inner;
+206:    const int64_t head_k_dim   = hparams.ssm_d_state;
+207:    const int64_t num_k_heads  = hparams.ssm_n_group;
+208:    const int64_t num_v_heads  = hparams.ssm_dt_rank;
+209:    const int64_t head_v_dim   = d_inner / num_v_heads;
+224:    beta = ggml_reshape_4d(ctx0, beta, 1, num_v_heads, n_seq_tokens, n_seqs);
+231:    alpha = ggml_reshape_3d(ctx0, alpha, num_v_heads, n_seq_tokens, n_seqs);
+241:    gate = ggml_reshape_4d(ctx0, gate, 1, num_v_heads, n_seq_tokens, n_seqs);
+280:    state = ggml_reshape_4d(ctx0, state, head_v_dim, head_v_dim, num_v_heads, n_seqs);
+292:    int64_t qkv_dim = head_k_dim * num_k_heads * 2 + head_v_dim * num_v_heads;
+296:    ggml_tensor * q_conv = ggml_view_4d(ctx0, conv_qkv_mix, head_k_dim, num_k_heads, n_seq_tokens, n_seqs,
+297:            ggml_row_size(conv_qkv_mix->type, head_k_dim),
+302:    ggml_tensor * k_conv = ggml_view_4d(ctx0, conv_qkv_mix, head_k_dim, num_k_heads, n_seq_tokens, n_seqs,
+303:            ggml_row_size(conv_qkv_mix->type, head_k_dim),
+306:            head_k_dim * num_k_heads * ggml_element_size(conv_qkv_mix));
+
+=== 2. delta-net-base CS 定義と chunking (src/models/delta-net-base.cpp) ===
+13:llm_build_delta_net_base::llm_build_delta_net_base(const llm_graph_params & params) : llm_graph_context(params) {}
+15:std::pair<ggml_tensor *, ggml_tensor *> llm_build_delta_net_base::build_delta_net_chunking(
+30:    const bool kda = (g->ne[0] == S_k && g->ne[1] == H_k);
+60:    const int CS = kda ? 16 : 64; // chunk size
+63:    const int n_chunks = (n_tokens + pad) / CS;
+77:    q   = ggml_reshape_4d(ctx0, q,   S_k, CS, n_chunks, H_k * n_seqs);
+78:    k   = ggml_reshape_4d(ctx0, k,   S_k, CS, n_chunks, H_k * n_seqs);
+79:    k_b = ggml_reshape_4d(ctx0, k_b, S_k, CS, n_chunks, H_v * n_seqs);
+80:    v   = ggml_reshape_4d(ctx0, v,   S_v, CS, n_chunks, H_v * n_seqs);
+81:    v_b = ggml_reshape_4d(ctx0, v_b, S_v, CS, n_chunks, H_v * n_seqs);
+83:    g = ggml_reshape_4d(ctx0, g, g->ne[0], CS, n_chunks, H_v * n_seqs);
+84:    b = ggml_reshape_4d(ctx0, b, 1,        CS, n_chunks, H_v * n_seqs);
+86:    // [CS, g_0, n_chunks, H_v * n_seqs]
+93:    if (kda) {
+94:        const int64_t CHB = n_chunks * H_k * n_seqs;
+122:        kb = ggml_cont(ctx0, ggml_transpose(ctx0, ggml_reshape_4d(ctx0, kb, CS, CS, n_chunks, H_v * n_seqs)));
+123:        kq = ggml_cont(ctx0, ggml_transpose(ctx0, ggml_reshape_4d(ctx0, kq, CS, CS, n_chunks, H_v * n_seqs)));
+126:        ggml_tensor * g_cs_j = ggml_reshape_4d(ctx0, g_cs, 1, CS, n_chunks, H_v * n_seqs);
+128:        g_cs_j = ggml_repeat_4d(ctx0, g_cs_j, CS, CS, n_chunks, H_v * n_seqs);
+130:        // [CS, CS, n_chunks, H_v * n_seqs]
+
+=== 3. ggml_gated_delta_net 出力テンソル shape (ggml/src/ggml.c) ===
+
+// ggml_gated_delta_net
+
+struct ggml_tensor * ggml_gated_delta_net(
+        struct ggml_context * ctx,
+        struct ggml_tensor  * q,
+        struct ggml_tensor  * k,
+        struct ggml_tensor  * v,
+        struct ggml_tensor  * g,
+
+=== 4. gated_delta_net CUDA kernel 出力 (ggml/src/ggml-cuda/gated_delta_net.cu) ===
+3:template <int S_v, bool KDA>
+4:__global__ void __launch_bounds__((ggml_cuda_get_physical_warp_size() < S_v ? ggml_cuda_get_physical_warp_size() : S_v) * 4, 2)
+13:                                     int64_t       n_tokens,
+36:    const int64_t attn_score_elems = S_v * H * n_tokens * n_seqs;
+38:    float *       state            = dst + attn_score_elems;
+40:    const int64_t state_offset = (sequence * H + h_idx) * S_v * S_v;
+42:    curr_state += state_offset + col * S_v;
+43:    attn_data += (sequence * n_tokens * H + h_idx) * S_v;
+45:    constexpr int warp_size = ggml_cuda_get_physical_warp_size() < S_v ? ggml_cuda_get_physical_warp_size() : S_v;
+46:    static_assert(S_v % warp_size == 0, "S_v must be a multiple of warp_size");
+47:    constexpr int rows_per_lane = (S_v + warp_size - 1) / warp_size;
+57:    for (int t = 0; t < n_tokens; t++) {
+64:        const float * g_t    = g    + gb_offset * (KDA ? S_v : 1);
+137:        attn_data += S_v * H;
+144:        state[col * S_v + i] = s_shard[r];
+
+=== 5. cparams.fused_gdn defaults (src/llama-context.cpp) ===
+156:    cparams.fused_gdn_ar = true;
+157:    cparams.fused_gdn_ch = true;
+158:    cparams.auto_fgdn    = true;
+469:    if (cparams.auto_fgdn) {
+472:        if (cparams.fused_gdn_ar) {
+500:                cparams.fused_gdn_ar = false;
+507:        if (cparams.fused_gdn_ch) {
+541:                cparams.fused_gdn_ch = false;
+548:        cparams.auto_fgdn = false;
+
+=== 6. runtime ログでの fused GDN 有効化確認 ===
+sched_reserve: resolving fused Gated Delta Net support:
+sched_reserve: fused Gated Delta Net (autoregressive) enabled
+sched_reserve: fused Gated Delta Net (chunked) enabled
+sched_reserve:      CUDA0 compute buffer size =   980.36 MiB
+
+=== 7. FA tile dispatch for head_dim=256 on P100 (CC 6.0) ===
+15:        if (turing_mma_available(cc) && Q->ne[1] <= 8/ncols2) {
+22:        if ((turing_mma_available(cc) || amd_wmma_available(cc)) && Q->ne[1] <= 16/ncols2) {
+301:    BEST_FATTN_KERNEL_TILE     = 200,
+404:    const bool can_use_vector_kernel = Q->ne[0] <= 256 && Q->ne[0] % 64 == 0 && K->ne[1] % FATTN_KQ_STRIDE == 0;
+407:    if (turing_mma_available(cc) && Q->ne[0] != 40 && Q->ne[0] != 72) {
+408:        if (can_use_vector_kernel) {
+431:    if (volta_mma_available(cc) && Q->ne[0] != 40 && Q->ne[0] != 72) {
+437:        if (can_use_vector_kernel && Q->ne[1] * gqa_ratio_eff <= 2) {
+441:            return BEST_FATTN_KERNEL_TILE; // On Volta tensor cores are only faster for sufficiently large matrices.
+447:    if (ggml_cuda_should_use_wmma_fattn(cc) && K->ne[1] % FATTN_KQ_STRIDE == 0 && Q->ne[0] != 40 && Q->ne[0] != 72 && Q->ne[0] != 512 && Q->ne[0] != 576) {
+448:        if (can_use_vector_kernel && Q->ne[1] <= 2) {
+455:        if (can_use_vector_kernel) {
+474:            return BEST_FATTN_KERNEL_TILE; // AMD WMMA is only faster if the full tile width of 16 can be utilized.
+492:    if (can_use_vector_kernel) {
+505:    return BEST_FATTN_KERNEL_TILE;
+
+=== 8. FA tile kernel config for DKQ=256 (ggml/src/ggml-cuda/fattn-tile.cuh, NVIDIA FP16) ===
+65:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256,  2,  64, 2,  64,  64)
+66:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256,  4, 128, 2,  64,  64)
+67:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256,  8, 256, 2,  64,  64)
+68:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256, 16, 256, 2,  64,  64)
+69:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256, 32, 256, 2,  64,  64)
+125:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256,  2, 128, 3,  64,  64)
+126:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256,  4, 128, 3,  32,  64)
+127:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256,  8, 256, 2,  32, 256)
+128:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256, 16, 256, 2,  32, 128)
+129:    GGML_CUDA_FATTN_TILE_CONFIG_CASE(256, 256, 32, 256, 2,  32,  64)
+
+=== 9. parallel_blocks と dst_tmp (ggml/src/ggml-cuda/fattn-common.cuh) ===
+697:    // nblocks_stream_k is a multiple of ntiles_dst (== gridDim.x), so each tile gets the same number of blocks.
+756:// (blocks_num.x not a multiple of ntiles_dst)
+869:        const int parallel_blocks) {
+885:    VKQ_parts += j_dst_unrolled * parallel_blocks*D;
+886:    VKQ_meta  += j_dst_unrolled * parallel_blocks;
+893:    for (int i = tid; i < 2*parallel_blocks; i += D) {
+900:    for (int l = 1; l < parallel_blocks; ++l) {
+906:    for (int l = 0; l < parallel_blocks; ++l) {
+1030:    const int ntiles_dst   = ntiles_x * ntiles_z_gqa * K->ne[2] * Q->ne[3];
+1055:    int parallel_blocks = max_blocks_per_sm;
+1057:    const int ntiles_KV = (K->ne[1] + nbatch_fa - 1) / nbatch_fa; // Max. number of parallel blocks limited by KV cache length.
+1063:        const int tiles_nwaves = (ntiles_dst + max_blocks - 1) / max_blocks;
+1064:        const int tiles_efficiency_percent = 100 * ntiles_dst / (max_blocks*tiles_nwaves);
+1068:        blocks_num.x = ntiles_dst;
+1073:            const int nblocks_stream_k_raw = std::min(max_blocks, ntiles_KV*ntiles_dst);
+1074:            // Round down to a multiple of ntiles_dst so that each output tile gets the same number of blocks (avoids fixup).
+1076:            const int nblocks_stream_k_rounded = (nblocks_stream_k_raw / ntiles_dst) * ntiles_dst;
+1088:        if (ntiles_dst % blocks_num.x != 0) { // Fixup is only needed if the SMs work on fractional tiles.
+1092:        // parallel_blocks must not be larger than what the tensor size allows:
+1093:        parallel_blocks = std::min(parallel_blocks, ntiles_KV);

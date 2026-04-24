@@ -1,0 +1,25 @@
+[start_phaseSbfa0] FLASH_ATTN=0 CTX_SIZE=32768 -b 1585 -ub 1585 MAX_ITER=75 (C-D3 base, poll=0, f16 KV)
+[start_phaseSbfa0] remote log: /tmp/llama-server_phaseSbfa0_fa0_ctx32768_b1585_ub1585.log
+[start_phaseSbfa0] waiting for /health (max 75*5s) or OOM/ub-reject abort...
+bash: line 1: 297344 Segmentation fault      (core dumped) nohup bash -c "numactl --cpunodebind=1 --membind=1 -- ./build/bin/llama-server   -m '/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.5-122B-A10B-GGUF/snapshots/51eab4d59d53f573fb9206cb3ce613f1d0aa392b/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf' --jinja   -ngl 999 -ot 'blk\.([0-9]|1[0-3]|2[0-4]|3[1-9]|4[0-7])\.ffn_.*_exps\.weight=CPU'   --flash-attn 0 --poll 0 -b 1585 -ub 1585   --n-predict 32768 --threads 40   --ctx-size 32768 --parallel 1   --cache-type-k f16 --cache-type-v f16   --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0   --port 8000 --host 0.0.0.0   --alias 'unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M'" > /tmp/llama-server_phaseSbfa0_fa0_ctx32768_b1585_ub1585.log 2>&1 < /dev/null
+[start_phaseSbfa0] OOM pattern detected in /tmp/llama-server_phaseSbfa0_fa0_ctx32768_b1585_ub1585.log, abort
+llama_context:  CUDA_Host  output buffer size =     0.95 MiB
+llama_kv_cache:      CUDA0 KV buffer size =   192.00 MiB
+llama_kv_cache:      CUDA1 KV buffer size =   192.00 MiB
+llama_kv_cache:      CUDA2 KV buffer size =   192.00 MiB
+llama_kv_cache:      CUDA3 KV buffer size =   192.00 MiB
+llama_kv_cache: size =  768.00 MiB ( 32768 cells,  12 layers,  1/1 seqs), K (f16):  384.00 MiB, V (f16):  384.00 MiB
+llama_kv_cache: attn_rot_k = 0, n_embd_head_k_all = 256
+llama_kv_cache: attn_rot_v = 0, n_embd_head_k_all = 256
+llama_memory_recurrent:      CUDA0 RS buffer size =    41.41 MiB
+llama_memory_recurrent:      CUDA1 RS buffer size =    37.27 MiB
+llama_memory_recurrent:      CUDA2 RS buffer size =    37.27 MiB
+llama_memory_recurrent:      CUDA3 RS buffer size =    33.12 MiB
+llama_memory_recurrent: size =  149.06 MiB (     1 cells,  48 layers,  1 seqs), R (f32):    5.06 MiB, S (f32):  144.00 MiB
+sched_reserve: reserving ...
+sched_reserve: resolving fused Gated Delta Net support:
+sched_reserve: fused Gated Delta Net (autoregressive) enabled
+sched_reserve: fused Gated Delta Net (chunked) enabled
+ggml_backend_cuda_buffer_type_alloc_buffer: allocating 6748.67 MiB on device 1: cudaMalloc failed: out of memory
+ggml_gallocr_reserve_n_impl: failed to allocate CUDA1 buffer of size 7076492800
+graph_reserve: failed to allocate compute buffers

@@ -1,0 +1,19 @@
+# Phase Sb-fa0-offload 判定結果 (Sbfa0 互換形式)
+
+FINAL_OT_TAG: X4
+STAGE2_CTX: 32768
+n_valid_conditions: 6
+n_slope_rows: 2
+
+## CUDA0 compute buffer MiB (pivot per OT_TAG)
+
+### OT_TAG=X4
+       ctx       ub=1584       ub=1585       ub=1586
+     16384     3571.7000     3573.9200     3576.1400
+     32768     6838.7000     6842.9800     6847.2700
+     65536            NA            NA            NA
+    131072            NA            NA            NA
+
+## slopes per (OT_TAG, ctx) (fa=0-offload)
+  OT=  X4 ctx= 16384: Δ(1584→1585)=+2.2200, Δ(1585→1586)=+2.2200, δ_of_δ=-0.0000, peak_ub=1585
+  OT=  X4 ctx= 32768: Δ(1584→1585)=+4.2800, Δ(1585→1586)=+4.2900, δ_of_δ=+0.0100, peak_ub=1586

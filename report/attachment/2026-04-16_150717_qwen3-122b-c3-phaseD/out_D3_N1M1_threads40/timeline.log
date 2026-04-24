@@ -1,0 +1,22 @@
+[20:03:12] ==== measure_phaseD start tag=D3_N1M1_threads40 pid=44562 ====
+[20:03:12] wait /health
+[20:03:12] /health OK
+[20:03:13] numastat snapshot (pre-run)
+[20:03:15] Run 1: dmon start (background, 20s)
+[20:03:15] Run 1: eval request
+[20:03:33] Run 1: eval done, predicted_per_second=15.034510073474122
+[20:03:47] cooldown 60s before run 2
+[20:04:47] Run 2: dmon start (background, 20s)
+[20:04:47] Run 2: eval request
+[20:05:05] Run 2: eval done, predicted_per_second=15.031592473329347
+[20:05:20] cooldown 60s before run 3
+[20:06:20] Run 3: dmon start (background, 20s)
+[20:06:20] Run 3: eval request
+[20:06:38] Run 3: eval done, predicted_per_second=15.036209070969027
+[20:06:53] Run 3: status snapshot
+[20:06:54] numastat snapshot (post-run)
+[20:06:55] ==== summary (predicted_per_second / prompt_per_second) ====
+run1: eval=15.034510073474122 prompt=28.626637085808344
+run2: eval=15.031592473329347 prompt=32.77721328132682
+run3: eval=15.036209070969027 prompt=32.92175048605307
+[20:06:55] ==== measure_phaseD end tag=D3_N1M1_threads40 ====

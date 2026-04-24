@@ -1,0 +1,21 @@
+# Phase Sb-fa0 判定結果 (Sbctx 互換形式)
+
+candidate_J_support_reeval_fa0: False
+n_valid_ctx: 1/4
+all_pre_delta_within_0.05: False
+all_step_delta_above_0.15: True
+all_ratio_above_5.0: False
+all_peak_ub_equal_1586: False
+peak_ub_per_ctx: {16384: 1585}
+unique_nodes_values: [4532]
+unique_splits_values: [(136, 77)]
+
+## CUDA0 compute buffer MiB (pivot)
+       ctx       ub=1584       ub=1585       ub=1586
+     16384     3890.9100     3893.0300     3895.1500
+     32768            NA            NA            NA
+     65536            NA            NA            NA
+    131072            NA            NA            NA
+
+## slopes per ctx (fa=0)
+  ctx= 16384: Δ(1584→1585)=+2.1200 MiB, Δ(1585→1586)=+2.1200 MiB, ratio=1.00, peak_ub=1585

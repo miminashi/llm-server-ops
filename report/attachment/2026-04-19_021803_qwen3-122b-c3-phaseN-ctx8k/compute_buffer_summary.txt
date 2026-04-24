@@ -1,0 +1,40 @@
+=== fa0_ctx8192.log ===
+sched_reserve: fused Gated Delta Net (autoregressive) enabled
+sched_reserve: fused Gated Delta Net (chunked) enabled
+ggml_backend_cuda_buffer_type_alloc_buffer: allocating 9536.19 MiB on device 1: cudaMalloc failed: out of memory
+ggml_gallocr_reserve_n_impl: failed to allocate CUDA1 buffer of size 9999417472
+graph_reserve: failed to allocate compute buffers
+
+=== fa1_ctx1024.log ===
+sched_reserve: fused Gated Delta Net (autoregressive) enabled
+sched_reserve: fused Gated Delta Net (chunked) enabled
+sched_reserve:      CUDA0 compute buffer size =   975.00 MiB
+sched_reserve:      CUDA1 compute buffer size =   230.03 MiB
+sched_reserve:      CUDA2 compute buffer size =   230.03 MiB
+sched_reserve:      CUDA3 compute buffer size =  1006.00 MiB
+sched_reserve:  CUDA_Host compute buffer size =    28.04 MiB
+sched_reserve: graph nodes  = 4473
+sched_reserve: graph splits = 136 (with bs=1024), 77 (with bs=1)
+
+=== fa1_ctx2048.log ===
+sched_reserve: fused Gated Delta Net (autoregressive) enabled
+sched_reserve: fused Gated Delta Net (chunked) enabled
+sched_reserve:      CUDA0 compute buffer size =   994.00 MiB
+sched_reserve:      CUDA1 compute buffer size =   464.06 MiB
+sched_reserve:      CUDA2 compute buffer size =   464.06 MiB
+sched_reserve:      CUDA3 compute buffer size =  2012.00 MiB
+sched_reserve:  CUDA_Host compute buffer size =    64.08 MiB
+sched_reserve: graph nodes  = 4473
+sched_reserve: graph splits = 136 (with bs=2048), 77 (with bs=1)
+
+=== fa1_ctx8192.log ===
+sched_reserve: fused Gated Delta Net (autoregressive) enabled
+sched_reserve: fused Gated Delta Net (chunked) enabled
+sched_reserve:      CUDA0 compute buffer size =  2320.53 MiB
+sched_reserve:      CUDA1 compute buffer size =  1952.25 MiB
+sched_reserve:      CUDA2 compute buffer size =  1952.25 MiB
+sched_reserve:      CUDA3 compute buffer size =  8048.00 MiB
+sched_reserve:  CUDA_Host compute buffer size =   448.31 MiB
+sched_reserve: graph nodes  = 4473
+sched_reserve: graph splits = 136 (with bs=8192), 77 (with bs=1)
+

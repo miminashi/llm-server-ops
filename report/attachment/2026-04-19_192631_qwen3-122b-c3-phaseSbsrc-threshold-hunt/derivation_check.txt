@@ -1,0 +1,86 @@
+=== レイヤ分散 ===
+  attn layers: 12 total, 3/GPU
+  SSM layers : 36 total, 9/GPU
+
+=== 検証 1: ub ≥ 1586 線形域 slope 0.2853 MiB/tok の由来 ===
+  観測 slope: 299,159 bytes/tok  (0.2853 MiB/tok)
+  SSM 1 layer の n_tokens 線形項: 128*64*4 = 32,768 bytes/tok  (0.0312 MiB/tok)
+  CUDA0 (9 SSM layers): 294,912 bytes/tok  (0.2812 MiB/tok)
+  差分: +4,247 bytes/tok (+1.42%)  [page/align 等の補正余地]
+  → 判定: 一致（SSM 出力テンソルが主因）
+
+  比較: FA dst_tmp (P100 tile kernel) の寄与仮説
+    parallel_blocks=1: 0 bytes/tok (0.0000 MiB/tok)
+    parallel_blocks=2: 196,608 bytes/tok (0.1875 MiB/tok)
+    parallel_blocks=3: 294,912 bytes/tok (0.2812 MiB/tok)
+    parallel_blocks=4: 393,216 bytes/tok (0.3750 MiB/tok)
+
+=== 検証 2: 境界 ub*=1586 の候補式 ===
+  候補 A: delta-net-base.cpp CS=64 chunking (KDA=false)
+    ub=1584: pad=16, n_chunks=25
+    ub=1585: pad=15, n_chunks=25
+    ub=1586: pad=14, n_chunks=25
+    ub=1587: pad=13, n_chunks=25
+    ub=1588: pad=12, n_chunks=25
+    ub=1592: pad= 8, n_chunks=25
+    ub=1600: pad= 0, n_chunks=25
+    ub=1601: pad=63, n_chunks=26
+  → KDA=false で CS=64 の場合、境界は 1536→1537 と 1600→1601。1585→1586 ではない。
+  → かつ runtime log で fused_gdn_ch=enabled → chunking path は使われない。
+
+  候補 B: delta-net-base.cpp CS=16 chunking (KDA=true の場合)
+    ub=1583: pad= 1, n_chunks=99
+    ub=1584: pad= 0, n_chunks=99
+    ub=1585: pad=15, n_chunks=100
+    ub=1586: pad=14, n_chunks=100
+    ub=1588: pad=12, n_chunks=100
+    ub=1600: pad= 0, n_chunks=100
+  → CS=16 で境界は 1584→1585。観測 1585→1586 と 1-tok オフ。
+  → さらに qwen35moe は KDA=false (g->ne[0]=1) なので CS=16 パスには入らない。
+
+  候補 C: FA tile kernel ntiles_x = ceil(n_tokens / ncols1=4)
+    ub=1584: ntiles_x=396, ntiles_dst=1584
+    ub=1585: ntiles_x=397, ntiles_dst=1588
+    ub=1586: ntiles_x=397, ntiles_dst=1588
+    ub=1587: ntiles_x=397, ntiles_dst=1588
+    ub=1588: ntiles_x=397, ntiles_dst=1588
+    ub=1592: ntiles_x=398, ntiles_dst=1592
+  → FA の境界は 4 の倍数 (1584, 1588, 1592)。1585→1586 とは一致しない。
+
+  候補 D: SSM 出力テンソルの累積が allocator pool 境界を超える点
+    ub=1580: CUDA0 SSM output 累積 = 503,709,696 bytes = 480.375 MiB
+    ub=1584: CUDA0 SSM output 累積 = 504,889,344 bytes = 481.500 MiB
+    ub=1585: CUDA0 SSM output 累積 = 505,184,256 bytes = 481.781 MiB
+    ub=1586: CUDA0 SSM output 累積 = 505,479,168 bytes = 482.062 MiB
+    ub=1587: CUDA0 SSM output 累積 = 505,774,080 bytes = 482.344 MiB
+    ub=1590: CUDA0 SSM output 累積 = 506,658,816 bytes = 483.188 MiB
+    ub=1600: CUDA0 SSM output 累積 = 509,607,936 bytes = 486.000 MiB
+  → pool chunk size が特定値 (例 1 MiB) の場合、累積が境界を越える ub で step.
+
+=== 検証 3: 9 SSM 層の SSM 出力累積値と pool 量子化境界 ===
+  ub=1584: per-layer=53.5000 MiB, 9 layers=481.5000 MiB, 1 MiB 境界=482 MiB, pad=524,288
+  ub=1585: per-layer=53.5312 MiB, 9 layers=481.7812 MiB, 1 MiB 境界=482 MiB, pad=229,376
+  ub=1586: per-layer=53.5625 MiB, 9 layers=482.0625 MiB, 1 MiB 境界=483 MiB, pad=983,040
+  ub=1588: per-layer=53.6250 MiB, 9 layers=482.6250 MiB, 1 MiB 境界=483 MiB, pad=393,216
+  ub=1592: per-layer=53.7500 MiB, 9 layers=483.7500 MiB, 1 MiB 境界=484 MiB, pad=262,144
+  ub=1600: per-layer=54.0000 MiB, 9 layers=486.0000 MiB, 1 MiB 境界=486 MiB, pad=0
+
+=== 検証 4: TG/PP 比較（TG は n_tokens=1 固定） ===
+  TG (n_tokens=1) CUDA0 SSM output: 36.2812 MiB
+  PP 線形モデル: 527.87 + 0.2853 × ub
+    ub=1:    528.16 MiB
+    ub=1585: 980.07 MiB (観測 980.12)
+    ub=1586: 980.36 MiB (観測 980.36)
+
+=== まとめ ===
+  (1) slope 0.2853 MiB/tok は 9 SSM layers × gated_delta_net 出力の n_tokens 線形項 = 0.28125 MiB/tok
+      で説明可能（誤差 +1.42%、残差 +4,247 bytes/tok は align/padding 由来）
+  (2) 境界 ub*=1586 は CS=16/64 chunking / FA ncols1=4 のいずれの整数閾値とも一致しない
+      → ソース単独の整数定数 / chunk_size 閾値では説明できない
+  (3) 最有力仮説: ggml graph allocator の pool quantization と SSM 出力累積の相互作用
+      - ub ≤ 1585: 既存 reserve pool 内で SSM 累積が収まる → 平坦域
+      - ub ≥ 1586: pool 境界超過 → 線形確保が発動
+  (4) 次 Phase で必要:
+      - ctx 依存性の検証 (ctx=16k/65k/131k で ub* が同じか)
+      - KV quant (q8_0) / fa=0 での境界位置
+      - ggml-alloc.c の tensor_fit / worst_alloc ロジックの詳細解析

@@ -1,0 +1,26 @@
+[09:46:40] ==== measure_phaseH start tag=H2_t0 pid=111205 ====
+[09:46:40] wait /health
+[09:46:40] /health OK
+[09:46:44] numastat -p (pre)
+[09:46:48] snap_extras (pre)
+[09:47:04] Run 1: dmon start (background, 20s)
+[09:47:04] Run 1: eval request
+[09:47:22] Run 1: eval done, predicted_per_second=14.338408737960707
+[09:47:39] Run 1: status snapshot
+[09:47:43] cooldown 60s before run 2
+[09:48:43] Run 2: dmon start (background, 20s)
+[09:48:43] Run 2: eval request
+[09:49:02] Run 2: eval done, predicted_per_second=14.336273650791446
+[09:49:19] Run 2: status snapshot
+[09:49:23] cooldown 60s before run 3
+[09:50:23] Run 3: dmon start (background, 20s)
+[09:50:23] Run 3: eval request
+[09:50:42] Run 3: eval done, predicted_per_second=14.343505325222456
+[09:50:57] Run 3: status snapshot
+[09:51:01] numastat -p (post)
+[09:51:05] snap_extras (post)
+[09:51:21] ==== summary (predicted_per_second / prompt_per_second) ====
+run1: eval=14.338408737960707 prompt=28.438130477302423
+run2: eval=14.336273650791446 prompt=32.65928204011649
+run3: eval=14.343505325222456 prompt=32.28531610014905
+[09:51:21] ==== measure_phaseH end tag=H2_t0 ====

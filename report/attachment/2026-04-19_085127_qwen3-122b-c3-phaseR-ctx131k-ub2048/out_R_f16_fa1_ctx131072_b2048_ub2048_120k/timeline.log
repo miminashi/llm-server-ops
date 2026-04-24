@@ -1,0 +1,14 @@
+[09:53:54] ==== measure_phaseI start tag=R_f16_fa1_ctx131072_b2048_ub2048_120k pid=185005 ====
+[09:53:54] wait /health
+[09:53:54] /health OK
+[09:53:55] numastat -p (pre)
+[09:53:57] snap_extras (pre)
+[09:54:01] Run 1: dmon start (background, 30s)
+[09:54:01] Run 1: eval request (prompt bytes=735000, marker=R_f16_fa1_ctx131072_b2048_ub2048_120k_r1_1776560041673398344)
+[10:22:09] Run 1: eval=12.816901006512238 prompt=72.28058784614197 prompt_n=120265 predicted_n=256
+[10:22:09] Run 1: status snapshot
+[10:22:12] numastat -p (post)
+[10:22:13] snap_extras (post)
+[10:22:17] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=12.816901006512238 prompt=72.28058784614197 prompt_n=120265 predicted_n=256
+[10:22:17] ==== measure_phaseI end tag=R_f16_fa1_ctx131072_b2048_ub2048_120k ====

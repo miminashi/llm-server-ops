@@ -1,0 +1,22 @@
+[03:06:03] ==== measure_phaseF start tag=F2b_numa_isolate pid=62325 ====
+[03:06:03] wait /health
+[03:06:04] /health OK
+[03:06:08] numastat snapshot (pre-run)
+[03:06:12] Run 1: dmon start (background, 20s)
+[03:06:12] Run 1: eval request
+[03:06:31] Run 1: eval done, predicted_per_second=14.373442011527276
+[03:06:47] cooldown 60s before run 2
+[03:07:47] Run 2: dmon start (background, 20s)
+[03:07:47] Run 2: eval request
+[03:08:06] Run 2: eval done, predicted_per_second=14.351165852835969
+[03:08:23] cooldown 60s before run 3
+[03:09:23] Run 3: dmon start (background, 20s)
+[03:09:23] Run 3: eval request
+[03:09:42] Run 3: eval done, predicted_per_second=14.425291864225546
+[03:09:58] Run 3: status snapshot
+[03:10:01] numastat snapshot (post-run)
+[03:10:06] ==== summary (predicted_per_second / prompt_per_second) ====
+run1: eval=14.373442011527276 prompt=28.72600181931345
+run2: eval=14.351165852835969 prompt=32.98346428990266
+run3: eval=14.425291864225546 prompt=32.93970387206219
+[03:10:06] ==== measure_phaseF end tag=F2b_numa_isolate ====

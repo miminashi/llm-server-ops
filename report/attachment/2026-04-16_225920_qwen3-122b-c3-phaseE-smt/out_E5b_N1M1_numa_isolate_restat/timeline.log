@@ -1,0 +1,22 @@
+[00:23:24] ==== measure_phaseE start tag=E5b_N1M1_numa_isolate_restat pid=55691 ====
+[00:23:24] wait /health
+[00:23:24] /health OK
+[00:23:25] numastat snapshot (pre-run)
+[00:23:27] Run 1: dmon start (background, 20s)
+[00:23:27] Run 1: eval request
+[00:23:45] Run 1: eval done, predicted_per_second=14.746797770307218
+[00:23:58] cooldown 60s before run 2
+[00:24:58] Run 2: dmon start (background, 20s)
+[00:24:58] Run 2: eval request
+[00:25:16] Run 2: eval done, predicted_per_second=14.75042851147203
+[00:25:30] cooldown 60s before run 3
+[00:26:30] Run 3: dmon start (background, 20s)
+[00:26:30] Run 3: eval request
+[00:26:49] Run 3: eval done, predicted_per_second=14.74564850728533
+[00:27:02] Run 3: status snapshot
+[00:27:03] numastat snapshot (post-run)
+[00:27:04] ==== summary (predicted_per_second / prompt_per_second) ====
+run1: eval=14.746797770307218 prompt=28.644221267061216
+run2: eval=14.75042851147203 prompt=32.715316766054585
+run3: eval=14.74564850728533 prompt=33.05524081661136
+[00:27:04] ==== measure_phaseE end tag=E5b_N1M1_numa_isolate_restat ====

@@ -1,0 +1,113 @@
+=== Phase Sb-alloc: 候補 E/F/G/H のソース file:line 集約 ===
+
+Commit: 6990e2f1f7581d332a6a1f34d6c567be70138184
+
+----- 候補 D (allocator pool 量子化) -----
+
+(1) 非VMM pool: ggml-cuda.cu:422
+        look_ahead_size = 256 * ((look_ahead_size + 255)/256);
+    ⇒ 量子化単位 256 bytes (細かすぎて 0.28 MiB/tok step を生まない)
+
+(2) VMM granularity: ggml-cuda.cu:L504-509
+        reserve_size = granularity * ((reserve_size + granularity - 1) / granularity);
+    ⇒ cuMemGetAllocationGranularity() の返す値 (P100/CC6.0 で ~2 MiB)
+    ⇒ 2 MiB granularity では 1584-1600 が同じ block 486 MiB、1664 で +18 MiB 単 step
+    ⇒ 観測 (1586 以降で線形 slope 0.28 MiB/tok) と不一致
+
+(3) tensor alignment: ggml-cuda.cu:772-776
+        ggml_backend_cuda_buffer_type_get_alignment() return 128;
+
+(4) chunk max_size 更新: ggml-alloc.c:303
+        chunk->max_size = MAX(chunk->max_size, offset + size);
+(5) buffer size 集計: ggml-alloc.c:916-919
+        new_size += new_chunk_size;
+
+結論: 候補 D (allocator 単独の pool 量子化) は棄却。alloc_sim.py/csv で数値確証。
+
+----- 候補 E (GDN CUDA kernel の tile 境界) -----
+
+gated_delta_net.cu:148-201 launch_gated_delta_net:
+    - grid_dims = (H, n_seqs, ceil(S_v / num_warps)) = (64, 1, 32)
+      ⇒ **n_tokens 非依存**
+    - block_dims = (warp_size, num_warps, 1) = (32, 4, 1)
+      ⇒ **n_tokens 非依存**
+    - n_tokens は kernel 内部の for ループ (line 57) で処理されるだけ
+    - S_v で switch (case 16/32/64/128); qwen35moe は case 128 固定
+
+結論: 候補 E は step 機構を持たない。棄却。
+
+----- 候補 F (graph_reserve での worst-case ubatch) -----
+
+llama-context.cpp:2087-2146 llama_context::graph_reserve:
+    - line 2111: ubatch = balloc.ubatch_reserve(n_tokens/n_seqs, n_seqs)
+    - line 2128: gf = model.build_graph(gparams) ← ub dependent tensor shape が決まる
+    - line 2139: ggml_backend_sched_reserve(sched.get(), gf) ← pool size 確定
+
+llama-context.cpp:559-610 context 構築フロー:
+    - line 560: graph_reserve(n_tokens=ub, n_seqs, n_tokens, ...) ← pp 予約
+    - line 580: graph_reserve(n_seqs, n_seqs, n_seqs, ...) ← tg 予約 (ub=1)
+    - line 595: graph_reserve(n_tokens=ub, ...) ← pp 再予約 (最終 compute buffer size)
+    - line 605: backend_buf_exp_size[i] = ggml_backend_sched_get_buffer_size(sched, backend)
+    - line 608-610: "CUDA0 compute buffer size = %8.2f MiB" の報告
+
+結論: 候補 F は step 自体は生まない (連続線形)。step は build_graph 内の ub 依存 tensor の離散処理
+       または sched の split 処理で発生する。→ 候補 H に接続。
+
+----- 候補 G (memory_recurrent の ub 依存成分) -----
+
+llama-memory-recurrent.cpp (grep 対象):
+    - R (f32): 5.06 MiB (conv state, ssm_n_group=16 × 48 layers × ~3 kB)
+    - S (f32): 144.00 MiB (SSM state, ssm_d_state=128 × ssm_dt_rank=64 × 48 layers × 4 = 144)
+    ⇒ これらは cell (1 seq) 単位で、n_tokens に非依存
+    ⇒ runtime には update される (rollup) が、compute buffer サイズには含まれない
+       (別 buffer type: memory buffer)
+
+結論: 候補 G は compute buffer step の原因ではない。棄却。
+
+----- 候補 H (graph splits の ub 境界) -----
+
+ggml-backend.cpp: ggml_backend_sched_split_graph (未精読、候補残)
+    - splits=77 (with bs=1) は tg graph、pp graph (with bs=ub) の splits は?
+llama-context.cpp:620-624:
+    if (n_splits_pp == n_splits_tg) { ... 77 ... }
+    else {
+        LLAMA_LOG_INFO("graph splits = %d (with bs=%d), %d (with bs=1)", ...);
+    }
+
+Phase Sb-fine3 startup_log では "graph splits = 77" 単一報告 (pp も tg も 77 の可能性)。
+ub で splits 数が変わるかは runtime ログの再検証が必要。
+
+----- 候補 I (新規): build_graph 内の ub 依存離散処理 -----
+
+候補: FA tile の ntiles_x
+    fattn-common.cuh:1027: ntiles_x = ceil(Q->ne[1] / ncols1) = ceil(n_tokens / 4)
+    ⇒ n_tokens が 4 の倍数ごとに +1
+    ⇒ 1585→1586 は同じ ntiles_x=397 ⇒ step 生成せず (不一致)
+
+候補: FA parallel_blocks の efficiency optimizer
+    fattn-common.cuh:1055 parallel_blocks = max_blocks_per_sm (occupancy 由来、P100 fixed)
+    fattn-common.cuh:1100-1114: efficiency loop で parallel_blocks を拡大試行
+    fattn-common.cuh:1121-1123: parallel_blocks > 1 で dst_tmp / dst_tmp_meta alloc
+    ⇒ これは runtime cuda_pool_alloc からの動的バッファ (compute buffer 外)
+    ⇒ ただし graph_reserve 時にも同じ code path が走る場合、間接的に反映されうる
+    ⇒ 要精査
+
+候補: MoE router top-k / expert routing の ub 境界
+    src/models/qwen35moe.cpp: MoE 層で n_tokens 依存の routing tensor
+    ⇒ 3 attn + 9 SSM の attn 側が影響を及ぼす可能性
+    ⇒ 未精査
+
+----- 次 Phase の方向性 -----
+
+本 Phase で絞り込めた範囲:
+    - 候補 D/E/G は棄却
+    - 候補 F (graph_reserve) は step を生む容器だが機構ではない
+    - 候補 H (graph splits) と 候補 I (build_graph 内 tensor shape の離散) が最有力
+
+実測方針:
+    (i) ub=1584/1585/1586/1588 の startup_log で "graph splits = N" を比較
+        → splits 数が変わるなら候補 H 確定
+    (ii) 同じ条件で CUDA nvprof/ncu で dst_tmp kernel の alloc サイズを記録
+        → parallel_blocks の実効値が ub で変わるなら候補 I(parallel_blocks) 確定
+    (iii) ggml_backend_sched_reserve_size を追加フックして、各 node の tensor size を
+         ub 条件ごとに dump → ub=1586 で新規 node が現れるなら qwen35moe.cpp 側

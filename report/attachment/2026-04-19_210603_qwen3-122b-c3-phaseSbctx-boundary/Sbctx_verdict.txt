@@ -1,0 +1,22 @@
+# Phase Sb-ctx-boundary 判定結果
+
+candidate_J_support: False
+n_valid_ctx: 3/3
+all_pre_delta_within_0.05: False
+all_step_delta_above_0.15: False
+all_ratio_above_5.0: False
+all_peak_ub_equal_1586: False
+peak_ub_per_ctx: {16384: 1585, 65536: 1586, 131072: 1586}
+unique_nodes_values: [4473]
+unique_splits_values: [(136, 77)]
+
+## CUDA0 compute buffer MiB (pivot)
+       ctx       ub=1584       ub=1585       ub=1586
+     16384      980.1100      980.1200      980.1300
+     65536     1162.2200     1162.6200     1163.0200
+    131072     1558.2200     1558.8700     1559.5200
+
+## slopes per ctx
+  ctx= 16384: Δ(1584→1585)=+0.0100 MiB, Δ(1585→1586)=+0.0100 MiB, ratio=1.00, peak_ub=1585
+  ctx= 65536: Δ(1584→1585)=+0.4000 MiB, Δ(1585→1586)=+0.4000 MiB, ratio=1.00, peak_ub=1586
+  ctx=131072: Δ(1584→1585)=+0.6500 MiB, Δ(1585→1586)=+0.6500 MiB, ratio=1.00, peak_ub=1586

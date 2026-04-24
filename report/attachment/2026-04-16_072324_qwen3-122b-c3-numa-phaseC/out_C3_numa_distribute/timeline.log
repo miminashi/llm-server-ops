@@ -1,0 +1,20 @@
+[11:35:30] ==== measure_phaseC start tag=C3_numa_distribute pid=39112 ====
+[11:35:30] wait /health
+[11:35:30] /health OK
+[11:35:32] Run 1: dmon start (background, 20s)
+[11:35:32] Run 1: eval request
+[11:35:57] Run 1: eval done, predicted_per_second=10.451942824279897
+[11:36:01] cooldown 60s before run 2
+[11:37:01] Run 2: dmon start (background, 20s)
+[11:37:01] Run 2: eval request
+[11:37:27] Run 2: eval done, predicted_per_second=10.26109969407894
+[11:37:30] cooldown 60s before run 3
+[11:38:30] Run 3: dmon start (background, 20s)
+[11:38:30] Run 3: eval request
+[11:38:56] Run 3: eval done, predicted_per_second=10.248909992390985
+[11:39:00] Run 3: status snapshot
+[11:39:01] ==== summary (predicted_per_second) ====
+run1: 10.451942824279897
+run2: 10.26109969407894
+run3: 10.248909992390985
+[11:39:02] ==== measure_phaseC end tag=C3_numa_distribute ====

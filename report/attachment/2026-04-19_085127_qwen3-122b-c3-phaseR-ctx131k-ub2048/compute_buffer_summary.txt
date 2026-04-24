@@ -1,0 +1,29 @@
+load_tensors:   CPU_Mapped model buffer size = 38043.66 MiB
+load_tensors:   CPU_Mapped model buffer size = 25271.75 MiB
+load_tensors:        CUDA0 model buffer size =  1301.21 MiB
+load_tensors:        CUDA1 model buffer size =  9550.77 MiB
+load_tensors:        CUDA2 model buffer size =  9550.77 MiB
+load_tensors:        CUDA3 model buffer size =  1693.13 MiB
+llama_kv_cache:      CUDA0 KV buffer size =   768.00 MiB
+llama_kv_cache:      CUDA1 KV buffer size =   768.00 MiB
+llama_kv_cache:      CUDA2 KV buffer size =   768.00 MiB
+llama_kv_cache:      CUDA3 KV buffer size =   768.00 MiB
+llama_kv_cache: size = 3072.00 MiB (131072 cells,  12 layers,  1/1 seqs), K (f16): 1536.00 MiB, V (f16): 1536.00 MiB
+llama_memory_recurrent:      CUDA0 RS buffer size =    41.41 MiB
+llama_memory_recurrent:      CUDA1 RS buffer size =    37.27 MiB
+llama_memory_recurrent:      CUDA2 RS buffer size =    37.27 MiB
+llama_memory_recurrent:      CUDA3 RS buffer size =    33.12 MiB
+llama_memory_recurrent: size =  149.06 MiB (     1 cells,  48 layers,  1 seqs), R (f32):    5.06 MiB, S (f32):  144.00 MiB
+sched_reserve: reserving ...
+sched_reserve: resolving fused Gated Delta Net support:
+sched_reserve: fused Gated Delta Net (autoregressive) enabled
+sched_reserve: fused Gated Delta Net (chunked) enabled
+sched_reserve:      CUDA0 compute buffer size =  2180.00 MiB
+sched_reserve:      CUDA1 compute buffer size =   968.06 MiB
+sched_reserve:      CUDA2 compute buffer size =   968.06 MiB
+sched_reserve:      CUDA3 compute buffer size =  2012.00 MiB
+sched_reserve:  CUDA_Host compute buffer size =  1072.08 MiB
+sched_reserve: graph nodes  = 4473
+sched_reserve: graph splits = 136 (with bs=2048), 77 (with bs=1)
+sched_reserve: reserve took 628.35 ms, sched copies = 1
+srv    load_model: prompt cache is enabled, size limit: 8192 MiB
