@@ -72,13 +72,15 @@ Arguments:
   server     GPUサーバ名 (mi25, t120h-p100, t120h-m10)
   hf-model   HuggingFaceモデル (例: unsloth/gpt-oss-20b-GGUF:Q8_0)
   ctx-size   コンテキストサイズ or "fit" (省略時: 65536)
-  fit-ctx    fitモード時のctx-size (省略時: 8192、"fit"指定時のみ有効)
+  fit-ctx    fitモード時のctx-size ("fit"指定時のみ有効)
+             - Qwen3.5-122B-A10B: 省略時 131072 (Phase U-6 確定 128k default)
+             - その他 MoE       : 省略時 8192
 
 Examples:
   start.sh t120h-p100 "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M" 131072
   start.sh mi25 "unsloth/gpt-oss-20b-GGUF:Q8_0"
-  start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit
-  start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 16384
+  start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit         # 128k default
+  start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 32768   # 短 ctx 指定
 EOF
   exit 1
 }
@@ -91,7 +93,7 @@ fi
 SERVER="$1"
 HF_MODEL="${2:-}"
 CTX_SIZE_ARG="${3:-65536}"
-FIT_CTX="${4:-8192}"
+FIT_CTX_ARG="${4:-}"
 
 # fitモード判定
 if [ "$CTX_SIZE_ARG" = "fit" ]; then
@@ -106,6 +108,27 @@ if [ -z "$HF_MODEL" ]; then
   echo "ERROR: モデルが指定されていません。" >&2
   echo "Claude側で AskUserQuestion を使ってモデルを選択してください。" >&2
   exit 1
+fi
+
+# --- モデルプロファイル判定 ---
+# Phase U-6 (2026-04-24) で確定した Qwen3.5-122B-A10B 向け ctx=128k 専用 default 構成を
+# モデル名で自動適用する。他モデルは従来挙動。
+MODEL_PROFILE="generic"
+case "$HF_MODEL" in
+  *Qwen3.5-122B-A10B*)
+    MODEL_PROFILE="qwen3_122b"
+    ;;
+esac
+
+# fit 時の ctx-size default はプロファイル依存 (qwen3_122b: 131072、その他: 8192)
+if [ -z "$FIT_CTX_ARG" ]; then
+  if [ "$MODEL_PROFILE" = "qwen3_122b" ]; then
+    FIT_CTX=131072
+  else
+    FIT_CTX=8192
+  fi
+else
+  FIT_CTX="$FIT_CTX_ARG"
 fi
 
 # --- サーバ名バリデーション ---
@@ -146,6 +169,7 @@ ssh "$SERVER" "cd ~/llama.cpp && ./update_and_build.sh"
 # --- サーバ別パラメータ設定 ---
 SERVER_OPTS=""
 ENV_PREFIX=""
+THREADS_OPT="--threads -1"
 
 case "$SERVER" in
   mi25)
@@ -159,6 +183,15 @@ case "$SERVER" in
     SERVER_OPTS="-b 4096 -ub 4096"
     ;;
 esac
+
+# --- モデルプロファイル上書き (サーバ別 default を上書き) ---
+# Phase U-6 (2026-04-24) 確定構成: Qwen3.5-122B-A10B × t120h-p100 × ctx=128k
+# -b 2048 / -ub 512 / tensor-split 11,12,13,14 / threads 40 / numactl node1
+if [ "$MODEL_PROFILE" = "qwen3_122b" ] && [ "$SERVER" = "t120h-p100" ]; then
+  SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14"
+  ENV_PREFIX="numactl --cpunodebind=1 --membind=1"
+  THREADS_OPT="--threads 40"
+fi
 
 # --- モデル別サンプリングパラメータ ---
 case "$HF_MODEL" in
@@ -204,7 +237,19 @@ MODEL_OPT="-m '$MODEL_PATH'"
 
 # --- fitモード分岐 ---
 if [ "$FIT_MODE" = true ]; then
-  NGL_OPTS="-ngl 999 -ot 'ffn_.*_exps.weight=CPU'"
+  if [ "$MODEL_PROFILE" = "qwen3_122b" ]; then
+    # Phase U-6 確定 OT=B14b: CPU offload = layer {2,3,20-23,31-38}、他は GPU
+    # llama.cpp の -ot はカンマ区切りで複数パターンを OR 合成できる (parse_tensor_buffer_overrides)。
+    # 単一 regex の `(|)` は bash のメタキャラで outer ssh パイプラインを通らないため使えない。
+    OT_PATTERNS=""
+    for L in 2 3 20 21 22 23 31 32 33 34 35 36 37 38; do
+      [ -n "$OT_PATTERNS" ] && OT_PATTERNS+=","
+      OT_PATTERNS+="blk.$L.ffn_.*_exps.weight=CPU"
+    done
+    NGL_OPTS="-ngl 999 --split-mode layer -ot '$OT_PATTERNS'"
+  else
+    NGL_OPTS="-ngl 999 -ot 'ffn_.*_exps.weight=CPU'"
+  fi
   CTX_OPTS="--ctx-size $FIT_CTX"
 else
   NGL_OPTS="--n-gpu-layers 99 --split-mode layer"
@@ -223,7 +268,7 @@ fi
 LAUNCH_CMD="${ENV_PREFIX:+$ENV_PREFIX }./build/bin/llama-server \
   $MODEL_OPT \
   $CHAT_TEMPLATE_OPTS $NGL_OPTS \
-  $SERVER_OPTS --n-predict 32768 --threads -1 \
+  $SERVER_OPTS --n-predict 32768 $THREADS_OPT \
   $CTX_OPTS --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0 \
   --defrag-thold 0.1 $SAMPLING_OPTS \
   --port 8000 --host 0.0.0.0 \

@@ -15,11 +15,13 @@ Arguments:
   server     GPUサーバ名 (mi25, t120h-p100, t120h-m10)
   hf-model   HuggingFaceモデル (例: unsloth/gpt-oss-20b-GGUF:Q8_0)
   ctx-size   コンテキストサイズ or "fit" (省略時: 65536)
-  fit-ctx    fitモード時のctx-size (省略時: 8192、"fit"指定時のみ有効)
+  fit-ctx    fitモード時のctx-size ("fit"指定時のみ有効)
+             - Qwen3.5-122B-A10B: 省略時 131072 (Phase U-6 確定 128k default)
+             - その他 MoE       : 省略時 8192
 
 Examples:
   wait-ready.sh t120h-p100 "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M" 131072
-  wait-ready.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 16384
+  wait-ready.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit
 EOF
   exit 1
 }
@@ -31,7 +33,17 @@ fi
 SERVER="$1"
 HF_MODEL="$2"
 CTX_SIZE_ARG="${3:-65536}"
-FIT_CTX="${4:-8192}"
+FIT_CTX_ARG="${4:-}"
+
+# fit 時の ctx-size default は start.sh と同じロジックで決定
+if [ -z "$FIT_CTX_ARG" ]; then
+  case "$HF_MODEL" in
+    *Qwen3.5-122B-A10B*) FIT_CTX=131072 ;;
+    *)                    FIT_CTX=8192 ;;
+  esac
+else
+  FIT_CTX="$FIT_CTX_ARG"
+fi
 
 # fitモード判定
 if [ "$CTX_SIZE_ARG" = "fit" ]; then
