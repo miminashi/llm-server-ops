@@ -1,0 +1,7 @@
+[start_phaseT5] OT_TAG=B18 OT_REGEX=blk\.([0-3]|2[0-4]|3[1-9])\.ffn_.*_exps\.weight=CPU
+[start_phaseT5] THREADS=28 SPLIT_MODE=layer CACHE_TYPE_K=q8_0 CACHE_TYPE_V=q8_0 FLASH_ATTN=1 CTX_SIZE=32768 -b 256 -ub 256
+[start_phaseT5] remote log: /tmp/llama-server_phaseT5_B18_t28_smlayer_kq8_0_vq8_0_fa1_ctx32768_b256_ub256.log
+[start_phaseT5] waiting for /health (max 300s) or OOM/ub-reject/threads abort...
+[start_phaseT5] /health OK after 4*5s
+[start_phaseT5] PID=1181794
+1181794

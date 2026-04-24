@@ -1,0 +1,65 @@
+[run_all] PID=974012 TAG_PREFIX=T1_kvq8_0_ctx32768_ub1664 WARMUP_RUNS=2 EVAL_RUNS=5
+[run_all] start at 2026-04-22 14:53:03
+[run_all] ==== T1_kvq8_0_ctx32768_ub1664_warmup (runs=2) ====
+[14:53:03] ==== measure_phaseI start tag=T1_kvq8_0_ctx32768_ub1664_warmup pid=974012 ====
+[14:53:03] wait /health
+[14:53:03] /health OK
+[14:53:04] numastat -p (pre)
+[14:53:06] snap_extras (pre)
+[14:53:10] Run 1: dmon start (background, 30s)
+[14:53:10] Run 1: eval request (prompt bytes=33, marker=T1_kvq8_0_ctx32768_ub1664_warmup_r1_1776837190454832645)
+[14:53:34] Run 1: eval=14.302697941378044 prompt=10.449844924301322 prompt_n=65 predicted_n=256
+[14:54:02] Run 1: status snapshot
+[14:54:05] cooldown 60s before run 2
+[14:55:05] Run 2: dmon start (background, 30s)
+[14:55:05] Run 2: eval request (prompt bytes=33, marker=T1_kvq8_0_ctx32768_ub1664_warmup_r2_1776837305324824897)
+[14:55:29] Run 2: eval=14.314318959930532 prompt=10.589085487479139 prompt_n=65 predicted_n=256
+[14:55:57] Run 2: status snapshot
+[14:55:59] numastat -p (post)
+[14:56:00] snap_extras (post)
+[14:56:05] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=14.302697941378044 prompt=10.449844924301322 prompt_n=65 predicted_n=256
+run2: eval=14.314318959930532 prompt=10.589085487479139 prompt_n=65 predicted_n=256
+[14:56:05] ==== measure_phaseI end tag=T1_kvq8_0_ctx32768_ub1664_warmup ====
+[run_all] ---- T1_kvq8_0_ctx32768_ub1664_warmup done ----
+[run_all] ==== T1_kvq8_0_ctx32768_ub1664_1k (runs=5) ====
+[14:56:05] ==== measure_phaseI start tag=T1_kvq8_0_ctx32768_ub1664_1k pid=974012 ====
+[14:56:05] wait /health
+[14:56:05] /health OK
+[14:56:06] numastat -p (pre)
+[14:56:07] snap_extras (pre)
+[14:56:12] Run 1: dmon start (background, 30s)
+[14:56:12] Run 1: eval request (prompt bytes=6200, marker=T1_kvq8_0_ctx32768_ub1664_1k_r1_1776837372119336772)
+[14:56:46] Run 1: eval=14.254261049641466 prompt=68.58380505223927 prompt_n=1086 predicted_n=256
+[14:57:01] Run 1: status snapshot
+[14:57:04] cooldown 60s before run 2
+[14:58:04] Run 2: dmon start (background, 30s)
+[14:58:04] Run 2: eval request (prompt bytes=6200, marker=T1_kvq8_0_ctx32768_ub1664_1k_r2_1776837484063737879)
+[14:58:38] Run 2: eval=14.237860930469797 prompt=68.75671462183712 prompt_n=1086 predicted_n=256
+[14:58:54] Run 2: status snapshot
+[14:58:56] cooldown 60s before run 3
+[14:59:56] Run 3: dmon start (background, 30s)
+[14:59:56] Run 3: eval request (prompt bytes=6200, marker=T1_kvq8_0_ctx32768_ub1664_1k_r3_1776837596292738760)
+[15:00:30] Run 3: eval=14.242474229327758 prompt=68.73613488991776 prompt_n=1086 predicted_n=256
+[15:00:45] Run 3: status snapshot
+[15:00:48] cooldown 60s before run 4
+[15:01:48] Run 4: dmon start (background, 30s)
+[15:01:48] Run 4: eval request (prompt bytes=6200, marker=T1_kvq8_0_ctx32768_ub1664_1k_r4_1776837708042344660)
+[15:02:22] Run 4: eval=14.250008948003664 prompt=68.63080965965374 prompt_n=1086 predicted_n=256
+[15:02:39] Run 4: status snapshot
+[15:02:41] cooldown 60s before run 5
+[15:03:41] Run 5: dmon start (background, 30s)
+[15:03:41] Run 5: eval request (prompt bytes=6200, marker=T1_kvq8_0_ctx32768_ub1664_1k_r5_1776837821215752214)
+[15:04:15] Run 5: eval=14.241025914606247 prompt=68.75157397422461 prompt_n=1086 predicted_n=256
+[15:04:30] Run 5: status snapshot
+[15:04:32] numastat -p (post)
+[15:04:33] snap_extras (post)
+[15:04:37] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=14.254261049641466 prompt=68.58380505223927 prompt_n=1086 predicted_n=256
+run2: eval=14.237860930469797 prompt=68.75671462183712 prompt_n=1086 predicted_n=256
+run3: eval=14.242474229327758 prompt=68.73613488991776 prompt_n=1086 predicted_n=256
+run4: eval=14.250008948003664 prompt=68.63080965965374 prompt_n=1086 predicted_n=256
+run5: eval=14.241025914606247 prompt=68.75157397422461 prompt_n=1086 predicted_n=256
+[15:04:38] ==== measure_phaseI end tag=T1_kvq8_0_ctx32768_ub1664_1k ====
+[run_all] ---- T1_kvq8_0_ctx32768_ub1664_1k done ----
+[run_all] end at 2026-04-22 15:04:38

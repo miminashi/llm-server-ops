@@ -1,0 +1,38 @@
+[08:12:32] ==== measure_phaseT5 start tag=T5ats_B18_ts_equal_t40_kvq8_0_smlayer_ctx32768_ub256_ts13-11-12-13_1k pid=1212820 ====
+[08:12:32] wait /health
+[08:12:32] /health OK
+[08:12:33] numastat -p (pre)
+[08:12:34] snap_extras (pre)
+[08:12:39] Run 1: dmon start (background, 30s)
+[08:12:39] Run 1: eval request (prompt bytes=6200, marker=T5ats_B18_ts_equal_t40_kvq8_0_smlayer_ctx32768_ub256_ts13-11-12-13_1k_r1_1776899559226043322)
+[08:13:22] Run 1: eval=18.115717684938655 prompt=38.35955186220059 prompt_n=1109 predicted_n=256
+[08:13:29] Run 1: status snapshot
+[08:13:31] cooldown 60s before run 2
+[08:14:31] Run 2: dmon start (background, 30s)
+[08:14:31] Run 2: eval request (prompt bytes=6200, marker=T5ats_B18_ts_equal_t40_kvq8_0_smlayer_ctx32768_ub256_ts13-11-12-13_1k_r2_1776899671469864197)
+[08:15:15] Run 2: eval=18.127949332381615 prompt=38.38104661549424 prompt_n=1109 predicted_n=256
+[08:15:20] Run 2: status snapshot
+[08:15:22] cooldown 60s before run 3
+[08:16:22] Run 3: dmon start (background, 30s)
+[08:16:22] Run 3: eval request (prompt bytes=6200, marker=T5ats_B18_ts_equal_t40_kvq8_0_smlayer_ctx32768_ub256_ts13-11-12-13_1k_r3_1776899782791195403)
+[08:17:06] Run 3: eval=18.117280516931306 prompt=38.39859374585588 prompt_n=1109 predicted_n=256
+[08:17:11] Run 3: status snapshot
+[08:17:13] cooldown 60s before run 4
+[08:18:13] Run 4: dmon start (background, 30s)
+[08:18:13] Run 4: eval request (prompt bytes=6200, marker=T5ats_B18_ts_equal_t40_kvq8_0_smlayer_ctx32768_ub256_ts13-11-12-13_1k_r4_1776899893617543280)
+[08:18:57] Run 4: eval=18.122617203248335 prompt=38.369269377493026 prompt_n=1109 predicted_n=256
+[08:19:01] Run 4: status snapshot
+[08:19:03] cooldown 60s before run 5
+[08:20:03] Run 5: dmon start (background, 30s)
+[08:20:03] Run 5: eval request (prompt bytes=6200, marker=T5ats_B18_ts_equal_t40_kvq8_0_smlayer_ctx32768_ub256_ts13-11-12-13_1k_r5_1776900003375567128)
+[08:20:47] Run 5: eval=18.116057408087546 prompt=38.35732026283722 prompt_n=1109 predicted_n=256
+[08:20:51] Run 5: status snapshot
+[08:20:53] numastat -p (post)
+[08:20:55] snap_extras (post)
+[08:20:59] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=18.115717684938655 prompt=38.35955186220059 prompt_n=1109 predicted_n=256
+run2: eval=18.127949332381615 prompt=38.38104661549424 prompt_n=1109 predicted_n=256
+run3: eval=18.117280516931306 prompt=38.39859374585588 prompt_n=1109 predicted_n=256
+run4: eval=18.122617203248335 prompt=38.369269377493026 prompt_n=1109 predicted_n=256
+run5: eval=18.116057408087546 prompt=38.35732026283722 prompt_n=1109 predicted_n=256
+[08:20:59] ==== measure_phaseT5 end tag=T5ats_B18_ts_equal_t40_kvq8_0_smlayer_ctx32768_ub256_ts13-11-12-13_1k ====

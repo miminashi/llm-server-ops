@@ -1,0 +1,65 @@
+[run_all] PID=992114 TAG_PREFIX=T2_kvf16_smrow_ctx32768_ub1586 WARMUP_RUNS=2 EVAL_RUNS=5
+[run_all] start at 2026-04-22 16:10:16
+[run_all] ==== T2_kvf16_smrow_ctx32768_ub1586_warmup (runs=2) ====
+[16:10:16] ==== measure_phaseI start tag=T2_kvf16_smrow_ctx32768_ub1586_warmup pid=992114 ====
+[16:10:16] wait /health
+[16:10:16] /health OK
+[16:10:17] numastat -p (pre)
+[16:10:18] snap_extras (pre)
+[16:10:23] Run 1: dmon start (background, 30s)
+[16:10:23] Run 1: eval request (prompt bytes=33, marker=T2_kvf16_smrow_ctx32768_ub1586_warmup_r1_1776841823325129729)
+[16:10:51] Run 1: eval=12.169805486100774 prompt=10.152645017843273 prompt_n=66 predicted_n=256
+[16:11:08] Run 1: status snapshot
+[16:11:10] cooldown 60s before run 2
+[16:12:10] Run 2: dmon start (background, 30s)
+[16:12:10] Run 2: eval request (prompt bytes=33, marker=T2_kvf16_smrow_ctx32768_ub1586_warmup_r2_1776841930794300664)
+[16:12:38] Run 2: eval=12.094440001679994 prompt=10.359602197554162 prompt_n=66 predicted_n=256
+[16:12:55] Run 2: status snapshot
+[16:12:57] numastat -p (post)
+[16:12:59] snap_extras (post)
+[16:13:03] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=12.169805486100774 prompt=10.152645017843273 prompt_n=66 predicted_n=256
+run2: eval=12.094440001679994 prompt=10.359602197554162 prompt_n=66 predicted_n=256
+[16:13:03] ==== measure_phaseI end tag=T2_kvf16_smrow_ctx32768_ub1586_warmup ====
+[run_all] ---- T2_kvf16_smrow_ctx32768_ub1586_warmup done ----
+[run_all] ==== T2_kvf16_smrow_ctx32768_ub1586_1k (runs=5) ====
+[16:13:03] ==== measure_phaseI start tag=T2_kvf16_smrow_ctx32768_ub1586_1k pid=992114 ====
+[16:13:03] wait /health
+[16:13:03] /health OK
+[16:13:04] numastat -p (pre)
+[16:13:05] snap_extras (pre)
+[16:13:10] Run 1: dmon start (background, 30s)
+[16:13:10] Run 1: eval request (prompt bytes=6200, marker=T2_kvf16_smrow_ctx32768_ub1586_1k_r1_1776841990150462001)
+[16:13:48] Run 1: eval=12.063699916972526 prompt=64.09563186205064 prompt_n=1087 predicted_n=256
+[16:13:50] Run 1: status snapshot
+[16:13:52] cooldown 60s before run 2
+[16:14:52] Run 2: dmon start (background, 30s)
+[16:14:52] Run 2: eval request (prompt bytes=6200, marker=T2_kvf16_smrow_ctx32768_ub1586_1k_r2_1776842092708322399)
+[16:15:31] Run 2: eval=12.040854808503608 prompt=64.12974810873291 prompt_n=1087 predicted_n=256
+[16:15:32] Run 2: status snapshot
+[16:15:34] cooldown 60s before run 3
+[16:16:34] Run 3: dmon start (background, 30s)
+[16:16:34] Run 3: eval request (prompt bytes=6200, marker=T2_kvf16_smrow_ctx32768_ub1586_1k_r3_1776842194961152243)
+[16:17:13] Run 3: eval=12.052159864744635 prompt=64.16754446922992 prompt_n=1087 predicted_n=256
+[16:17:15] Run 3: status snapshot
+[16:17:17] cooldown 60s before run 4
+[16:18:17] Run 4: dmon start (background, 30s)
+[16:18:17] Run 4: eval request (prompt bytes=6200, marker=T2_kvf16_smrow_ctx32768_ub1586_1k_r4_1776842297139163305)
+[16:18:55] Run 4: eval=12.056477059726657 prompt=64.1114678429676 prompt_n=1087 predicted_n=256
+[16:18:56] Run 4: status snapshot
+[16:18:59] cooldown 60s before run 5
+[16:19:59] Run 5: dmon start (background, 30s)
+[16:19:59] Run 5: eval request (prompt bytes=6200, marker=T2_kvf16_smrow_ctx32768_ub1586_1k_r5_1776842399138278727)
+[16:20:38] Run 5: eval=12.044699762804104 prompt=64.11900487304437 prompt_n=1087 predicted_n=256
+[16:20:39] Run 5: status snapshot
+[16:20:41] numastat -p (post)
+[16:20:42] snap_extras (post)
+[16:20:47] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=12.063699916972526 prompt=64.09563186205064 prompt_n=1087 predicted_n=256
+run2: eval=12.040854808503608 prompt=64.12974810873291 prompt_n=1087 predicted_n=256
+run3: eval=12.052159864744635 prompt=64.16754446922992 prompt_n=1087 predicted_n=256
+run4: eval=12.056477059726657 prompt=64.1114678429676 prompt_n=1087 predicted_n=256
+run5: eval=12.044699762804104 prompt=64.11900487304437 prompt_n=1087 predicted_n=256
+[16:20:47] ==== measure_phaseI end tag=T2_kvf16_smrow_ctx32768_ub1586_1k ====
+[run_all] ---- T2_kvf16_smrow_ctx32768_ub1586_1k done ----
+[run_all] end at 2026-04-22 16:20:47

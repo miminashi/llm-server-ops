@@ -1,0 +1,38 @@
+[00:30:22] ==== measure_phaseT5 start tag=T5f_B28_32k_ub256_t40_kvq8_0_smlayer_ctx32768_ub256_1k pid=1105512 ====
+[00:30:22] wait /health
+[00:30:23] /health OK
+[00:30:24] numastat -p (pre)
+[00:30:25] snap_extras (pre)
+[00:30:29] Run 1: dmon start (background, 30s)
+[00:30:29] Run 1: eval request (prompt bytes=6200, marker=T5f_B28_32k_ub256_t40_kvq8_0_smlayer_ctx32768_ub256_1k_r1_1776871829644410836)
+[00:31:28] Run 1: eval=15.914400418747661 prompt=26.14967347640042 prompt_n=1103 predicted_n=256
+[00:31:28] Run 1: status snapshot
+[00:31:31] cooldown 60s before run 2
+[00:32:31] Run 2: dmon start (background, 30s)
+[00:32:31] Run 2: eval request (prompt bytes=6200, marker=T5f_B28_32k_ub256_t40_kvq8_0_smlayer_ctx32768_ub256_1k_r2_1776871951054161133)
+[00:33:30] Run 2: eval=15.922876552239444 prompt=26.12831380393877 prompt_n=1103 predicted_n=256
+[00:33:30] Run 2: status snapshot
+[00:33:33] cooldown 60s before run 3
+[00:34:33] Run 3: dmon start (background, 30s)
+[00:34:33] Run 3: eval request (prompt bytes=6200, marker=T5f_B28_32k_ub256_t40_kvq8_0_smlayer_ctx32768_ub256_1k_r3_1776872073059709641)
+[00:35:32] Run 3: eval=15.894260452168117 prompt=26.22502488405353 prompt_n=1103 predicted_n=256
+[00:35:32] Run 3: status snapshot
+[00:35:34] cooldown 60s before run 4
+[00:36:34] Run 4: dmon start (background, 30s)
+[00:36:34] Run 4: eval request (prompt bytes=6200, marker=T5f_B28_32k_ub256_t40_kvq8_0_smlayer_ctx32768_ub256_1k_r4_1776872194479918905)
+[00:37:33] Run 4: eval=15.915068243626123 prompt=26.15129412749337 prompt_n=1103 predicted_n=256
+[00:37:33] Run 4: status snapshot
+[00:37:35] cooldown 60s before run 5
+[00:38:35] Run 5: dmon start (background, 30s)
+[00:38:35] Run 5: eval request (prompt bytes=6200, marker=T5f_B28_32k_ub256_t40_kvq8_0_smlayer_ctx32768_ub256_1k_r5_1776872315760627823)
+[00:39:34] Run 5: eval=15.909130032217853 prompt=26.141653157380812 prompt_n=1103 predicted_n=256
+[00:39:34] Run 5: status snapshot
+[00:39:36] numastat -p (post)
+[00:39:38] snap_extras (post)
+[00:39:42] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=15.914400418747661 prompt=26.14967347640042 prompt_n=1103 predicted_n=256
+run2: eval=15.922876552239444 prompt=26.12831380393877 prompt_n=1103 predicted_n=256
+run3: eval=15.894260452168117 prompt=26.22502488405353 prompt_n=1103 predicted_n=256
+run4: eval=15.915068243626123 prompt=26.15129412749337 prompt_n=1103 predicted_n=256
+run5: eval=15.909130032217853 prompt=26.141653157380812 prompt_n=1103 predicted_n=256
+[00:39:42] ==== measure_phaseT5 end tag=T5f_B28_32k_ub256_t40_kvq8_0_smlayer_ctx32768_ub256_1k ====

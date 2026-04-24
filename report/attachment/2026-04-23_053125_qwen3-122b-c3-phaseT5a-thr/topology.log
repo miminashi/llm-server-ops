@@ -1,0 +1,35 @@
+## t120h-p100 topology (Phase T-5a-thr 取得 2026-04-23_053125 JST)
+
+### nproc
+80
+
+### lscpu (抜粋)
+Model name:                              Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz
+Thread(s) per core:                      2
+Core(s) per socket:                      20
+Socket(s):                               2
+NUMA node(s):                            2
+NUMA node0 CPU(s):                       0-19,40-59
+NUMA node1 CPU(s):                       20-39,60-79
+
+### numactl -H
+available: 2 nodes (0-1)
+node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
+node 0 size: 128551 MB
+node 0 free: 118183 MB
+node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
+node 1 size: 129008 MB
+node 1 free: 53527 MB
+node distances:
+node   0   1
+  0:  10  21
+  1:  21  10
+
+### 解釈
+- **CPU**: Intel Xeon Gold 6138 × 2 socket (20 physical cores × 2 = 40 physical / 80 logical with SMT)
+- **SMT**: ON (Thread(s) per core = 2)
+- **NUMA node1**: 物理コア 20-39 + HT 60-79 = 論理 40 スレッド
+- **numactl -N1 -m1** は node1 の 40 論理スレッドに CPU 束縛 + メモリ node1 確保
+- **threads=40 が node1 論理上限**、44 は node0 漏れ (NUMA 違反)
+- threads=20 で node1 物理コアフル使用、threads > 20 から HT 使用開始
+- threads=14 は CPU オフロード層数 (layer 0-3, 24, 31-39 = 14 層) と一致、T-3 dip 仮説検証点

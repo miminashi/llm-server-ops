@@ -1,0 +1,20 @@
+[03:01:52] ==== measure_phaseT5 start tag=T5a_B24_run2_B24_t40_kvq8_0_smlayer_ctx32768_ub512_warmup pid=1140238 ====
+[03:01:52] wait /health
+[03:01:52] /health OK
+[03:01:53] numastat -p (pre)
+[03:01:54] snap_extras (pre)
+[03:01:58] Run 1: dmon start (background, 30s)
+[03:01:58] Run 1: eval request (prompt bytes=33, marker=T5a_B24_run2_B24_t40_kvq8_0_smlayer_ctx32768_ub512_warmup_r1_1776880918801131970)
+[03:02:18] Run 1: eval=17.19872767037456 prompt=15.771025472002837 prompt_n=79 predicted_n=256
+[03:02:51] Run 1: status snapshot
+[03:02:54] cooldown 60s before run 2
+[03:03:54] Run 2: dmon start (background, 30s)
+[03:03:54] Run 2: eval request (prompt bytes=33, marker=T5a_B24_run2_B24_t40_kvq8_0_smlayer_ctx32768_ub512_warmup_r2_1776881034455755278)
+[03:04:15] Run 2: eval=16.666672092015656 prompt=15.953697925817325 prompt_n=79 predicted_n=256
+[03:04:48] Run 2: status snapshot
+[03:04:50] numastat -p (post)
+[03:04:51] snap_extras (post)
+[03:04:56] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=17.19872767037456 prompt=15.771025472002837 prompt_n=79 predicted_n=256
+run2: eval=16.666672092015656 prompt=15.953697925817325 prompt_n=79 predicted_n=256
+[03:04:56] ==== measure_phaseT5 end tag=T5a_B24_run2_B24_t40_kvq8_0_smlayer_ctx32768_ub512_warmup ====

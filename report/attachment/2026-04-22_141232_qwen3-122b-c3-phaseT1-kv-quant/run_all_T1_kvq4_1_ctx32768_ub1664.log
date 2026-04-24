@@ -1,0 +1,65 @@
+[run_all] PID=987914 TAG_PREFIX=T1_kvq4_1_ctx32768_ub1664 WARMUP_RUNS=2 EVAL_RUNS=5
+[run_all] start at 2026-04-22 15:42:28
+[run_all] ==== T1_kvq4_1_ctx32768_ub1664_warmup (runs=2) ====
+[15:42:28] ==== measure_phaseI start tag=T1_kvq4_1_ctx32768_ub1664_warmup pid=987914 ====
+[15:42:28] wait /health
+[15:42:29] /health OK
+[15:42:30] numastat -p (pre)
+[15:42:31] snap_extras (pre)
+[15:42:35] Run 1: dmon start (background, 30s)
+[15:42:35] Run 1: eval request (prompt bytes=33, marker=T1_kvq4_1_ctx32768_ub1664_warmup_r1_1776840155775926627)
+[15:42:59] Run 1: eval=14.9914686245837 prompt=10.316510543473775 prompt_n=65 predicted_n=256
+[15:43:26] Run 1: status snapshot
+[15:43:29] cooldown 60s before run 2
+[15:44:29] Run 2: dmon start (background, 30s)
+[15:44:29] Run 2: eval request (prompt bytes=33, marker=T1_kvq4_1_ctx32768_ub1664_warmup_r2_1776840269229033558)
+[15:44:53] Run 2: eval=14.9990022148136 prompt=10.418241089959588 prompt_n=65 predicted_n=256
+[15:45:20] Run 2: status snapshot
+[15:45:22] numastat -p (post)
+[15:45:23] snap_extras (post)
+[15:45:27] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=14.9914686245837 prompt=10.316510543473775 prompt_n=65 predicted_n=256
+run2: eval=14.9990022148136 prompt=10.418241089959588 prompt_n=65 predicted_n=256
+[15:45:28] ==== measure_phaseI end tag=T1_kvq4_1_ctx32768_ub1664_warmup ====
+[run_all] ---- T1_kvq4_1_ctx32768_ub1664_warmup done ----
+[run_all] ==== T1_kvq4_1_ctx32768_ub1664_1k (runs=5) ====
+[15:45:28] ==== measure_phaseI start tag=T1_kvq4_1_ctx32768_ub1664_1k pid=987914 ====
+[15:45:28] wait /health
+[15:45:28] /health OK
+[15:45:29] numastat -p (pre)
+[15:45:30] snap_extras (pre)
+[15:45:35] Run 1: dmon start (background, 30s)
+[15:45:35] Run 1: eval request (prompt bytes=6200, marker=T1_kvq4_1_ctx32768_ub1664_1k_r1_1776840335097839016)
+[15:46:08] Run 1: eval=14.907956760869036 prompt=67.82907547658513 prompt_n=1086 predicted_n=256
+[15:46:25] Run 1: status snapshot
+[15:46:27] cooldown 60s before run 2
+[15:47:27] Run 2: dmon start (background, 30s)
+[15:47:27] Run 2: eval request (prompt bytes=6200, marker=T1_kvq4_1_ctx32768_ub1664_1k_r2_1776840447253351445)
+[15:48:00] Run 2: eval=14.914454244289555 prompt=67.9842549467153 prompt_n=1086 predicted_n=256
+[15:48:18] Run 2: status snapshot
+[15:48:20] cooldown 60s before run 3
+[15:49:20] Run 3: dmon start (background, 30s)
+[15:49:20] Run 3: eval request (prompt bytes=6200, marker=T1_kvq4_1_ctx32768_ub1664_1k_r3_1776840560359580027)
+[15:49:54] Run 3: eval=14.909583857207187 prompt=67.93486760207432 prompt_n=1086 predicted_n=256
+[15:50:11] Run 3: status snapshot
+[15:50:13] cooldown 60s before run 4
+[15:51:13] Run 4: dmon start (background, 30s)
+[15:51:13] Run 4: eval request (prompt bytes=6200, marker=T1_kvq4_1_ctx32768_ub1664_1k_r4_1776840673259316449)
+[15:51:46] Run 4: eval=14.91160389560992 prompt=67.9996518618192 prompt_n=1086 predicted_n=256
+[15:52:02] Run 4: status snapshot
+[15:52:05] cooldown 60s before run 5
+[15:53:05] Run 5: dmon start (background, 30s)
+[15:53:05] Run 5: eval request (prompt bytes=6200, marker=T1_kvq4_1_ctx32768_ub1664_1k_r5_1776840785079800495)
+[15:53:38] Run 5: eval=14.909232186772611 prompt=68.04139949505262 prompt_n=1086 predicted_n=256
+[15:53:55] Run 5: status snapshot
+[15:53:57] numastat -p (post)
+[15:53:58] snap_extras (post)
+[15:54:04] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=14.907956760869036 prompt=67.82907547658513 prompt_n=1086 predicted_n=256
+run2: eval=14.914454244289555 prompt=67.9842549467153 prompt_n=1086 predicted_n=256
+run3: eval=14.909583857207187 prompt=67.93486760207432 prompt_n=1086 predicted_n=256
+run4: eval=14.91160389560992 prompt=67.9996518618192 prompt_n=1086 predicted_n=256
+run5: eval=14.909232186772611 prompt=68.04139949505262 prompt_n=1086 predicted_n=256
+[15:54:04] ==== measure_phaseI end tag=T1_kvq4_1_ctx32768_ub1664_1k ====
+[run_all] ---- T1_kvq4_1_ctx32768_ub1664_1k done ----
+[run_all] end at 2026-04-22 15:54:04

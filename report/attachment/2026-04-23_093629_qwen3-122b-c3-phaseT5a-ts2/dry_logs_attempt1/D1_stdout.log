@@ -1,0 +1,25 @@
+[start_phaseT5] OT_TAG=B14 OT_REGEX=blk\.(20|2[1-4]|3[1-9])\.ffn_.*_exps\.weight=CPU TS=11,12,14,13
+[start_phaseT5] THREADS=40 SPLIT_MODE=layer CACHE_TYPE_K=q8_0 CACHE_TYPE_V=q8_0 FLASH_ATTN=1 CTX_SIZE=32768 -b 256 -ub 256
+[start_phaseT5] remote log: /tmp/llama-server_phaseT5_B14_t40_smlayer_kq8_0_vq8_0_fa1_ctx32768_b256_ub256_ts11-12-14-13.log
+[start_phaseT5] waiting for /health (max 300s) or OOM/ub-reject/threads abort...
+[start_phaseT5] OOM pattern detected in /tmp/llama-server_phaseT5_B14_t40_smlayer_kq8_0_vq8_0_fa1_ctx32768_b256_ub256_ts11-12-14-13.log, abort
+print_info: FIM MID token         = 248061 '<|fim_middle|>'
+print_info: FIM PAD token         = 248063 '<|fim_pad|>'
+print_info: FIM REP token         = 248064 '<|repo_name|>'
+print_info: FIM SEP token         = 248065 '<|file_sep|>'
+print_info: EOG token             = 248044 '<|endoftext|>'
+print_info: EOG token             = 248046 '<|im_end|>'
+print_info: EOG token             = 248063 '<|fim_pad|>'
+print_info: EOG token             = 248064 '<|repo_name|>'
+print_info: EOG token             = 248065 '<|file_sep|>'
+print_info: max token length      = 256
+load_tensors: loading model tensors, this can take a while... (mmap = true, direct_io = false)
+llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --no-mmap for better performance
+ggml_backend_cuda_buffer_type_alloc_buffer: allocating 16418.49 MiB on device 0: cudaMalloc failed: out of memory
+alloc_tensor_range: failed to allocate CUDA0 buffer of size 17216029696
+llama_model_load: error loading model: unable to allocate CUDA0 buffer
+llama_model_load_from_file_impl: failed to load model
+common_init_from_params: failed to load model '/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.5-122B-A10B-GGUF/snapshots/51eab4d59d53f573fb9206cb3ce613f1d0aa392b/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf'
+srv    load_model: failed to load model, '/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.5-122B-A10B-GGUF/snapshots/51eab4d59d53f573fb9206cb3ce613f1d0aa392b/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf'
+srv    operator(): operator(): cleaning up before exit...
+main: exiting due to model loading error

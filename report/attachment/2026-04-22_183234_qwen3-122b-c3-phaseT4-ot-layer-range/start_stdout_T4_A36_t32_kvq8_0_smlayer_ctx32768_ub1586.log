@@ -1,0 +1,7 @@
+[start_phaseT4] OT_TAG=A36 OT_REGEX=blk\.([0-9]|1[0-3]|2[0-4]|3[1-9]|4[0-7])\.ffn_.*_exps\.weight=CPU
+[start_phaseT4] THREADS=32 SPLIT_MODE=layer CACHE_TYPE_K=q8_0 CACHE_TYPE_V=q8_0 FLASH_ATTN=1 CTX_SIZE=32768 -b 1586 -ub 1586
+[start_phaseT4] remote log: /tmp/llama-server_phaseT4_A36_t32_smlayer_kq8_0_vq8_0_fa1_ctx32768_b1586_ub1586.log
+[start_phaseT4] waiting for /health (max 300s) or OOM/ub-reject/threads abort...
+[start_phaseT4] /health OK after 3*5s
+[start_phaseT4] PID=1028829
+1028829

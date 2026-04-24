@@ -1,0 +1,38 @@
+[15:20:46] ==== measure_phaseI start tag=T1_kvq4_0_ctx32768_ub1664_1k pid=980978 ====
+[15:20:46] wait /health
+[15:20:46] /health OK
+[15:20:47] numastat -p (pre)
+[15:20:49] snap_extras (pre)
+[15:20:53] Run 1: dmon start (background, 30s)
+[15:20:53] Run 1: eval request (prompt bytes=6200, marker=T1_kvq4_0_ctx32768_ub1664_1k_r1_1776838853817453063)
+[15:21:28] Run 1: eval=14.082006897212958 prompt=68.12034393372029 prompt_n=1086 predicted_n=256
+[15:21:44] Run 1: status snapshot
+[15:21:46] cooldown 60s before run 2
+[15:22:46] Run 2: dmon start (background, 30s)
+[15:22:46] Run 2: eval request (prompt bytes=6200, marker=T1_kvq4_0_ctx32768_ub1664_1k_r2_1776838966361927020)
+[15:23:21] Run 2: eval=14.079487506654758 prompt=68.22970491406545 prompt_n=1086 predicted_n=256
+[15:23:37] Run 2: status snapshot
+[15:23:39] cooldown 60s before run 3
+[15:24:39] Run 3: dmon start (background, 30s)
+[15:24:39] Run 3: eval request (prompt bytes=6200, marker=T1_kvq4_0_ctx32768_ub1664_1k_r3_1776839079241811247)
+[15:25:13] Run 3: eval=14.083420722059182 prompt=68.36259621752149 prompt_n=1086 predicted_n=256
+[15:25:30] Run 3: status snapshot
+[15:25:32] cooldown 60s before run 4
+[15:26:32] Run 4: dmon start (background, 30s)
+[15:26:32] Run 4: eval request (prompt bytes=6200, marker=T1_kvq4_0_ctx32768_ub1664_1k_r4_1776839192511998879)
+[15:27:07] Run 4: eval=14.070993438519874 prompt=68.26232469672452 prompt_n=1086 predicted_n=256
+[15:27:23] Run 4: status snapshot
+[15:27:25] cooldown 60s before run 5
+[15:28:25] Run 5: dmon start (background, 30s)
+[15:28:25] Run 5: eval request (prompt bytes=6200, marker=T1_kvq4_0_ctx32768_ub1664_1k_r5_1776839305541034530)
+[15:29:00] Run 5: eval=14.073914439396404 prompt=68.25477382749956 prompt_n=1086 predicted_n=256
+[15:29:14] Run 5: status snapshot
+[15:29:17] numastat -p (post)
+[15:29:18] snap_extras (post)
+[15:29:22] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=14.082006897212958 prompt=68.12034393372029 prompt_n=1086 predicted_n=256
+run2: eval=14.079487506654758 prompt=68.22970491406545 prompt_n=1086 predicted_n=256
+run3: eval=14.083420722059182 prompt=68.36259621752149 prompt_n=1086 predicted_n=256
+run4: eval=14.070993438519874 prompt=68.26232469672452 prompt_n=1086 predicted_n=256
+run5: eval=14.073914439396404 prompt=68.25477382749956 prompt_n=1086 predicted_n=256
+[15:29:22] ==== measure_phaseI end tag=T1_kvq4_0_ctx32768_ub1664_1k ====
