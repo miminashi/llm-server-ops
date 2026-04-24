@@ -1,0 +1,22 @@
+# Phase S-eval 再現性検証 verdict
+ctx=32768, fa=1, f16/f16 KV, OT_REGEX=MoE only, threads=40, poll=0, numactl node1
+warmup_runs=2, eval_runs=5
+thresholds: confirmed <= 0.05 t/s, partial <= 0.1 t/s
+
+ub    | ref (1-run) | mean   | stdev  | min    | max    | median | Δmean  | verdict
+------|-------------|--------|--------|--------|--------|--------|--------|----------
+1584  |      15.293 | 15.206 |  0.005 | 15.199 | 15.211 | 15.208 | -0.087 | partial
+1586  |      15.466 | 15.188 |  0.008 | 15.177 | 15.198 | 15.188 | -0.278 | reject
+1664  |      15.451 | 14.646 |  0.005 | 14.639 | 14.652 | 14.645 | -0.805 | reject
+
+overall: ['partial', 'reject', 'reject']
+
+## Run 1 外れ値チェック（eval フェーズ、平均 ± 2σ）
+ub=1584: run1=15.208, mean=15.206, stdev=0.005, |run1-mean|=0.002, 2σ=0.010 → in_range
+ub=1586: run1=15.177, mean=15.188, stdev=0.008, |run1-mean|=0.011, 2σ=0.015 → in_range
+ub=1664: run1=14.652, mean=14.646, stdev=0.005, |run1-mean|=0.006, 2σ=0.010 → in_range
+
+## ub=1586 vs ub=1584 有意差（Welch t 近似）
+ub=1586 - ub=1584: diff=-0.019, SE=0.004, t=-4.61 → significant (|t|>2.0)
+ub=1664 - ub=1584: diff=-0.560, SE=0.003, t=-183.18 → significant (|t|>2.0)
+ub=1586 - ub=1664: diff=+0.542, SE=0.004, t=+134.59 → significant (|t|>2.0)

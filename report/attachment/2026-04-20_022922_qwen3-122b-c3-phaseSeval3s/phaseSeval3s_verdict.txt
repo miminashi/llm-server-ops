@@ -1,0 +1,60 @@
+# Phase S-eval-3session verdict
+ctx=32768, fa=1, f16/f16 KV, OT_REGEX=MoE only, threads=40, poll=0, numactl node1
+warmup_runs=2, eval_runs=5
+sessions: ['S1_phaseSeval', 'S2_phaseSevalcross', 'S3_phaseSeval3s']
+thresholds: 1-run [confirmed <= 0.05, partial <= 0.1], session range [independent <= 0.02, partial <= 0.1]
+
+## 1. 本 Phase (S3) 5-run 統計（eval フェーズ）
+ub    | mean   | stdev  | min    | max    | median
+------|--------|--------|--------|--------|--------
+1584  | 15.359 |  0.004 | 15.353 | 15.363 | 15.359
+1586  | 15.146 |  0.004 | 15.140 | 15.149 | 15.147
+1664  | 15.135 |  0.004 | 15.131 | 15.142 | 15.133
+
+## 2. 3 session mean 時系列 (eval 5-run mean, t/s)
+ub    | S1_Seval | S2_Sevalcross | S3_Seval3s | range | mean_of_means | σ_session
+------|----------|---------------|------------|-------|---------------|----------
+1584  |   15.206 |        15.470 |     15.359 | 0.264 |        15.345 |    0.132  [session_dominated]
+1586  |   15.188 |        15.204 |     15.146 | 0.058 |        15.179 |    0.030  [partial_drift]
+1664  |   14.646 |        15.042 |     15.135 | 0.489 |        14.941 |    0.260  [session_dominated]
+
+## 3. 過去 1-run 参照値との再現性（本 Phase, 再確認）
+ub    | ref_1run | cur_mean | Δ_1run   | verdict_1run
+------|----------|----------|----------|-------------
+1584  |   15.293 |   15.359 |   +0.066 | partial
+1586  |   15.466 |   15.146 |   -0.320 | reject
+1664  |   15.451 |   15.135 |   -0.316 | reject
+
+## 4. ピーク ub 順序の session 間安定性
+S1_phaseSeval peak order: [1584, 1586, 1664] (means: ub1584=15.206, ub1586=15.188, ub1664=14.646)
+S2_phaseSevalcross peak order: [1584, 1586, 1664] (means: ub1584=15.470, ub1586=15.204, ub1664=15.042)
+S3_phaseSeval3s peak order: [1584, 1586, 1664] (means: ub1584=15.359, ub1586=15.146, ub1664=15.135)
+
+## 5. Prior 2-session pool (S1+S2) vs 本 Phase (S3) Welch t
+ub    | n_prior | mean_prior | n_cur | mean_cur | diff    | SE      | t_welch | sig
+------|---------|------------|-------|----------|---------|---------|---------|-----
+1584  |      10 |     15.338 |     5 |   15.359 |  +0.021 |   0.044 |   +0.48 | not_sig
+1586  |      10 |     15.196 |     5 |   15.146 |  -0.050 |   0.004 |  -13.87 | significant
+1664  |      10 |     14.844 |     5 |   15.135 |  +0.291 |   0.066 |   +4.42 | significant
+
+## 6. Pooled 15-run (S1+S2+S3) 統計
+ub    | pool_n | mean   | stdev  | min    | max    | median | σ_pool/σ_run_avg
+------|--------|--------|--------|--------|--------|--------|------------------
+1584  |     15 | 15.345 |  0.112 | 15.199 | 15.474 | 15.359 |              26.0x
+1586  |     15 | 15.179 |  0.026 | 15.140 | 15.206 | 15.188 |               5.8x
+1664  |     15 | 14.941 |  0.219 | 14.639 | 15.142 | 15.042 |              53.3x
+
+## 7. Run 1 外れ値チェック（本 Phase eval、平均 ± 2σ）
+ub=1584: run1=15.363, mean=15.359, stdev=0.004, |run1-mean|=0.003, 2σ=0.008 → in_range
+ub=1586: run1=15.140, mean=15.146, stdev=0.004, |run1-mean|=0.006, 2σ=0.007 → in_range
+ub=1664: run1=15.137, mean=15.135, stdev=0.004, |run1-mean|=0.002, 2σ=0.008 → in_range
+
+## 8. ub 間有意差（本 Phase 5-run プール、Welch t 近似）
+ub=1586 - ub=1584: diff=-0.213, SE=0.002, t=-86.92 → significant
+ub=1664 - ub=1584: diff=-0.224, SE=0.003, t=-86.51 → significant
+ub=1586 - ub=1664: diff=+0.011, SE=0.002, t=+4.39 → significant
+
+## 9. 3-session verdict summary (range ベース)
+ub=1584: range_Δ=0.264 t/s → session_dominated
+ub=1586: range_Δ=0.058 t/s → partial_drift
+ub=1664: range_Δ=0.489 t/s → session_dominated

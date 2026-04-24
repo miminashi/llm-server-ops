@@ -1,0 +1,202 @@
+# Phase S-eval-12session verdict
+ctx=32768, fa=1, f16/f16 KV, OT_REGEX=MoE only, threads=40, poll=0, numactl node1
+warmup_runs=2, eval_runs=5
+sessions: ['S1_phaseSeval', 'S2_phaseSevalcross', 'S3_phaseSeval3s', 'S4_phaseSeval4s', 'S5_phaseSeval5s', 'S6_phaseSeval6s', 'S7_phaseSeval7s', 'S8_phaseSeval8s', 'S9_phaseSeval9s', 'S10_phaseSeval10s', 'S11_phaseSeval11s', 'S12_phaseSeval12s']
+thresholds: 1-run [confirmed <= 0.05, partial <= 0.1], session range [independent <= 0.02, partial <= 0.1]
+崩壊判定: eval_mean < 15.0 t/s
+
+## 1. 本 Phase (S11) 5-run 統計（eval フェーズ）
+ub    | mean   | stdev  | min    | max    | median
+------|--------|--------|--------|--------|--------
+1584  | 15.133 |  0.005 | 15.127 | 15.139 | 15.133
+1586  | 15.059 |  0.006 | 15.054 | 15.067 | 15.056
+1664  | 14.721 |  0.058 | 14.617 | 14.752 | 14.746
+
+## 2. 12 session mean 時系列 (eval 5-run mean, t/s)
+ub    | S1_phaseS | S2_phaseS | S3_phaseS | S4_phaseS | S5_phaseS | S6_phaseS | S7_phaseS | S8_phaseS | S9_phaseS | S10_phase | S11_phase | S12_phase | range | mean_all | σ_session
+------|------------|------------|------------|------------|------------|------------|------------|------------|------------|------------|------------|------------|-------|---------|----------
+1584  |    15.206 |    15.470 |    15.359 |    14.631 |    15.207 |    15.289 |    15.122 |    15.260 |    15.416 |    15.043 |    15.248 |    15.133 | 0.839 |  15.199 |    0.217  [session_dominated]
+1586  |    15.188 |    15.204 |    15.146 |    15.134 |    15.321 |    14.727 |    15.134 |    15.273 |    14.843 |    15.300 |    15.048 |    15.059 | 0.594 |  15.115 |    0.178  [session_dominated]
+1664  |    14.646 |    15.042 |    15.135 |    14.593 |    14.714 |    15.292 |    14.736 |    15.380 |    14.602 |    14.945 |    15.038 |    14.721 | 0.787 |  14.904 |    0.273  [session_dominated]
+
+## 3. 過去 1-run 参照値との再現性（本 Phase, 再確認）
+ub    | ref_1run | cur_mean | Δ_1run   | verdict_1run
+------|----------|----------|----------|-------------
+1584  |   15.293 |   15.133 |   -0.160 | reject
+1586  |   15.466 |   15.059 |   -0.407 | reject
+1664  |   15.451 |   14.721 |   -0.730 | reject
+
+## 4. ピーク ub 順序の session 間安定性
+S1_phaseSeval peak order: [1584, 1586, 1664] (means: ub1584=15.206, ub1586=15.188, ub1664=14.646)
+S2_phaseSevalcross peak order: [1584, 1586, 1664] (means: ub1584=15.470, ub1586=15.204, ub1664=15.042)
+S3_phaseSeval3s peak order: [1584, 1586, 1664] (means: ub1584=15.359, ub1586=15.146, ub1664=15.135)
+S4_phaseSeval4s peak order: [1586, 1584, 1664] (means: ub1586=15.134, ub1584=14.631, ub1664=14.593)
+S5_phaseSeval5s peak order: [1586, 1584, 1664] (means: ub1586=15.321, ub1584=15.207, ub1664=14.714)
+S6_phaseSeval6s peak order: [1664, 1584, 1586] (means: ub1664=15.292, ub1584=15.289, ub1586=14.727)
+S7_phaseSeval7s peak order: [1586, 1584, 1664] (means: ub1586=15.134, ub1584=15.122, ub1664=14.736)
+S8_phaseSeval8s peak order: [1664, 1586, 1584] (means: ub1664=15.380, ub1586=15.273, ub1584=15.260)
+S9_phaseSeval9s peak order: [1584, 1586, 1664] (means: ub1584=15.416, ub1586=14.843, ub1664=14.602)
+S10_phaseSeval10s peak order: [1586, 1584, 1664] (means: ub1586=15.300, ub1584=15.043, ub1664=14.945)
+S11_phaseSeval11s peak order: [1584, 1586, 1664] (means: ub1584=15.248, ub1586=15.048, ub1664=15.038)
+S12_phaseSeval12s peak order: [1584, 1586, 1664] (means: ub1584=15.133, ub1586=15.059, ub1664=14.721)
+
+## 5. Prior 11-session pool (S1..S11) vs 本 Phase (S12) Welch t
+ub    | n_prior | mean_prior | n_cur | mean_cur | diff    | SE      | t_welch | sig
+------|---------|------------|-------|----------|---------|---------|---------|-----
+1584  |      55 |     15.205 |     5 |   15.133 |  -0.072 |   0.029 |   -2.44 | significant
+1586  |      55 |     15.120 |     5 |   15.059 |  -0.061 |   0.024 |   -2.51 | significant
+1664  |      55 |     14.920 |     5 |   14.721 |  -0.199 |   0.045 |   -4.46 | significant
+
+## 6. Pooled 60-run (S1+S2+S3+S4+S5+S6+S7+S8+S9+S10+S11+S12) 統計
+ub    | pool_n | mean   | stdev  | min    | max    | median | σ_pool/σ_run_avg
+------|--------|--------|--------|--------|--------|--------|------------------
+1584  |     60 | 15.199 |  0.209 | 14.627 | 15.474 | 15.225 |              46.9x
+1586  |     60 | 15.115 |  0.172 | 14.724 | 15.323 | 15.141 |              42.0x
+1664  |     60 | 14.904 |  0.264 | 14.589 | 15.381 | 14.845 |              32.6x
+
+## 7. Run 1 外れ値チェック（本 Phase eval、平均 ± 2σ）
+ub=1584: run1=15.133, mean=15.133, stdev=0.005, |run1-mean|=0.000, 2σ=0.010 → in_range
+ub=1586: run1=15.056, mean=15.059, stdev=0.006, |run1-mean|=0.003, 2σ=0.011 → in_range
+ub=1664: run1=14.617, mean=14.721, stdev=0.058, |run1-mean|=0.104, 2σ=0.116 → in_range
+
+## 8. ub 間有意差（本 Phase 5-run プール、Welch t 近似）
+ub=1586 - ub=1584: diff=-0.074, SE=0.003, t=-21.81 → significant
+ub=1664 - ub=1584: diff=-0.412, SE=0.026, t=-15.81 → significant
+ub=1586 - ub=1664: diff=+0.338, SE=0.026, t=+12.96 → significant
+
+## 9. 12-session verdict summary (range ベース)
+ub=1584: range_Δ=0.839 t/s → session_dominated
+ub=1586: range_Δ=0.594 t/s → session_dominated
+ub=1664: range_Δ=0.787 t/s → session_dominated
+
+## 10. 崩壊頻度カウント（eval_mean < 15.0 t/s）
+
+### ub=1584
+  S1_phaseSeval: mean=15.206 → normal
+  S2_phaseSevalcross: mean=15.470 → normal
+  S3_phaseSeval3s: mean=15.359 → normal
+  S4_phaseSeval4s: mean=14.631 → COLLAPSE
+  S5_phaseSeval5s: mean=15.207 → normal
+  S6_phaseSeval6s: mean=15.289 → normal
+  S7_phaseSeval7s: mean=15.122 → normal
+  S8_phaseSeval8s: mean=15.260 → normal
+  S9_phaseSeval9s: mean=15.416 → normal
+  S10_phaseSeval10s: mean=15.043 → normal
+  S11_phaseSeval11s: mean=15.248 → normal
+  S12_phaseSeval12s: mean=15.133 → normal
+  → 崩壊 session: 1 / 12 = 8.3% (Wilson 95% CI: [1.5%, 35.4%])
+  崩壊 session ラベル: ['S4_phaseSeval4s']
+
+### ub=1586
+  S1_phaseSeval: mean=15.188 → normal
+  S2_phaseSevalcross: mean=15.204 → normal
+  S3_phaseSeval3s: mean=15.146 → normal
+  S4_phaseSeval4s: mean=15.134 → normal
+  S5_phaseSeval5s: mean=15.321 → normal
+  S6_phaseSeval6s: mean=14.727 → COLLAPSE
+  S7_phaseSeval7s: mean=15.134 → normal
+  S8_phaseSeval8s: mean=15.273 → normal
+  S9_phaseSeval9s: mean=14.843 → COLLAPSE
+  S10_phaseSeval10s: mean=15.300 → normal
+  S11_phaseSeval11s: mean=15.048 → normal
+  S12_phaseSeval12s: mean=15.059 → normal
+  → 崩壊 session: 2 / 12 = 16.7% (Wilson 95% CI: [4.7%, 44.8%])
+  崩壊 session ラベル: ['S6_phaseSeval6s', 'S9_phaseSeval9s']
+
+### ub=1664
+  S1_phaseSeval: mean=14.646 → COLLAPSE
+  S2_phaseSevalcross: mean=15.042 → normal
+  S3_phaseSeval3s: mean=15.135 → normal
+  S4_phaseSeval4s: mean=14.593 → COLLAPSE
+  S5_phaseSeval5s: mean=14.714 → COLLAPSE
+  S6_phaseSeval6s: mean=15.292 → normal
+  S7_phaseSeval7s: mean=14.736 → COLLAPSE
+  S8_phaseSeval8s: mean=15.380 → normal
+  S9_phaseSeval9s: mean=14.602 → COLLAPSE
+  S10_phaseSeval10s: mean=14.945 → COLLAPSE
+  S11_phaseSeval11s: mean=15.038 → normal
+  S12_phaseSeval12s: mean=14.721 → COLLAPSE
+  → 崩壊 session: 7 / 12 = 58.3% (Wilson 95% CI: [32.0%, 80.7%])
+  崩壊 session ラベル: ['S1_phaseSeval', 'S4_phaseSeval4s', 'S5_phaseSeval5s', 'S7_phaseSeval7s', 'S9_phaseSeval9s', 'S10_phaseSeval10s', 'S12_phaseSeval12s']
+
+## 11. ub=1664 時系列パターン分析 (12 session)
+  S1_phaseSeval: 14.646
+  S2_phaseSevalcross: 15.042
+  S3_phaseSeval3s: 15.135
+  S4_phaseSeval4s: 14.593
+  S5_phaseSeval5s: 14.714
+  S6_phaseSeval6s: 15.292
+  S7_phaseSeval7s: 14.736
+  S8_phaseSeval8s: 15.380
+  S9_phaseSeval9s: 14.602
+  S10_phaseSeval10s: 14.945
+  S11_phaseSeval11s: 15.038
+  S12_phaseSeval12s: 14.721
+  Δ_pattern: +0.395 | +0.093 | -0.542 | +0.121 | +0.579 | -0.556 | +0.643 | -0.778 | +0.344 | +0.093 | -0.317
+  符号変化数: 7 / 10
+  上昇 step: 7, 下降 step: 4
+  完全交互（bimodal/periodic 候補）: NO
+  単調増加: NO / 単調減少: NO
+
+## 11b. ub=1586 時系列パターン分析 (12 session)
+  S1_phaseSeval: 15.188
+  S2_phaseSevalcross: 15.204
+  S3_phaseSeval3s: 15.146
+  S4_phaseSeval4s: 15.134
+  S5_phaseSeval5s: 15.321
+  S6_phaseSeval6s: 14.727
+  S7_phaseSeval7s: 15.134
+  S8_phaseSeval8s: 15.273
+  S9_phaseSeval9s: 14.843
+  S10_phaseSeval10s: 15.300
+  S11_phaseSeval11s: 15.048
+  S12_phaseSeval12s: 15.059
+  Δ_pattern: +0.016 | -0.058 | -0.012 | +0.187 | -0.594 | +0.407 | +0.139 | -0.430 | +0.457 | -0.252 | +0.011
+  符号変化数: 8 / 10
+
+## 11c. ub=1584 時系列パターン分析 (12 session)
+  S1_phaseSeval: 15.206
+  S2_phaseSevalcross: 15.470
+  S3_phaseSeval3s: 15.359
+  S4_phaseSeval4s: 14.631
+  S5_phaseSeval5s: 15.207
+  S6_phaseSeval6s: 15.289
+  S7_phaseSeval7s: 15.122
+  S8_phaseSeval8s: 15.260
+  S9_phaseSeval9s: 15.416
+  S10_phaseSeval10s: 15.043
+  S11_phaseSeval11s: 15.248
+  S12_phaseSeval12s: 15.133
+  Δ_pattern: +0.264 | -0.111 | -0.728 | +0.575 | +0.082 | -0.167 | +0.139 | +0.156 | -0.373 | +0.205 | -0.115
+
+## 12. ピーク 1 位 ub の出現頻度 (12 session)
+  ub=1584: 1位回数 6 / 12
+  ub=1586: 1位回数 4 / 12
+  ub=1664: 1位回数 2 / 12
+
+  ピーク順序パターン集計:
+    (1584, 1586, 1664): 6 / 12
+    (1586, 1584, 1664): 4 / 12
+    (1664, 1584, 1586): 1 / 12
+    (1664, 1586, 1584): 1 / 12
+
+## 13. モード分類 (S1-S3 A / S4-S5 B / S6 C / S8 D / S9 / S10 / S11 / S12) の eval_mean 比較
+ub    | modeA_mean | modeB_mean | modeC_mean | modeD_mean | S9_mean | S10_mean | S11_mean | S12_mean | closer_to | dA     | dB     | dC     | dD     | dS9    | dS10   | dS11
+------|------------|------------|------------|------------|---------|----------|----------|----------|-----------|--------|--------|--------|--------|--------|--------|--------
+1584  |     15.345 |     14.919 |     15.289 |     15.260 |  15.416 |   15.043 |   15.248 |   15.133 | S10       | -0.212 | +0.214 | -0.156 | -0.127 | -0.283 | +0.090 | -0.115
+1586  |     15.179 |     15.227 |     14.727 |     15.273 |  14.843 |   15.300 |   15.048 |   15.059 | S11       | -0.120 | -0.168 | +0.332 | -0.214 | +0.216 | -0.241 | +0.011
+1664  |     14.941 |     14.653 |     15.292 |     15.380 |  14.602 |   14.945 |   15.038 |   14.721 | mode_B    | -0.220 | +0.068 | -0.571 | -0.659 | +0.120 | -0.224 | -0.317
+
+## 14. warmup1 ub=1584 absolute 帯のモード判定（S12）
+  warmup1 ub=1584 absolute = 15.433
+  eval mean ub=1584 = 15.133
+  Δ(warmup1 - eval_mean) = +0.300
+  判定: S7_band (15.418 ± 0.04)
+  Δ 判定: mode_A_delta (S1-S3 / S7: +0.296〜+0.31)
+
+## 15. prompt_tps (本 Phase eval フェーズ、参考)
+ub    | mean   | stdev  | min    | max
+------|--------|--------|--------|--------
+1584  | 67.995 |  0.041 | 67.942 | 68.051
+1586  | 68.930 |  0.065 | 68.826 | 68.996
+1664  | 68.613 |  0.128 | 68.395 | 68.706

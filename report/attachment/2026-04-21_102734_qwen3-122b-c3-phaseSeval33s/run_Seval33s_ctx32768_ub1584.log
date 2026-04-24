@@ -1,0 +1,65 @@
+[run_all] PID=656264 TAG_PREFIX=Seval33s_fa1_ctx32768_ub1584 WARMUP_RUNS=2 EVAL_RUNS=5
+[run_all] start at 2026-04-21 10:30:31
+[run_all] ==== Seval33s_fa1_ctx32768_ub1584_warmup (runs=2) ====
+[10:30:32] ==== measure_phaseI start tag=Seval33s_fa1_ctx32768_ub1584_warmup pid=656264 ====
+[10:30:32] wait /health
+[10:30:32] /health OK
+[10:30:33] numastat -p (pre)
+[10:30:34] snap_extras (pre)
+[10:30:38] Run 1: dmon start (background, 30s)
+[10:30:38] Run 1: eval request (prompt bytes=33, marker=Seval33s_fa1_ctx32768_ub1584_warmup_r1_1776735038558211676)
+[10:31:01] Run 1: eval=15.34862636089405 prompt=10.056992201189356 prompt_n=65 predicted_n=256
+[10:31:32] Run 1: status snapshot
+[10:31:34] cooldown 60s before run 2
+[10:32:34] Run 2: dmon start (background, 30s)
+[10:32:34] Run 2: eval request (prompt bytes=33, marker=Seval33s_fa1_ctx32768_ub1584_warmup_r2_1776735154480196649)
+[10:32:58] Run 2: eval=15.240218890025092 prompt=10.337838987680636 prompt_n=65 predicted_n=256
+[10:33:25] Run 2: status snapshot
+[10:33:27] numastat -p (post)
+[10:33:29] snap_extras (post)
+[10:33:33] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=15.34862636089405 prompt=10.056992201189356 prompt_n=65 predicted_n=256
+run2: eval=15.240218890025092 prompt=10.337838987680636 prompt_n=65 predicted_n=256
+[10:33:33] ==== measure_phaseI end tag=Seval33s_fa1_ctx32768_ub1584_warmup ====
+[run_all] ---- Seval33s_fa1_ctx32768_ub1584_warmup done ----
+[run_all] ==== Seval33s_fa1_ctx32768_ub1584_1k (runs=5) ====
+[10:33:33] ==== measure_phaseI start tag=Seval33s_fa1_ctx32768_ub1584_1k pid=656264 ====
+[10:33:33] wait /health
+[10:33:33] /health OK
+[10:33:34] numastat -p (pre)
+[10:33:36] snap_extras (pre)
+[10:33:40] Run 1: dmon start (background, 30s)
+[10:33:40] Run 1: eval request (prompt bytes=6200, marker=Seval33s_fa1_ctx32768_ub1584_1k_r1_1776735220326490976)
+[10:34:13] Run 1: eval=15.21551288106093 prompt=67.87824967120301 prompt_n=1086 predicted_n=256
+[10:34:31] Run 1: status snapshot
+[10:34:33] cooldown 60s before run 2
+[10:35:33] Run 2: dmon start (background, 30s)
+[10:35:33] Run 2: eval request (prompt bytes=6200, marker=Seval33s_fa1_ctx32768_ub1584_1k_r2_1776735333419438994)
+[10:36:06] Run 2: eval=15.21851679740819 prompt=67.96884798685785 prompt_n=1086 predicted_n=256
+[10:36:25] Run 2: status snapshot
+[10:36:27] cooldown 60s before run 3
+[10:37:27] Run 3: dmon start (background, 30s)
+[10:37:27] Run 3: eval request (prompt bytes=6200, marker=Seval33s_fa1_ctx32768_ub1584_1k_r3_1776735447795105569)
+[10:38:01] Run 3: eval=15.21089309095092 prompt=68.01658928370453 prompt_n=1086 predicted_n=256
+[10:38:18] Run 3: status snapshot
+[10:38:20] cooldown 60s before run 4
+[10:39:20] Run 4: dmon start (background, 30s)
+[10:39:20] Run 4: eval request (prompt bytes=6200, marker=Seval33s_fa1_ctx32768_ub1584_1k_r4_1776735560375761847)
+[10:39:53] Run 4: eval=15.21858826906036 prompt=68.079677294807 prompt_n=1086 predicted_n=256
+[10:40:11] Run 4: status snapshot
+[10:40:13] cooldown 60s before run 5
+[10:41:13] Run 5: dmon start (background, 30s)
+[10:41:13] Run 5: eval request (prompt bytes=6200, marker=Seval33s_fa1_ctx32768_ub1584_1k_r5_1776735673664567074)
+[10:41:47] Run 5: eval=15.213215292252702 prompt=68.06528927841957 prompt_n=1086 predicted_n=256
+[10:42:05] Run 5: status snapshot
+[10:42:07] numastat -p (post)
+[10:42:09] snap_extras (post)
+[10:42:13] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=15.21551288106093 prompt=67.87824967120301 prompt_n=1086 predicted_n=256
+run2: eval=15.21851679740819 prompt=67.96884798685785 prompt_n=1086 predicted_n=256
+run3: eval=15.21089309095092 prompt=68.01658928370453 prompt_n=1086 predicted_n=256
+run4: eval=15.21858826906036 prompt=68.079677294807 prompt_n=1086 predicted_n=256
+run5: eval=15.213215292252702 prompt=68.06528927841957 prompt_n=1086 predicted_n=256
+[10:42:13] ==== measure_phaseI end tag=Seval33s_fa1_ctx32768_ub1584_1k ====
+[run_all] ---- Seval33s_fa1_ctx32768_ub1584_1k done ----
+[run_all] end at 2026-04-21 10:42:13

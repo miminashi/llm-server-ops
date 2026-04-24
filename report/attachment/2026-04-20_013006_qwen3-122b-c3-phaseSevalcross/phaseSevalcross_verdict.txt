@@ -1,0 +1,50 @@
+# Phase S-eval-cross-session verdict
+ctx=32768, fa=1, f16/f16 KV, OT_REGEX=MoE only, threads=40, poll=0, numactl node1
+warmup_runs=2, eval_runs=5
+prior_tsv=/home/ubuntu/projects/llm-server-ops/report/attachment/2026-04-20_003250_qwen3-122b-c3-phaseSeval/summary_phaseSeval.tsv
+thresholds: 1-run [confirmed <= 0.05, partial <= 0.1], session [independent <= 0.02, partial <= 0.1]
+
+## 1. 本 Phase 5-run 統計（eval フェーズ）
+ub    | mean   | stdev  | min    | max    | median
+------|--------|--------|--------|--------|--------
+1584  | 15.470 |  0.004 | 15.464 | 15.474 | 15.471
+1586  | 15.204 |  0.002 | 15.201 | 15.206 | 15.204
+1664  | 15.042 |  0.003 | 15.036 | 15.046 | 15.042
+
+## 2. 前 Phase S-eval との session 間 mean 差
+ub    | prior   | cur     | Δsession | SE      | t_welch | sig     | verdict
+------|---------|---------|----------|---------|---------|---------|-------------------
+1584  |  15.206 |  15.470 |   +0.264 |   0.003 |  +93.22 | significant | session_dominated
+1586  |  15.188 |  15.204 |   +0.016 |   0.004 |   +4.62 | significant | session_independent
+1664  |  14.646 |  15.042 |   +0.395 |   0.003 | +150.75 | significant | session_dominated
+
+session_verdicts: ['session_dominated', 'session_independent', 'session_dominated']
+
+## 3. 過去 1-run 参照値との再現性（再確認）
+ub    | ref_1run | cur_mean | Δ_1run   | verdict_1run
+------|----------|----------|----------|-------------
+1584  |   15.293 |   15.470 |   +0.177 | reject
+1586  |   15.466 |   15.204 |   -0.262 | reject
+1664  |   15.451 |   15.042 |   -0.409 | reject
+
+## 4. ピーク ub 順序のセッション間安定性
+前 Phase peak order: [1584, 1586, 1664]
+本 Phase peak order: [1584, 1586, 1664]
+同一順序: True
+
+## 5. Run 1 外れ値チェック（eval フェーズ、平均 ± 2σ）
+ub=1584: run1=15.464, mean=15.470, stdev=0.004, |run1-mean|=0.006, 2σ=0.008 → in_range
+ub=1586: run1=15.201, mean=15.204, stdev=0.002, |run1-mean|=0.003, 2σ=0.004 → in_range
+ub=1664: run1=15.042, mean=15.042, stdev=0.003, |run1-mean|=0.000, 2σ=0.007 → in_range
+
+## 6. ub 間有意差（本 Phase 5-run プール、Welch t 近似）
+ub=1586 - ub=1584: diff=-0.266, SE=0.002, t=-133.27 → significant
+ub=1664 - ub=1584: diff=-0.428, SE=0.002, t=-182.21 → significant
+ub=1586 - ub=1664: diff=+0.162, SE=0.002, t=+92.01 → significant
+
+## 7. Pooled 10-run 統計（prior + cur、真の性能推定）
+ub    | pool_n | mean   | stdev  | min    | max    | median
+------|--------|--------|--------|--------|--------|--------
+1584  |     10 | 15.338 |  0.139 | 15.199 | 15.474 | 15.338
+1586  |     10 | 15.196 |  0.010 | 15.177 | 15.206 | 15.200
+1664  |     10 | 14.844 |  0.208 | 14.639 | 15.046 | 14.844

@@ -1,0 +1,38 @@
+[09:50:47] ==== measure_phaseI start tag=Seval32s_fa1_ctx32768_ub1586_1k pid=648997 ====
+[09:50:47] wait /health
+[09:50:47] /health OK
+[09:50:48] numastat -p (pre)
+[09:50:49] snap_extras (pre)
+[09:50:54] Run 1: dmon start (background, 30s)
+[09:50:54] Run 1: eval request (prompt bytes=6200, marker=Seval32s_fa1_ctx32768_ub1586_1k_r1_1776732654194032032)
+[09:51:28] Run 1: eval=14.4489544121378 prompt=68.4523614425875 prompt_n=1086 predicted_n=256
+[09:51:44] Run 1: status snapshot
+[09:51:46] cooldown 60s before run 2
+[09:52:46] Run 2: dmon start (background, 30s)
+[09:52:46] Run 2: eval request (prompt bytes=6200, marker=Seval32s_fa1_ctx32768_ub1586_1k_r2_1776732766818370218)
+[09:53:21] Run 2: eval=14.454965639247987 prompt=68.57453309804144 prompt_n=1086 predicted_n=256
+[09:53:39] Run 2: status snapshot
+[09:53:41] cooldown 60s before run 3
+[09:54:41] Run 3: dmon start (background, 30s)
+[09:54:41] Run 3: eval request (prompt bytes=6200, marker=Seval32s_fa1_ctx32768_ub1586_1k_r3_1776732881221439246)
+[09:55:15] Run 3: eval=14.44563276075397 prompt=68.59147222310646 prompt_n=1086 predicted_n=256
+[09:55:31] Run 3: status snapshot
+[09:55:33] cooldown 60s before run 4
+[09:56:33] Run 4: dmon start (background, 30s)
+[09:56:33] Run 4: eval request (prompt bytes=6200, marker=Seval32s_fa1_ctx32768_ub1586_1k_r4_1776732993888362210)
+[09:57:08] Run 4: eval=14.45622840389121 prompt=68.58892064091357 prompt_n=1086 predicted_n=256
+[09:57:24] Run 4: status snapshot
+[09:57:26] cooldown 60s before run 5
+[09:58:26] Run 5: dmon start (background, 30s)
+[09:58:26] Run 5: eval request (prompt bytes=6200, marker=Seval32s_fa1_ctx32768_ub1586_1k_r5_1776733106379319378)
+[09:59:00] Run 5: eval=14.448829639155154 prompt=68.5654541230188 prompt_n=1086 predicted_n=256
+[09:59:18] Run 5: status snapshot
+[09:59:20] numastat -p (post)
+[09:59:21] snap_extras (post)
+[09:59:25] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=14.4489544121378 prompt=68.4523614425875 prompt_n=1086 predicted_n=256
+run2: eval=14.454965639247987 prompt=68.57453309804144 prompt_n=1086 predicted_n=256
+run3: eval=14.44563276075397 prompt=68.59147222310646 prompt_n=1086 predicted_n=256
+run4: eval=14.45622840389121 prompt=68.58892064091357 prompt_n=1086 predicted_n=256
+run5: eval=14.448829639155154 prompt=68.5654541230188 prompt_n=1086 predicted_n=256
+[09:59:26] ==== measure_phaseI end tag=Seval32s_fa1_ctx32768_ub1586_1k ====

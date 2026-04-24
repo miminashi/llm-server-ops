@@ -1,0 +1,20 @@
+[13:25:06] ==== measure_phaseI start tag=Seval36s_fa1_ctx32768_ub1586_warmup pid=691698 ====
+[13:25:06] wait /health
+[13:25:06] /health OK
+[13:25:07] numastat -p (pre)
+[13:25:08] snap_extras (pre)
+[13:25:12] Run 1: dmon start (background, 30s)
+[13:25:12] Run 1: eval request (prompt bytes=33, marker=Seval36s_fa1_ctx32768_ub1586_warmup_r1_1776745512869000861)
+[13:25:36] Run 1: eval=15.409234043693003 prompt=10.062090840556108 prompt_n=65 predicted_n=256
+[13:26:03] Run 1: status snapshot
+[13:26:06] cooldown 60s before run 2
+[13:27:06] Run 2: dmon start (background, 30s)
+[13:27:06] Run 2: eval request (prompt bytes=33, marker=Seval36s_fa1_ctx32768_ub1586_warmup_r2_1776745626135288954)
+[13:27:29] Run 2: eval=15.387860336653924 prompt=10.25843361609785 prompt_n=65 predicted_n=256
+[13:27:58] Run 2: status snapshot
+[13:28:00] numastat -p (post)
+[13:28:02] snap_extras (post)
+[13:28:06] ==== summary (predicted_per_second / prompt_per_second / prompt_n / predicted_n) ====
+run1: eval=15.409234043693003 prompt=10.062090840556108 prompt_n=65 predicted_n=256
+run2: eval=15.387860336653924 prompt=10.25843361609785 prompt_n=65 predicted_n=256
+[13:28:06] ==== measure_phaseI end tag=Seval36s_fa1_ctx32768_ub1586_warmup ====
