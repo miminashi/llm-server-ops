@@ -278,14 +278,15 @@ LAUNCH_CMD="${ENV_PREFIX:+$ENV_PREFIX }./build/bin/llama-server \
 ssh "$SERVER" "ps aux | grep '[t]tyd --port 7682' | awk '{print \$2}' | xargs -r kill 2>/dev/null || true"
 
 # llama-serverをバックグラウンド起動（ssh -fでSSHを即座に返す）
-ssh -f "$SERVER" "cd ~/llama.cpp && nohup bash -c '$LAUNCH_CMD' > /tmp/llama-server.log 2>&1 < /dev/null &"
+# ローカル側 fd を /dev/null に向け、tee 等のパイプライン下でハングしないようにする
+ssh -f "$SERVER" "cd ~/llama.cpp && nohup bash -c '$LAUNCH_CMD' > /tmp/llama-server.log 2>&1 < /dev/null &" </dev/null >/dev/null 2>&1
 
 # ttydでログ閲覧用UIを起動
-ssh -f "$SERVER" "nohup ttyd --port 7682 --writable bash -c 'tail -f /tmp/llama-server.log' > /dev/null 2>&1 < /dev/null &"
+ssh -f "$SERVER" "nohup ttyd --port 7682 --writable bash -c 'tail -f /tmp/llama-server.log' > /dev/null 2>&1 < /dev/null &" </dev/null >/dev/null 2>&1
 
 # 既存nvtopプロセスを停止してttydでnvtop監視UIを起動
 ssh "$SERVER" "pkill nvtop 2>/dev/null || true"
-ssh -f "$SERVER" "nohup ttyd --port 7681 nvtop > /dev/null 2>&1 < /dev/null &"
+ssh -f "$SERVER" "nohup ttyd --port 7681 nvtop > /dev/null 2>&1 < /dev/null &" </dev/null >/dev/null 2>&1
 
 echo "==> llama-server をバックグラウンドで起動しました"
 echo "    ログ: ssh $SERVER 'tail -f /tmp/llama-server.log'"
