@@ -33,6 +33,8 @@ PERM_SCRIPTS=(
   wait-ready.sh
   ttyd-gpu.sh
   monitor-download.sh
+  llama-up.sh
+  llama-down.sh
 )
 
 usage() {
@@ -107,6 +109,19 @@ EOF
     local gpu_global_scripts="${CLAUDE_DIR}/plugins/cache/${MARKETPLACE}/gpu-server/1.0.0/skills/gpu-server/scripts"
     if [[ -d "${gpu_global_scripts}" ]]; then
       sed -i "s|${gpu_relative}|${gpu_global_scripts}/|g" "${SKILL_DIR}/SKILL.md"
+
+      # llama-up.sh / llama-down.sh は gpu-server スキルを相対パス参照しているため、
+      # グローバルインストール後に隣接スキルとして解決できなくなる。
+      # 行頭の GPU_SCRIPTS_DIR=... を gpu-server プラグインの絶対パスに固定化する。
+      local f
+      for f in llama-up.sh llama-down.sh; do
+        if [[ -f "${SCRIPTS_PATH}/${f}" ]]; then
+          sed -i "s|^GPU_SCRIPTS_DIR=.*|GPU_SCRIPTS_DIR=\"${gpu_global_scripts}\"|" \
+            "${SCRIPTS_PATH}/${f}"
+        fi
+      done
+    else
+      echo "WARNING: gpu-server プラグインが未インストールのため、llama-up.sh / llama-down.sh の GPU_SCRIPTS_DIR を書換できません。先に gpu-server をインストールするか、install-all-global.sh を使ってください。" >&2
     fi
     # 「プロジェクトルートから実行」注意書きを更新
     sed -i \
