@@ -1,0 +1,53 @@
+START: 2026-05-12 08:40:54 JST
+
+=== B-1: 他者 session_id でロック取得 ===
+Lock acquired: t120h-p100 (session: other-host-99999-19700101_000000)
+lock.sh EC=0
+
+=== B-2: llama-down.sh → exit 1 期待 ===
+==> [1/4] t120h-p100 のロック状態を確認中...
+t120h-p100: LOCKED
+  Holder: other-host-99999-19700101_000000
+  Since:  2026-05-12 08:40:57
+ERROR: 他者ロック (other-host-99999-19700101_000000) のため停止を中止します。
+  強制停止する場合は --force を指定してください。
+llama-down.sh EC=1
+
+=== B-3: lock-status.sh でロック残存確認 ===
+t120h-p100: LOCKED
+  Holder: other-host-99999-19700101_000000
+  Since:  2026-05-12 08:40:57
+
+=== B-3b: llama-server 稼働継続確認 (curl /health) ===
+{"status":"ok"}
+
+=== B-4: llama-down.sh --force → 警告のみで停止実行、ロック残存期待 ===
+==> [1/4] t120h-p100 のロック状態を確認中...
+t120h-p100: LOCKED
+  Holder: other-host-99999-19700101_000000
+  Since:  2026-05-12 08:40:57
+WARNING: 他者ロック (other-host-99999-19700101_000000) を無視して停止します (--force)
+==> [2/4] llama-server を停止中...
+==> t120h-p100 の llama-server プロセスを確認中...
+==> llama-server を停止中... (PID: 11270
+11271)
+llama-server を停止しました。
+==> ttyd を停止中...
+WARNING: stop.sh が失敗しましたが、power off を続行します
+==> [3/4] t120h-p100 の電源を OFF にします...
+t120h-p100: off コマンドを送信しました (ResetType: GracefulShutdown)
+==> [4/4] ロック解放スキップ（未保持または --force のため）
+==> 停止完了
+llama-down.sh --force EC=0 ELAPSED=39s
+
+=== B-4-verify: lock-status.sh (ロック残存) + power.sh status (Off 期待) ===
+t120h-p100: UNREACHABLE (SSH connection failed)
+t120h-p100: 電源状態 = On
+
+=== B-5: 強制 unlock (cleanup) ===
+Error: SSH connection to t120h-p100 failed
+
+=== B-5-verify: lock-status.sh (available 期待) ===
+t120h-p100: UNREACHABLE (SSH connection failed)
+END: 2026-05-12 08:42:03 JST
+

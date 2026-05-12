@@ -1,0 +1,31 @@
+START: 2026-05-12 09:16:54 JST
+
+=== pre: 前サイクル残留ロックを cleanup (V3 で unlock 失敗のため残留している可能性) ===
+t120h-p100: available
+No lock exists for t120h-p100
+
+=== pre-verify: available 期待 ===
+t120h-p100: available
+
+=== D-2: (ロック取得せず) llama-down.sh → 警告で続行 → stop+off+解放スキップ 期待 ===
+==> [1/4] t120h-p100 のロック状態を確認中...
+t120h-p100: available
+    ロックなしで停止します（注意: 排他制御なし）
+==> [2/4] llama-server を停止中...
+==> t120h-p100 の llama-server プロセスを確認中...
+==> llama-server を停止中... (PID: 2830
+2831)
+llama-server を停止しました。
+==> ttyd を停止中...
+WARNING: stop.sh が失敗しましたが、power off を続行します
+==> [3/4] t120h-p100 の電源を OFF にします...
+t120h-p100: off コマンドを送信しました (ResetType: GracefulShutdown)
+==> [4/4] ロック解放スキップ（未保持または --force のため）
+==> 停止完了
+llama-down.sh EC=0 ELAPSED=36s
+
+=== D-3: 検証 (available + 電源 Off 期待) ===
+t120h-p100: UNREACHABLE (SSH connection failed)
+t120h-p100: 電源状態 = On
+END: 2026-05-12 09:17:46 JST
+

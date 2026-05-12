@@ -1,0 +1,41 @@
+START: 2026-05-12 11:06:11 JST
+
+=== pre: ロック状態 (available 期待) ===
+t120h-p100: available
+
+=== C-2: 自分のロック取得 ===
+Lock acquired: t120h-p100 (session: aws-mmns-generic-2728214-20260512_110615)
+lock.sh EC=0
+
+=== C-2-verify: 自分ロック確認 (hostname=aws-mmns-generic) ===
+t120h-p100: LOCKED
+  Holder: aws-mmns-generic-2728214-20260512_110615
+  Since:  2026-05-12 11:06:18
+
+=== C-3: 修正版 llama-down.sh (stop → unlock → off 順序、EC=0 期待) ===
+==> [1/4] t120h-p100 のロック状態を確認中...
+t120h-p100: LOCKED
+  Holder: aws-mmns-generic-2728214-20260512_110615
+  Since:  2026-05-12 11:06:18
+    自分のロック (holder=aws-mmns-generic-2728214-20260512_110615) → 停止後に解放します
+==> [2/4] llama-server を停止中...
+==> t120h-p100 の llama-server プロセスを確認中...
+==> llama-server を停止中... (PID: 2833
+2834)
+llama-server を停止しました。
+==> ttyd を停止中...
+WARNING: stop.sh が失敗しましたが、続行します
+==> [3/4] ロックを解放します...
+Lock released: t120h-p100 (was held by: aws-mmns-generic-2728214-20260512_110615)
+==> [4/4] t120h-p100 の電源を OFF にします...
+t120h-p100: off コマンドを送信しました (ResetType: GracefulShutdown)
+==> 停止完了
+llama-down.sh EC=0 ELAPSED=52s
+
+=== C-4-immediate: 即時ロック状態確認 (available 期待: unlock が power off 前に実行されたため) ===
+t120h-p100: UNREACHABLE (SSH connection failed)
+
+=== C-4-power: 電源状態確認 (Off / 進行中) ===
+t120h-p100: 電源状態 = On
+END: 2026-05-12 11:07:18 JST
+
