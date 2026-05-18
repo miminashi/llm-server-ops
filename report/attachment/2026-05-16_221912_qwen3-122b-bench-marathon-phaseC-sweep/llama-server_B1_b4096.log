@@ -1,0 +1,97 @@
+0.00.104.795 W DEPRECATED: --defrag-thold is deprecated and no longer necessary to specify
+0.00.104.997 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.104.998 I device_info:
+0.00.184.303 I   - CUDA0   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.262.320 I   - CUDA1   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.354.028 I   - CUDA2   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.434.079 I   - CUDA3   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.434.095 I   - CPU     : Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz (257560 MiB, 257560 MiB free)
+0.00.434.234 I system_info: n_threads = 40 (n_threads_batch = 40) / 80 | CUDA : ARCHS = 600 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | FA_ALL_QUANTS = 1 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.434.325 I srv          init: running without SSL
+0.00.434.367 I srv          init: using 79 threads for HTTP server
+0.00.434.505 I srv         start: binding port with default address family
+0.00.435.762 I srv          main: loading model
+0.00.435.766 I srv    load_model: loading model '/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.5-122B-A10B-GGUF/snapshots/51eab4d59d53f573fb9206cb3ce613f1d0aa392b/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf'
+0.00.435.856 I common_init_result: fitting params to device memory ...
+0.00.435.856 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.01.071.248 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort
+0.01.531.926 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --no-mmap for better performance
+0.17.604.192 W llama_context: n_ctx_seq (131072) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.17.793.665 W common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.18.757.961 I srv    load_model: initializing slots, n_slots = 1
+0.19.490.179 W srv    load_model: speculative decoding will use checkpoints
+0.19.490.188 W common_speculative_init: no implementations specified for speculative decoding
+0.19.490.190 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 131072
+0.19.490.431 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.19.490.433 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.19.490.433 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.19.490.459 W srv          init: --cache-idle-slots requires --kv-unified, disabling
+0.19.510.509 I init: chat template, example_format: '<|im_start|>system
+You are a helpful assistant<|im_end|>
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+Hi there<|im_end|>
+<|im_start|>user
+How are you?<|im_end|>
+<|im_start|>assistant
+<think>
+'
+0.19.525.556 I srv          init: init: chat template, thinking = 1
+0.19.525.586 I srv          main: model loaded
+0.19.525.590 I srv          main: server is listening on http://0.0.0.0:8000
+0.19.525.593 I srv  update_slots: all slots are idle
+0.38.329.407 I srv  params_from_: Chat format: peg-native
+0.38.329.790 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.38.329.800 I srv  get_availabl: updating prompt cache
+0.38.329.810 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
+0.38.329.822 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 131072 tokens, 8589934592 est)
+0.38.329.829 I srv  get_availabl: prompt cache update took 0.03 ms
+0.38.330.003 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.47.963.684 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =    561, progress = 0.52, t =   9.63 s / 58.23 tokens per second
+0.48.093.029 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 560, pos_max = 560, n_tokens = 561, size = 149.063 MiB)
+0.55.014.341 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   1073, progress = 1.00, t =  16.68 s / 64.31 tokens per second
+0.55.143.114 I slot create_check: id  0 | task 0 | created context checkpoint 2 of 32 (pos_min = 1072, pos_max = 1072, n_tokens = 1073, size = 149.063 MiB)
+1.00.467.077 I slot print_timing: id  0 | task 0 | n_decoded =    100, tg =  19.16 t/s
+1.03.518.509 I slot print_timing: id  0 | task 0 | n_decoded =    158, tg =  19.10 t/s
+1.06.535.735 I slot print_timing: id  0 | task 0 | n_decoded =    215, tg =  19.05 t/s
+1.09.541.744 I slot print_timing: id  0 | task 0 | n_decoded =    270, tg =  18.89 t/s
+1.12.596.631 I slot print_timing: id  0 | task 0 | n_decoded =    325, tg =  18.73 t/s
+1.15.652.115 I slot print_timing: id  0 | task 0 | n_decoded =    380, tg =  18.62 t/s
+1.18.652.512 I slot print_timing: id  0 | task 0 | n_decoded =    434, tg =  18.54 t/s
+1.21.661.875 I slot print_timing: id  0 | task 0 | n_decoded =    488, tg =  18.48 t/s
+1.24.671.627 I slot print_timing: id  0 | task 0 | n_decoded =    542, tg =  18.42 t/s
+1.27.681.124 I slot print_timing: id  0 | task 0 | n_decoded =    596, tg =  18.38 t/s
+1.30.690.078 I slot print_timing: id  0 | task 0 | n_decoded =    650, tg =  18.34 t/s
+1.33.700.049 I slot print_timing: id  0 | task 0 | n_decoded =    704, tg =  18.31 t/s
+1.36.725.249 I slot print_timing: id  0 | task 0 | n_decoded =    758, tg =  18.28 t/s
+1.39.749.476 I slot print_timing: id  0 | task 0 | n_decoded =    812, tg =  18.25 t/s
+1.42.773.764 I slot print_timing: id  0 | task 0 | n_decoded =    866, tg =  18.22 t/s
+1.45.797.941 I slot print_timing: id  0 | task 0 | n_decoded =    920, tg =  18.20 t/s
+1.48.827.733 I slot print_timing: id  0 | task 0 | n_decoded =    974, tg =  18.18 t/s
+1.51.627.706 I slot print_timing: id  0 | task 0 | 
+prompt eval time =   16917.97 ms /  1077 tokens (   15.71 ms per token,    63.66 tokens per second)
+       eval time =   56379.68 ms /  1024 tokens (   55.06 ms per token,    18.16 tokens per second)
+      total time =   73297.64 ms /  2101 tokens
+1.51.627.970 I slot      release: id  0 | task 0 | stop processing: n_tokens = 2100, truncated = 0
+1.51.628.012 I srv  update_slots: all slots are idle
+2.15.147.638 I srv  params_from_: Chat format: peg-native
+2.15.147.988 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 60787530018
+2.15.147.999 I srv  get_availabl: updating prompt cache
+2.15.148.676 W srv   prompt_save:  - saving prompt with length 2100, total state size = 175.251 MiB (draft: 0.000 MiB)
+2.15.778.198 I srv          load:  - looking for better prompt, base f_keep = 0.009, sim = 0.018
+2.15.778.208 I srv        update:  - cache state: 1 prompts, 473.378 MiB (limits: 8192.000 MiB, 131072 tokens, 131072 est)
+2.15.778.209 I srv        update:    - prompt 0x561e410d7ce0:    2100 tokens, checkpoints:  2,   473.378 MiB
+2.15.778.211 I srv  get_availabl: prompt cache update took 630.21 ms
+2.15.778.308 I slot launch_slot_: id  0 | task 1027 | processing task, is_child = 0
+2.15.778.324 W slot update_slots: id  0 | task 1027 | n_past = 19, slot.prompt.tokens.size() = 2100, seq_id = 0, pos_min = 2099, n_swa = 0
+2.15.778.324 I slot update_slots: id  0 | task 1027 | Checking checkpoint with [1072, 1072] against 19...
+2.15.778.325 I slot update_slots: id  0 | task 1027 | Checking checkpoint with [560, 560] against 19...
+2.15.778.326 W slot update_slots: id  0 | task 1027 | forcing full prompt re-processing due to lack of cache data (likely due to SWA or hybrid/recurrent memory, see https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)
+2.15.778.327 W slot update_slots: id  0 | task 1027 | erased invalidated context checkpoint (pos_min = 560, pos_max = 560, n_tokens = 561, n_swa = 0, pos_next = 0, size = 149.063 MiB)
+2.15.787.159 W slot update_slots: id  0 | task 1027 | erased invalidated context checkpoint (pos_min = 1072, pos_max = 1072, n_tokens = 1073, n_swa = 0, pos_next = 0, size = 149.063 MiB)
+2.25.322.843 I slot print_timing: id  0 | task 1027 | prompt processing, n_tokens =    561, progress = 0.52, t =   9.54 s / 58.78 tokens per second
+2.25.452.014 I slot create_check: id  0 | task 1027 | created context checkpoint 1 of 32 (pos_min = 560, pos_max = 560, n_tokens = 561, size = 149.063 MiB)
+2.32.346.382 I slot print_timing: id  0 | task 1027 | prompt processing, n_tokens =   1073, progress = 1.00, t =  16.57 s / 64.76 tokens per second
+2.32.475.230 I slot create_check: id  0 | task 1027 | created context checkpoint 2 of 32 (pos_min = 1072, pos_max = 1072, n_tokens = 1073, size = 149.063 MiB)
+2.37.836.213 I slot print_timing: id  0 | task 1027 | n_decoded =    100, tg =  19.03 t/s

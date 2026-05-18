@@ -1,0 +1,34 @@
+[19:18:13] [phaseB96k] === S1 @ ctx96k: --spec-type ngram-simple ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..8d1d32b 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+[19:18:13] [phaseB96k] Starting llama-server for S1_ctx96k (ctx=98304)...
+[19:18:25] [phaseB96k] S1_ctx96k_1k start (W=2 E=5 MT=1024)
+[19:26:33] [phaseB96k] S1_ctx96k_1k end
+[19:26:36] [phaseB96k] S1_ctx96k_32k start (W=1 E=5 MT=512)
+[19:29:28] [phaseB96k] S1_ctx96k_32k end
+[19:29:28] [phaseB96k] Stopping llama-server for S1_ctx96k...
+[19:32:34] [phaseB96k] === S2 @ ctx96k: --spec-type ngram-mod ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..20ce869 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+[19:32:34] [phaseB96k] Starting llama-server for S2_ctx96k (ctx=98304)...
+[19:33:30] [phaseB96k] S2_ctx96k_1k start (W=2 E=5 MT=1024)
+[19:37:17] [phaseB96k] S2_ctx96k_1k end
+[19:37:21] [phaseB96k] S2_ctx96k_32k start (W=1 E=5 MT=512)
+[19:40:28] [phaseB96k] S2_ctx96k_32k end
+[19:40:28] [phaseB96k] Stopping llama-server for S2_ctx96k...
+[19:44:17] [phaseB96k] === S3 @ ctx96k: --spec-type ngram-cache ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..f4ab09a 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+[19:44:17] [phaseB96k] Starting llama-server for S3_ctx96k (ctx=98304)...
+[19:45:28] [phaseB96k] S3_ctx96k_1k start (W=2 E=5 MT=1024)
+[19:48:16] [phaseB96k] S3_ctx96k_1k end
+[19:48:20] [phaseB96k] S3_ctx96k_32k start (W=1 E=5 MT=512)

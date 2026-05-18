@@ -1,0 +1,98 @@
+[10:35:24] [phaseA] === BL 32k/96k (existing server) ===
+[10:35:26] [phaseA] BL_32k start (warmup=1 eval=5 max_tokens=512)
+[11:33:23] [phaseA] BL_32k end
+[11:33:25] [phaseA] BL_96k start (warmup=1 eval=5 max_tokens=256)
+[14:38:44] [phaseA] BL_96k end
+[14:38:44] [phaseA] Stopping llama-server for BL...
+[14:40:41] [phaseA]   llama-server kill TIMEOUT - escalating
+[14:41:17] [phaseA] === F1: --flash-attn 1 -> auto ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..c863156 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+ # Phase U-6 (2026-04-24) 確定構成: Qwen3.5-122B-A10B × t120h-p100 × ctx=128k
+ # -b 2048 / -ub 512 / tensor-split 11,12,13,14 / threads 40 / numactl node1
+ if [ "$MODEL_PROFILE" = "qwen3_122b" ] && [ "$SERVER" = "t120h-p100" ]; then
+-  SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14"
++  SERVER_OPTS="--flash-attn auto --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14"
+   ENV_PREFIX="numactl --cpunodebind=1 --membind=1"
+   THREADS_OPT="--threads 40"
+ fi
+[14:41:17] [phaseA] Starting llama-server for F1...
+[14:44:56] [phaseA]   /health OK after 0x5s
+[14:45:01] [phaseA] F1_1k start (warmup=2 eval=5 max_tokens=1024)
+[14:55:26] [phaseA] F1_1k end
+[14:55:27] [phaseA] F1_32k start (warmup=1 eval=5 max_tokens=512)
+[15:53:18] [phaseA] F1_32k end
+[15:53:18] [phaseA] Stopping llama-server for F1...
+[15:55:13] [phaseA]   llama-server kill TIMEOUT - escalating
+[15:55:51] [phaseA] === N1: -ot ... -> -ncmoe 14 ===
+N1 patch applied
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..364b75d 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -238,15 +238,8 @@ MODEL_OPT="-m '$MODEL_PATH'"
+ # --- fitモード分岐 ---
+ if [ "$FIT_MODE" = true ]; then
+   if [ "$MODEL_PROFILE" = "qwen3_122b" ]; then
+-    # Phase U-6 確定 OT=B14b: CPU offload = layer {2,3,20-23,31-38}、他は GPU
+-    # llama.cpp の -ot はカンマ区切りで複数パターンを OR 合成できる (parse_tensor_buffer_overrides)。
+-    # 単一 regex の `(|)` は bash のメタキャラで outer ssh パイプラインを通らないため使えない。
+-    OT_PATTERNS=""
+-    for L in 2 3 20 21 22 23 31 32 33 34 35 36 37 38; do
+-      [ -n "$OT_PATTERNS" ] && OT_PATTERNS+=","
+-      OT_PATTERNS+="blk.$L.ffn_.*_exps.weight=CPU"
+-    done
+-    NGL_OPTS="-ngl 999 --split-mode layer -ot '$OT_PATTERNS'"
++    # PHASE A N1 TRIAL: -ncmoe 14 (front-14 layers CPU offload, NOT same as B14b)
++    NGL_OPTS="-ngl 999 --split-mode layer -ncmoe 14"
+   else
+     NGL_OPTS="-ngl 999 -ot 'ffn_.*_exps.weight=CPU'"
+   fi
+[15:55:51] [phaseA] Starting llama-server for N1...
+[16:11:37] [phaseA]   /health TIMEOUT
+[16:11:37] [phaseA] N1 server_up failed
+[16:12:07] [phaseA] === M1: --main-gpu 1 ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..9bd6ece 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+ # Phase U-6 (2026-04-24) 確定構成: Qwen3.5-122B-A10B × t120h-p100 × ctx=128k
+ # -b 2048 / -ub 512 / tensor-split 11,12,13,14 / threads 40 / numactl node1
+ if [ "$MODEL_PROFILE" = "qwen3_122b" ] && [ "$SERVER" = "t120h-p100" ]; then
+-  SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14"
++  SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 --main-gpu 1"
+[16:12:07] [phaseA] Starting llama-server for M1...
+[16:12:47] [phaseA]   /health OK after 0x5s
+[16:12:52] [phaseA] M1_1k start (warmup=2 eval=5 max_tokens=1024)
+[16:23:13] [phaseA] M1_1k end
+[16:23:15] [phaseA] M1_32k start (warmup=1 eval=5 max_tokens=512)
+[17:21:11] [phaseA] M1_32k end
+[17:21:11] [phaseA] Stopping llama-server for M1...
+[17:23:41] [phaseA]   llama-server kill TIMEOUT - escalating
+[17:24:19] [phaseA] === K1: KV q8_0 -> q4_0 ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..a60de96 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -269,7 +269,7 @@ LAUNCH_CMD="${ENV_PREFIX:+$ENV_PREFIX }./build/bin/llama-server \
+   $MODEL_OPT \
+   $CHAT_TEMPLATE_OPTS $NGL_OPTS \
+   $SERVER_OPTS --n-predict 32768 $THREADS_OPT \
+-  $CTX_OPTS --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0 \
++  $CTX_OPTS --parallel 1 --cache-type-k q4_0 --cache-type-v q4_0 \
+[17:24:19] [phaseA] Starting llama-server for K1...
+[17:25:08] [phaseA]   /health OK after 0x5s
+[17:25:16] [phaseA] K1_1k start (warmup=2 eval=5 max_tokens=1024)
+[17:36:00] [phaseA] K1_1k end
+[17:36:03] [phaseA] K1_32k start (warmup=1 eval=5 max_tokens=512)
+[18:34:14] [phaseA] K1_32k end
+[18:34:14] [phaseA] Stopping llama-server for K1...
+[18:36:52] [phaseA]   llama-server kill TIMEOUT - escalating
+[18:37:09] [phaseA] === Phase A done ===
+[18:37:09] [phaseA] git status check:
+[18:37:09] [phaseA] results.csv summary:
+59 /tmp/bench_marathon_20260516_102303/results.csv

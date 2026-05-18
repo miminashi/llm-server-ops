@@ -1,0 +1,68 @@
+0.00.078.730 W DEPRECATED: --defrag-thold is deprecated and no longer necessary to specify
+0.00.078.938 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.078.939 I device_info:
+0.00.163.017 I   - CUDA0   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.244.245 I   - CUDA1   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.349.578 I   - CUDA2   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.433.085 I   - CUDA3   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.433.101 I   - CPU     : Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz (257560 MiB, 257560 MiB free)
+0.00.433.226 I system_info: n_threads = 40 (n_threads_batch = 40) / 80 | CUDA : ARCHS = 600 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | FA_ALL_QUANTS = 1 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.433.308 I srv          init: running without SSL
+0.00.433.354 I srv          init: using 79 threads for HTTP server
+0.00.433.497 I srv         start: binding port with default address family
+0.00.434.761 I srv          main: loading model
+0.00.434.788 I srv    load_model: loading model '/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.5-122B-A10B-GGUF/snapshots/51eab4d59d53f573fb9206cb3ce613f1d0aa392b/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf'
+0.00.434.864 I common_init_result: fitting params to device memory ...
+0.00.434.864 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.00.434.965 W common_fit_params: failed to fit params to free device memory: llama_params_fit is not implemented for SPLIT_MODE_TENSOR, abort
+0.00.928.539 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --no-mmap for better performance
+0.21.479.731 W llama_context: n_ctx_seq (131072) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.21.479.773 W NCCL not compiled in; falling back to internal AllReduce.  Recompile with -DGGML_CUDA_NCCL=ON for best multi-GPU performance.
+0.21.479.781 W internal AllReduce init failed (n_devices != 2?); falling back to meta-backend butterfly
+0.21.789.390 W common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.23.135.473 I srv    load_model: initializing slots, n_slots = 1
+0.23.747.282 W srv    load_model: speculative decoding will use checkpoints
+0.23.747.292 W common_speculative_init: no implementations specified for speculative decoding
+0.23.747.293 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 131072
+0.23.747.411 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.23.747.413 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.23.747.413 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.23.747.438 W srv          init: --cache-idle-slots requires --kv-unified, disabling
+0.23.767.504 I init: chat template, example_format: '<|im_start|>system
+You are a helpful assistant<|im_end|>
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+Hi there<|im_end|>
+<|im_start|>user
+How are you?<|im_end|>
+<|im_start|>assistant
+<think>
+'
+0.23.782.531 I srv          init: init: chat template, thinking = 1
+0.23.782.557 I srv          main: model loaded
+0.23.782.560 I srv          main: server is listening on http://0.0.0.0:8000
+0.23.782.563 I srv  update_slots: all slots are idle
+0.44.419.528 I srv  params_from_: Chat format: peg-native
+0.44.419.928 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.44.419.938 I srv  get_availabl: updating prompt cache
+0.44.419.948 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
+0.44.419.958 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 131072 tokens, 8589934592 est)
+0.44.419.961 I srv  get_availabl: prompt cache update took 0.02 ms
+0.44.420.114 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+/home/llm/llama.cpp/ggml/src/ggml-backend-meta.cpp:1311: GGML_ASSERT(ggml_is_contiguous(tensor)) failed
+/home/llm/llama.cpp/build/bin/libggml-base.so.0(+0x1b27b)[0x7f9641bd327b]
+/home/llm/llama.cpp/build/bin/libggml-base.so.0(ggml_print_backtrace+0x21f)[0x7f9641bd36ff]
+/home/llm/llama.cpp/build/bin/libggml-base.so.0(ggml_abort+0x152)[0x7f9641bd38d2]
+/home/llm/llama.cpp/build/bin/libggml-base.so.0(+0x43684)[0x7f9641bfb684]
+/home/llm/llama.cpp/build/bin/libggml-base.so.0(ggml_backend_sched_graph_compute_async+0x1ee)[0x7f9641bf11ae]
+/home/llm/llama.cpp/build/bin/libllama.so.0(_ZN13llama_context13graph_computeEP11ggml_cgraphb+0xa1)[0x7f9641d49ec1]
+/home/llm/llama.cpp/build/bin/libllama.so.0(_ZN13llama_context14process_ubatchERK12llama_ubatch14llm_graph_typeP22llama_memory_context_iR11ggml_status+0x115)[0x7f9641d4a305]
+/home/llm/llama.cpp/build/bin/libllama.so.0(_ZN13llama_context6decodeERK11llama_batch+0x381)[0x7f9641d52e31]
+/home/llm/llama.cpp/build/bin/libllama.so.0(llama_decode+0x10)[0x7f9641d54680]
+./build/bin/llama-server(+0x1054c2)[0x55f657d354c2]
+./build/bin/llama-server(+0x181b41)[0x55f657db1b41]
+./build/bin/llama-server(+0x5c051)[0x55f657c8c051]
+/lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f9641678d90]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f9641678e40]
+./build/bin/llama-server(+0x5c8f5)[0x55f657c8c8f5]

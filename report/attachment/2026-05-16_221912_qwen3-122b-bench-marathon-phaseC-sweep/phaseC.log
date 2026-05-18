@@ -1,0 +1,76 @@
+[19:52:53] [phaseC] === U1_ub256: SERVER_OPTS=--flash-attn 1 --poll 0 -b 2048 -ub 256 --tensor-split 11,12,13,14 THREADS_OPT=default ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..07517c0 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+[19:52:53] [phaseC] Starting llama-server for U1_ub256...
+[19:54:04] [phaseC] U1_ub256_1k start (W=2 E=5 MT=1024)
+[19:57:27] [phaseC] U1_ub256_1k end
+[19:57:27] [phaseC] Stopping llama-server for U1_ub256...
+[20:01:15] [phaseC] === U1_ub384: SERVER_OPTS=--flash-attn 1 --poll 0 -b 2048 -ub 384 --tensor-split 11,12,13,14 THREADS_OPT=default ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..c748ce6 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+[20:01:15] [phaseC] Starting llama-server for U1_ub384...
+[20:02:26] [phaseC] U1_ub384_1k start (W=2 E=5 MT=1024)
+[20:05:55] [phaseC] U1_ub384_1k end
+[20:05:55] [phaseC] Stopping llama-server for U1_ub384...
+[20:09:47] [phaseC] === U1_ub768: SERVER_OPTS=--flash-attn 1 --poll 0 -b 2048 -ub 768 --tensor-split 11,12,13,14 THREADS_OPT=default ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..6b97cbb 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+[20:09:47] [phaseC] Starting llama-server for U1_ub768...
+[20:11:00] [phaseC] U1_ub768_1k start (W=2 E=5 MT=1024)
+[21:00:48] [phaseC] U1_ub768_1k end
+[21:00:48] [phaseC] Stopping llama-server for U1_ub768...
+[21:04:36] [phaseC] === B1_b1024: SERVER_OPTS=--flash-attn 1 --poll 0 -b 1024 -ub 512 --tensor-split 11,12,13,14 THREADS_OPT=default ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..69a57c5 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+[21:04:36] [phaseC] Starting llama-server for B1_b1024...
+[21:08:59] [phaseC] B1_b1024_1k start (W=2 E=5 MT=1024)
+[21:24:49] [phaseC] B1_b1024_1k end
+[21:24:49] [phaseC] Stopping llama-server for B1_b1024...
+[21:28:37] [phaseC] === B1_b4096: SERVER_OPTS=--flash-attn 1 --poll 0 -b 4096 -ub 512 --tensor-split 11,12,13,14 THREADS_OPT=default ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..622afc0 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,7 +188,7 @@ esac
+[21:28:37] [phaseC] Starting llama-server for B1_b4096...
+[21:32:50] [phaseC] B1_b4096_1k start (W=2 E=5 MT=1024)
+[21:36:56] [phaseC] B1_b4096_1k end
+[21:36:56] [phaseC] Stopping llama-server for B1_b4096...
+[21:40:44] [phaseC] === T1_th32: SERVER_OPTS=--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 THREADS_OPT=--threads 32 ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..23b59bf 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -190,7 +190,7 @@ esac
+[21:40:44] [phaseC] Starting llama-server for T1_th32...
+[21:41:56] [phaseC] T1_th32_1k start (W=2 E=5 MT=1024)
+[21:52:50] [phaseC] T1_th32_1k end
+[21:52:50] [phaseC] Stopping llama-server for T1_th32...
+[21:56:39] [phaseC] === T1_th44: SERVER_OPTS=--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 THREADS_OPT=--threads 44 ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..8a43389 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -190,7 +190,7 @@ esac
+[21:56:39] [phaseC] Starting llama-server for T1_th44...
+[22:00:58] [phaseC] T1_th44_1k start (W=2 E=5 MT=1024)
+[22:14:24] [phaseC] T1_th44_1k end
+[22:14:24] [phaseC] Stopping llama-server for T1_th44...
+[22:18:14] [phaseC] === Phase C done ===
+?? report/2026-05-16_183834_qwen3-122b-bench-marathon-phaseA-quickwins.md
+?? report/2026-05-16_195031_qwen3-122b-bench-marathon-phaseB-spec-fail.md
+?? report/attachment/2026-05-16_183834_qwen3-122b-bench-marathon-phaseA-quickwins/
+?? report/attachment/2026-05-16_195031_qwen3-122b-bench-marathon-phaseB-spec-fail/
+229 /tmp/bench_marathon_20260516_102303/results.csv

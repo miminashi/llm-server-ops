@@ -1,0 +1,44 @@
+0.00.094.993 W DEPRECATED: --defrag-thold is deprecated and no longer necessary to specify
+0.00.095.186 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.095.186 I device_info:
+0.00.176.111 I   - CUDA0   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.255.584 I   - CUDA1   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.364.842 I   - CUDA2   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.443.893 I   - CUDA3   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.443.907 I   - CPU     : Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz (257560 MiB, 257560 MiB free)
+0.00.444.045 I system_info: n_threads = 40 (n_threads_batch = 40) / 80 | CUDA : ARCHS = 600 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | FA_ALL_QUANTS = 1 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.444.122 I srv          init: running without SSL
+0.00.444.172 I srv          init: using 79 threads for HTTP server
+0.00.444.310 I srv         start: binding port with default address family
+0.00.445.569 I srv          main: loading model
+0.00.445.575 I srv    load_model: loading model '/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.5-122B-A10B-GGUF/snapshots/51eab4d59d53f573fb9206cb3ce613f1d0aa392b/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf'
+0.00.445.645 I common_init_result: fitting params to device memory ...
+0.00.445.645 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.01.077.967 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort
+0.01.534.366 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --no-mmap for better performance
+0.17.472.815 W llama_context: n_ctx_seq (131072) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.17.619.727 W common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.18.579.203 I srv    load_model: initializing slots, n_slots = 1
+0.19.309.883 W srv    load_model: speculative decoding will use checkpoints
+0.19.309.891 W common_speculative_init: no implementations specified for speculative decoding
+0.19.309.892 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 131072
+0.19.310.008 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.19.310.009 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.19.310.009 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.19.310.032 W srv          init: --cache-idle-slots requires --kv-unified, disabling
+0.19.330.157 I init: chat template, example_format: '<|im_start|>system
+You are a helpful assistant<|im_end|>
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+Hi there<|im_end|>
+<|im_start|>user
+How are you?<|im_end|>
+<|im_start|>assistant
+<think>
+'
+0.19.345.236 I srv          init: init: chat template, thinking = 1
+0.19.345.260 I srv          main: model loaded
+0.19.345.263 I srv          main: server is listening on http://0.0.0.0:8000
+0.19.345.266 I srv  update_slots: all slots are idle
+0.30.335.525 I srv    operator(): operator(): cleaning up before exit...

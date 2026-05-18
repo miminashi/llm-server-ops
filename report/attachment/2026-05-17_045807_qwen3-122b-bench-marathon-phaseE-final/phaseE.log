@@ -1,0 +1,42 @@
+[23:23:43] [phaseE] === BL_FINAL: BL + --main-gpu 1 + --threads 32 ===
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index 9969fa8..65e132b 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -188,9 +188,9 @@ esac
+ # Phase U-6 (2026-04-24) 確定構成: Qwen3.5-122B-A10B × t120h-p100 × ctx=128k
+ # -b 2048 / -ub 512 / tensor-split 11,12,13,14 / threads 40 / numactl node1
+ if [ "$MODEL_PROFILE" = "qwen3_122b" ] && [ "$SERVER" = "t120h-p100" ]; then
+-  SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14"
++  SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 --main-gpu 1"
+   ENV_PREFIX="numactl --cpunodebind=1 --membind=1"
+-  THREADS_OPT="--threads 40"
++  THREADS_OPT="--threads 32"
+ fi
+ 
+[23:23:43] [phaseE] --- Set 1 ---
+[23:23:43] [phaseE] Starting llama-server for BL_FINAL_set1...
+[23:24:54] [phaseE] BL_FINAL_set1_1k start (W=2 E=5 MT=1024)
+[23:35:56] [phaseE] BL_FINAL_set1_1k end
+[23:36:00] [phaseE] BL_FINAL_set1_32k start (W=1 E=5 MT=512)
+[00:34:14] [phaseE] BL_FINAL_set1_32k end
+[00:34:15] [phaseE] BL_FINAL_set1_96k start (W=1 E=5 MT=256)
+[03:40:03] [phaseE] BL_FINAL_set1_96k end
+[03:40:03] [phaseE] Stopping llama-server for BL_FINAL_set1...
+[03:43:03] [phaseE] --- Set 2 ---
+[03:43:03] [phaseE] Starting llama-server for BL_FINAL_set2...
+[03:46:46] [phaseE] BL_FINAL_set2_1k start (W=2 E=5 MT=1024)
+[03:57:24] [phaseE] BL_FINAL_set2_1k end
+[03:57:26] [phaseE] BL_FINAL_set2_32k start (W=1 E=5 MT=512)
+[04:55:22] [phaseE] BL_FINAL_set2_32k end
+[04:55:22] [phaseE] Stopping llama-server for BL_FINAL_set2...
+[04:57:23] [phaseE] === Phase E done ===
+?? report/2026-05-16_183834_qwen3-122b-bench-marathon-phaseA-quickwins.md
+?? report/2026-05-16_195031_qwen3-122b-bench-marathon-phaseB-spec-fail.md
+?? report/2026-05-16_221912_qwen3-122b-bench-marathon-phaseC-sweep.md
+?? report/2026-05-16_232150_qwen3-122b-bench-marathon-phaseD-arch.md
+?? report/attachment/2026-05-16_183834_qwen3-122b-bench-marathon-phaseA-quickwins/
+?? report/attachment/2026-05-16_195031_qwen3-122b-bench-marathon-phaseB-spec-fail/
+?? report/attachment/2026-05-16_221912_qwen3-122b-bench-marathon-phaseC-sweep/
+?? report/attachment/2026-05-16_232150_qwen3-122b-bench-marathon-phaseD-arch/
+282 /tmp/bench_marathon_20260516_102303/results.csv

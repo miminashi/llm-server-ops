@@ -1,0 +1,80 @@
+0.00.093.417 W DEPRECATED: --defrag-thold is deprecated and no longer necessary to specify
+0.00.093.616 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.093.616 I device_info:
+0.00.175.622 I   - CUDA0   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.254.108 I   - CUDA1   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.347.612 I   - CUDA2   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.427.752 I   - CUDA3   : Tesla P100-PCIE-16GB (16269 MiB, 16013 MiB free)
+0.00.427.767 I   - CPU     : Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz (257560 MiB, 257560 MiB free)
+0.00.427.907 I system_info: n_threads = 40 (n_threads_batch = 40) / 80 | CUDA : ARCHS = 600 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | FA_ALL_QUANTS = 1 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.427.978 I srv          init: running without SSL
+0.00.428.034 I srv          init: using 79 threads for HTTP server
+0.00.428.172 I srv         start: binding port with default address family
+0.00.429.443 I srv          main: loading model
+0.00.429.447 I srv    load_model: loading model '/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.5-122B-A10B-GGUF/snapshots/51eab4d59d53f573fb9206cb3ce613f1d0aa392b/Q4_K_M/Qwen3.5-122B-A10B-Q4_K_M-00001-of-00003.gguf'
+0.00.429.524 I common_init_result: fitting params to device memory ...
+0.00.429.526 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.01.061.608 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort
+0.01.521.793 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --no-mmap for better performance
+0.17.593.546 W llama_context: n_ctx_seq (131072) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.17.785.294 W common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.18.745.143 I srv    load_model: initializing slots, n_slots = 1
+0.19.479.981 W srv    load_model: speculative decoding will use checkpoints
+0.19.480.002 I common_speculative_init: adding speculative implementation 'ngram-mod'
+0.19.490.878 I common_speculative_impl_ngram_mod: initialized ngram_mod with n_match=24, size=4194304 (16.000 MB)
+0.19.490.885 I srv    load_model: speculative decoding context initialized
+0.19.490.886 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 131072
+0.19.490.979 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.19.490.979 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.19.490.980 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.19.491.004 W srv          init: --cache-idle-slots requires --kv-unified, disabling
+0.19.511.148 I init: chat template, example_format: '<|im_start|>system
+You are a helpful assistant<|im_end|>
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+Hi there<|im_end|>
+<|im_start|>user
+How are you?<|im_end|>
+<|im_start|>assistant
+<think>
+'
+0.19.526.246 I srv          init: init: chat template, thinking = 1
+0.19.526.274 I srv          main: model loaded
+0.19.526.278 I srv          main: server is listening on http://0.0.0.0:8000
+0.19.526.281 I srv  update_slots: all slots are idle
+0.34.325.994 I srv  params_from_: Chat format: peg-native
+0.34.326.378 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.34.326.388 I srv  get_availabl: updating prompt cache
+0.34.326.397 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
+0.34.326.407 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 131072 tokens, 8589934592 est)
+0.34.326.410 I srv  get_availabl: prompt cache update took 0.02 ms
+0.34.326.547 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.43.830.960 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =    556, progress = 0.52, t =   9.50 s / 58.50 tokens per second
+0.43.960.125 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 555, pos_max = 555, n_tokens = 556, size = 149.063 MiB)
+0.50.885.677 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   1068, progress = 1.00, t =  16.56 s / 64.50 tokens per second
+0.51.014.726 I slot create_check: id  0 | task 0 | created context checkpoint 2 of 32 (pos_min = 1067, pos_max = 1067, n_tokens = 1068, size = 149.063 MiB)
+0.51.104.171 I begin: ngram_mod occupancy = 1048/4194304 (0.00)
+/home/llm/llama.cpp/ggml/src/ggml-cuda/ggml-cuda.cu:102: CUDA error
+0.59.676.335 E CUDA error: out of memory
+0.59.676.341 E   current device: 3, in function alloc at /home/llm/llama.cpp/ggml/src/ggml-cuda/ggml-cuda.cu:527
+0.59.676.342 E   cuMemCreate(&handle, reserve_size, &prop, 0)
+/home/llm/llama.cpp/build/bin/libggml-base.so.0(+0x1b27b)[0x7f033f21427b]
+/home/llm/llama.cpp/build/bin/libggml-base.so.0(ggml_print_backtrace+0x21f)[0x7f033f2146ff]
+/home/llm/llama.cpp/build/bin/libggml-base.so.0(ggml_abort+0x152)[0x7f033f2148d2]
+/home/llm/llama.cpp/build/bin/libggml-cuda.so.0(+0x1fed46)[0x7f033a92ed46]
+/home/llm/llama.cpp/build/bin/libggml-cuda.so.0(_ZN18ggml_cuda_pool_vmm5allocEmPm+0x1ef)[0x7f033a946fdf]
+/home/llm/llama.cpp/build/bin/libggml-cuda.so.0(+0x206f71)[0x7f033a936f71]
+/home/llm/llama.cpp/build/bin/libggml-cuda.so.0(+0x20d594)[0x7f033a93d594]
+/home/llm/llama.cpp/build/bin/libggml-cuda.so.0(+0x2158d7)[0x7f033a9458d7]
+/home/llm/llama.cpp/build/bin/libggml-base.so.0(ggml_backend_sched_graph_compute_async+0x81f)[0x7f033f23278f]
+/home/llm/llama.cpp/build/bin/libllama.so.0(_ZN13llama_context13graph_computeEP11ggml_cgraphb+0xa1)[0x7f033f38a801]
+/home/llm/llama.cpp/build/bin/libllama.so.0(_ZN13llama_context14process_ubatchERK12llama_ubatch14llm_graph_typeP22llama_memory_context_iR11ggml_status+0x115)[0x7f033f38ac35]
+/home/llm/llama.cpp/build/bin/libllama.so.0(_ZN13llama_context6decodeERK11llama_batch+0x38b)[0x7f033f39341b]
+/home/llm/llama.cpp/build/bin/libllama.so.0(llama_decode+0x10)[0x7f033f394a60]
+./build/bin/llama-server(+0x10552a)[0x560b208be52a]
+./build/bin/llama-server(+0x1818a1)[0x560b2093a8a1]
+./build/bin/llama-server(+0x5c011)[0x560b20815011]
+/lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f033ecb9d90]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f033ecb9e40]
+./build/bin/llama-server(+0x5c8b5)[0x560b208158b5]
