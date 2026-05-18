@@ -54,7 +54,7 @@ fi
 
 # モデル別サンプリングパラメータ
 case "$HF_MODEL" in
-  *Qwen3.5*)
+  *Qwen3.5*|*Qwen3.6*)
     SAMPLING_OPTS="--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0"
     ;;
   *)

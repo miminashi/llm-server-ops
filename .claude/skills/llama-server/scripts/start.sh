@@ -195,11 +195,27 @@ fi
 
 # --- モデル別サンプリングパラメータ ---
 case "$HF_MODEL" in
-  *Qwen3.5*)
+  *Qwen3.5*|*Qwen3.6*)
     SAMPLING_OPTS="--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0"
     ;;
   *)
     SAMPLING_OPTS="--temp 1.0 --top-p 1.0 --top-k 0"
+    ;;
+esac
+
+# --- MTP (Multi-Token Prediction) 自動検出 ---
+# llama.cpp 2026-05-16 マージの speculative decoding 機能。
+# リポジトリ名に "MTP" を含むモデル（unsloth の Qwen3.6-*-MTP-GGUF 等）で自動有効化。
+# MTP draft context は追加 compute buffer を要するため、t120h-p100 では
+# サーバデフォルトの -b 8192 -ub 8192 だと P100 単体 (16 GiB) で OOM。
+# batch を縮小して fit させる。
+SPEC_OPTS=""
+case "$HF_MODEL" in
+  *MTP*)
+    SPEC_OPTS="--spec-type draft-mtp --spec-draft-n-max 6"
+    if [ "$SERVER" = "t120h-p100" ]; then
+      SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 512"
+    fi
     ;;
 esac
 
@@ -270,7 +286,7 @@ LAUNCH_CMD="${ENV_PREFIX:+$ENV_PREFIX }./build/bin/llama-server \
   $CHAT_TEMPLATE_OPTS $NGL_OPTS \
   $SERVER_OPTS --n-predict 32768 $THREADS_OPT \
   $CTX_OPTS --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0 \
-  --defrag-thold 0.1 $SAMPLING_OPTS \
+  --defrag-thold 0.1 $SAMPLING_OPTS $SPEC_OPTS \
   --port 8000 --host 0.0.0.0 \
   --alias '$ALIAS'"
 
