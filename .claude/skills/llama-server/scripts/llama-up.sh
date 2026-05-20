@@ -9,13 +9,14 @@
 #
 # 引数（すべて省略可）:
 #   server    GPUサーバ名               (デフォルト: t120h-p100)
-#   hf-model  HuggingFaceモデル          (デフォルト: unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M)
-#   mode      ctx-size or "fit"          (デフォルト: fit)
+#   hf-model  HuggingFaceモデル          (デフォルト: unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_XL)
+#   mode      ctx-size or "fit"          (デフォルト: 131072)
 #   fit-ctx   fit時のctx-size            (デフォルト: 空 → start.sh のプロファイル既定に委譲)
 #
 # 例:
 #   .claude/skills/llama-server/scripts/llama-up.sh
 #   .claude/skills/llama-server/scripts/llama-up.sh t120h-p100 "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M" 8192
+#   旧 122B を fit 起動: .claude/skills/llama-server/scripts/llama-up.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit
 #
 # ロック取得は行わない（必要なら事前に gpu-server/scripts/lock.sh を実行）。
 # 終了コード: 0=成功 / 1=エラー。
@@ -28,8 +29,8 @@ SKILL_DIR="$(dirname "$SCRIPT_DIR")"
 GPU_SCRIPTS_DIR="$(cd "$SKILL_DIR/../gpu-server/scripts" && pwd)"
 
 SERVER="${1:-t120h-p100}"
-HF_MODEL="${2:-unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M}"
-MODE="${3:-fit}"
+HF_MODEL="${2:-unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_XL}"
+MODE="${3:-131072}"
 FIT_CTX="${4:-}"
 
 # --- Step 1: 電源状態確認 ---
