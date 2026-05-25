@@ -194,9 +194,12 @@ if [ "$MODEL_PROFILE" = "qwen3_122b" ] && [ "$SERVER" = "t120h-p100" ]; then
 fi
 
 # --- モデル別サンプリングパラメータ ---
+# Qwen3.x thinking モードは opencode 等の長コンテキストで段落単位の verbatim ループに陥ることがある。
+# 公式推奨どおり presence_penalty を併用し、加えて DRY サンプラで verbatim 長文ループを抑制する。
+# DRY breakers は llama.cpp default の '\n', ':', '"', '*'、allowed-length=2 のまま使用。
 case "$HF_MODEL" in
   *Qwen3.5*|*Qwen3.6*)
-    SAMPLING_OPTS="--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0"
+    SAMPLING_OPTS="--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0 --presence-penalty 1.0 --dry-multiplier 0.8"
     ;;
   *)
     SAMPLING_OPTS="--temp 1.0 --top-p 1.0 --top-k 0"
