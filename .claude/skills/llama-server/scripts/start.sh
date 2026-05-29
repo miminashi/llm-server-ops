@@ -195,11 +195,27 @@ fi
 
 # --- モデル別サンプリングパラメータ ---
 # Qwen3.x thinking モードは opencode 等の長コンテキストで段落単位の verbatim ループに陥ることがある。
-# 公式推奨どおり presence_penalty を併用し、加えて DRY サンプラで verbatim 長文ループを抑制する。
-# DRY breakers は llama.cpp default の '\n', ':', '"', '*'、allowed-length=2 のまま使用。
+# Qwen 公式推奨レンジ (0〜2) の presence_penalty を 1.0 で常用し、DRY サンプラはサーバ default では
+# 完全無効化 (--dry-multiplier 0、llama.cpp default 値と同じ) する。DRY は long path / 識別子の末尾を
+# 切り落とす副作用が greedy decoding でも観測されたため、必要なクライアントだけがリクエスト側で
+# dry_multiplier を送る運用にしている。
+# 経緯:
+#   fed12136          : presence_penalty=1.0 + DRY=0.8 default 有効化 → URL/IP 数字書換の副作用
+#   2026-05-26 #1     : DRY allowed-length=4 + breakers `. / _` (実は最後の '_' だけ有効) で URL 改善
+#   2026-05-26 #2     : `-` 追加 + presence_penalty=0.5 緩和 → path の数字/文字書換は止まったが、
+#                       greedy + dry_multiplier=0 でないと末尾 (.1.0/config/... 等) が切れる
+#   2026-05-26 #3     : DRY サーバ default を 0 (無効) に。thinking ループ抑制は presence_penalty 0.5
+#                       単独で対応。クライアントが必要なら dry_multiplier をリクエスト側で送れる。
+#   2026-05-26 #4     : ytdlor セッションで Active Storage 文脈の段落 verbatim ループ再発 (同一段落
+#                       10 回以上反復) を観測。presence_penalty=0.5 単独では長距離段落反復に抑制不足と
+#                       判断し、presence_penalty を 1.0 へ引き上げ。fed12136 時の URL 副作用は DRY=0.8
+#                       が原因 (greedy decoding で再現済) であり、presence_penalty 単独 1.0 では
+#                       URL/path リグレッションは観測されない。
+# それでも verbatim ループが再発した場合は、クライアント側で dry_multiplier=0.4 程度を送る運用に
+# 切り替える (SKILL.md 参照)。
 case "$HF_MODEL" in
   *Qwen3.5*|*Qwen3.6*)
-    SAMPLING_OPTS="--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0 --presence-penalty 1.0 --dry-multiplier 0.8"
+    SAMPLING_OPTS="--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0 --presence-penalty 1.0 --dry-multiplier 0"
     ;;
   *)
     SAMPLING_OPTS="--temp 1.0 --top-p 1.0 --top-k 0"
@@ -284,12 +300,14 @@ else
   echo "    ctx-size: $CTX_SIZE"
 fi
 
+# EXTRA_LLAMA_OPTS: 検証用の追加フラグ注入口 (YaRN/rope-scaling, -b/-ub 上書き等)。
+# SERVER_OPTS より後段に置くため、同名フラグは EXTRA 側が優先される (llama.cpp は最後の指定を採用)。
 LAUNCH_CMD="${ENV_PREFIX:+$ENV_PREFIX }./build/bin/llama-server \
   $MODEL_OPT \
   $CHAT_TEMPLATE_OPTS $NGL_OPTS \
   $SERVER_OPTS --n-predict 32768 $THREADS_OPT \
   $CTX_OPTS --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0 \
-  --defrag-thold 0.1 $SAMPLING_OPTS $SPEC_OPTS \
+  --defrag-thold 0.1 $SAMPLING_OPTS $SPEC_OPTS ${EXTRA_LLAMA_OPTS:-} \
   --port 8000 --host 0.0.0.0 \
   --alias '$ALIAS'"
 
