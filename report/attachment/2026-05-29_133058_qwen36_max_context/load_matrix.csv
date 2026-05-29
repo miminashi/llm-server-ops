@@ -1,0 +1,7 @@
+label,ctx,ub,yarn,result,vram_gb,gpu0_mib,note
+S0,131072,8192,none,processed,43.4,13061,NIAH 3/3 OK pp262 tg25
+-,262144,8192,none,load-fail,,,compute buffer ~13GB OOM on GPU0 at warmup
+-,262144,2048,none,crash-on-process,48.2,16077,loads but fattn OOM on GPU0 during 262K prompt
+S1,262144,512,none,processed,30.2,8877,NIAH@0.5 OK pp133.7 tg15.6 wall1943s server-stable
+S2,524288,512,yarn2.0+ovk,loaded,38.1,11729,cap-bypassed slot_nctx=524288 (override-kv ctx_len=2097152)
+S3,1048576,512,yarn4.0+ovk,loaded,38.4,11229,cap-bypassed slot_nctx=1048576; shortqa 6/6 OK; full NIAH skipped (~2h/req)
