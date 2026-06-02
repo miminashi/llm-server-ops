@@ -277,9 +277,28 @@ tmux split-window -v -b -d -l 3 \
 | サーバ | 固有パラメータ | 理由 |
 |--------|--------------|------|
 | mi25 | `-b 4096 -ub 4096` | ROCm標準設定 |
-| t120h-p100 | `--flash-attn 1 --poll 0 -b 8192 -ub 8192` | Flash Attention有効、マルチGPUポーリング無効 |
+| t120h-p100 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | Flash Attention有効、マルチGPUポーリング無効。**`-ub 8192` は CUDA OOM**（下記参照） |
 | t120h-p100 × Qwen3.5-122B-A10B | `--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 --threads 40` + `numactl --cpunodebind=1 --membind=1` | Phase U-6 確定 128k fit プロファイル |
 | t120h-m10 | `CUDA_VISIBLE_DEVICES=0..14 -b 4096 -ub 4096` | GPU 15は使用不可 |
+
+### 既知の問題: llama.cpp `-ub 8192` の CUDA OOM (2026-06-02 master リグレッション)
+
+- **症状**: t120h-p100 で Qwen3.6-35B-A3B / ctx=131072 / KV q8_0 を `-ub 8192` で起動すると、
+  モデルロードと初回の小リクエストは成功するが、**2回目以降の大きめリクエストで CUDA out of
+  memory・クラッシュ**（`/health` が 000 に）。ログ: `ggml_cuda_pool_vmm::alloc` →
+  `cuMemCreate(&handle, reserve_size, …)`、`current device: 0`。直前に context checkpoint の
+  `forcing full prompt re-processing` / `erased invalidated context checkpoint` 警告。
+- **原因**: 2026-06-02 頃の llama.cpp master で **1 ubatch あたりの compute buffer 確保が約2倍に増加**。
+  `-ub 8192` だとロード時点で VRAM 15.3/16 GiB（空き ~0.6 GiB）まで埋まり、大リクエスト時の
+  VMM プール成長分が device 0 の僅かな空きを超えて OOM。`af6528e6d`(2026-06-01) では同 `-ub 8192`
+  でも ~10 GiB だった（リグレッション）。context checkpoint 自体は原因ではない（host RAM 保存、
+  `--ctx-checkpoints 0` でも OOM は解消しない）。
+- **対策**: **`-ub 4096`**（`start.sh` の t120h-p100 default 済み）。ロード時 VRAM 10.6 GiB
+  （空き ~5.4 GiB）に下がり OOM 解消。eval ~39 t/s 維持、context checkpoint も有効のまま
+  （同一プレフィクスの再リクエストは ~3倍高速）。prompt processing は ub=8192 比で ~30% 低下
+  （pp 693→489 t/s 相当）するが、ctx=131072 と eval 速度は維持。
+- **注意**: 上流が compute buffer 確保を元に戻せば `-ub 8192` へ戻して pp 速度を回復できる。
+  検証は report/2026-06-03_*_llama_cpp_oom_regression_fix.md 参照。
 
 ## server-scripts/ について
 

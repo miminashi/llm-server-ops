@@ -176,7 +176,15 @@ case "$SERVER" in
     SERVER_OPTS="-b 4096 -ub 4096"
     ;;
   t120h-p100)
-    SERVER_OPTS="--flash-attn 1 --poll 0 -b 8192 -ub 8192"
+    # -ub は 4096。8192 は CUDA OOM (2026-06-02 の llama.cpp master リグレッション)。
+    # 経緯: 2026-06-02 頃の master で 1 ubatch あたりの compute buffer 確保が約2倍に増加し、
+    # Qwen3.6-35B-A3B / ctx=131072 / KV q8_0 では ub=8192 だとロード時点で VRAM 15.3/16 GiB
+    # (空き ~0.6 GiB)。2回目以降の大リクエストで VMM プール (ggml_cuda_pool_vmm::alloc /
+    # cuMemCreate) が成長しきれず device 0 で out of memory・クラッシュした。
+    # ub=4096 でロード時 VRAM が 10.6 GiB (空き ~5.4 GiB) に下がり OOM 解消。eval ~39 t/s 維持、
+    # context checkpoint も有効のまま (同一プレフィクスの再リクエストは ~3倍高速)。
+    # 詳細は report/2026-06-03_*_llama_cpp_oom_regression_fix.md。
+    SERVER_OPTS="--flash-attn 1 --poll 0 -b 4096 -ub 4096"
     ;;
   t120h-m10)
     ENV_PREFIX="CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14"
