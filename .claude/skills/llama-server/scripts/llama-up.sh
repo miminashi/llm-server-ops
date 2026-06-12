@@ -76,6 +76,9 @@ if [ -z "$IP" ]; then
 fi
 if curl -sf -m 5 "http://${IP}:8000/health" >/dev/null 2>&1; then
   echo "    llama-server は既に起動しています (http://${IP}:8000/health → 200)"
+  # 既起動でも ttyd (7681/7682) を担保する（落ちていれば立て直す）。
+  # ttyd-up.sh は検証失敗でも exit 0 + 自前 WARNING なので || は付けない。
+  "$SCRIPT_DIR/ttyd-up.sh" "$SERVER"
   echo "==> 完了（冪等スキップ）"
   exit 0
 fi

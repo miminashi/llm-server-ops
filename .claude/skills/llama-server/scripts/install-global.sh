@@ -32,6 +32,7 @@ PERM_SCRIPTS=(
   stop.sh
   wait-ready.sh
   ttyd-gpu.sh
+  ttyd-up.sh
   monitor-download.sh
   llama-up.sh
   llama-down.sh

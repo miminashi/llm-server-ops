@@ -1,7 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-# GPU監視用ttydをサーバ側でバックグラウンド起動するスクリプト
+# GPU監視用ttydを起動するスクリプト（後方互換のための薄いラッパー）
+#
+# ttyd 起動ロジックは ttyd-up.sh に集約済み。本スクリプトは互換のために残し、
+# ttyd-up.sh へ委譲する。GPU監視 (7681) に加えログ閲覧 (7682) も起動される。
 
 if [ $# -lt 1 ]; then
   echo "Usage: ttyd-gpu.sh <server>" >&2
@@ -20,16 +23,6 @@ case "$SERVER" in
     ;;
 esac
 
-# サーバ別GPU監視コマンド
-case "$SERVER" in
-  mi25) GPU_CMD="watch -n 1 rocm-smi" ;;
-  *)    GPU_CMD="nvtop" ;;
-esac
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# 既存プロセスを停止してからバックグラウンド起動
-echo "==> ttyd GPU監視を $SERVER で起動中 (port 7681)..."
-ssh "$SERVER" "ps aux | grep '[t]tyd --port 7681' | awk '{print \$2}' | xargs -r kill 2>/dev/null || true"
-ssh -f "$SERVER" "nohup ttyd --port 7681 $GPU_CMD > /dev/null 2>&1 < /dev/null &"
-
-echo "==> ttyd GPU監視をバックグラウンドで起動しました"
-echo "    ブラウザ: http://$SERVER:7681"
+exec "$SCRIPT_DIR/ttyd-up.sh" "$SERVER"

@@ -82,6 +82,10 @@ for i in $(seq 1 $MAX_RETRIES); do
     echo ""
     echo "API endpoint: http://${IP}:8000/v1"
 
+    # ttyd の LISTEN 状態を確認（落ちていれば通知本文に明記。ここでは再起動しない）
+    if ssh "$SERVER" "ss -tln | grep -q ':7681 '"; then TTYD_7681=""; else TTYD_7681=" (未起動)"; fi
+    if ssh "$SERVER" "ss -tln | grep -q ':7682 '"; then TTYD_7682=""; else TTYD_7682=" (未起動)"; fi
+
     # Discord通知
     if [ -x "$NOTIFY_SCRIPT" ]; then
       NOTIFY_MSG="llama-server 起動完了
@@ -90,8 +94,8 @@ for i in $(seq 1 $MAX_RETRIES); do
 - ctx-size: ${CTX_SIZE_DISPLAY}
 - サンプリング: ${SAMPLING_OPTS}
 - エンドポイント: http://${IP}:8000/v1
-- GPU監視: http://${IP}:7681
-- サーバログ: http://${IP}:7682"
+- GPU監視: http://${IP}:7681${TTYD_7681}
+- サーバログ: http://${IP}:7682${TTYD_7682}"
       ("$NOTIFY_SCRIPT" "$NOTIFY_MSG" || echo "WARNING: Discord通知の送信に失敗しました" >&2) || true
     fi
 

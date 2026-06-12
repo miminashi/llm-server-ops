@@ -159,8 +159,8 @@ ssh t120h-p100 "ps aux | grep llama-server | grep -v grep | grep -o 'spec-type [
 
 1. `power.sh status` で電源状態を確認
 2. `Off` なら `power.sh on` → SSH 疎通待ち（5 秒間隔、最大 5 分）
-3. `http://<ip>:8000/health` に 200 が返れば既起動扱いで即 `exit 0`（冪等）
-4. `start.sh` → `wait-ready.sh`
+3. `http://<ip>:8000/health` に 200 が返れば既起動扱い → **`ttyd-up.sh` で ttyd (7681/7682) を担保してから** `exit 0`（冪等。既起動時も監視UIが落ちていれば立て直す）
+4. `start.sh` → `wait-ready.sh`（`start.sh` 内で `ttyd-up.sh` を呼ぶ）
 
 ロック: 取得しない。必要なら事前に `gpu-server/scripts/lock.sh <server>` を実行してください。
 
@@ -185,51 +185,57 @@ ssh t120h-p100 "ps aux | grep llama-server | grep -v grep | grep -o 'spec-type [
 
 `stop.sh` または `power.sh off` が失敗しても警告のみで後続ステップを継続します（電源 OFF すれば結果的にプロセスも止まるため）。
 
-## start.sh + ttyd-gpu.sh + wait-ready.sh の使い方
+## start.sh + wait-ready.sh の使い方
 
-llama-server の起動は3ステップで行います:
+llama-server の起動は2ステップで行います（ttyd は `start.sh` が内部で `ttyd-up.sh` を呼んで自動起動するため、ttyd を手動で立てる必要はありません）:
 
-1. **`ttyd-gpu.sh`** — GPU監視をサーバ側でバックグラウンド起動
-2. **`start.sh`** — ビルド・llama-serverをサーバ側でバックグラウンド起動
-3. **`wait-ready.sh`** — ヘルスチェック・Discord通知
+1. **`start.sh`** — ビルド・llama-server をサーバ側でバックグラウンド起動し、**`ttyd-up.sh` で ttyd (7681 GPU監視 / 7682 ログ閲覧) を起動・LISTEN検証**
+2. **`wait-ready.sh`** — ヘルスチェック・Discord通知
 
 ### 例
 
 ```bash
-# 1. GPU監視
-.claude/skills/llama-server/scripts/ttyd-gpu.sh t120h-p100
-
-# 2. ビルド＋llama-server起動
+# 1. ビルド＋llama-server起動（ttyd 7681/7682 も自動起動）
 .claude/skills/llama-server/scripts/start.sh t120h-p100 \
   "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M" 131072
 
-# 3. ヘルスチェック＋Discord通知
+# 2. ヘルスチェック＋Discord通知
 .claude/skills/llama-server/scripts/wait-ready.sh t120h-p100 \
   "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M" 131072
 ```
 
-**注**: `ttyd-gpu.sh` と `start.sh` はサーバ側でバックグラウンド起動するため即座に完了します。`run_in_background` は不要です。
+**注**: `start.sh` はサーバ側でバックグラウンド起動するため即座に完了します。`run_in_background` は不要です。
 
-### ttyd-gpu.sh の動作
+### ttyd-up.sh の動作（ttyd 起動の単一の真実源）
 
-1. NVIDIAサーバは `nvtop`、MI25は `watch -n 1 rocm-smi` を使用
-2. 既存の ttyd (port 7681) を停止後、サーバ側でバックグラウンド起動
-3. ブラウザから `http://<server-ip>:7681` でアクセス可能
+```bash
+.claude/skills/llama-server/scripts/ttyd-up.sh <server>
+```
+
+1. 既存の ttyd (7681/7682) と nvtop を停止し、ポート解放を待つ（冪等）
+2. `/tmp/llama-server.log` を `touch`（未起動時に 7682 の `tail -f` が即終了するのを防ぐ）
+3. ttyd を起動: 7681 = GPU監視（NVIDIA は `nvtop`、MI25 は `watch -n 1 rocm-smi`）、7682 = ログ閲覧
+   - GPU監視は `bash -c 'TERM=xterm-256color exec ...'` でラップ（TERM 未設定だと nvtop/watch が `Error opening terminal: unknown.` で即終了するため）
+4. 両ポートの LISTEN を検証。落ちていれば WARNING を出すが、ttyd は監視用途なので **常に exit 0**（本体起動は止めない）
+5. ブラウザから `http://<server-ip>:7681`（GPU監視）/ `:7682`（ログ閲覧）でアクセス可能
+
+**`ttyd-gpu.sh`** は後方互換のため残しているが、中身は `ttyd-up.sh` への薄いラッパー。監視UIだけ立て直したい場合は `ttyd-up.sh <server>`（または `ttyd-gpu.sh <server>`）を単独実行すればよい（llama-server 起動中でも安全・ロック不要）。
 
 ### start.sh の動作
 
 1. 既存の llama-server プロセスを確認（起動中なら警告して終了）
 2. `server-scripts/update_and_build-<server>.sh` をサーバに転送・実行
 3. llama-server をサーバ側でバックグラウンド起動（ログは `/tmp/llama-server.log`）
-4. ttyd (port 7682) でログ閲覧UIをバックグラウンド起動
-5. ブラウザから `http://<server-ip>:7682` でログを閲覧可能
+4. **`ttyd-up.sh` を呼び、ttyd (7681/7682) を起動・LISTEN検証**
+5. ブラウザから `http://<server-ip>:7682`（ログ）/ `:7681`（GPU監視）でアクセス可能
 
 **注意**: ビルドフェーズ（cmake + make）が120秒以上かかることがあります。Bashツールで実行する場合は `timeout: 300000` を指定するか、`run_in_background` での実行を推奨します。
 
 ### wait-ready.sh の動作
 
 1. `/health` エンドポイントでヘルスチェック（通常: 最大150秒、fitモード/大コンテキスト時: 最大300秒ポーリング）
-2. 成功時にDiscord通知を送信（GPU監視・サーバログのURLを含む）
+2. 通知前に 7681/7682 の LISTEN を `ss` で確認し、落ちているポートは通知本文に「(未起動)」と明記（ここでは ttyd の再起動はしない）
+3. 成功時にDiscord通知を送信（GPU監視・サーバログのURLを含む）
 
 **注**: 起動スクリプトはモデル名に基づいてサンプリングパラメータを自動選択します（Qwen3.5系: `--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0`、その他: `--temp 1.0 --top-p 1.0 --top-k 0`）。
 

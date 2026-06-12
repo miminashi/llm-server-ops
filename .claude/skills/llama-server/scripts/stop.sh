@@ -62,7 +62,7 @@ for i in $(seq 1 10); do
 
     # --- ttyd 停止 ---
     echo "==> ttyd を停止中..."
-    ssh "$SERVER" "pkill -f 'ttyd --port 768' 2>/dev/null || true"
+    ssh "$SERVER" "pkill -f '^ttyd --port 768' 2>/dev/null || true"
 
     # Discord通知（失敗しても主機能のexit codeに影響させない）
     if [ -x "$NOTIFY_SCRIPT" ]; then
@@ -97,7 +97,7 @@ echo "llama-server を強制終了しました。"
 
 # --- ttyd 停止 ---
 echo "==> ttyd を停止中..."
-ssh "$SERVER" "pkill -f 'ttyd --port 768' 2>/dev/null || true"
+ssh "$SERVER" "pkill -f '^ttyd --port 768' 2>/dev/null || true"
 
 # Discord通知（失敗しても主機能のexit codeに影響させない）
 if [ -x "$NOTIFY_SCRIPT" ]; then
