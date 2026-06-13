@@ -1,0 +1,122 @@
+[
+  {
+    "lang": "ja",
+    "kind": "qa",
+    "prompt": "光合成の仕組みを3文で説明してください。",
+    "content": "植物は葉緑体の中で太陽光のエネルギーを用いて、二酸化炭素と水からブドウ糖などの有機物を合成します。この過程で、副産物として酸素が大気中に放出されます。これにより、植物は成長に必要なエネルギーを得ると同時に、地球上の生物が呼吸するために必要な酸素を供給しています。",
+    "finish_reason": "stop",
+    "len_chars": 131,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 1.8
+  },
+  {
+    "lang": "ja",
+    "kind": "summary",
+    "prompt": "次の文章を1文で要約してください:『人工知能は近年急速に発展し、画像認識や自然言語処理など多くの分野で人間に匹敵する性能を示すようになった。一方で、計算資源の消費やバイアスといった課題も指摘されている。』",
+    "content": "近年、画像認識や自然言語処理などで人間に匹敵する性能を示すまで急速に発展した人工知能だが、計算資源の消費やバイアスといった課題も指摘されている。",
+    "finish_reason": "stop",
+    "len_chars": 72,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 1.5
+  },
+  {
+    "lang": "ja",
+    "kind": "code",
+    "prompt": "Pythonでフィボナッチ数列の最初の10項を返す関数を書いてください。コードのみ示してください。",
+    "content": "```python\ndef fibonacci_first_10():\n    fib = [0, 1]\n    for i in range(2, 10):\n        fib.append(fib[i-1] + fib[i-2])\n    return fib[:10]\n```",
+    "finish_reason": "stop",
+    "len_chars": 143,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 1.8
+  },
+  {
+    "lang": "ja",
+    "kind": "reason",
+    "prompt": "数列 3, 6, 11, 18, 27 の次に来る数は何ですか。理由も述べてください。",
+    "content": "この数列の次に来る数は **38** です。\n\n### 理由（解説）\n\nこの数列の規則性は、**隣り合う項の差（差分）が奇数の数列になっている**ことです。\n\n1.  **各項の差を計算します：**\n    *   $6 - 3 = 3$\n    *   $11 - 6 = 5$\n    *   $18 - 11 = 7$\n    *   $27 - 18 = 9$\n\n2.  **差の数列を観察します：**\n    差は $3, 5, 7, 9$ となっており、これは**連続する奇数**です。\n\n3.  **次の差を予測します：**\n    連続する奇数の次は $11$ です。\n\n4.  **次の項を計算します：**\n    最後の項 $27$ に次の差 $11$ を足します。\n    $$27 + 11 = 38$$\n\n---\n\n### 別解：一般項から求める方法\n\nこの数列は、$n$ 番目の項 $a_n$ が $n^2 + 2$ で表せることも確認できます。\n\n*   $n=1$: $1^2 + 2 = 3$\n*   $n=2$: $2^2 + 2 = 6$\n*   $n=3$: $3^2 + 2 = 11$\n*   $n=4$: $4^2 + 2 = 18$\n*   $n=5$: $5^2 + 2 = 27$\n\nしたがって、次の項（$n=6$）は：\n$$6^2 + 2 = 36 + 2 = 38$$\n\nどちらの方法でも、答えは **38** になります。",
+    "finish_reason": "stop",
+    "len_chars": 640,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 9.5
+  },
+  {
+    "lang": "ja",
+    "kind": "format",
+    "prompt": "日本の都道府県を3つ、JSON配列の形式だけで出力してください。",
+    "content": "[\"北海道\", \"東京都\", \"大阪府\"]",
+    "finish_reason": "stop",
+    "len_chars": 21,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 0.8
+  },
+  {
+    "lang": "en",
+    "kind": "qa",
+    "prompt": "Explain how photosynthesis works in three sentences.",
+    "content": "Photosynthesis is the process by which green plants, algae, and some bacteria convert light energy from the sun into chemical energy. During this process, chlorophyll in the plant's cells absorbs sunlight to transform carbon dioxide from the air and water from the soil into glucose and oxygen. The resulting glucose serves as food for the plant's growth, while the oxygen is released into the atmosphere as a byproduct.",
+    "finish_reason": "stop",
+    "len_chars": 420,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 2.2
+  },
+  {
+    "lang": "en",
+    "kind": "summary",
+    "prompt": "Summarize the following in one sentence: 'Artificial intelligence has advanced rapidly in recent years, achieving human-level performance in many areas such as image recognition and natural language processing. At the same time, concerns about compute consumption and bias have been raised.'",
+    "content": "While artificial intelligence has rapidly achieved human-level performance in areas like image recognition and natural language processing, it has simultaneously raised concerns regarding compute consumption and bias.",
+    "finish_reason": "stop",
+    "len_chars": 217,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 1.3
+  },
+  {
+    "lang": "en",
+    "kind": "code",
+    "prompt": "Write a Python function that returns the first 10 Fibonacci numbers. Show only the code.",
+    "content": "def fibonacci_first_10():\n    fib = [0, 1]\n    for i in range(2, 10):\n        fib.append(fib[i-1] + fib[i-2])\n    return fib",
+    "finish_reason": "stop",
+    "len_chars": 124,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 1.6
+  },
+  {
+    "lang": "en",
+    "kind": "reason",
+    "prompt": "What number comes next in the sequence 3, 6, 11, 18, 27? Explain your reasoning.",
+    "content": "The next number in the sequence is **38**.\n\n### Reasoning\n\nThere are two common ways to analyze this sequence, both leading to the same result.\n\n#### Method 1: Analyzing the Differences Between Terms\nLet's look at the difference between consecutive numbers:\n\n*   $6 - 3 = 3$\n*   $11 - 6 = 5$\n*   $18 - 11 = 7$\n*   $27 - 18 = 9$\n\nThe differences are **3, 5, 7, 9**. These are consecutive odd numbers. The next odd number in this pattern is **11**.\n\nTherefore, we add 11 to the last term:\n$$27 + 11 = 38$$\n\n#### Method 2: Analyzing the Relationship to Square Numbers\nLet's compare each term to the square of its position ($n$) in the sequence:\n\n*   $n=1: 1^2 + 2 = 1 + 2 = 3$\n*   $n=2: 2^2 + 2 = 4 + 2 = 6$\n*   $n=3: 3^2 + 2 = 9 + 2 = 11$\n*   $n=4: 4^2 + 2 = 16 + 2 = 18$\n*   $n=5: 5^2 + 2 = 25 + 2 = 27$\n\nThe formula for the $n$-th term is $n^2 + 2$.\n\nFor the next term ($n=6$):\n$$6^2 + 2 = 36 + 2 = 38$$\n\n### Conclusion\nThe next number in the sequence is **38**.",
+    "finish_reason": "stop",
+    "len_chars": 962,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 8.9
+  },
+  {
+    "lang": "en",
+    "kind": "format",
+    "prompt": "Output exactly three Japanese prefectures as a JSON array, nothing else.",
+    "content": "[\"Tokyo\", \"Osaka\", \"Hokkaido\"]",
+    "finish_reason": "stop",
+    "len_chars": 30,
+    "empty": false,
+    "max_rep": 1,
+    "garble_ratio": 0.0,
+    "elapsed_s": 0.8
+  }
+]
