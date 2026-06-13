@@ -142,8 +142,9 @@ case "$SERVER" in
 esac
 
 # --- 既存プロセス確認 ---
+# build/bin (HIP/CUDA) と build-vulkan/bin (Vulkan) の双方を検出するため bin/llama-server で照合。
 echo "==> $SERVER の既存 llama-server プロセスを確認中..."
-EXISTING=$(ssh "$SERVER" "pgrep -a -f './build/bin/llama-server'" || true)
+EXISTING=$(ssh "$SERVER" "pgrep -a -f 'bin/llama-server'" || true)
 if [ -n "$EXISTING" ]; then
   echo "WARNING: $SERVER で llama-server が既に起動中です:" >&2
   echo "$EXISTING" >&2
@@ -164,16 +165,42 @@ scp -q "$BUILD_SCRIPT" "${SERVER}:~/llama.cpp/update_and_build.sh"
 ssh "$SERVER" "chmod +x ~/llama.cpp/update_and_build.sh"
 
 echo "==> llama.cpp を更新・ビルド中..."
-ssh "$SERVER" "cd ~/llama.cpp && ./update_and_build.sh"
+# MI25_BACKEND (hip|vulkan) をリモートビルドへ透過。mi25 の update_and_build がバックエンドを分岐する。
+ssh "$SERVER" "cd ~/llama.cpp && MI25_BACKEND='${MI25_BACKEND:-}' ./update_and_build.sh"
 
 # --- サーバ別パラメータ設定 ---
 SERVER_OPTS=""
 ENV_PREFIX=""
 THREADS_OPT="--threads -1"
+# llama-server バイナリパス (バックエンドで切替)。既定は build/ (HIP/CUDA)。
+LLAMA_BIN="./build/bin/llama-server"
 
 case "$SERVER" in
   mi25)
-    SERVER_OPTS="-b 4096 -ub 4096"
+    # MI25 (gfx900/ROCm) x4 = 64GB。llama.cpp は -fa auto がデフォルトで Flash-Attention を
+    # 有効化するが、split-mode layer で層が GPU0 に偏り、FA tile カーネルの compute buffer
+    # (ubatch 比例) で GPU0 が 16GiB を超え OOM する。Qwen3.6-35B-A3B / ctx=131072 / KV q8_0 で:
+    #   ub=4096: ロード時 GPU0 16.8/16 GiB、32k プロンプトで OOM クラッシュ。
+    #   ub=2048: GPU0 12.3 GiB に収まり 131k 安定。prompt 122.8 t/s / eval 24.5 t/s (32k 計測)。
+    #   ub=3072: GPU0 15.0 GiB かつ prompt 99.3 t/s (ub=2048 より遅い) で不利。
+    # → gfx900 では ub=2048 が速度・VRAM 両面の最適点。--flash-attn 1 を明示し auto 挙動に依存しない。
+    # なお mi25 の llama.cpp は update_and_build-mi25.sh で gfx900 ビルド可能コミットに pin 済み
+    # (master は __hip_fp8_e4m3 型を gfx900 で参照しビルド不能)。詳細は
+    # report/2026-06-13_*_mi25_qwen36_128k.md。
+    SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 2048"
+    # Vulkan (RADV) バックエンド: build-vulkan/ のバイナリを使い、llvmpipe (CPU) を除外する。
+    # vulkaninfo では 4 枚の RADV VEGA10 (id 0-3) に加え llvmpipe (id 4) が列挙されるため、
+    # GGML_VK_VISIBLE_DEVICES=0,1,2,3 で物理 4GPU のみに限定する。
+    # Vulkan は HIP の FP8 型問題に無関係なため pin 不要 (build-vulkan は master 追従)。
+    # 探索結果 (report/2026-06-14_001107_mi25_vulkan_qwen36_128k.md): ub は VRAM/速度に
+    # ほぼ無影響 (GPU0 8.72GB 一定・prompt ~405 t/s 一定で ub=4096 でも OOM せず) なので
+    # ROCm と同じ ub=2048 を踏襲。prompt は ROCm の約3.3倍、eval は約0.6倍。FA=0+q8_0 は不可
+    # (V cache quantization requires flash_attn)。KV を f16 にすると高負荷でホストが不安定
+    # になる事象を観測したため本番は q8_0 のままにすること。EXTRA_LLAMA_OPTS で上書き可。
+    if [ "${MI25_BACKEND:-hip}" = "vulkan" ]; then
+      LLAMA_BIN="./build-vulkan/bin/llama-server"
+      ENV_PREFIX="GGML_VK_VISIBLE_DEVICES=0,1,2,3"
+    fi
     ;;
   t120h-p100)
     # -ub は 4096。8192 は CUDA OOM (2026-06-02 の llama.cpp master リグレッション)。
@@ -310,7 +337,7 @@ fi
 
 # EXTRA_LLAMA_OPTS: 検証用の追加フラグ注入口 (YaRN/rope-scaling, -b/-ub 上書き等)。
 # SERVER_OPTS より後段に置くため、同名フラグは EXTRA 側が優先される (llama.cpp は最後の指定を採用)。
-LAUNCH_CMD="${ENV_PREFIX:+$ENV_PREFIX }./build/bin/llama-server \
+LAUNCH_CMD="${ENV_PREFIX:+$ENV_PREFIX }$LLAMA_BIN \
   $MODEL_OPT \
   $CHAT_TEMPLATE_OPTS $NGL_OPTS \
   $SERVER_OPTS --n-predict 32768 $THREADS_OPT \

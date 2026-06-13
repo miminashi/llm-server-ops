@@ -37,7 +37,7 @@ esac
 
 # --- llama-server プロセス検索 ---
 echo "==> $SERVER の llama-server プロセスを確認中..."
-PIDS=$(ssh "$SERVER" "pgrep -f './build/bin/llama-server'" 2>/dev/null || true)
+PIDS=$(ssh "$SERVER" "pgrep -f 'bin/llama-server'" 2>/dev/null || true)
 
 if [ -z "$PIDS" ]; then
   echo "llama-server は $SERVER で起動していません。"
@@ -56,7 +56,7 @@ done
 
 # 停止確認（最大10秒待機）
 for i in $(seq 1 10); do
-  REMAINING=$(ssh "$SERVER" "pgrep -f './build/bin/llama-server'" 2>/dev/null || true)
+  REMAINING=$(ssh "$SERVER" "pgrep -f 'bin/llama-server'" 2>/dev/null || true)
   if [ -z "$REMAINING" ]; then
     echo "llama-server を停止しました。"
 
@@ -79,13 +79,13 @@ done
 
 # SIGTERM で停止できなかった場合、SIGKILL にエスカレーション
 echo "WARNING: SIGTERM での停止がタイムアウトしました。SIGKILL で強制終了します..." >&2
-REMAINING=$(ssh "$SERVER" "pgrep -f './build/bin/llama-server'" 2>/dev/null || true)
+REMAINING=$(ssh "$SERVER" "pgrep -f 'bin/llama-server'" 2>/dev/null || true)
 if [ -n "$REMAINING" ]; then
   for PID in $REMAINING; do
     ssh "$SERVER" "kill -9 $PID" 2>/dev/null || true
   done
   sleep 2
-  STILL_RUNNING=$(ssh "$SERVER" "pgrep -f './build/bin/llama-server'" 2>/dev/null || true)
+  STILL_RUNNING=$(ssh "$SERVER" "pgrep -f 'bin/llama-server'" 2>/dev/null || true)
   if [ -n "$STILL_RUNNING" ]; then
     echo "ERROR: SIGKILL でも llama-server を停止できませんでした。" >&2
     echo "手動で確認してください: ssh $SERVER 'ps aux | grep llama-server'" >&2
