@@ -151,6 +151,21 @@ Supermicro機（mi25）は Redfish が DCMS ライセンス未活性で使えな
 `bmc-setup.sh` で `~/.config/gpu-server/.env` に `BMC_<SERVER>_HOST/USER/PASS` として保存される
 （iLO5用の `ILO_<SERVER>_*` とは別キー、`GPU_SERVER_ENV` でパス上書き可能）。
 
+### 統一電源インタフェース: power-ctl.sh
+
+サーバ種別（Supermicro/IPMI か HPE/iLO5 か）を意識せず電源制御するためのディスパッチャ。
+`llama-up.sh` / `llama-down.sh` はこれを経由する。低レベルの個別操作は従来どおり
+`power.sh`（Redfish）/ `bmc-power.sh`（IPMI）を直接使う。
+
+```bash
+.claude/skills/gpu-server/scripts/power-ctl.sh <server> <status|on|off>
+```
+
+- 内部でサーバ種別を判定し、HPE は `power.sh`、Supermicro は `bmc-power.sh` へディスパッチ。
+- `status`: 標準出力に **`On`/`Off`/`Unknown` の1語だけ**を正規化して返す（下位の生出力は stderr）。
+- `off`: **グレースフル**。HPE=`power.sh off`（Redfish GracefulShutdown）、Supermicro=`bmc-power.sh soft`（ACPI）。Supermicro のハード即時断（`bmc-power.sh off`）は使わない。
+- サーバ種別の真実源は `power-ctl.sh` の `server_type()`。サーバ追加時はここを更新する。
+
 ## 排他制御（重要）
 
 複数のClaudeセッションがGPUサーバに同時アクセスすることを防ぐため、**GPUサーバを使用する前に必ずロックを取得してください**。

@@ -30,6 +30,7 @@ PERM_SCRIPTS=(
   unlock.sh
   lock-status.sh
   power.sh
+  power-ctl.sh
   setup-llama-cpp.sh
   setup-remote-browser.sh
   transfer-file.sh

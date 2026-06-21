@@ -35,10 +35,8 @@ FIT_CTX="${4:-}"
 
 # --- Step 1: 電源状態確認 ---
 echo "==> [1/4] $SERVER の電源状態を確認中..."
-POWER_OUT=$("$GPU_SCRIPTS_DIR/power.sh" "$SERVER" status)
-echo "$POWER_OUT"
-POWER_STATE=$(echo "$POWER_OUT" | grep -oE 'On|Off' | tail -1)
-if [ -z "$POWER_STATE" ]; then
+POWER_STATE=$("$GPU_SCRIPTS_DIR/power-ctl.sh" "$SERVER" status)
+if [ "$POWER_STATE" != "On" ] && [ "$POWER_STATE" != "Off" ]; then
   echo "ERROR: 電源状態を判定できませんでした" >&2
   exit 1
 fi
@@ -46,7 +44,7 @@ fi
 # --- Step 2: 電源OFFなら起動 + SSH疎通待機 ---
 if [ "$POWER_STATE" = "Off" ]; then
   echo "==> [2/4] 電源を ON にします..."
-  "$GPU_SCRIPTS_DIR/power.sh" "$SERVER" on
+  "$GPU_SCRIPTS_DIR/power-ctl.sh" "$SERVER" on
 
   echo "==> SSH 疎通を待機中（最大 5 分）..."
   SSH_READY=false

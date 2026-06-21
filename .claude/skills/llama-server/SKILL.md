@@ -155,10 +155,12 @@ ssh t120h-p100 "ps aux | grep llama-server | grep -v grep | grep -o 'spec-type [
 
 引数すべて省略可（デフォルト: `t120h-p100` / `unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_XL` / `131072`）。
 
+**mi25 / t120h-p100 両対応**: 電源制御は `power-ctl.sh`（gpu-server）経由で行い、サーバ種別（Supermicro/IPMI か HPE/iLO5 か）を自動判別する。mi25（IPMI）でも統合スクリプトで起動・停止できる。
+
 動作:
 
-1. `power.sh status` で電源状態を確認
-2. `Off` なら `power.sh on` → SSH 疎通待ち（5 秒間隔、最大 5 分）
+1. `power-ctl.sh status` で電源状態を確認（出力は `On`/`Off` に正規化）
+2. `Off` なら `power-ctl.sh on` → SSH 疎通待ち（5 秒間隔、最大 5 分）
 3. `http://<ip>:8000/health` に 200 が返れば既起動扱い → **`ttyd-up.sh` で ttyd (7681/7682) を担保してから** `exit 0`（冪等。既起動時も監視UIが落ちていれば立て直す）
 4. `start.sh` → `wait-ready.sh`（`start.sh` 内で `ttyd-up.sh` を呼ぶ）
 
@@ -179,11 +181,11 @@ ssh t120h-p100 "ps aux | grep llama-server | grep -v grep | grep -o 'spec-type [
    - **他者保持** → `exit 1`（`--force` で警告のみ、ただし `unlock` はしない）
    - **未ロック** (`available`) → 警告のみで継続、`unlock` スキップ
    - **UNREACHABLE** → `exit 1`
-2. `stop.sh` → 自分保持時のみ `unlock` → `power.sh off`
+2. `stop.sh` → 自分保持時のみ `unlock` → `power-ctl.sh off`（グレースフル。HPE=Redfish GracefulShutdown / Supermicro=ACPI soft）
 
 「自分のロック」判定: session_id が `<hostname>-<pid>-<timestamp>` 形式なので、末尾 2 セグメントを剥がした `hostname` 部分が `$(hostname)` と一致するか比較します（`hostname` が `-` を含むケースに対応）。
 
-`stop.sh` または `power.sh off` が失敗しても警告のみで後続ステップを継続します（電源 OFF すれば結果的にプロセスも止まるため）。
+`stop.sh` または `power-ctl.sh off` が失敗しても警告のみで後続ステップを継続します（電源 OFF すれば結果的にプロセスも止まるため）。
 
 ## start.sh + wait-ready.sh の使い方
 

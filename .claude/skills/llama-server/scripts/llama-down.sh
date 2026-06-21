@@ -1,7 +1,8 @@
 #!/bin/bash
 # llama-server 停止統合スクリプト
 #
-# ロック検証 → stop.sh → power.sh off → unlock.sh を 1 コマンドで実行する薄いラッパー。
+# ロック検証 → stop.sh → unlock.sh → power-ctl.sh off を 1 コマンドで実行する薄いラッパー。
+# 電源 OFF はグレースフル（HPE=Redfish GracefulShutdown / Supermicro=ACPI soft）。
 #
 # 使い方:
 #   llama-down.sh [server] [--force]
@@ -92,9 +93,9 @@ else
 fi
 
 # --- Step 4: 電源 OFF ---
-echo "==> [4/4] $SERVER の電源を OFF にします..."
-if ! "$GPU_SCRIPTS_DIR/power.sh" "$SERVER" off; then
-  echo "WARNING: power.sh off に失敗しました（API エラー等）。" >&2
+echo "==> [4/4] $SERVER の電源を OFF にします（グレースフル）..."
+if ! "$GPU_SCRIPTS_DIR/power-ctl.sh" "$SERVER" off; then
+  echo "WARNING: 電源 OFF に失敗しました。" >&2
 fi
 
 echo "==> 停止完了"

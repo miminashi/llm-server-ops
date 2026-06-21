@@ -23,6 +23,11 @@ GPU サーバを操作・観測するための手順。BMC（Baseboard Managemen
 > このため Supermicro 機の out-of-band 操作は IPMI ベースの `bmc-power.sh` を使う。
 > （`power.sh` は HPE iLO5 の Redfish 専用なので mi25 では使えない。）
 
+> **上位スクリプト向けの統一IF**: `llama-up.sh` / `llama-down.sh` などはサーバ種別を意識しないよう
+> `power-ctl.sh <server> <status|on|off>` を経由する。これが HPE→`power.sh`、Supermicro→`bmc-power.sh`
+> へ振り分け、`off` は Supermicro では **`bmc-power.sh soft`（ACPI グレースフル）** にマップする
+> （ハード即時断 `bmc-power.sh off` は使わない）。
+
 ## 初回セットアップ
 
 ```bash
