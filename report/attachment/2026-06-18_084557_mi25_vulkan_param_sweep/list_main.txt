@@ -1,0 +1,15 @@
+# COND_ID | ENV_EXTRA | OVERRIDE | TAG
+E1a_mmvq_force|GGML_VK_FORCE_MMVQ=1||32k
+E1b_mmvq_disable|GGML_VK_DISABLE_MMVQ=1||32k
+E5a_ub4096||-ub 4096|32k
+E5b_ub1024||-ub 1024|32k
+E5c_ub512||-ub 512|32k
+E6_sm_row||-sm row|32k
+E7_xfer_queue|GGML_VK_ASYNC_USE_TRANSFER_QUEUE=1||32k
+E8a_threads6||-t 6|32k
+E8b_threads24||-t 24|32k
+E9_maingpu1||-mg 1|32k
+E10_suballoc2g|GGML_VK_SUBALLOCATION_BLOCK_SIZE=2147483648||32k
+D2_no_intdot|GGML_VK_DISABLE_INTEGER_DOT_PRODUCT=1||32k
+D3_no_fusion|GGML_VK_DISABLE_FUSION=1||32k
+B0_baseline_end|||32k

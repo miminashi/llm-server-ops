@@ -1,0 +1,6 @@
+mi25 Vulkan device features (master f3e182816, 2026-06-18)
+- 実GPU: Vulkan0/1/2 = Radeon Instinct MI25 (RADV VEGA10), 各16368MiB。Vulkan3=llvmpipe(CPU)→除外。
+- GGML_VK_VISIBLE_DEVICES=0,1,2 が正 (start.shの 0,1,2,3 は3枚構成でllvmpipe混入→OOM、要修正)。
+- VK_KHR_shader_integer_dot_product: 存在 (rev1) → integer dot 有効可能。
+- VK_VALVE_shader_mixed_float_dot_product: 非存在 → dot2_f16(b4e3dc613)はMI25で無効=非該当(報告書の未解決問いの回答)。
+- VK_KHR_cooperative_matrix / VK_KHR_shader_bfloat16: 非存在 (gfx900で想定通り、matrix cores無し)。
