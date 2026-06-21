@@ -176,6 +176,7 @@
 - [x] [2026-05-13_071824_llama_up_down_global_install.md](2026-05-13_071824_llama_up_down_global_install.md) — llama-up.sh / llama-down.sh をグローバルインストール対応化し、gpu-server への相対パス参照を絶対パス固定に変換
 - [x] [2026-06-03_063647_llama_cpp_oom_regression_fix.md](2026-06-03_063647_llama_cpp_oom_regression_fix.md) — llama.cpp HEAD更新後のCUDA OOM 回帰を -ub 8192→4096 変更で解消（VRAM空き 0.6→5.4GB）
 - [x] [2026-06-10_213920_ttyd_startup_reliability.md](2026-06-10_213920_ttyd_startup_reliability.md) — ttyd 起動ロジックを単一冪等スクリプトに集約し、どの起動経路でも ttyd が確実に立ち上がる構造に改善
+- [x] [2026-06-20_052841_start_sh_gpu_visibility_autodetect.md](2026-06-20_052841_start_sh_gpu_visibility_autodetect.md) — start.sh の `GGML_VK_VISIBLE_DEVICES=0,1,2,3` ハードコードを撤廃し、起動前に vulkaninfo で RADV 物理 GPU を自動検出（llvmpipe 除外、3枚→`0,1,2`/4枚→`0,1,2,3`）。mi25/p100 に期待枚数チェック（警告のみ・非中断）を追加、ROCm/CUDA は可視性不介入
 
 ## 11. mi25 への横展開（2台目 GPU サーバ）
 

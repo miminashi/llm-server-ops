@@ -141,6 +141,40 @@ case "$SERVER" in
     ;;
 esac
 
+# --- GPU 枚数検出ヘルパ ---
+# RADV 物理 GPU の Vulkan index をカンマ連結で返す（llvmpipe/lavapipe=CPU を除外）。
+# vulkaninfo --summary の各 GPUn ブロックを走査し、deviceType=PHYSICAL_DEVICE_TYPE_CPU
+# （= llvmpipe/lavapipe）を除いた index のみを列挙する（例 実効3枚→ "0,1,2" / 4枚→ "0,1,2,3"）。
+# この index は vulkaninfo の GPUn 列挙順 = ggml-vulkan の Vulkann 列挙順と一致する（実機確認済み）。
+# ただし ICD のデバイス列挙順の安定性に依存するため、ドライバ/Mesa 更新時は要再確認。
+# vulkaninfo 不在/失敗時は空文字を返す（呼び出し側でフォールバックする）。
+detect_radv_vk_indices() {
+  local srv="$1"
+  ssh "$srv" 'vulkaninfo --summary 2>/dev/null' 2>/dev/null | awk '
+    /^GPU[0-9]+:/ { match($0, /[0-9]+/); idx = substr($0, RSTART, RLENGTH); have = 1; is_cpu = 0; next }
+    have && /deviceType/  { if ($0 ~ /PHYSICAL_DEVICE_TYPE_CPU/) is_cpu = 1 }
+    have && /deviceName/  {
+      if (is_cpu || $0 ~ /llvmpipe|lavapipe/) { } else { out = out (out == "" ? "" : ",") idx }
+      have = 0
+    }
+    END { print out }'
+}
+
+# 実効 GPU 枚数が期待を下回る場合に stderr へ警告を出す（起動は中断しない）。
+# actual が空/0/非数値（検出不能）なら誤警告を避けるため何もしない。
+# 注: 数値ガードを -lt 比較の前に置くこと（空/非数値での算術エラー→ set -e 中断を防ぐ）。
+warn_gpu_degraded() {
+  local srv="$1" actual="$2" expected="$3"
+  case "$actual" in
+    ''|*[!0-9]*) return 0 ;;
+  esac
+  if [ "$actual" -lt "$expected" ]; then
+    echo "WARNING: $srv の実効 GPU 枚数が ${actual} 枚です（期待 ${expected} 枚）。GPU 脱落の可能性があります。" >&2
+    echo "         実効枚数で VRAM が不足する場合はモデルロード時に llama-server 自体が失敗します。起動は継続します。" >&2
+  fi
+  return 0
+}
+
 # --- 既存プロセス確認 ---
 # build/bin (HIP/CUDA) と build-vulkan/bin (Vulkan) の双方を検出するため bin/llama-server で照合。
 echo "==> $SERVER の既存 llama-server プロセスを確認中..."
@@ -189,8 +223,13 @@ case "$SERVER" in
     # report/2026-06-13_*_mi25_qwen36_128k.md。
     SERVER_OPTS="--flash-attn 1 --poll 0 -b 2048 -ub 2048"
     # Vulkan (RADV) バックエンド: build-vulkan/ のバイナリを使い、llvmpipe (CPU) を除外する。
-    # vulkaninfo では 4 枚の RADV VEGA10 (id 0-3) に加え llvmpipe (id 4) が列挙されるため、
-    # GGML_VK_VISIBLE_DEVICES=0,1,2,3 で物理 4GPU のみに限定する。
+    # 【可視性の動的検出】MI25 は SLOT4 等の PCIe 物理層障害で実効枚数が変動する (4枚⇄3枚、間欠的。
+    # report/2026-06-14_131713_mi25_gpu4_pcie_dropout.md)。vulkaninfo の列挙は「RADV VEGA10 × 実効枚数
+    # ＋ 末尾に llvmpipe(CPU)」となるため、起動前に vulkaninfo で RADV 物理 GPU の index のみを検出して
+    # GGML_VK_VISIBLE_DEVICES に設定する (実効3枚→0,1,2 / 4枚→0,1,2,3)。旧来の固定値 0,1,2,3 は
+    # 3枚構成時に index 3 の llvmpipe を拾い ErrorOutOfDeviceMemory で破綻していた
+    # (report/2026-06-18_084557_mi25_vulkan_param_sweep.md)。index は vulkaninfo GPUn 順 =
+    # ggml-vulkan Vulkann 順と一致 (--list-devices で実機確認済み・ICD 列挙順に依存)。
     # Vulkan は HIP の FP8 型問題に無関係なため pin 不要 (build-vulkan は master 追従)。
     # 探索結果 (report/2026-06-14_001107_mi25_vulkan_qwen36_128k.md): ub は VRAM/速度に
     # ほぼ無影響 (GPU0 8.72GB 一定・prompt ~405 t/s 一定で ub=4096 でも OOM せず) なので
@@ -199,8 +238,27 @@ case "$SERVER" in
     # になる事象を観測したため本番は q8_0 のままにすること。EXTRA_LLAMA_OPTS で上書き可。
     if [ "${MI25_BACKEND:-hip}" = "vulkan" ]; then
       LLAMA_BIN="./build-vulkan/bin/llama-server"
-      ENV_PREFIX="GGML_VK_VISIBLE_DEVICES=0,1,2,3"
+      # set -o pipefail 下でも落ちないよう || true でガード。
+      MI25_VK_IDX=$(detect_radv_vk_indices "$SERVER" || true)
+      if [ -n "$MI25_VK_IDX" ]; then
+        ENV_PREFIX="GGML_VK_VISIBLE_DEVICES=$MI25_VK_IDX"
+        MI25_GPU_COUNT=$(printf '%s' "$MI25_VK_IDX" | awk -F, '{print NF}' || true)
+        echo "    Vulkan: RADV 物理 GPU を検出 → GGML_VK_VISIBLE_DEVICES=$MI25_VK_IDX (${MI25_GPU_COUNT}枚)"
+      else
+        # 検出失敗 (vulkaninfo 不在/失敗): 環境変数ごと渡さず ggml の自動選択に委ねる。
+        # 空代入 (GGML_VK_VISIBLE_DEVICES=) は「デバイス0個」と解釈され全滅しうるため厳禁。
+        ENV_PREFIX=""
+        echo "WARNING: mi25 で RADV GPU を検出できませんでした (vulkaninfo 不在/失敗)。" >&2
+        echo "         GGML_VK_VISIBLE_DEVICES を未設定で起動します (ggml 自動選択。現行 master は llvmpipe を除外する)。" >&2
+        echo "         /tmp/llama-server.log で実 GPU 数 (Vulkan0..) を確認してください。" >&2
+        MI25_GPU_COUNT=""
+      fi
+    else
+      # ROCm(hip): 可視性は触らない (auto で実効枚数のみ使用)。枚数は rocminfo の gfx900 Agent 数で
+      # best-effort 検出 ('Name:' 行に限定。rocm-smi は脱落時に誤って4枚列挙した実績があり使わない)。
+      MI25_GPU_COUNT=$(ssh "$SERVER" "rocminfo 2>/dev/null | grep -cE '^[[:space:]]*Name:[[:space:]]*gfx900'" 2>/dev/null || true)
     fi
+    warn_gpu_degraded "$SERVER" "${MI25_GPU_COUNT:-}" 4
     ;;
   t120h-p100)
     # -ub は 4096。8192 は CUDA OOM (2026-06-02 の llama.cpp master リグレッション)。
@@ -212,6 +270,10 @@ case "$SERVER" in
     # context checkpoint も有効のまま (同一プレフィクスの再リクエストは ~3倍高速)。
     # 詳細は report/2026-06-03_*_llama_cpp_oom_regression_fix.md。
     SERVER_OPTS="--flash-attn 1 --poll 0 -b 4096 -ub 4096"
+    # CUDA は可視性を触らない (auto で実効枚数のみ使用)。期待 4 枚に対する枚数チェックのみ行う。
+    # nvidia-smi の index 行数で枚数を取得し、tr で数字以外を除去して堅牢化。
+    P100_GPU_COUNT=$(ssh "$SERVER" "nvidia-smi --query-gpu=index --format=csv,noheader 2>/dev/null | wc -l" 2>/dev/null | tr -dc '0-9' || true)
+    warn_gpu_degraded "$SERVER" "${P100_GPU_COUNT:-}" 4
     ;;
   t120h-m10)
     ENV_PREFIX="CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14"
