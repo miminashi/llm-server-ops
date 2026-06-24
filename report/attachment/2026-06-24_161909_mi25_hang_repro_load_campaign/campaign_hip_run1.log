@@ -1,0 +1,21 @@
+[2026-06-23T08:31:28+09:00] ===== キャンペーン開始 backend=hip MAX=30 MIN=10 HANG_SAFETY=3 CAP=21600s TRIAL=720s =====
+[2026-06-23T08:31:39+09:00] boot_seq=0 (phase-start-hip) gpu_count=3
+telemetry started. pids: 3522886 3522887 3522888 
+logs: /tmp/claude-1000/-home-ubuntu-projects-llm-server-ops/9f591f12-9f54-4500-82e9-bbcf7fe050f2/scratchpad/mi25-hang/telemetry_rocmsmi.log / /tmp/claude-1000/-home-ubuntu-projects-llm-server-ops/9f591f12-9f54-4500-82e9-bbcf7fe050f2/scratchpad/mi25-hang/telemetry_gpucount.log / /tmp/claude-1000/-home-ubuntu-projects-llm-server-ops/9f591f12-9f54-4500-82e9-bbcf7fe050f2/scratchpad/mi25-hang/kern_dmesg.log / /tmp/claude-1000/-home-ubuntu-projects-llm-server-ops/9f591f12-9f54-4500-82e9-bbcf7fe050f2/scratchpad/mi25-hang/llama_server.log
+[2026-06-23T08:31:39+09:00] --- trial 1 開始 (elapsed=0s hangs=0) ---
+[2026-06-23T08:44:07+09:00] --- trial 2 開始 (elapsed=748s hangs=0) ---
+[2026-06-23T08:56:21+09:00] --- trial 3 開始 (elapsed=1482s hangs=0) ---
+[2026-06-23T09:09:18+09:00] --- trial 4 開始 (elapsed=2259s hangs=0) ---
+[2026-06-23T09:22:05+09:00] --- trial 5 開始 (elapsed=3026s hangs=0) ---
+[2026-06-23T09:35:38+09:00] --- trial 6 開始 (elapsed=3839s hangs=0) ---
+[2026-06-23T09:48:07+09:00] --- trial 7 開始 (elapsed=4588s hangs=0) ---
+[2026-06-23T09:55:42+09:00] *** HANG 検出 trial=7 (hang_count=1) ***
+[2026-06-23T09:55:42+09:00] ハング#1: KVMスクショ取得（リセット前）
+[09:55:57] ERROR: Login request failed: <urlopen error [Errno 113] No route to host>
+[2026-06-23T09:55:57+09:00] ハング#1: BMC warm reset
+Error: Unable to establish IPMI v2 / RMCP+ session
+[2026-06-23T10:04:02+09:00] warm reset 後 SSH 復帰せず → cold cycle へエスカレーション
+mi25: 電源OFF...
+Error: Unable to establish IPMI v2 / RMCP+ session
+[2026-06-23T10:12:27+09:00] cold cycle 後も SSH 復帰せず → 復旧失敗(要介入)
+[2026-06-23T10:12:27+09:00] 復旧失敗 → キャンペーン中断(rc=9)

@@ -1,0 +1,125 @@
+### BOOT boot_seq=0 reset_type=initial(power-on) epoch=1782170304 ts=2026-06-23T08:18:24+09:00 backend=hip(ROCm)
+gfx900_count=6
+--- rocm-smi --showmaxpower (per-GPU power cap) ---
+=== gfx900 count ===
+6
+=== showid ===
+
+
+============================ ROCm System Management Interface ============================
+=========================================== ID ===========================================
+GPU[0]		: Device Name: 		Vega 10 [Instinct MI25/MI25x2/V340/V320]
+GPU[0]		: Device ID: 		0x6860
+GPU[0]		: Device Rev: 		0x01
+GPU[0]		: Subsystem ID: 	Radeon PRO V320
+GPU[0]		: GUID: 		29525
+GPU[1]		: Device Name: 		Vega 10 [Instinct MI25/MI25x2/V340/V320]
+GPU[1]		: Device ID: 		0x6860
+GPU[1]		: Device Rev: 		0x01
+GPU[1]		: Subsystem ID: 	Radeon PRO V320
+GPU[1]		: GUID: 		54068
+GPU[2]		: Device Name: 		Vega 10 [Instinct MI25/MI25x2/V340/V320]
+GPU[2]		: Device ID: 		0x6860
+GPU[2]		: Device Rev: 		0x01
+GPU[2]		: Subsystem ID: 	Radeon PRO V320
+GPU[2]		: GUID: 		8820
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+=== maxpower(power cap) ===
+
+
+============================ ROCm System Management Interface ============================
+======================================= Power Cap ========================================
+GPU[0]		: Max Graphics Package Power (W): 160.0
+GPU[1]		: Max Graphics Package Power (W): 160.0
+GPU[2]		: Max Graphics Package Power (W): 160.0
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+### END BOOT boot_seq=0
+
+[訂正] boot_seq=0: 真のGPU枚数=15枚 (grep -c gfx900=6はGPUあたり2行のため誤計数), power cap=160.0W x15
+[再訂正] boot_seq=0: 真のGPU枚数(unique index)=3枚, power cap=160.0W each
+### BOOT boot_seq=0 reset_type=phase-start-hip epoch=1782171088 ts=2026-06-23T08:31:28+09:00 backend=hip
+gpu_count=3
+--- rocm-smi --showmaxpower (per-GPU power cap) ---
+
+
+============================ ROCm System Management Interface ============================
+======================================= Power Cap ========================================
+GPU[0]		: Max Graphics Package Power (W): 160.0
+GPU[1]		: Max Graphics Package Power (W): 160.0
+GPU[2]		: Max Graphics Package Power (W): 160.0
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+--- root fs ---
+/dev/nvme0n1p2 / ext4 rw,relatime 0 0
+### END BOOT boot_seq=0 gpu_count=3
+
+### BOOT boot_seq=0 reset_type=phase-start-hip epoch=1782247850 ts=2026-06-24T05:50:50+09:00 backend=hip
+gpu_count=3
+--- rocm-smi --showmaxpower (per-GPU power cap) ---
+
+
+============================ ROCm System Management Interface ============================
+======================================= Power Cap ========================================
+GPU[0]		: Max Graphics Package Power (W): 160.0
+GPU[1]		: Max Graphics Package Power (W): 160.0
+GPU[2]		: Max Graphics Package Power (W): 160.0
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+--- root fs ---
+/dev/nvme0n1p2 / ext4 rw,relatime 0 0
+### END BOOT boot_seq=0 gpu_count=3
+
+### BOOT vulkan-phase-start reset_type=cold(power-on for vulkan) epoch=1782266475 ts=2026-06-24T11:01:15+09:00 backend=vulkan
+--- GPU列挙 (rocm-smi --showid) ---
+
+
+============================ ROCm System Management Interface ============================
+=========================================== ID ===========================================
+GPU[0]		: Device Name: 		Vega 10 [Instinct MI25/MI25x2/V340/V320]
+GPU[0]		: Device ID: 		0x6860
+GPU[0]		: Device Rev: 		0x01
+GPU[0]		: Subsystem ID: 	Radeon PRO V320
+GPU[0]		: GUID: 		29525
+GPU[1]		: Device Name: 		Vega 10 [Instinct MI25/MI25x2/V340/V320]
+GPU[1]		: Device ID: 		0x6860
+GPU[1]		: Device Rev: 		0x01
+GPU[1]		: Subsystem ID: 	Radeon PRO V320
+GPU[1]		: GUID: 		54068
+GPU[2]		: Device Name: 		Vega 10 [Instinct MI25/MI25x2/V340/V320]
+GPU[2]		: Device ID: 		0x6860
+GPU[2]		: Device Rev: 		0x01
+GPU[2]		: Subsystem ID: 	Radeon PRO V320
+GPU[2]		: GUID: 		8820
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+--- 各GPU power cap (rocm-smi --showmaxpower) ---
+
+
+============================ ROCm System Management Interface ============================
+======================================= Power Cap ========================================
+GPU[0]		: Max Graphics Package Power (W): 160.0
+GPU[1]		: Max Graphics Package Power (W): 160.0
+GPU[2]		: Max Graphics Package Power (W): 160.0
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+gpu_count=3
+### END BOOT vulkan-phase gpu_count=3
+
+### BOOT boot_seq=0 reset_type=phase-start-vulkan epoch=1782267147 ts=2026-06-24T11:12:27+09:00 backend=vulkan
+gpu_count=3
+--- rocm-smi --showmaxpower (per-GPU power cap) ---
+
+
+============================ ROCm System Management Interface ============================
+======================================= Power Cap ========================================
+GPU[0]		: Max Graphics Package Power (W): 160.0
+GPU[1]		: Max Graphics Package Power (W): 160.0
+GPU[2]		: Max Graphics Package Power (W): 160.0
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+--- root fs ---
+/dev/nvme0n1p2 / ext4 rw,relatime 0 0
+### END BOOT boot_seq=0 gpu_count=3
+
