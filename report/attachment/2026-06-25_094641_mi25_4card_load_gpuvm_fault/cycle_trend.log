@@ -1,0 +1,129 @@
+##### mi25 4-card power-cycle / reboot stability test #####
+cold=5 warm=2  start=2026-06-25 08:08:58
+slot map (4-card recovery): 29525=SLOT2(00:02)  33301=SLOT4(00:03)  54068=SLOT8(80:02)  8820=SLOT6(80:03)
+baseline expected: COUNT=4, all ports Width x16 Speed 8GT/s PresDet+ AER cor/fatal/nonfatal=0, GUIDs 29525 33301 54068 8820
+
+===================== CYCLE 1 / 7  [COLD-CYCLE] =====================
+[2026-06-25 08:08:58] soft shutdown
+mi25: ACPI ソフトシャットダウンを要求しました
+[2026-06-25 08:09:19] power OFF confirmed
+[2026-06-25 08:09:19] 30s power drain
+[2026-06-25 08:09:49] power ON
+mi25: 電源ON を要求しました
+[2026-06-25 08:12:18] SSH back -- re-acquire lock & capture:
+Lock acquired: mi25 (session: aws-mmns-generic-mi25stab-20260625_080715)
+COUNT=4
+UPTIME=08:12:30 up 1 min,  0 users,  load average: 0.60, 0.20, 0.07
+PORT 00:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 00:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+GUIDS_ALIVE= 29525 33301 54068 8820 
+DMESG_SIG: none
+[OK] cycle 1: 4 cards present
+
+===================== CYCLE 2 / 7  [COLD-CYCLE] =====================
+[2026-06-25 08:12:30] soft shutdown
+mi25: ACPI ソフトシャットダウンを要求しました
+[2026-06-25 08:12:51] power OFF confirmed
+[2026-06-25 08:12:51] 30s power drain
+[2026-06-25 08:13:21] power ON
+mi25: 電源ON を要求しました
+[2026-06-25 08:15:51] SSH back -- re-acquire lock & capture:
+Lock acquired: mi25 (session: aws-mmns-generic-mi25stab-20260625_080715)
+COUNT=4
+UPTIME=08:16:03 up 1 min,  0 users,  load average: 0.58, 0.19, 0.07
+PORT 00:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 00:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+GUIDS_ALIVE= 29525 33301 54068 8820 
+DMESG_SIG: none
+[OK] cycle 2: 4 cards present
+
+===================== CYCLE 3 / 7  [COLD-CYCLE] =====================
+[2026-06-25 08:16:03] soft shutdown
+mi25: ACPI ソフトシャットダウンを要求しました
+[2026-06-25 08:16:24] power OFF confirmed
+[2026-06-25 08:16:24] 30s power drain
+[2026-06-25 08:16:54] power ON
+mi25: 電源ON を要求しました
+[2026-06-25 08:19:23] SSH back -- re-acquire lock & capture:
+Lock acquired: mi25 (session: aws-mmns-generic-mi25stab-20260625_080715)
+COUNT=4
+UPTIME=08:19:33 up 1 min,  0 users,  load average: 0.66, 0.23, 0.08
+PORT 00:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 00:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+GUIDS_ALIVE= 29525 33301 54068 8820 
+DMESG_SIG: none
+[OK] cycle 3: 4 cards present
+
+===================== CYCLE 4 / 7  [COLD-CYCLE] =====================
+[2026-06-25 08:19:34] soft shutdown
+mi25: ACPI ソフトシャットダウンを要求しました
+[2026-06-25 08:19:54] power OFF confirmed
+[2026-06-25 08:19:54] 30s power drain
+[2026-06-25 08:20:24] power ON
+mi25: 電源ON を要求しました
+[2026-06-25 08:22:54] SSH back -- re-acquire lock & capture:
+Lock acquired: mi25 (session: aws-mmns-generic-mi25stab-20260625_080715)
+COUNT=4
+UPTIME=08:23:05 up 1 min,  0 users,  load average: 0.73, 0.25, 0.09
+PORT 00:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 00:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+GUIDS_ALIVE= 29525 33301 54068 8820 
+DMESG_SIG: none
+[OK] cycle 4: 4 cards present
+
+===================== CYCLE 5 / 7  [COLD-CYCLE] =====================
+[2026-06-25 08:23:06] soft shutdown
+mi25: ACPI ソフトシャットダウンを要求しました
+[2026-06-25 08:23:26] power OFF confirmed
+[2026-06-25 08:23:26] 30s power drain
+[2026-06-25 08:23:56] power ON
+mi25: 電源ON を要求しました
+[2026-06-25 08:26:25] SSH back -- re-acquire lock & capture:
+Lock acquired: mi25 (session: aws-mmns-generic-mi25stab-20260625_080715)
+COUNT=4
+UPTIME=08:26:36 up 1 min,  0 users,  load average: 0.66, 0.22, 0.08
+PORT 00:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 00:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+GUIDS_ALIVE= 29525 33301 54068 8820 
+DMESG_SIG: none
+[OK] cycle 5: 4 cards present
+
+===================== CYCLE 6 / 7  [WARM-REBOOT] =====================
+[2026-06-25 08:26:36] warm reboot via ssh sudo reboot
+[2026-06-25 08:28:56] SSH back -- re-acquire lock & capture:
+Lock acquired: mi25 (session: aws-mmns-generic-mi25stab-20260625_080715)
+COUNT=4
+UPTIME=08:29:08 up 1 min,  0 users,  load average: 0.55, 0.17, 0.06
+PORT 00:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 00:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+GUIDS_ALIVE= 29525 33301 54068 8820 
+DMESG_SIG: none
+[OK] cycle 6: 4 cards present
+
+===================== CYCLE 7 / 7  [WARM-REBOOT] =====================
+[2026-06-25 08:29:08] warm reboot via ssh sudo reboot
+[2026-06-25 08:31:47] SSH back -- re-acquire lock & capture:
+Lock acquired: mi25 (session: aws-mmns-generic-mi25stab-20260625_080715)
+COUNT=4
+UPTIME=08:31:58 up 1 min,  0 users,  load average: 1.11, 0.33, 0.11
+PORT 00:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 00:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:02.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+PORT 80:03.0 = Width x16 Speed 8GT/s PresDet+ AER(cor=0 fatal=0 nonfatal=0)
+GUIDS_ALIVE= 29525 33301 54068 8820 
+DMESG_SIG: none
+[OK] cycle 7: 4 cards present
+
+##### ALL 7 CYCLES PASSED (4 cards every time) -- done 2026-06-25 08:31:59 #####
