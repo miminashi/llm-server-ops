@@ -1,0 +1,300 @@
+43.02.504.057 I slot print_timing: id  0 | task 36323 |       total time =  125986.27 ms /  2102 tokens
+43.02.504.059 I slot print_timing: id  0 | task 36323 |    graphs reused =      38132
+43.02.504.356 I slot      release: id  0 | task 36323 | stop processing: n_tokens = 2189, truncated = 0
+43.02.504.566 I srv  update_slots: all slots are idle
+43.03.058.737 I srv    operator(): Chat format: peg-native
+43.03.059.060 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 28035099164
+43.03.059.067 I srv  get_availabl: updating prompt cache
+43.03.059.958 W srv   prompt_save:  - saving prompt with length 2189, total state size = 85.568 MiB (draft: 0.000 MiB)
+43.03.490.364 I srv          load:  - looking for better prompt, base f_keep = 0.064, sim = 0.081
+43.03.490.390 I srv        update:  - cache state: 10 prompts, 3655.384 MiB (limits: 8192.000 MiB, 131072 tokens, 131072 est)
+43.03.490.392 I srv        update:    - prompt 0x55a7422864c0:    2189 tokens, checkpoints:  1,   148.381 MiB
+43.03.490.393 I srv        update:    - prompt 0x55a7422a7600:    3761 tokens, checkpoints:  2,   227.536 MiB
+43.03.490.394 I srv        update:    - prompt 0x55a741d69140:   10034 tokens, checkpoints:  6,   543.997 MiB
+43.03.490.396 I srv        update:    - prompt 0x55a741d69d30:    2189 tokens, checkpoints:  2,   211.195 MiB
+43.03.490.397 I srv        update:    - prompt 0x55a742285420:    3780 tokens, checkpoints:  3,   290.546 MiB
+43.03.490.399 I srv        update:    - prompt 0x55a7422b6c60:   10111 tokens, checkpoints:  7,   607.610 MiB
+43.03.490.400 I srv        update:    - prompt 0x55a74e4ce230:    2189 tokens, checkpoints:  3,   274.008 MiB
+43.03.490.401 I srv        update:    - prompt 0x55a74e4d4e70:    3706 tokens, checkpoints:  4,   352.590 MiB
+43.03.490.402 I srv        update:    - prompt 0x55a74e4cd1f0:    9368 tokens, checkpoints:  8,   662.700 MiB
+43.03.490.403 I srv        update:    - prompt 0x55a74e4c2da0:    2189 tokens, checkpoints:  4,   336.821 MiB
+43.03.490.416 I srv  get_availabl: prompt cache update took 431.33 ms
+43.03.490.587 I slot launch_slot_: id  0 | task 38373 | processing task, is_child = 0
+43.03.490.602 I slot   operator(): id  0 | task 38373 | Checking checkpoint with [87, 87] against 140...
+43.03.507.645 W slot   operator(): id  0 | task 38373 | restored context checkpoint (pos_min = 87, pos_max = 87, n_tokens = 88, n_past = 88, size = 62.813 MiB)
+43.06.490.986 I slot create_check: id  0 | task 38373 | created context checkpoint 5 of 32 (pos_min = 1677, pos_max = 1677, n_tokens = 1678, size = 62.813 MiB)
+43.06.815.785 I slot print_timing: id  0 | task 38373 | prompt processing, n_tokens =   1640, progress = 1.00, t =   3.33 s / 493.21 tokens per second
+43.12.918.138 I slot print_timing: id  0 | task 38373 | n_decoded =    100, tg =  16.68 t/s, tg_3s =  16.68 t/s
+43.15.963.949 I slot print_timing: id  0 | task 38373 | n_decoded =    150, tg =  16.59 t/s, tg_3s =  16.42 t/s
+43.19.023.092 I slot print_timing: id  0 | task 38373 | n_decoded =    199, tg =  16.45 t/s, tg_3s =  16.02 t/s
+43.22.036.181 I slot print_timing: id  0 | task 38373 | n_decoded =    247, tg =  16.34 t/s, tg_3s =  15.93 t/s
+43.25.058.252 I slot print_timing: id  0 | task 38373 | n_decoded =    296, tg =  16.32 t/s, tg_3s =  16.21 t/s
+43.28.058.331 I slot print_timing: id  0 | task 38373 | n_decoded =    346, tg =  16.37 t/s, tg_3s =  16.67 t/s
+43.31.101.628 I slot print_timing: id  0 | task 38373 | n_decoded =    396, tg =  16.38 t/s, tg_3s =  16.43 t/s
+43.34.138.801 I slot print_timing: id  0 | task 38373 | n_decoded =    447, tg =  16.42 t/s, tg_3s =  16.79 t/s
+43.37.181.263 I slot print_timing: id  0 | task 38373 | n_decoded =    495, tg =  16.36 t/s, tg_3s =  15.78 t/s
+43.40.225.048 I slot print_timing: id  0 | task 38373 | n_decoded =    546, tg =  16.40 t/s, tg_3s =  16.76 t/s
+43.43.259.928 I slot print_timing: id  0 | task 38373 | n_decoded =    598, tg =  16.46 t/s, tg_3s =  17.13 t/s
+43.46.275.450 I slot print_timing: id  0 | task 38373 | n_decoded =    646, tg =  16.42 t/s, tg_3s =  15.92 t/s
+43.49.304.315 I slot print_timing: id  0 | task 38373 | n_decoded =    695, tg =  16.40 t/s, tg_3s =  16.18 t/s
+43.52.316.685 I slot print_timing: id  0 | task 38373 | n_decoded =    745, tg =  16.41 t/s, tg_3s =  16.60 t/s
+43.55.356.402 I slot print_timing: id  0 | task 38373 | n_decoded =    794, tg =  16.39 t/s, tg_3s =  16.12 t/s
+43.58.369.973 I slot print_timing: id  0 | task 38373 | n_decoded =    842, tg =  16.37 t/s, tg_3s =  15.93 t/s
+44.01.424.834 I slot print_timing: id  0 | task 38373 | n_decoded =    891, tg =  16.35 t/s, tg_3s =  16.04 t/s
+44.04.463.055 I slot print_timing: id  0 | task 38373 | n_decoded =    941, tg =  16.35 t/s, tg_3s =  16.46 t/s
+44.07.477.289 I slot print_timing: id  0 | task 38373 | n_decoded =    990, tg =  16.35 t/s, tg_3s =  16.26 t/s
+44.10.490.801 I slot print_timing: id  0 | task 38373 | n_decoded =   1041, tg =  16.38 t/s, tg_3s =  16.92 t/s
+44.13.506.280 I slot print_timing: id  0 | task 38373 | n_decoded =   1089, tg =  16.36 t/s, tg_3s =  15.92 t/s
+44.16.565.998 I slot print_timing: id  0 | task 38373 | n_decoded =   1139, tg =  16.35 t/s, tg_3s =  16.34 t/s
+44.19.593.581 I slot print_timing: id  0 | task 38373 | n_decoded =   1188, tg =  16.35 t/s, tg_3s =  16.18 t/s
+44.22.613.307 I slot print_timing: id  0 | task 38373 | n_decoded =   1239, tg =  16.37 t/s, tg_3s =  16.89 t/s
+44.25.647.219 I slot print_timing: id  0 | task 38373 | n_decoded =   1289, tg =  16.37 t/s, tg_3s =  16.48 t/s
+44.28.667.147 I slot print_timing: id  0 | task 38373 | n_decoded =   1338, tg =  16.37 t/s, tg_3s =  16.23 t/s
+44.31.698.953 I slot print_timing: id  0 | task 38373 | n_decoded =   1389, tg =  16.38 t/s, tg_3s =  16.82 t/s
+44.34.748.401 I slot print_timing: id  0 | task 38373 | n_decoded =   1440, tg =  16.40 t/s, tg_3s =  16.72 t/s
+44.37.776.076 I slot print_timing: id  0 | task 38373 | n_decoded =   1489, tg =  16.39 t/s, tg_3s =  16.18 t/s
+44.40.835.567 I slot print_timing: id  0 | task 38373 | n_decoded =   1537, tg =  16.37 t/s, tg_3s =  15.69 t/s
+44.43.892.833 I slot print_timing: id  0 | task 38373 | n_decoded =   1587, tg =  16.37 t/s, tg_3s =  16.35 t/s
+44.46.949.097 I slot print_timing: id  0 | task 38373 | n_decoded =   1636, tg =  16.36 t/s, tg_3s =  16.03 t/s
+44.49.991.432 I slot print_timing: id  0 | task 38373 | n_decoded =   1686, tg =  16.36 t/s, tg_3s =  16.43 t/s
+44.53.015.134 I slot print_timing: id  0 | task 38373 | n_decoded =   1737, tg =  16.37 t/s, tg_3s =  16.87 t/s
+44.56.035.061 I slot print_timing: id  0 | task 38373 | n_decoded =   1788, tg =  16.39 t/s, tg_3s =  16.89 t/s
+44.59.090.038 I slot print_timing: id  0 | task 38373 | n_decoded =   1838, tg =  16.39 t/s, tg_3s =  16.37 t/s
+45.02.134.392 I slot print_timing: id  0 | task 38373 | n_decoded =   1887, tg =  16.38 t/s, tg_3s =  16.10 t/s
+45.05.192.723 I slot print_timing: id  0 | task 38373 | n_decoded =   1937, tg =  16.38 t/s, tg_3s =  16.35 t/s
+45.08.214.738 I slot print_timing: id  0 | task 38373 | n_decoded =   1987, tg =  16.38 t/s, tg_3s =  16.55 t/s
+45.11.266.928 I slot print_timing: id  0 | task 38373 | n_decoded =   2036, tg =  16.37 t/s, tg_3s =  16.05 t/s
+45.12.005.333 I slot print_timing: id  0 | task 38373 | prompt eval time =    3432.83 ms /  1644 tokens (    2.09 ms per token,   478.90 tokens per second)
+45.12.005.339 I slot print_timing: id  0 | task 38373 |        eval time =  125081.88 ms /  2048 tokens (   61.08 ms per token,    16.37 tokens per second)
+45.12.005.341 I slot print_timing: id  0 | task 38373 |       total time =  128514.71 ms /  3692 tokens
+45.12.005.343 I slot print_timing: id  0 | task 38373 |    graphs reused =      40170
+45.12.006.166 I slot      release: id  0 | task 38373 | stop processing: n_tokens = 3779, truncated = 0
+45.12.006.273 I srv  update_slots: all slots are idle
+45.12.833.721 I srv    operator(): Chat format: peg-native
+45.12.834.120 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 0.508 (> 0.100 thold), f_keep = 0.458
+45.12.834.125 I srv  get_availabl: updating prompt cache
+45.12.834.971 W srv   prompt_save:  - saving prompt with length 3779, total state size = 102.096 MiB (draft: 0.000 MiB)
+45.13.341.789 I srv          load:  - looking for better prompt, base f_keep = 0.458, sim = 0.508
+45.13.341.836 I srv        update:  - cache state: 11 prompts, 4071.547 MiB (limits: 8192.000 MiB, 131072 tokens, 131072 est)
+45.13.341.838 I srv        update:    - prompt 0x55a7422864c0:    2189 tokens, checkpoints:  1,   148.381 MiB
+45.13.341.840 I srv        update:    - prompt 0x55a7422a7600:    3761 tokens, checkpoints:  2,   227.536 MiB
+45.13.341.841 I srv        update:    - prompt 0x55a741d69140:   10034 tokens, checkpoints:  6,   543.997 MiB
+45.13.341.843 I srv        update:    - prompt 0x55a741d69d30:    2189 tokens, checkpoints:  2,   211.195 MiB
+45.13.341.846 I srv        update:    - prompt 0x55a742285420:    3780 tokens, checkpoints:  3,   290.546 MiB
+45.13.341.848 I srv        update:    - prompt 0x55a7422b6c60:   10111 tokens, checkpoints:  7,   607.610 MiB
+45.13.341.850 I srv        update:    - prompt 0x55a74e4ce230:    2189 tokens, checkpoints:  3,   274.008 MiB
+45.13.341.853 I srv        update:    - prompt 0x55a74e4d4e70:    3706 tokens, checkpoints:  4,   352.590 MiB
+45.13.341.855 I srv        update:    - prompt 0x55a74e4cd1f0:    9368 tokens, checkpoints:  8,   662.700 MiB
+45.13.341.856 I srv        update:    - prompt 0x55a74e4c2da0:    2189 tokens, checkpoints:  4,   336.821 MiB
+45.13.341.858 I srv        update:    - prompt 0x55a74e457b30:    3779 tokens, checkpoints:  5,   416.162 MiB
+45.13.341.860 I srv  get_availabl: prompt cache update took 507.73 ms
+45.13.341.994 I slot launch_slot_: id  0 | task 40424 | processing task, is_child = 0
+45.13.342.014 I slot   operator(): id  0 | task 40424 | Checking checkpoint with [1677, 1677] against 1730...
+45.13.361.480 W slot   operator(): id  0 | task 40424 | restored context checkpoint (pos_min = 1677, pos_max = 1677, n_tokens = 1678, n_past = 1678, size = 62.813 MiB)
+45.16.768.711 I slot create_check: id  0 | task 40424 | created context checkpoint 6 of 32 (pos_min = 3345, pos_max = 3345, n_tokens = 3346, size = 62.813 MiB)
+45.17.105.427 I slot print_timing: id  0 | task 40424 | prompt processing, n_tokens =   1721, progress = 1.00, t =   3.76 s / 457.30 tokens per second
+45.23.256.438 I slot print_timing: id  0 | task 40424 | n_decoded =    100, tg =  16.55 t/s, tg_3s =  16.55 t/s
+45.26.287.589 I slot print_timing: id  0 | task 40424 | n_decoded =    148, tg =  16.31 t/s, tg_3s =  15.84 t/s
+45.29.289.711 I slot print_timing: id  0 | task 40424 | n_decoded =    197, tg =  16.32 t/s, tg_3s =  16.32 t/s
+45.32.334.882 I slot print_timing: id  0 | task 40424 | n_decoded =    248, tg =  16.40 t/s, tg_3s =  16.75 t/s
+45.35.338.980 I slot print_timing: id  0 | task 40424 | n_decoded =    299, tg =  16.50 t/s, tg_3s =  16.98 t/s
+45.38.348.621 I slot print_timing: id  0 | task 40424 | n_decoded =    347, tg =  16.42 t/s, tg_3s =  15.95 t/s
+45.41.397.466 I slot print_timing: id  0 | task 40424 | n_decoded =    396, tg =  16.38 t/s, tg_3s =  16.07 t/s
+45.44.404.875 I slot print_timing: id  0 | task 40424 | n_decoded =    444, tg =  16.33 t/s, tg_3s =  15.96 t/s
+45.47.443.158 I slot print_timing: id  0 | task 40424 | n_decoded =    493, tg =  16.31 t/s, tg_3s =  16.13 t/s
+45.50.444.812 I slot print_timing: id  0 | task 40424 | n_decoded =    544, tg =  16.37 t/s, tg_3s =  16.99 t/s
+45.53.479.334 I slot print_timing: id  0 | task 40424 | n_decoded =    596, tg =  16.43 t/s, tg_3s =  17.14 t/s
+45.56.521.373 I slot print_timing: id  0 | task 40424 | n_decoded =    645, tg =  16.41 t/s, tg_3s =  16.11 t/s
+45.59.572.501 I slot print_timing: id  0 | task 40424 | n_decoded =    695, tg =  16.41 t/s, tg_3s =  16.39 t/s
+46.02.584.914 I slot print_timing: id  0 | task 40424 | n_decoded =    746, tg =  16.44 t/s, tg_3s =  16.93 t/s
+46.05.619.581 I slot print_timing: id  0 | task 40424 | n_decoded =    794, tg =  16.40 t/s, tg_3s =  15.82 t/s
+46.08.668.464 I slot print_timing: id  0 | task 40424 | n_decoded =    843, tg =  16.38 t/s, tg_3s =  16.07 t/s
+46.11.714.056 I slot print_timing: id  0 | task 40424 | n_decoded =    891, tg =  16.35 t/s, tg_3s =  15.76 t/s
+46.14.727.129 I slot print_timing: id  0 | task 40424 | n_decoded =    940, tg =  16.34 t/s, tg_3s =  16.26 t/s
+46.17.750.856 I slot print_timing: id  0 | task 40424 | n_decoded =    990, tg =  16.35 t/s, tg_3s =  16.54 t/s
+46.20.796.280 I slot print_timing: id  0 | task 40424 | n_decoded =   1042, tg =  16.39 t/s, tg_3s =  17.07 t/s
+46.23.831.386 I slot print_timing: id  0 | task 40424 | n_decoded =   1093, tg =  16.41 t/s, tg_3s =  16.80 t/s
+46.26.839.325 I slot print_timing: id  0 | task 40424 | n_decoded =   1143, tg =  16.42 t/s, tg_3s =  16.62 t/s
+46.29.855.705 I slot print_timing: id  0 | task 40424 | n_decoded =   1195, tg =  16.45 t/s, tg_3s =  17.24 t/s
+46.32.864.033 I slot print_timing: id  0 | task 40424 | n_decoded =   1246, tg =  16.47 t/s, tg_3s =  16.95 t/s
+46.35.880.792 I slot print_timing: id  0 | task 40424 | n_decoded =   1296, tg =  16.47 t/s, tg_3s =  16.57 t/s
+46.38.911.952 I slot print_timing: id  0 | task 40424 | n_decoded =   1345, tg =  16.46 t/s, tg_3s =  16.17 t/s
+46.41.916.987 I slot print_timing: id  0 | task 40424 | n_decoded =   1395, tg =  16.47 t/s, tg_3s =  16.64 t/s
+46.44.922.117 I slot print_timing: id  0 | task 40424 | n_decoded =   1446, tg =  16.49 t/s, tg_3s =  16.97 t/s
+46.47.962.329 I slot print_timing: id  0 | task 40424 | n_decoded =   1496, tg =  16.49 t/s, tg_3s =  16.45 t/s
+46.51.003.170 I slot print_timing: id  0 | task 40424 | n_decoded =   1543, tg =  16.45 t/s, tg_3s =  15.46 t/s
+46.54.052.215 I slot print_timing: id  0 | task 40424 | n_decoded =   1591, tg =  16.43 t/s, tg_3s =  15.74 t/s
+46.57.054.308 I slot print_timing: id  0 | task 40424 | n_decoded =   1640, tg =  16.43 t/s, tg_3s =  16.32 t/s
+47.00.068.829 I slot print_timing: id  0 | task 40424 | n_decoded =   1689, tg =  16.42 t/s, tg_3s =  16.25 t/s
+47.03.075.852 I slot print_timing: id  0 | task 40424 | n_decoded =   1737, tg =  16.41 t/s, tg_3s =  15.96 t/s
+47.06.094.588 I slot print_timing: id  0 | task 40424 | n_decoded =   1785, tg =  16.39 t/s, tg_3s =  15.90 t/s
+47.09.123.637 I slot print_timing: id  0 | task 40424 | n_decoded =   1833, tg =  16.38 t/s, tg_3s =  15.85 t/s
+47.12.149.121 I slot print_timing: id  0 | task 40424 | n_decoded =   1884, tg =  16.39 t/s, tg_3s =  16.86 t/s
+47.15.206.626 I slot print_timing: id  0 | task 40424 | n_decoded =   1932, tg =  16.37 t/s, tg_3s =  15.70 t/s
+47.18.217.778 I slot print_timing: id  0 | task 40424 | n_decoded =   1980, tg =  16.36 t/s, tg_3s =  15.94 t/s
+47.21.263.401 I slot print_timing: id  0 | task 40424 | n_decoded =   2030, tg =  16.36 t/s, tg_3s =  16.42 t/s
+47.22.410.411 I slot print_timing: id  0 | task 40424 | prompt eval time =    3873.08 ms /  1725 tokens (    2.25 ms per token,   445.38 tokens per second)
+47.22.410.422 I slot print_timing: id  0 | task 40424 |        eval time =  125195.28 ms /  2048 tokens (   61.13 ms per token,    16.36 tokens per second)
+47.22.410.425 I slot print_timing: id  0 | task 40424 |       total time =  129068.36 ms /  3773 tokens
+47.22.410.427 I slot print_timing: id  0 | task 40424 |    graphs reused =      42208
+47.22.412.274 I slot      release: id  0 | task 40424 | stop processing: n_tokens = 5450, truncated = 0
+47.22.412.453 I srv  update_slots: all slots are idle
+47.23.425.474 I srv    operator(): Chat format: peg-native
+47.23.425.917 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 0.687 (> 0.100 thold), f_keep = 0.624
+47.23.426.129 I slot launch_slot_: id  0 | task 42475 | processing task, is_child = 0
+47.23.426.162 I slot   operator(): id  0 | task 42475 | Checking checkpoint with [3345, 3345] against 3401...
+47.23.500.737 W slot   operator(): id  0 | task 42475 | restored context checkpoint (pos_min = 3345, pos_max = 3345, n_tokens = 3346, n_past = 3346, size = 62.813 MiB)
+47.26.883.554 I slot create_check: id  0 | task 42475 | created context checkpoint 7 of 32 (pos_min = 4903, pos_max = 4903, n_tokens = 4904, size = 62.813 MiB)
+47.27.206.341 I slot print_timing: id  0 | task 42475 | prompt processing, n_tokens =   1602, progress = 1.00, t =   3.78 s / 423.79 tokens per second
+47.33.345.089 I slot print_timing: id  0 | task 42475 | n_decoded =    100, tg =  16.59 t/s, tg_3s =  16.59 t/s
+47.36.407.775 I slot print_timing: id  0 | task 42475 | n_decoded =    149, tg =  16.39 t/s, tg_3s =  16.00 t/s
+47.39.435.978 I slot print_timing: id  0 | task 42475 | n_decoded =    197, tg =  16.25 t/s, tg_3s =  15.85 t/s
+47.42.494.921 I slot print_timing: id  0 | task 42475 | n_decoded =    245, tg =  16.14 t/s, tg_3s =  15.69 t/s
+47.45.552.806 I slot print_timing: id  0 | task 42475 | n_decoded =    293, tg =  16.07 t/s, tg_3s =  15.70 t/s
+47.48.553.454 I slot print_timing: id  0 | task 42475 | n_decoded =    341, tg =  16.06 t/s, tg_3s =  16.00 t/s
+47.51.568.674 I slot print_timing: id  0 | task 42475 | n_decoded =    388, tg =  16.00 t/s, tg_3s =  15.59 t/s
+47.54.582.976 I slot print_timing: id  0 | task 42475 | n_decoded =    438, tg =  16.06 t/s, tg_3s =  16.59 t/s
+47.57.602.756 I slot print_timing: id  0 | task 42475 | n_decoded =    488, tg =  16.11 t/s, tg_3s =  16.56 t/s
+48.00.634.679 I slot print_timing: id  0 | task 42475 | n_decoded =    539, tg =  16.18 t/s, tg_3s =  16.82 t/s
+48.03.636.927 I slot print_timing: id  0 | task 42475 | n_decoded =    589, tg =  16.22 t/s, tg_3s =  16.65 t/s
+48.06.678.238 I slot print_timing: id  0 | task 42475 | n_decoded =    640, tg =  16.26 t/s, tg_3s =  16.77 t/s
+48.09.705.968 I slot print_timing: id  0 | task 42475 | n_decoded =    690, tg =  16.28 t/s, tg_3s =  16.51 t/s
+48.12.716.097 I slot print_timing: id  0 | task 42475 | n_decoded =    739, tg =  16.28 t/s, tg_3s =  16.28 t/s
+48.15.725.081 I slot print_timing: id  0 | task 42475 | n_decoded =    787, tg =  16.26 t/s, tg_3s =  15.95 t/s
+48.18.779.791 I slot print_timing: id  0 | task 42475 | n_decoded =    834, tg =  16.21 t/s, tg_3s =  15.39 t/s
+48.21.809.890 I slot print_timing: id  0 | task 42475 | n_decoded =    882, tg =  16.19 t/s, tg_3s =  15.84 t/s
+48.24.864.392 I slot print_timing: id  0 | task 42475 | n_decoded =    932, tg =  16.20 t/s, tg_3s =  16.37 t/s
+48.27.923.020 I slot print_timing: id  0 | task 42475 | n_decoded =    982, tg =  16.20 t/s, tg_3s =  16.35 t/s
+48.30.928.938 I slot print_timing: id  0 | task 42475 | n_decoded =   1029, tg =  16.18 t/s, tg_3s =  15.64 t/s
+48.33.966.836 I slot print_timing: id  0 | task 42475 | n_decoded =   1080, tg =  16.20 t/s, tg_3s =  16.79 t/s
+48.37.013.661 I slot print_timing: id  0 | task 42475 | n_decoded =   1128, tg =  16.18 t/s, tg_3s =  15.75 t/s
+48.40.045.738 I slot print_timing: id  0 | task 42475 | n_decoded =   1175, tg =  16.16 t/s, tg_3s =  15.50 t/s
+48.43.052.759 I slot print_timing: id  0 | task 42475 | n_decoded =   1223, tg =  16.15 t/s, tg_3s =  15.96 t/s
+48.46.082.940 I slot print_timing: id  0 | task 42475 | n_decoded =   1273, tg =  16.16 t/s, tg_3s =  16.50 t/s
+48.49.120.191 I slot print_timing: id  0 | task 42475 | n_decoded =   1323, tg =  16.17 t/s, tg_3s =  16.46 t/s
+48.52.164.023 I slot print_timing: id  0 | task 42475 | n_decoded =   1374, tg =  16.19 t/s, tg_3s =  16.76 t/s
+48.55.190.294 I slot print_timing: id  0 | task 42475 | n_decoded =   1422, tg =  16.18 t/s, tg_3s =  15.86 t/s
+48.58.210.819 I slot print_timing: id  0 | task 42475 | n_decoded =   1470, tg =  16.17 t/s, tg_3s =  15.89 t/s
+49.01.247.125 I slot print_timing: id  0 | task 42475 | n_decoded =   1521, tg =  16.19 t/s, tg_3s =  16.80 t/s
+49.04.304.060 I slot print_timing: id  0 | task 42475 | n_decoded =   1572, tg =  16.21 t/s, tg_3s =  16.68 t/s
+49.07.352.371 I slot print_timing: id  0 | task 42475 | n_decoded =   1622, tg =  16.21 t/s, tg_3s =  16.40 t/s
+49.10.376.056 I slot print_timing: id  0 | task 42475 | n_decoded =   1672, tg =  16.22 t/s, tg_3s =  16.54 t/s
+49.13.398.288 I slot print_timing: id  0 | task 42475 | n_decoded =   1719, tg =  16.20 t/s, tg_3s =  15.55 t/s
+49.16.434.141 I slot print_timing: id  0 | task 42475 | n_decoded =   1767, tg =  16.19 t/s, tg_3s =  15.81 t/s
+49.19.485.833 I slot print_timing: id  0 | task 42475 | n_decoded =   1815, tg =  16.18 t/s, tg_3s =  15.73 t/s
+49.22.490.061 I slot print_timing: id  0 | task 42475 | n_decoded =   1863, tg =  16.18 t/s, tg_3s =  15.98 t/s
+49.25.490.870 I slot print_timing: id  0 | task 42475 | n_decoded =   1915, tg =  16.20 t/s, tg_3s =  17.33 t/s
+49.28.541.245 I slot print_timing: id  0 | task 42475 | n_decoded =   1963, tg =  16.19 t/s, tg_3s =  15.74 t/s
+49.31.598.455 I slot print_timing: id  0 | task 42475 | n_decoded =   2011, tg =  16.18 t/s, tg_3s =  15.70 t/s
+49.33.824.877 I slot print_timing: id  0 | task 42475 | prompt eval time =    3889.59 ms /  1606 tokens (    2.42 ms per token,   412.90 tokens per second)
+49.33.824.882 I slot print_timing: id  0 | task 42475 |        eval time =  126509.12 ms /  2048 tokens (   61.77 ms per token,    16.19 tokens per second)
+49.33.824.897 I slot print_timing: id  0 | task 42475 |       total time =  130398.71 ms /  3654 tokens
+49.33.824.898 I slot print_timing: id  0 | task 42475 |    graphs reused =      44246
+49.33.825.966 I slot      release: id  0 | task 42475 | stop processing: n_tokens = 6999, truncated = 0
+49.33.826.071 I srv  update_slots: all slots are idle
+49.34.621.992 I srv    operator(): Chat format: peg-native
+49.34.622.432 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 0.759 (> 0.100 thold), f_keep = 0.707
+49.34.622.606 I slot launch_slot_: id  0 | task 44526 | processing task, is_child = 0
+49.34.622.635 I slot   operator(): id  0 | task 44526 | Checking checkpoint with [4903, 4903] against 4950...
+49.34.678.203 W slot   operator(): id  0 | task 44526 | restored context checkpoint (pos_min = 4903, pos_max = 4903, n_tokens = 4904, n_past = 4904, size = 62.813 MiB)
+49.38.297.183 I slot create_check: id  0 | task 44526 | created context checkpoint 8 of 32 (pos_min = 6469, pos_max = 6469, n_tokens = 6470, size = 62.813 MiB)
+49.38.634.814 I slot print_timing: id  0 | task 44526 | prompt processing, n_tokens =   1613, progress = 1.00, t =   4.01 s / 402.03 tokens per second
+49.44.844.254 I slot print_timing: id  0 | task 44526 | n_decoded =    100, tg =  16.40 t/s, tg_3s =  16.40 t/s
+49.47.893.793 I slot print_timing: id  0 | task 44526 | n_decoded =    153, tg =  16.73 t/s, tg_3s =  17.38 t/s
+49.50.930.229 I slot print_timing: id  0 | task 44526 | n_decoded =    203, tg =  16.66 t/s, tg_3s =  16.47 t/s
+49.53.948.043 I slot print_timing: id  0 | task 44526 | n_decoded =    252, tg =  16.58 t/s, tg_3s =  16.24 t/s
+49.56.986.741 I slot print_timing: id  0 | task 44526 | n_decoded =    303, tg =  16.61 t/s, tg_3s =  16.78 t/s
+49.59.991.803 I slot print_timing: id  0 | task 44526 | n_decoded =    352, tg =  16.57 t/s, tg_3s =  16.31 t/s
+50.03.051.236 I slot print_timing: id  0 | task 44526 | n_decoded =    401, tg =  16.50 t/s, tg_3s =  16.02 t/s
+50.06.089.897 I slot print_timing: id  0 | task 44526 | n_decoded =    450, tg =  16.46 t/s, tg_3s =  16.13 t/s
+50.09.102.571 I slot print_timing: id  0 | task 44526 | n_decoded =    498, tg =  16.41 t/s, tg_3s =  15.93 t/s
+50.12.156.036 I slot print_timing: id  0 | task 44526 | n_decoded =    547, tg =  16.37 t/s, tg_3s =  16.05 t/s
+50.15.158.060 I slot print_timing: id  0 | task 44526 | n_decoded =    595, tg =  16.34 t/s, tg_3s =  15.99 t/s
+50.18.175.822 I slot print_timing: id  0 | task 44526 | n_decoded =    644, tg =  16.33 t/s, tg_3s =  16.24 t/s
+50.21.231.691 I slot print_timing: id  0 | task 44526 | n_decoded =    693, tg =  16.31 t/s, tg_3s =  16.03 t/s
+50.24.264.326 I slot print_timing: id  0 | task 44526 | n_decoded =    743, tg =  16.32 t/s, tg_3s =  16.49 t/s
+50.27.301.722 I slot print_timing: id  0 | task 44526 | n_decoded =    791, tg =  16.29 t/s, tg_3s =  15.80 t/s
+50.30.356.361 I slot print_timing: id  0 | task 44526 | n_decoded =    840, tg =  16.28 t/s, tg_3s =  16.04 t/s
+50.33.367.218 I slot print_timing: id  0 | task 44526 | n_decoded =    887, tg =  16.24 t/s, tg_3s =  15.61 t/s
+50.36.385.023 I slot print_timing: id  0 | task 44526 | n_decoded =    935, tg =  16.22 t/s, tg_3s =  15.91 t/s
+50.39.394.106 I slot print_timing: id  0 | task 44526 | n_decoded =    984, tg =  16.22 t/s, tg_3s =  16.28 t/s
+50.42.394.945 I slot print_timing: id  0 | task 44526 | n_decoded =   1033, tg =  16.23 t/s, tg_3s =  16.33 t/s
+50.45.453.887 I slot print_timing: id  0 | task 44526 | n_decoded =   1085, tg =  16.27 t/s, tg_3s =  17.00 t/s
+50.48.456.150 I slot print_timing: id  0 | task 44526 | n_decoded =   1133, tg =  16.25 t/s, tg_3s =  15.99 t/s
+50.51.472.331 I slot print_timing: id  0 | task 44526 | n_decoded =   1180, tg =  16.23 t/s, tg_3s =  15.58 t/s
+50.54.481.542 I slot print_timing: id  0 | task 44526 | n_decoded =   1228, tg =  16.21 t/s, tg_3s =  15.95 t/s
+50.57.491.759 I slot print_timing: id  0 | task 44526 | n_decoded =   1277, tg =  16.22 t/s, tg_3s =  16.28 t/s
+51.00.510.257 I slot print_timing: id  0 | task 44526 | n_decoded =   1325, tg =  16.21 t/s, tg_3s =  15.90 t/s
+51.03.521.331 I slot print_timing: id  0 | task 44526 | n_decoded =   1373, tg =  16.20 t/s, tg_3s =  15.94 t/s
+51.06.554.916 I slot print_timing: id  0 | task 44526 | n_decoded =   1423, tg =  16.21 t/s, tg_3s =  16.48 t/s
+51.09.571.822 I slot print_timing: id  0 | task 44526 | n_decoded =   1472, tg =  16.21 t/s, tg_3s =  16.24 t/s
+51.12.602.864 I slot print_timing: id  0 | task 44526 | n_decoded =   1521, tg =  16.21 t/s, tg_3s =  16.17 t/s
+51.15.627.596 I slot print_timing: id  0 | task 44526 | n_decoded =   1569, tg =  16.20 t/s, tg_3s =  15.87 t/s
+51.18.629.531 I slot print_timing: id  0 | task 44526 | n_decoded =   1616, tg =  16.18 t/s, tg_3s =  15.66 t/s
+51.21.649.271 I slot print_timing: id  0 | task 44526 | n_decoded =   1663, tg =  16.16 t/s, tg_3s =  15.56 t/s
+51.24.667.242 I slot print_timing: id  0 | task 44526 | n_decoded =   1712, tg =  16.16 t/s, tg_3s =  16.24 t/s
+51.27.714.185 I slot print_timing: id  0 | task 44526 | n_decoded =   1762, tg =  16.17 t/s, tg_3s =  16.41 t/s
+51.30.765.555 I slot print_timing: id  0 | task 44526 | n_decoded =   1811, tg =  16.17 t/s, tg_3s =  16.06 t/s
+51.33.795.604 I slot print_timing: id  0 | task 44526 | n_decoded =   1860, tg =  16.17 t/s, tg_3s =  16.17 t/s
+51.36.850.621 I slot print_timing: id  0 | task 44526 | n_decoded =   1909, tg =  16.16 t/s, tg_3s =  16.04 t/s
+51.39.892.662 I slot print_timing: id  0 | task 44526 | n_decoded =   1959, tg =  16.17 t/s, tg_3s =  16.44 t/s
+51.42.894.170 I slot print_timing: id  0 | task 44526 | n_decoded =   2006, tg =  16.16 t/s, tg_3s =  15.66 t/s
+51.45.557.848 I slot print_timing: id  0 | task 44526 | prompt eval time =    4124.14 ms /  1617 tokens (    2.55 ms per token,   392.08 tokens per second)
+51.45.557.858 I slot print_timing: id  0 | task 44526 |        eval time =  126811.04 ms /  2048 tokens (   61.92 ms per token,    16.15 tokens per second)
+51.45.557.861 I slot print_timing: id  0 | task 44526 |       total time =  130935.17 ms /  3665 tokens
+51.45.557.863 I slot print_timing: id  0 | task 44526 |    graphs reused =      46284
+51.45.560.051 I slot      release: id  0 | task 44526 | stop processing: n_tokens = 8568, truncated = 0
+51.45.560.236 I srv  update_slots: all slots are idle
+51.46.478.881 I srv    operator(): Chat format: peg-native
+51.46.479.411 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, sim_best = 0.806 (> 0.100 thold), f_keep = 0.761
+51.46.479.599 I slot launch_slot_: id  0 | task 46577 | processing task, is_child = 0
+51.46.479.637 I slot   operator(): id  0 | task 46577 | Checking checkpoint with [6469, 6469] against 6519...
+51.46.541.096 W slot   operator(): id  0 | task 46577 | restored context checkpoint (pos_min = 6469, pos_max = 6469, n_tokens = 6470, n_past = 6470, size = 62.813 MiB)
+51.50.354.523 I slot create_check: id  0 | task 46577 | created context checkpoint 9 of 32 (pos_min = 8030, pos_max = 8030, n_tokens = 8031, size = 62.813 MiB)
+51.50.723.156 I slot print_timing: id  0 | task 46577 | prompt processing, n_tokens =   1611, progress = 1.00, t =   4.24 s / 379.64 tokens per second
+51.56.893.245 I slot print_timing: id  0 | task 46577 | n_decoded =    100, tg =  16.53 t/s, tg_3s =  16.53 t/s
+51.59.954.026 I slot print_timing: id  0 | task 46577 | n_decoded =    149, tg =  16.36 t/s, tg_3s =  16.01 t/s
+52.02.995.846 I slot print_timing: id  0 | task 46577 | n_decoded =    197, tg =  16.21 t/s, tg_3s =  15.78 t/s
+52.06.015.668 I slot print_timing: id  0 | task 46577 | n_decoded =    247, tg =  16.28 t/s, tg_3s =  16.56 t/s
+52.09.025.803 I slot print_timing: id  0 | task 46577 | n_decoded =    296, tg =  16.28 t/s, tg_3s =  16.28 t/s
+52.12.057.738 I slot print_timing: id  0 | task 46577 | n_decoded =    345, tg =  16.26 t/s, tg_3s =  16.16 t/s
+52.15.111.638 I slot print_timing: id  0 | task 46577 | n_decoded =    394, tg =  16.24 t/s, tg_3s =  16.05 t/s
+52.18.129.531 I slot print_timing: id  0 | task 46577 | n_decoded =    444, tg =  16.27 t/s, tg_3s =  16.57 t/s
+52.21.130.213 I slot print_timing: id  0 | task 46577 | n_decoded =    493, tg =  16.28 t/s, tg_3s =  16.33 t/s
+52.24.159.318 I slot print_timing: id  0 | task 46577 | n_decoded =    542, tg =  16.27 t/s, tg_3s =  16.18 t/s
+52.27.185.518 I slot print_timing: id  0 | task 46577 | n_decoded =    591, tg =  16.26 t/s, tg_3s =  16.19 t/s
+52.30.229.098 I slot print_timing: id  0 | task 46577 | n_decoded =    639, tg =  16.22 t/s, tg_3s =  15.77 t/s
+52.33.279.895 I slot print_timing: id  0 | task 46577 | n_decoded =    689, tg =  16.24 t/s, tg_3s =  16.39 t/s
+52.36.296.946 I slot print_timing: id  0 | task 46577 | n_decoded =    739, tg =  16.26 t/s, tg_3s =  16.57 t/s
+52.39.314.238 I slot print_timing: id  0 | task 46577 | n_decoded =    787, tg =  16.24 t/s, tg_3s =  15.91 t/s
+52.42.349.133 I slot print_timing: id  0 | task 46577 | n_decoded =    835, tg =  16.21 t/s, tg_3s =  15.82 t/s
+52.45.386.035 I slot print_timing: id  0 | task 46577 | n_decoded =    883, tg =  16.19 t/s, tg_3s =  15.81 t/s
+52.48.429.087 I slot print_timing: id  0 | task 46577 | n_decoded =    935, tg =  16.24 t/s, tg_3s =  17.09 t/s
+52.51.457.231 I slot print_timing: id  0 | task 46577 | n_decoded =    983, tg =  16.22 t/s, tg_3s =  15.85 t/s
+52.54.475.746 I slot print_timing: id  0 | task 46577 | n_decoded =   1031, tg =  16.20 t/s, tg_3s =  15.90 t/s
+52.57.529.050 I slot print_timing: id  0 | task 46577 | n_decoded =   1080, tg =  16.20 t/s, tg_3s =  16.05 t/s
+53.00.546.290 I slot print_timing: id  0 | task 46577 | n_decoded =   1129, tg =  16.20 t/s, tg_3s =  16.24 t/s
+53.03.577.438 I slot print_timing: id  0 | task 46577 | n_decoded =   1177, tg =  16.18 t/s, tg_3s =  15.84 t/s
+53.06.594.672 I slot print_timing: id  0 | task 46577 | n_decoded =   1226, tg =  16.18 t/s, tg_3s =  16.24 t/s
+53.09.625.399 I slot print_timing: id  0 | task 46577 | n_decoded =   1273, tg =  16.16 t/s, tg_3s =  15.51 t/s
+53.12.633.591 I slot print_timing: id  0 | task 46577 | n_decoded =   1319, tg =  16.13 t/s, tg_3s =  15.29 t/s
+53.15.646.363 I slot print_timing: id  0 | task 46577 | n_decoded =   1367, tg =  16.12 t/s, tg_3s =  15.93 t/s
+53.18.675.996 I slot print_timing: id  0 | task 46577 | n_decoded =   1417, tg =  16.13 t/s, tg_3s =  16.50 t/s
+53.21.738.741 I slot print_timing: id  0 | task 46577 | n_decoded =   1466, tg =  16.13 t/s, tg_3s =  16.00 t/s
+53.24.789.575 I slot print_timing: id  0 | task 46577 | n_decoded =   1513, tg =  16.11 t/s, tg_3s =  15.41 t/s
+53.27.830.534 I slot print_timing: id  0 | task 46577 | n_decoded =   1560, tg =  16.08 t/s, tg_3s =  15.46 t/s
+53.30.887.938 I slot print_timing: id  0 | task 46577 | n_decoded =   1608, tg =  16.07 t/s, tg_3s =  15.70 t/s
+53.33.913.877 I slot print_timing: id  0 | task 46577 | n_decoded =   1657, tg =  16.08 t/s, tg_3s =  16.19 t/s
+53.36.921.590 I slot print_timing: id  0 | task 46577 | n_decoded =   1704, tg =  16.06 t/s, tg_3s =  15.63 t/s
+53.39.956.655 I slot print_timing: id  0 | task 46577 | n_decoded =   1753, tg =  16.07 t/s, tg_3s =  16.14 t/s
+53.42.980.289 I slot print_timing: id  0 | task 46577 | n_decoded =   1802, tg =  16.07 t/s, tg_3s =  16.21 t/s
+53.46.012.512 I slot print_timing: id  0 | task 46577 | n_decoded =   1852, tg =  16.08 t/s, tg_3s =  16.49 t/s
+53.49.022.853 I slot print_timing: id  0 | task 46577 | n_decoded =   1901, tg =  16.09 t/s, tg_3s =  16.28 t/s
+53.52.065.693 I slot print_timing: id  0 | task 46577 | n_decoded =   1952, tg =  16.10 t/s, tg_3s =  16.76 t/s
+53.55.085.973 I slot print_timing: id  0 | task 46577 | n_decoded =   2002, tg =  16.11 t/s, tg_3s =  16.55 t/s
+53.57.917.684 I slot print_timing: id  0 | task 46577 | prompt eval time =    4364.95 ms /  1615 tokens (    2.70 ms per token,   369.99 tokens per second)
+53.57.917.696 I slot print_timing: id  0 | task 46577 |        eval time =  127073.07 ms /  2048 tokens (   62.05 ms per token,    16.12 tokens per second)
+53.57.917.699 I slot print_timing: id  0 | task 46577 |       total time =  131438.02 ms /  3663 tokens
+53.57.917.701 I slot print_timing: id  0 | task 46577 |    graphs reused =      48322
+53.57.920.299 I slot      release: id  0 | task 46577 | stop processing: n_tokens = 10132, truncated = 0
+53.57.920.483 I srv  update_slots: all slots are idle

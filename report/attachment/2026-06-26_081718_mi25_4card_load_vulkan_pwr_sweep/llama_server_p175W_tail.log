@@ -1,0 +1,152 @@
+0.00.072.771 W DEPRECATED: --defrag-thold is deprecated and no longer necessary to specify
+0.00.072.981 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.072.985 I device_info:
+0.00.073.418 I   - Vulkan0 : Radeon Instinct MI25 (RADV VEGA10) (16368 MiB, 16360 MiB free)
+0.00.073.813 I   - Vulkan1 : Radeon Instinct MI25 (RADV VEGA10) (16368 MiB, 16360 MiB free)
+0.00.074.202 I   - Vulkan2 : Radeon Instinct MI25 (RADV VEGA10) (16368 MiB, 16360 MiB free)
+0.00.074.589 I   - Vulkan3 : Radeon Instinct MI25 (RADV VEGA10) (16368 MiB, 16360 MiB free)
+0.00.074.595 I   - CPU     : Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz (32015 MiB, 32015 MiB free)
+0.00.074.657 I system_info: n_threads = 24 (n_threads_batch = 24) / 24 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.074.799 I srv          init: using 23 threads for HTTP server
+0.00.075.358 I srv         start: binding port with default address family
+0.00.076.543 I srv  llama_server: loading model
+0.00.076.641 I srv    load_model: loading model '/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf'
+0.00.076.665 I common_init_result: fitting params to device memory ...
+0.00.076.666 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.18.317.931 W llama_context: n_ctx_seq (131072) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.19.144.973 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.19.263.400 I srv    load_model: initializing slots, n_slots = 1
+0.19.367.682 W srv    load_model: speculative decoding will use checkpoints
+0.19.367.701 W common_speculative_init: no implementations specified for speculative decoding
+0.19.367.705 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 131072
+0.19.367.899 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.19.367.903 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.19.367.907 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.19.367.909 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 8192
+0.19.368.000 I srv          init: idle slots will be saved to prompt cache upon starting a new task
+0.19.395.757 I init: chat template, example_format: '<|im_start|>system
+You are a helpful assistant<|im_end|>
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+Hi there<|im_end|>
+<|im_start|>user
+How are you?<|im_end|>
+<|im_start|>assistant
+<think>
+'
+0.19.417.998 I srv          init: init: chat template, thinking = 1
+0.19.418.047 I srv  llama_server: model loaded
+0.19.418.051 I srv  llama_server: server is listening on http://0.0.0.0:8000
+0.19.418.058 I srv  update_slots: all slots are idle
+2.13.793.309 I srv    operator(): Chat format: peg-native
+2.13.793.822 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+2.13.793.829 I srv  get_availabl: updating prompt cache
+2.13.793.844 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
+2.13.793.856 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 131072 tokens, 8589934592 est)
+2.13.793.858 I srv  get_availabl: prompt cache update took 0.03 ms
+2.13.794.020 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+2.14.362.878 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 87, pos_max = 87, n_tokens = 88, size = 62.813 MiB)
+2.20.740.024 I slot print_timing: id  0 | task 0 | n_decoded =    100, tg =  16.75 t/s, tg_3s =  16.75 t/s
+2.23.755.981 I slot print_timing: id  0 | task 0 | n_decoded =    151, tg =  16.81 t/s, tg_3s =  16.91 t/s
+2.26.798.132 I slot print_timing: id  0 | task 0 | n_decoded =    199, tg =  16.55 t/s, tg_3s =  15.78 t/s
+2.29.818.373 I slot print_timing: id  0 | task 0 | n_decoded =    248, tg =  16.48 t/s, tg_3s =  16.22 t/s
+2.32.828.216 I slot print_timing: id  0 | task 0 | n_decoded =    297, tg =  16.45 t/s, tg_3s =  16.28 t/s
+2.35.838.574 I slot print_timing: id  0 | task 0 | n_decoded =    346, tg =  16.42 t/s, tg_3s =  16.28 t/s
+2.38.883.174 I slot print_timing: id  0 | task 0 | n_decoded =    395, tg =  16.38 t/s, tg_3s =  16.09 t/s
+2.41.889.329 I slot print_timing: id  0 | task 0 | n_decoded =    443, tg =  16.34 t/s, tg_3s =  15.97 t/s
+2.44.910.911 I slot print_timing: id  0 | task 0 | n_decoded =    492, tg =  16.32 t/s, tg_3s =  16.22 t/s
+2.47.933.836 I slot print_timing: id  0 | task 0 | n_decoded =    544, tg =  16.40 t/s, tg_3s =  17.20 t/s
+2.50.936.936 I slot print_timing: id  0 | task 0 | n_decoded =    591, tg =  16.34 t/s, tg_3s =  15.65 t/s
+2.53.953.263 I slot print_timing: id  0 | task 0 | n_decoded =    640, tg =  16.33 t/s, tg_3s =  16.24 t/s
+2.56.981.253 I slot print_timing: id  0 | task 0 | n_decoded =    690, tg =  16.35 t/s, tg_3s =  16.51 t/s
+3.00.013.579 I slot print_timing: id  0 | task 0 | n_decoded =    737, tg =  16.29 t/s, tg_3s =  15.50 t/s
+3.03.029.480 I slot print_timing: id  0 | task 0 | n_decoded =    784, tg =  16.25 t/s, tg_3s =  15.58 t/s
+3.06.062.904 I slot print_timing: id  0 | task 0 | n_decoded =    832, tg =  16.22 t/s, tg_3s =  15.82 t/s
+3.09.063.782 I slot print_timing: id  0 | task 0 | n_decoded =    881, tg =  16.23 t/s, tg_3s =  16.33 t/s
+3.12.074.632 I slot print_timing: id  0 | task 0 | n_decoded =    930, tg =  16.23 t/s, tg_3s =  16.27 t/s
+3.15.095.755 I slot print_timing: id  0 | task 0 | n_decoded =    982, tg =  16.28 t/s, tg_3s =  17.21 t/s
+3.18.103.690 I slot print_timing: id  0 | task 0 | n_decoded =   1032, tg =  16.30 t/s, tg_3s =  16.62 t/s
+3.21.119.839 I slot print_timing: id  0 | task 0 | n_decoded =   1080, tg =  16.28 t/s, tg_3s =  15.91 t/s
+3.24.127.714 I slot print_timing: id  0 | task 0 | n_decoded =   1129, tg =  16.28 t/s, tg_3s =  16.29 t/s
+3.27.181.086 I slot print_timing: id  0 | task 0 | n_decoded =   1179, tg =  16.28 t/s, tg_3s =  16.38 t/s
+3.30.209.781 I slot print_timing: id  0 | task 0 | n_decoded =   1229, tg =  16.29 t/s, tg_3s =  16.51 t/s
+3.33.249.945 I slot print_timing: id  0 | task 0 | n_decoded =   1278, tg =  16.28 t/s, tg_3s =  16.12 t/s
+3.36.308.687 I slot print_timing: id  0 | task 0 | n_decoded =   1329, tg =  16.30 t/s, tg_3s =  16.67 t/s
+3.39.310.918 I slot print_timing: id  0 | task 0 | n_decoded =   1378, tg =  16.30 t/s, tg_3s =  16.32 t/s
+3.42.367.933 I slot print_timing: id  0 | task 0 | n_decoded =   1430, tg =  16.32 t/s, tg_3s =  17.01 t/s
+3.45.377.669 I slot print_timing: id  0 | task 0 | n_decoded =   1478, tg =  16.31 t/s, tg_3s =  15.95 t/s
+3.48.410.236 I slot print_timing: id  0 | task 0 | n_decoded =   1528, tg =  16.32 t/s, tg_3s =  16.49 t/s
+3.51.459.076 I slot print_timing: id  0 | task 0 | n_decoded =   1578, tg =  16.32 t/s, tg_3s =  16.40 t/s
+3.54.472.187 I slot print_timing: id  0 | task 0 | n_decoded =   1626, tg =  16.31 t/s, tg_3s =  15.93 t/s
+3.57.491.999 I slot print_timing: id  0 | task 0 | n_decoded =   1674, tg =  16.30 t/s, tg_3s =  15.89 t/s
+4.00.492.478 I slot print_timing: id  0 | task 0 | n_decoded =   1722, tg =  16.29 t/s, tg_3s =  16.00 t/s
+4.03.508.154 I slot print_timing: id  0 | task 0 | n_decoded =   1769, tg =  16.27 t/s, tg_3s =  15.59 t/s
+4.06.514.517 I slot print_timing: id  0 | task 0 | n_decoded =   1819, tg =  16.28 t/s, tg_3s =  16.63 t/s
+5.09.055.305 E srv  update_slots: decode() failed: vk::Device::waitForFences: ErrorDeviceLost
+5.09.055.315 E srv    send_error: task id = 0, error: decode() failed: vk::Device::waitForFences: ErrorDeviceLost
+5.09.055.320 I slot      release: id  0 | task 0 | stop processing: n_tokens = 1967, truncated = 0
+5.09.055.374 W srv          stop: cancel task, id_task = 0
+5.09.055.428 I srv  update_slots: all slots are idle
+5.09.496.948 I srv    operator(): Chat format: peg-native
+5.09.497.311 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 29461786443
+5.09.497.317 I srv  get_availabl: updating prompt cache
+5.09.498.047 W srv   prompt_save:  - saving prompt with length 1967, total state size = 83.261 MiB (draft: 0.000 MiB)
+[New LWP 940068]
+[New LWP 940069]
+[New LWP 940070]
+[New LWP 940071]
+[New LWP 940072]
+[New LWP 940073]
+[New LWP 940074]
+[New LWP 940075]
+[New LWP 940076]
+[New LWP 940077]
+[New LWP 940078]
+[New LWP 940079]
+[New LWP 940080]
+[New LWP 940081]
+[New LWP 940082]
+[New LWP 940083]
+[New LWP 940084]
+[New LWP 940085]
+[New LWP 940086]
+[New LWP 940087]
+[New LWP 940088]
+[New LWP 940089]
+[New LWP 940090]
+[New LWP 940091]
+[New LWP 940092]
+[New LWP 940093]
+[New LWP 940094]
+[New LWP 940095]
+[New LWP 940096]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x00007feaaa73c42f in __GI___wait4 (pid=953111, stat_loc=0x0, options=0, usage=0x0) at ../sysdeps/unix/sysv/linux/wait4.c:30
+30	../sysdeps/unix/sysv/linux/wait4.c: No such file or directory.
+#0  0x00007feaaa73c42f in __GI___wait4 (pid=953111, stat_loc=0x0, options=0, usage=0x0) at ../sysdeps/unix/sysv/linux/wait4.c:30
+30	in ../sysdeps/unix/sysv/linux/wait4.c
+#1  0x00007feaa9d02c3b in ggml_print_backtrace () from /home/llm/llama.cpp/build-vulkan/bin/libggml-base.so.0
+#2  0x00007feaa9d16d2f in ggml_uncaught_exception() () from /home/llm/llama.cpp/build-vulkan/bin/libggml-base.so.0
+#3  0x00007feaaa94920c in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#4  0x00007feaaa949277 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#5  0x00007feaaa9494d8 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#6  0x00007feaa6c568f9 in ggml_vk_synchronize(ggml_backend_vk_context*) [clone .cold] () from /home/llm/llama.cpp/build-vulkan/bin/libggml-vulkan.so.0
+#7  0x00007feaa6cd2c84 in ggml_backend_vk_synchronize(ggml_backend*) () from /home/llm/llama.cpp/build-vulkan/bin/libggml-vulkan.so.0
+#8  0x00007feaa9d1ccae in ggml_backend_sched_synchronize () from /home/llm/llama.cpp/build-vulkan/bin/libggml-base.so.0
+#9  0x00007feaa9e98a99 in llama_context::synchronize() () from /home/llm/llama.cpp/build-vulkan/bin/libllama.so.0
+#10 0x00007feaa9e9cd90 in llama_state_seq_get_data_ext () from /home/llm/llama.cpp/build-vulkan/bin/libllama.so.0
+#11 0x00007feaaac48174 in server_slot::prompt_save(server_prompt_cache&) const () from /home/llm/llama.cpp/build-vulkan/bin/libllama-server-impl.so
+#12 0x00007feaaac4a7e2 in server_context_impl::get_available_slot(server_task const&) () from /home/llm/llama.cpp/build-vulkan/bin/libllama-server-impl.so
+#13 0x00007feaaac5a26b in server_context_impl::process_single_task(server_task&&) () from /home/llm/llama.cpp/build-vulkan/bin/libllama-server-impl.so
+#14 0x00007feaaabfe7c6 in server_queue::start_loop(long) () from /home/llm/llama.cpp/build-vulkan/bin/libllama-server-impl.so
+#15 0x00007feaaaba2a4b in llama_server(int, char**) () from /home/llm/llama.cpp/build-vulkan/bin/libllama-server-impl.so
+#16 0x00007feaaa67bd90 in __libc_start_call_main (main=main@entry=0x55742f10d260 <main>, argc=argc@entry=48, argv=argv@entry=0x7ffd7fea9df8) at ../sysdeps/nptl/libc_start_call_main.h:58
+58	../sysdeps/nptl/libc_start_call_main.h: No such file or directory.
+#17 0x00007feaaa67be40 in __libc_start_main_impl (main=0x55742f10d260 <main>, argc=48, argv=0x7ffd7fea9df8, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7ffd7fea9de8) at ../csu/libc-start.c:392
+392	../csu/libc-start.c: No such file or directory.
+#18 0x000055742f10d295 in _start ()
+[Inferior 1 (process 940066) detached]
+terminate called after throwing an instance of 'vk::DeviceLostError'
+  what():  vk::Queue::submit: ErrorDeviceLost
