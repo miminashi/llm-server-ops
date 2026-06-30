@@ -56,6 +56,25 @@ ssh t120h-p100 "ps aux | grep llama-server | grep -v grep"
 ssh t120h-p100 "docker ps | grep chrome-novnc-cdp"
 ```
 
+### mi25 GPU 個体識別 (Unique ID 必須)
+
+mi25 (MI25 4枚) では `rocm-smi -i` が表示する **GUID は KFD ランタイム割当値で個体不変ではない**。過去のレポート群で「GUID 8820 / 54068 / 33301 / 29525」と呼んでいたものは、その当時の 4 枚同時運用セッション内でのみ有効。物理交換・スロット入れ替え・単独可視化で値が変わる (実例: 別個体カードを単独装着すると両方とも GUID 54068 を返した)。
+
+カード個体不変の識別子は `rocm-smi --showuniqueid` の **Unique ID** (例: `0x21501edbcec48c4`)。ASIC 内部に焼き込まれた値で、構成変更でも変わらない。
+
+**運用ルール**:
+- 認識確認では必ず `rocm-smi --showuniqueid` を併記して記録 (`boot_state.log` 等)
+- レポート/メモリで「カード」を指すときは Unique ID **末尾 5 桁** で略記 (例: `card-c48c4`)。2026-06-29 の 4 枚 baseline で末尾 4 桁では `48c4` が `card-c48c4` / `card-448c4` で衝突することが判明したため。衝突した場合は 6 桁以上に拡張
+- 過去レポートの「GUID xxxxx」は当時のセッション値として読み替える (新たに使わない)。本日の 4 枚 baseline で過去 fault 集中個体 (4 枚運用時 BDF 87:00.0 = GUID 8820) = **`card-c48c4` (Unique ID `0x21501edbcec48c4`)** と確定
+- 物理スワップ前後で Unique ID で必ず照合 (BDF / GUID では追跡不能)
+
+**SMBIOS スロット ↔ GPU BDF**:
+- `sudo dmidecode -t 9` の `Bus Address` は MI25 内蔵 upstream bridge の bus 番号 (GPU 本体 BDF ではない)
+- 正しい SLOT↔GPU BDF マッピングは `lspci -tnnv` で PCIe tree を辿る
+- 例: SMBIOS CPU2 SLOT6 = `85:00.0` (upstream) → `86:00.0` (downstream) → `87:00.0` (GPU 本体) / CPU2 SLOT8 = `82:00.0` → `83:00.0` → `84:00.0`
+
+詳細経緯は [report/2026-06-29_191721_mi25_gpu_card_id_unique_id.md](report/2026-06-29_191721_mi25_gpu_card_id_unique_id.md) と続編 [report/2026-06-29_213624_mi25_4card_uniqueid_baseline.md](report/2026-06-29_213624_mi25_4card_uniqueid_baseline.md) (4 枚 baseline 取得 + 過去 fault 個体 = `card-c48c4` 確定) を参照。
+
 ---
 
 ## 重要な制約
@@ -65,5 +84,5 @@ ssh t120h-p100 "docker ps | grep chrome-novnc-cdp"
 | GPUサーバ使用 | **必ず Skill `gpu-server` を使用**（ロック管理のため） |
 | スクリプト実行 | **プロジェクトルートからの相対パス**（`.claude/skills/...`）で実行すること。フルパス（`/home/ubuntu/projects/...`）は使用しない |
 | レポート作成 | plan mode で計画を立てた場合は、**必ず**対になるレポートを作成すること（ユーザから明示的に不要と指示された場合を除く）。フォーマットは [REPORT.md](REPORT.md) に従う |
-| sudo実行 | **Claudeはsudoを直接実行しない**。sudo権限が必要な操作が発生した場合は、コマンドをユーザに提示して実行を依頼すること（sshリモート先のsudoも同様） |
+| sudo実行 | **原則 Claudeはsudoを直接実行しない**。sudo権限が必要な操作が発生した場合は、コマンドをユーザに提示して実行を依頼すること（sshリモート先のsudoも同様）。**例外**: mi25 では `sudo dmidecode`（GPU SMBIOS スロット番号確認等の読み出し用途）は Claude が直接実行してよい（NOPASSWD 設定済み・副作用なし） |
 | OSクラッシュ時の証跡保全 | OSハング/クラッシュ（SSH・ping不通）検知時は、**電源リセットの前に必ず** `bmc-screenshot.sh` で KVM スクショを取得すること（コンソールに原因究明の情報が残るため）。詳細は「GPUサーバとLLM」節 |

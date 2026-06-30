@@ -74,6 +74,22 @@ cd /home/ubuntu/projects/llm-server-ops
 > 事前に `lock.sh <server>` でロックを取得すること。`status`・スクショは読み取り的だが、
 > 復旧作業全体をロック下で行うのが安全。
 
+### mi25 (X10DRG-Q) で `soft` を優先する理由 (実測ノウハウ)
+
+mi25 (Supermicro X10DRG-Q) では、OS から `sudo shutdown -h +1` を発行しても **OS halt 状態で
+止まり、Power=on のまま固定される既知のクセ**がある (BMC `status` で確認可能)。物理スワップ等で
+完全電源 OFF が必要な場面では、OS 経由ではなく直接以下を使うのが確実:
+
+```bash
+.claude/skills/gpu-server/scripts/bmc-power.sh mi25 soft
+# ~20 秒以内に System Power: off に到達 (12 回連続スワップで実測、2026-06-29 物理交換作業)
+```
+
+- `soft` は IPMI 経由で ACPI shutdown を OS に依頼 → systemd が正常停止 → 電源 OFF まで進む
+- 物理スワップを伴う作業 (シャットダウン → 装着変更 → 電源 ON のサイクルを何度も繰り返す) に最適
+- ハード `off` は OS の状態次第で FS 整合性リスクがあるため、SSH 不通でない限り常に `soft` を選ぶ
+- 詳細: [report/2026-06-29_191721_mi25_gpu_card_id_unique_id.md](../../../report/2026-06-29_191721_mi25_gpu_card_id_unique_id.md) の物理スワップ 12 サイクルで実証
+
 ## KVM スクリーンショット
 
 ```bash
