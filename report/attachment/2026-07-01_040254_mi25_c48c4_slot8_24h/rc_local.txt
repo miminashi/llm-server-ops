@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#max_gpu_power="190000000"
+max_gpu_power="160000000"
+echo "${max_gpu_power}" | sudo tee /sys/class/drm/card1/device/hwmon/hwmon2/power1_cap
+echo "${max_gpu_power}" | sudo tee /sys/class/drm/card2/device/hwmon/hwmon3/power1_cap
+echo "${max_gpu_power}" | sudo tee /sys/class/drm/card3/device/hwmon/hwmon4/power1_cap
+echo "${max_gpu_power}" | sudo tee /sys/class/drm/card4/device/hwmon/hwmon5/power1_cap
+
+exit 0
