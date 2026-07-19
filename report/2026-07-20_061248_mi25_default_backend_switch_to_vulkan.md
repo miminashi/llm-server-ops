@@ -84,11 +84,11 @@ L12 usage コメントで hip / vulkan の順序を入れ替え、L21 の defaul
 
 ## 動作確認
 
-### Vulkan 既定 (`MI25_BACKEND` 未指定)
+### Vulkan 既定 (`MI25_BACKEND` 未指定, 初回起動)
 
 - `start.sh mi25 "unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_XL" 131072` を prefix なしで実行
 - 起動ログに `Vulkan: RADV 物理 GPU を検出 → GGML_VK_VISIBLE_DEVICES=0,1,2,3 (4枚)` を確認
-- `update_and_build-mi25.sh` は `更新はありません (backend: vulkan)` で通過 (既に build-vulkan/ が master 追従で存在)
+- `update_and_build-mi25.sh` は `更新はありません (backend: vulkan)` で通過 (前セッション後の状態: build-vulkan/ が `ded1561b4` = v9812 で存在、`git fetch origin` は gnutls_handshake エラーで失敗するが `|| true` で通過、BEFORE = AFTER = `ded1561b4` で NEED_BUILD=0)
 - `wait-ready.sh` は 1 回目の poll で `llama-server が正常に起動しました (attempt 1/60)` を返す
 - `curl -sf http://10.1.4.13:8000/health` → `{"status":"ok"}`
 - `ssh mi25 "ps -ef | grep 'build-vulkan/bin/llama-server' | grep -v grep"` で Vulkan バイナリのプロセスが確認できる
@@ -100,15 +100,15 @@ L12 usage コメントで hip / vulkan の順序を入れ替え、L21 の defaul
 - `find ~/llama.cpp/build/bin/llama-server` が実在するようになり `BUILT`
 - `ps -ef | grep 'build/bin/llama-server'` で ROCm バイナリのプロセス (PID 3768367) が確認できた
 - `until curl -sf http://10.1.4.13:8000/health; do sleep 5; done` で `{"status":"ok"}` を返し fallback 経路のヘルスチェックも成功
-- 動作確認後、`stop.sh mi25` で HIP プロセスを停止し、`MI25_BACKEND` 未指定 = Vulkan 既定で再起動しなおして最終稼働状態にした
+- 動作確認後、`stop.sh mi25` で HIP プロセスを停止し、`MI25_BACKEND` 未指定 = Vulkan 既定で再起動しなおして最終稼働状態にした (この Vulkan 復帰起動では、初回とは異なり `update_and_build-mi25.sh` の vulkan 分岐で HEAD が `0fac87b15` → master 最新に fast-forward し build-vulkan/ の再ビルドが走行。詳細は下記副次発見 (a))
 
 ## 副次発見
 
 ### (a) Vulkan バイナリの再ビルドと HEAD 進行 — 前セッション実測 HEAD と異なる状態で default 反転が確定
 
-fallback 動作確認で `MI25_BACKEND=hip` に切り替えた際、`update_and_build-mi25.sh` は HEAD を master (前セッション実測時 `ded1561b4` = v9812) から PINNED_COMMIT (`0fac87b15` = v8533) に一時 checkout する。動作確認後に `MI25_BACKEND` 未指定 (= Vulkan) で再起動したとき、`update_and_build-mi25.sh` の vulkan 分岐は `git checkout master` → `git pull --ff-only` を実行する。ここで問題が 2 つ観測された:
+fallback 動作確認で `MI25_BACKEND=hip` に切り替えた際、`update_and_build-mi25.sh` は HEAD を master (前セッション実測時 `ded1561b4` = v9812) から PINNED_COMMIT (`0fac87b15` = v8533) に一時 checkout する。動作確認後に `MI25_BACKEND` 未指定 (= Vulkan) で再起動したとき、`update_and_build-mi25.sh` の vulkan 分岐は `git fetch origin` → `git checkout master` → `git pull --ff-only` を実行する。ここで 2 段階の HEAD 更新と再ビルドが観測された:
 
-1. `git checkout master` によって HEAD が **master 最新** に更新された (本セッション終了時点で `571d0d54`)。前セッション実測時 `ded1561b4` から master が進行しており、`git fetch origin` が `gnutls_handshake() failed` エラーで stderr を出しつつも部分的に情報を取得できていたため、checkout の結果 HEAD が飛んだ形。
+1. `git checkout master` はローカル master ブランチに切り替えるだけで単体では HEAD を進めないが、直後の `git pull --ff-only` によって HEAD が **master 最新 (本セッション終了時点で `571d0d54`)** に fast-forward された。前セッション時点でローカル master は `ded1561b4` で止まっていたが、`git fetch origin` が `gnutls_handshake() failed` エラーで stderr を出しつつも部分的に origin/master ref を進めることに成功しており、pull --ff-only の merge 段階でローカル master がそこに追い付いた形。
 2. `update_and_build-mi25.sh` は `BEFORE != AFTER` (= HIP の `0fac87b15` から Vulkan の `571d0d54` に切替) を主要な NEED_BUILD 判定に使っており、build-vulkan/ の rm -rf → cmake → make が走行した (mtime 実測 `build-vulkan/bin/llama-server` = 06:23、本セッション中の Vulkan 復帰と符号)。
 
 結果として、**本セッション終了時点の Vulkan 稼働バイナリは前セッション pp/tg 実測時 (`ded1561b4`) とは異なる HEAD (`571d0d54`) でビルドされたもの**である。前セッション実測で示した Vulkan pp 100k=191 t/s / tg=39.5 t/s の水準が現行 HEAD でそのまま維持されているかは実測未確認 (`git log --oneline ded1561b4..571d0d54 -- 'ggml/src/ggml-vulkan/**'` の差分を確認し、必要に応じ pp/tg 再実測が要)。
@@ -120,7 +120,7 @@ fallback 動作確認で `MI25_BACKEND=hip` に切り替えた際、`update_and_
 
 ### (b) `git fetch origin` の gnutls_handshake エラー握り潰し
 
-`update_and_build-mi25.sh` の `git fetch origin 2>/dev/null || true` は本セッションで実際にエラーを吐いた (`fatal: unable to access 'https://github.com/ggml-org/llama.cpp.git/': gnutls_handshake() failed: Error in the pull function.`)。stderr は `2>/dev/null` で握り潰されるため運用継続に影響なし、ただし部分的に fetch 情報が更新されていた形跡があり、直後の `git checkout master` の挙動に上記 (a) のような副作用を生む場合がある。完全にオフライン運用したい場合はここが再現不能な不安定要因になる。
+`update_and_build-mi25.sh` の `git fetch origin 2>/dev/null || true` は本セッションで実際にエラーを吐いた (`fatal: unable to access 'https://github.com/ggml-org/llama.cpp.git/': gnutls_handshake() failed: Error in the pull function.`)。stderr は `2>/dev/null` で握り潰されるため運用継続に影響なし、ただし部分的に origin/master ref は進んでいた形跡があり、直後の `git pull --ff-only` がその ref にローカル master を fast-forward させ、上記 (a) の副作用 (Vulkan 再ビルド) を生む場合がある。完全にオフライン運用したい場合はここが再現不能な不安定要因になる。
 
 ### (c) HIP → Vulkan 切替時の一時的な SSH タイムアウト
 
