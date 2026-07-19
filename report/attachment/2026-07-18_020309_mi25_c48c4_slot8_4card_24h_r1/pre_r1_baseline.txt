@@ -1,0 +1,41 @@
+# mi25 c48c4×SLOT8×4-card 24h R1 開始前 baseline (2026-07-18 02:04 JST)
+
+## 環境
+- サーバ: mi25 (10.1.4.13, Ubuntu 22.04.5 LTS)
+- ロック: aws-mmns-generic-3689648-20260718_020309
+- 物理配置 (CMOS 交換後・変更なし):
+  - CPU1 SLOT2 = c3164 (Unique ID 0x2150172bdcc3164, BDF 04:00.0, GPU[0])
+  - CPU1 SLOT4 = 448c4 (Unique ID 0x215026e14c448c4, BDF 07:00.0, GPU[1])
+  - CPU2 SLOT8 = c48c4 (Unique ID 0x21501edbcec48c4, BDF 84:00.0, GPU[2]) ★ 過去 fault 集中個体
+  - CPU2 SLOT6 = a48e4 (Unique ID 0x2150040969a48e4, BDF 87:00.0, GPU[3])
+
+## Boot / uptime
+- boot 0 起動: 2026-07-18 00:14:51 JST (BIOS 復旧 + GPU 4 枚装着後の cold boot)
+- baseline 記録時刻: 2026-07-18 02:04:00 JST (uptime 1h 49m、load 1.81 1.95 1.61)
+
+## Power cap (rocm-smi --showmaxpower)
+- GPU[0] (c3164): 160.0 W
+- GPU[1] (448c4): 160.0 W
+- GPU[2] (c48c4): 160.0 W ← 試験対象
+- GPU[3] (a48e4): 160.0 W
+
+/etc/rc.local の 160W 書き込みが 4 枚全てで反映済み (SLOT8_x2 追試の副次発見と整合)。
+
+## PCIe / AER
+- 全 4 枚 LnkSta: Speed 8GT/s (ok), Width x16 (ok)
+- UESta 全枚数クリーン (- のみ)
+- CESta の AdvNonFatalErr+ は Vega10 起動時 quirk (機能影響なし)
+
+## dmesg baseline
+- 行数: 2308 (fault 検出時の diff base として使用)
+- amdgpu init 全 4 枚完走、VBIOS 113-D0513700-001 正常フェッチ、MEM ECC active
+
+## 前試験の履歴 (D-2 判定の比較対象)
+| 試験 | Trial / Fault | 発生率 | 出典 |
+|---|---|---|---|
+| c48c4×SLOT6×4 枚 (電力スイープ) | 3/88 | 3.41% | 2026-06-25/26 |
+| c48c4×SLOT6×SA (idx=3) | 2/147 | 1.36% | 2026-06-29 stand_alone_24h |
+| c48c4×SLOT6 累積 | 5/235 | 2.13% | (合算) |
+| c48c4×SLOT8×SA (idx=2) | 0/221 | 0.00% | 2026-07-04 SLOT8_24h_x2 |
+| a48e4×SLOT6×SA (idx=3) | 0/221 | 0.00% | 2026-07-10 D-1 |
+| **本試験 c48c4×SLOT8×4 枚 (idx=0,1,2,3)** | (実施中) | ? | 2026-07-18 D-2 R1 |
