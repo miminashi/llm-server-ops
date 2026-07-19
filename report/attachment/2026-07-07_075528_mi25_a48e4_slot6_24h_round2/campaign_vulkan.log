@@ -1,0 +1,128 @@
+[2026-07-07T07:56:54+09:00] ===== キャンペーン開始 backend=vulkan model=unsloth/Qwen3-8B-GGUF:Q6_K ctx=131072 MAX=200 MIN=80 HANG_SAFETY=10 CAP=86400s TRIAL=720s =====
+[2026-07-07T07:57:06+09:00] boot_seq=0 (phase-start-vulkan-a48e4-slot6-r2) gpu_count=4
+telemetry started. pids: 2041436 2041437 2041438 
+logs: /home/ubuntu/projects/llm-server-ops/report/attachment/2026-07-07_075528_mi25_a48e4_slot6_24h_round2/telemetry_rocmsmi.log / /home/ubuntu/projects/llm-server-ops/report/attachment/2026-07-07_075528_mi25_a48e4_slot6_24h_round2/telemetry_gpucount.log / /home/ubuntu/projects/llm-server-ops/report/attachment/2026-07-07_075528_mi25_a48e4_slot6_24h_round2/kern_dmesg.log / /home/ubuntu/projects/llm-server-ops/report/attachment/2026-07-07_075528_mi25_a48e4_slot6_24h_round2/llama_server.log
+telemetry_pcie started. pid: 2041445
+log: /home/ubuntu/projects/llm-server-ops/report/attachment/2026-07-07_075528_mi25_a48e4_slot6_24h_round2/telemetry_pcie.log
+[2026-07-07T07:57:06+09:00] 初回 llama-server 起動
+[2026-07-07T07:57:06+09:00] llama 再起動 (a48e4 SLOT6 stand-alone Vulkan ctx=131072)
+MODEL_PATH=/home/llm/models/Qwen3-8B-Q6_K.gguf
+CTX_SIZE=131072
+==> llama-server 起動 (a48e4 SLOT6 stand-alone Vulkan ctx=131072)
+==> /health 確認待機 (最大 300s)
+    /health OK (elapsed 15s)
+[2026-07-07T07:57:36+09:00] /health 確認待機 (最大 300s)
+[2026-07-07T07:57:37+09:00]     /health OK (elapsed 5s)
+[2026-07-07T07:57:38+09:00] --- trial 1 開始 (elapsed=0s hangs=0) ---
+[2026-07-07T08:11:24+09:00] --- trial 2 開始 (elapsed=826s hangs=0) ---
+[2026-07-07T08:24:57+09:00] --- trial 3 開始 (elapsed=1639s hangs=0) ---
+[2026-07-07T08:38:26+09:00] --- trial 4 開始 (elapsed=2449s hangs=0) ---
+[2026-07-07T08:52:04+09:00] --- trial 5 開始 (elapsed=3267s hangs=0) ---
+[2026-07-07T09:05:38+09:00] --- trial 6 開始 (elapsed=4080s hangs=0) ---
+[2026-07-07T09:19:20+09:00] --- trial 7 開始 (elapsed=4903s hangs=0) ---
+[2026-07-07T09:31:57+09:00] --- trial 8 開始 (elapsed=5660s hangs=0) ---
+[2026-07-07T09:44:24+09:00] --- trial 9 開始 (elapsed=6406s hangs=0) ---
+[2026-07-07T09:57:38+09:00] --- trial 10 開始 (elapsed=7201s hangs=0) ---
+[2026-07-07T10:11:35+09:00] --- trial 11 開始 (elapsed=8038s hangs=0) ---
+[2026-07-07T10:24:41+09:00] --- trial 12 開始 (elapsed=8824s hangs=0) ---
+[2026-07-07T10:37:53+09:00] --- trial 13 開始 (elapsed=9615s hangs=0) ---
+[2026-07-07T10:50:59+09:00] --- trial 14 開始 (elapsed=10401s hangs=0) ---
+[2026-07-07T11:03:48+09:00] --- trial 15 開始 (elapsed=11170s hangs=0) ---
+[2026-07-07T11:16:43+09:00] --- trial 16 開始 (elapsed=11945s hangs=0) ---
+[2026-07-07T11:29:20+09:00] --- trial 17 開始 (elapsed=12702s hangs=0) ---
+[2026-07-07T11:43:13+09:00] --- trial 18 開始 (elapsed=13536s hangs=0) ---
+[2026-07-07T11:57:28+09:00] --- trial 19 開始 (elapsed=14391s hangs=0) ---
+[2026-07-07T12:11:35+09:00] --- trial 20 開始 (elapsed=15237s hangs=0) ---
+[2026-07-07T12:24:26+09:00] --- trial 21 開始 (elapsed=16009s hangs=0) ---
+[2026-07-07T12:37:42+09:00] --- trial 22 開始 (elapsed=16805s hangs=0) ---
+[2026-07-07T12:50:58+09:00] --- trial 23 開始 (elapsed=17601s hangs=0) ---
+[2026-07-07T13:04:40+09:00] --- trial 24 開始 (elapsed=18422s hangs=0) ---
+[2026-07-07T13:18:17+09:00] --- trial 25 開始 (elapsed=19240s hangs=0) ---
+[2026-07-07T13:31:44+09:00] --- trial 26 開始 (elapsed=20046s hangs=0) ---
+[2026-07-07T13:45:18+09:00] --- trial 27 開始 (elapsed=20861s hangs=0) ---
+[2026-07-07T13:59:23+09:00] --- trial 28 開始 (elapsed=21705s hangs=0) ---
+[2026-07-07T14:11:35+09:00] --- trial 29 開始 (elapsed=22438s hangs=0) ---
+[2026-07-07T14:24:37+09:00] --- trial 30 開始 (elapsed=23220s hangs=0) ---
+[2026-07-07T14:38:28+09:00] --- trial 31 開始 (elapsed=24050s hangs=0) ---
+[2026-07-07T14:50:58+09:00] --- trial 32 開始 (elapsed=24801s hangs=0) ---
+[2026-07-07T15:03:36+09:00] --- trial 33 開始 (elapsed=25558s hangs=0) ---
+[2026-07-07T15:16:04+09:00] --- trial 34 開始 (elapsed=26306s hangs=0) ---
+[2026-07-07T15:28:22+09:00] --- trial 35 開始 (elapsed=27044s hangs=0) ---
+[2026-07-07T15:41:20+09:00] --- trial 36 開始 (elapsed=27823s hangs=0) ---
+[2026-07-07T15:54:24+09:00] --- trial 37 開始 (elapsed=28606s hangs=0) ---
+[2026-07-07T16:06:47+09:00] --- trial 38 開始 (elapsed=29349s hangs=0) ---
+[2026-07-07T16:20:03+09:00] --- trial 39 開始 (elapsed=30145s hangs=0) ---
+[2026-07-07T16:33:12+09:00] --- trial 40 開始 (elapsed=30934s hangs=0) ---
+[2026-07-07T16:45:26+09:00] --- trial 41 開始 (elapsed=31669s hangs=0) ---
+[2026-07-07T16:59:29+09:00] --- trial 42 開始 (elapsed=32511s hangs=0) ---
+[2026-07-07T17:11:46+09:00] --- trial 43 開始 (elapsed=33248s hangs=0) ---
+[2026-07-07T17:25:02+09:00] --- trial 44 開始 (elapsed=34044s hangs=0) ---
+[2026-07-07T17:38:35+09:00] --- trial 45 開始 (elapsed=34857s hangs=0) ---
+[2026-07-07T17:51:27+09:00] --- trial 46 開始 (elapsed=35630s hangs=0) ---
+[2026-07-07T18:04:57+09:00] --- trial 47 開始 (elapsed=36440s hangs=0) ---
+[2026-07-07T18:17:22+09:00] --- trial 48 開始 (elapsed=37185s hangs=0) ---
+[2026-07-07T18:29:24+09:00] --- trial 49 開始 (elapsed=37907s hangs=0) ---
+[2026-07-07T18:41:47+09:00] --- trial 50 開始 (elapsed=38649s hangs=0) ---
+[2026-07-07T18:54:16+09:00] --- trial 51 開始 (elapsed=39398s hangs=0) ---
+[2026-07-07T19:07:33+09:00] --- trial 52 開始 (elapsed=40195s hangs=0) ---
+[2026-07-07T19:20:24+09:00] --- trial 53 開始 (elapsed=40967s hangs=0) ---
+[2026-07-07T19:33:20+09:00] --- trial 54 開始 (elapsed=41742s hangs=0) ---
+[2026-07-07T19:45:47+09:00] --- trial 55 開始 (elapsed=42490s hangs=0) ---
+[2026-07-07T19:58:48+09:00] --- trial 56 開始 (elapsed=43270s hangs=0) ---
+[2026-07-07T20:11:15+09:00] --- trial 57 開始 (elapsed=44018s hangs=0) ---
+[2026-07-07T20:23:53+09:00] --- trial 58 開始 (elapsed=44776s hangs=0) ---
+[2026-07-07T20:37:52+09:00] --- trial 59 開始 (elapsed=45615s hangs=0) ---
+[2026-07-07T20:50:52+09:00] --- trial 60 開始 (elapsed=46395s hangs=0) ---
+[2026-07-07T21:02:54+09:00] --- trial 61 開始 (elapsed=47116s hangs=0) ---
+[2026-07-07T21:16:32+09:00] --- trial 62 開始 (elapsed=47934s hangs=0) ---
+[2026-07-07T21:29:57+09:00] --- trial 63 開始 (elapsed=48740s hangs=0) ---
+[2026-07-07T21:43:51+09:00] --- trial 64 開始 (elapsed=49573s hangs=0) ---
+[2026-07-07T21:57:14+09:00] --- trial 65 開始 (elapsed=50376s hangs=0) ---
+[2026-07-07T22:10:14+09:00] --- trial 66 開始 (elapsed=51156s hangs=0) ---
+[2026-07-07T22:24:10+09:00] --- trial 67 開始 (elapsed=51992s hangs=0) ---
+[2026-07-07T22:36:28+09:00] --- trial 68 開始 (elapsed=52731s hangs=0) ---
+[2026-07-07T22:49:43+09:00] --- trial 69 開始 (elapsed=53525s hangs=0) ---
+[2026-07-07T23:02:00+09:00] --- trial 70 開始 (elapsed=54262s hangs=0) ---
+[2026-07-07T23:14:10+09:00] --- trial 71 開始 (elapsed=54992s hangs=0) ---
+[2026-07-07T23:28:08+09:00] --- trial 72 開始 (elapsed=55830s hangs=0) ---
+[2026-07-07T23:40:10+09:00] --- trial 73 開始 (elapsed=56553s hangs=0) ---
+[2026-07-07T23:52:31+09:00] --- trial 74 開始 (elapsed=57293s hangs=0) ---
+[2026-07-08T00:05:05+09:00] --- trial 75 開始 (elapsed=58048s hangs=0) ---
+[2026-07-08T00:18:01+09:00] --- trial 76 開始 (elapsed=58824s hangs=0) ---
+[2026-07-08T00:32:16+09:00] --- trial 77 開始 (elapsed=59679s hangs=0) ---
+[2026-07-08T00:44:44+09:00] --- trial 78 開始 (elapsed=60427s hangs=0) ---
+[2026-07-08T00:58:17+09:00] --- trial 79 開始 (elapsed=61240s hangs=0) ---
+[2026-07-08T01:11:51+09:00] --- trial 80 開始 (elapsed=62053s hangs=0) ---
+[2026-07-08T01:24:08+09:00] --- trial 81 開始 (elapsed=62790s hangs=0) ---
+[2026-07-08T01:37:09+09:00] --- trial 82 開始 (elapsed=63571s hangs=0) ---
+[2026-07-08T01:49:43+09:00] --- trial 83 開始 (elapsed=64325s hangs=0) ---
+[2026-07-08T02:02:49+09:00] --- trial 84 開始 (elapsed=65112s hangs=0) ---
+[2026-07-08T02:16:31+09:00] --- trial 85 開始 (elapsed=65934s hangs=0) ---
+[2026-07-08T02:28:52+09:00] --- trial 86 開始 (elapsed=66675s hangs=0) ---
+[2026-07-08T02:42:48+09:00] --- trial 87 開始 (elapsed=67510s hangs=0) ---
+[2026-07-08T02:54:54+09:00] --- trial 88 開始 (elapsed=68236s hangs=0) ---
+[2026-07-08T03:06:56+09:00] --- trial 89 開始 (elapsed=68958s hangs=0) ---
+[2026-07-08T03:20:04+09:00] --- trial 90 開始 (elapsed=69747s hangs=0) ---
+[2026-07-08T03:32:38+09:00] --- trial 91 開始 (elapsed=70501s hangs=0) ---
+[2026-07-08T03:45:13+09:00] --- trial 92 開始 (elapsed=71256s hangs=0) ---
+[2026-07-08T03:58:49+09:00] --- trial 93 開始 (elapsed=72071s hangs=0) ---
+[2026-07-08T04:11:20+09:00] --- trial 94 開始 (elapsed=72822s hangs=0) ---
+[2026-07-08T04:25:27+09:00] --- trial 95 開始 (elapsed=73669s hangs=0) ---
+[2026-07-08T04:39:41+09:00] --- trial 96 開始 (elapsed=74524s hangs=0) ---
+[2026-07-08T04:51:59+09:00] --- trial 97 開始 (elapsed=75261s hangs=0) ---
+[2026-07-08T05:04:03+09:00] --- trial 98 開始 (elapsed=75986s hangs=0) ---
+[2026-07-08T05:16:11+09:00] --- trial 99 開始 (elapsed=76713s hangs=0) ---
+[2026-07-08T05:29:08+09:00] --- trial 100 開始 (elapsed=77490s hangs=0) ---
+[2026-07-08T05:42:02+09:00] --- trial 101 開始 (elapsed=78265s hangs=0) ---
+[2026-07-08T05:54:56+09:00] --- trial 102 開始 (elapsed=79038s hangs=0) ---
+[2026-07-08T06:08:40+09:00] --- trial 103 開始 (elapsed=79862s hangs=0) ---
+[2026-07-08T06:21:54+09:00] --- trial 104 開始 (elapsed=80656s hangs=0) ---
+[2026-07-08T06:34:25+09:00] --- trial 105 開始 (elapsed=81408s hangs=0) ---
+[2026-07-08T06:47:06+09:00] --- trial 106 開始 (elapsed=82168s hangs=0) ---
+[2026-07-08T07:00:16+09:00] --- trial 107 開始 (elapsed=82958s hangs=0) ---
+[2026-07-08T07:13:01+09:00] --- trial 108 開始 (elapsed=83723s hangs=0) ---
+[2026-07-08T07:26:26+09:00] --- trial 109 開始 (elapsed=84529s hangs=0) ---
+[2026-07-08T07:39:21+09:00] --- trial 110 開始 (elapsed=85304s hangs=0) ---
+[2026-07-08T07:51:22+09:00] --- trial 111 開始 (elapsed=86025s hangs=0) ---
+[2026-07-08T08:04:04+09:00] PHASE_CAP 到達で終了 (86787s)
+[2026-07-08T08:04:04+09:00] ===== キャンペーン完了 backend=vulkan trials=111 hangs=0 =====
