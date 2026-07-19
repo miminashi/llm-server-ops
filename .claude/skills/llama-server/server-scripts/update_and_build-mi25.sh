@@ -9,16 +9,18 @@ Options:
   -h, --help    このヘルプを表示
 
 Environment:
-  MI25_BACKEND  ビルドバックエンド: hip (既定) | vulkan
-                hip    : ROCm/HIP (gfx900)。FP8 型リグレッション回避のためコミット pin。
-                         build/ にビルド。
+  MI25_BACKEND  ビルドバックエンド: vulkan (既定) | hip
                 vulkan : Vulkan (RADV)。pin 不要で master 追従。build-vulkan/ にビルド。
+                hip    : ROCm/HIP (gfx900) fallback。FP8 型リグレッション回避のためコミット pin。
+                         build/ にビルド。
 EOF
   exit 0
 }
 
-# バックエンド選択。既定は hip (ROCm/gfx900) で従来挙動を維持する。
-MI25_BACKEND="${MI25_BACKEND:-hip}"
+# バックエンド選択。既定は vulkan (RADV)。過去は hip 既定だったが、2026-07-20 実測で
+# Vulkan が pp / tg とも ROCm を上回ることが確認されたため反転
+# (report/2026-07-20_013500_mi25_prompt_eval_regression.md)。hip は fallback 用途で残置。
+MI25_BACKEND="${MI25_BACKEND:-vulkan}"
 
 # mi25 (ROCm 6.2 / gfx900) 向け llama.cpp コミット pin (hip バックエンドのみ)。
 # llama.cpp master は 112c78159 "ggml-cuda: Add NVFP4 dp4a kernel (#20644)" 以降、

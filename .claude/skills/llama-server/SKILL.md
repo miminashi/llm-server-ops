@@ -286,25 +286,27 @@ tmux split-window -v -b -d -l 3 \
 
 | サーバ | 固有パラメータ | 理由 |
 |--------|--------------|------|
-| mi25 (ROCm/hip, 既定) | `--flash-attn 1 --poll 0 -b 2048 -ub 2048` | gfx900 では ub=2048 が速度・VRAM 両面の最適点。ub=4096 は GPU0 が 16GiB を超え OOM（ub を上げると遅くもなる）。`--flash-attn 1` を明示し auto 挙動に依存しない。`start.sh` が自動適用 |
-| mi25 (Vulkan/RADV, `MI25_BACKEND=vulkan`) | `--flash-attn 1 --poll 0 -b 2048 -ub 2048`（同値）／ `GGML_VK_VISIBLE_DEVICES` は**起動時に vulkaninfo で RADV 物理 GPU を自動検出**（llvmpipe 除外、実効3枚→`0,1,2`/4枚→`0,1,2,3`） | Vulkan は ub が VRAM/速度にほぼ無影響（ub=4096 でも OOM せず）だが ROCm と同値を踏襲。prompt は ROCm の約3.3倍・eval は約0.6倍。FA=0+q8_0 不可、本番は KV q8_0 固定。詳細は下記「mi25 のバックエンド切替」 |
+| mi25 (Vulkan/RADV, 既定) | `--flash-attn 1 --poll 0 -b 2048 -ub 2048`（同値）／ `GGML_VK_VISIBLE_DEVICES` は**起動時に vulkaninfo で RADV 物理 GPU を自動検出**（llvmpipe 除外、実効3枚→`0,1,2`/4枚→`0,1,2,3`） | Vulkan は ub が VRAM/速度にほぼ無影響（ub=4096 でも OOM せず）だが ROCm と同値を踏襲。2026-07-20 実測で pp / tg とも ROCm を上回る（pp 1k=541 t/s / 32k=372 t/s / 100k=191 t/s、tg=39.5 t/s）。FA=0+q8_0 不可、本番は KV q8_0 固定。詳細は下記「mi25 のバックエンド切替」 |
+| mi25 (ROCm/hip, `MI25_BACKEND=hip`) | `--flash-attn 1 --poll 0 -b 2048 -ub 2048` | gfx900 では ub=2048 が速度・VRAM 両面の最適点。ub=4096 は GPU0 が 16GiB を超え OOM（ub を上げると遅くもなる）。`--flash-attn 1` を明示し auto 挙動に依存しない。`start.sh` が自動適用。2026-07-20 実測で long ctx (32k/100k) の pp が退行（1k 254 t/s は健全、32k -19%、100k -35%）、fallback 用途で残置 |
 | t120h-p100 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | Flash Attention有効、マルチGPUポーリング無効。**`-ub 8192` は CUDA OOM**（下記参照） |
 | t120h-p100 × Qwen3.5-122B-A10B | `--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 --threads 40` + `numactl --cpunodebind=1 --membind=1` | Phase U-6 確定 128k fit プロファイル |
 | t120h-m10 | `CUDA_VISIBLE_DEVICES=0..14 -b 4096 -ub 4096` | GPU 15は使用不可 |
 
-### mi25 のバックエンド切替（ROCm / Vulkan）
+### mi25 のバックエンド切替（Vulkan 既定 / ROCm fallback）
 
-mi25 は2つのバックエンドを持つ。**既定は ROCm（hip）**。環境変数 `MI25_BACKEND=vulkan` を付けると Vulkan（RADV）に切り替わる（`start.sh` が `build-vulkan/bin` を使用）。
+mi25 は2つのバックエンドを持つ。**既定は Vulkan（RADV）**。環境変数 `MI25_BACKEND=hip` を付けると ROCm（hip）に切り替わる（`start.sh` が `build/bin` を使用）。
+
+**反転の背景 (2026-07-20)**: 過去は ROCm を既定としていたが、長 ctx (32k/100k) で ROCm 側だけが退行する現象を切り分けた結果、Vulkan が prompt eval / token gen ともに ROCm を上回ることが確認された（Vulkan pp 100k=191 t/s vs ROCm 100k=38.9 t/s、Vulkan tg=39.5 t/s vs ROCm tg=28.8 t/s）。詳細は [2026-07-20 mi25 pp 退行レポート](../../../report/2026-07-20_013500_mi25_prompt_eval_regression.md)。ROCm 側の long-ctx 退行原因調査は打ち切り、`MI25_BACKEND=hip` は fallback 用途で残置する。
 
 ```bash
-# ROCm（既定）
+# Vulkan（既定）
 .claude/skills/llama-server/scripts/start.sh mi25 "<model>" 131072
-# Vulkan
-MI25_BACKEND=vulkan .claude/skills/llama-server/scripts/start.sh mi25 "<model>" 131072
+# ROCm（fallback）
+MI25_BACKEND=hip .claude/skills/llama-server/scripts/start.sh mi25 "<model>" 131072
 ```
 
-- **ROCm**: `update_and_build-mi25.sh` で gfx900 ビルド可能コミットに **pin**（master は `__hip_fp8_e4m3` を gfx900 で参照しビルド不能）。起動パラメータは上表のとおり ub=2048 が最適。
-- **Vulkan**: `build-vulkan/` を使用、**pin 不要（master 追従）**。ub は VRAM/速度にほぼ無影響だが ROCm と同値（ub=2048）を踏襲。**prompt は ROCm の約3.3倍・eval は約0.6倍**。KV は **q8_0 固定**（f16 は高負荷でホスト不安定、`FA=0`+q8_0 は不可）。
+- **Vulkan (既定)**: `build-vulkan/` を使用、**pin 不要（master 追従）**。ub は VRAM/速度にほぼ無影響だが ROCm と同値（ub=2048）を踏襲。**2026-07-20 実測で prompt eval / token gen とも ROCm を上回る**（pp 1k=541 t/s / 32k=372 t/s / 100k=191 t/s、tg=39.5 t/s）。KV は **q8_0 固定**（f16 は高負荷でホスト不安定、`FA=0`+q8_0 は不可）。
+- **ROCm (fallback, `MI25_BACKEND=hip`)**: `update_and_build-mi25.sh` で gfx900 ビルド可能コミット (`0fac87b15`, v8533) に **pin**（master は `__hip_fp8_e4m3` を gfx900 で参照しビルド不能）。起動パラメータは上表のとおり ub=2048。**2026-07-20 実測で long ctx (32k/100k) の pp が退行**（1k は健全 254 t/s、32k -19%、100k -35%）、原因未解明のまま fallback 用途で残置。
 - **Vulkan の GPU 可視性（自動検出）**: `start.sh` は**起動前に `vulkaninfo --summary` で RADV 物理 GPU の index のみを検出**し（`deviceType=PHYSICAL_DEVICE_TYPE_CPU` の llvmpipe/lavapipe を除外）、`GGML_VK_VISIBLE_DEVICES` に設定する（実効3枚→`0,1,2`／4枚→`0,1,2,3`）。mi25 は SLOT4 等の PCIe 物理層障害で**実効枚数が間欠的に変動**する（[原因究明レポート](../../../report/2026-06-14_131713_mi25_gpu4_pcie_dropout.md)）ため、旧来の固定値 `0,1,2,3` は3枚構成時に index 3 の llvmpipe(CPU) を拾い `ErrorOutOfDeviceMemory` で破綻していた（[param sweep レポート](../../../report/2026-06-18_084557_mi25_vulkan_param_sweep.md)）。検出した index は vulkaninfo の `GPUn` 順 = ggml-vulkan の `Vulkann` 順と一致する（`--list-devices` で確認済み・ICD 列挙順に依存するためドライバ更新時は要再確認）。vulkaninfo が使えない等で検出に失敗した場合は `GGML_VK_VISIBLE_DEVICES` を**未設定**で起動し警告する（現行 master の ggml は未設定時に llvmpipe を自動除外する）。
 - **GPU 枚数チェック**: `start.sh` は起動時に実効 GPU 枚数（mi25 Vulkan=RADV 検出数／mi25 ROCm=`rocminfo` の gfx900 Agent 数／t120h-p100=`nvidia-smi` 枚数）が**期待枚数（mi25=4／p100=4）を下回ると stderr に警告**を出す。ただし**起動は中断しない**（実効枚数で VRAM が足りなければモデルロード時に llama-server 自体が失敗するため、それに委ねる）。ROCm/CUDA は可視性を触らず（auto で実効枚数のみ使用）、警告のみ。
 

@@ -236,7 +236,7 @@ case "$SERVER" in
     # ROCm と同じ ub=2048 を踏襲。prompt は ROCm の約3.3倍、eval は約0.6倍。FA=0+q8_0 は不可
     # (V cache quantization requires flash_attn)。KV を f16 にすると高負荷でホストが不安定
     # になる事象を観測したため本番は q8_0 のままにすること。EXTRA_LLAMA_OPTS で上書き可。
-    if [ "${MI25_BACKEND:-hip}" = "vulkan" ]; then
+    if [ "${MI25_BACKEND:-vulkan}" = "vulkan" ]; then
       LLAMA_BIN="./build-vulkan/bin/llama-server"
       # set -o pipefail 下でも落ちないよう || true でガード。
       MI25_VK_IDX=$(detect_radv_vk_indices "$SERVER" || true)

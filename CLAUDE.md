@@ -41,6 +41,11 @@
 | mi25 | 10.1.4.13 | `http://10.1.4.13:8000/v1` | 10.1.4.7（IPMI） |
 | t120h-p100 | 10.1.4.14 | `http://10.1.4.14:8000/v1` | 10.1.4.8（iLO5） |
 
+**mi25 デフォルトバックエンド**: Vulkan (RADV, 4 枚 x16GB)。
+`MI25_BACKEND=hip` を明示すると ROCm fallback。詳細は
+[llama-server SKILL.md](.claude/skills/llama-server/SKILL.md) の「mi25 のバックエンド切替」節、
+および [2026-07-20 pp 退行レポート](report/2026-07-20_013500_mi25_prompt_eval_regression.md)。
+
 **OSハング/クラッシュ（SSH・ping 不通）を検知したら、電源リセットの前に必ず**
 `bmc-screenshot.sh`（KVM スクショ）でコンソール画面を保全すること。カーネルパニックの
 スタックトレース・FS 破損・OOM などの原因究明に決定的な情報が表示されている可能性が高く、
