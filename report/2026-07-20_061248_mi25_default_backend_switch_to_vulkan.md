@@ -96,11 +96,35 @@ L12 usage コメントで hip / vulkan の順序を入れ替え、L21 の defaul
 ### ROCm fallback (`MI25_BACKEND=hip`)
 
 - `stop.sh mi25` で Vulkan プロセスを停止したうえで `MI25_BACKEND=hip start.sh mi25 "unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_XL" 131072` を実行
-- `update_and_build-mi25.sh` が `hip` 分岐に入り、`git checkout 0fac87b15` (PINNED_COMMIT, v8533) → `build/` が未生成のため cmake + フルビルド (`-DGGML_HIP=ON -DAMDGPU_TARGETS=gfx900`) が走行 (実測 ~2 分、mi25 側 CPU 全コアで並列 make)
+- `update_and_build-mi25.sh` が `hip` 分岐に入り、`git checkout 0fac87b15` (PINNED_COMMIT, v8533) → `build/` が未生成のため cmake + フルビルド (`-DGGML_HIP=ON -DAMDGPU_TARGETS=gfx900`) が走行 (数分、mi25 側 CPU 全コアで並列 make)
 - `find ~/llama.cpp/build/bin/llama-server` が実在するようになり `BUILT`
 - `ps -ef | grep 'build/bin/llama-server'` で ROCm バイナリのプロセス (PID 3768367) が確認できた
 - `until curl -sf http://10.1.4.13:8000/health; do sleep 5; done` で `{"status":"ok"}` を返し fallback 経路のヘルスチェックも成功
 - 動作確認後、`stop.sh mi25` で HIP プロセスを停止し、`MI25_BACKEND` 未指定 = Vulkan 既定で再起動しなおして最終稼働状態にした
+
+## 副次発見
+
+### (a) Vulkan バイナリの再ビルドと HEAD 進行 — 前セッション実測 HEAD と異なる状態で default 反転が確定
+
+fallback 動作確認で `MI25_BACKEND=hip` に切り替えた際、`update_and_build-mi25.sh` は HEAD を master (前セッション実測時 `ded1561b4` = v9812) から PINNED_COMMIT (`0fac87b15` = v8533) に一時 checkout する。動作確認後に `MI25_BACKEND` 未指定 (= Vulkan) で再起動したとき、`update_and_build-mi25.sh` の vulkan 分岐は `git checkout master` → `git pull --ff-only` を実行する。ここで問題が 2 つ観測された:
+
+1. `git checkout master` によって HEAD が **master 最新** に更新された (本セッション終了時点で `571d0d54`)。前セッション実測時 `ded1561b4` から master が進行しており、`git fetch origin` が `gnutls_handshake() failed` エラーで stderr を出しつつも部分的に情報を取得できていたため、checkout の結果 HEAD が飛んだ形。
+2. `update_and_build-mi25.sh` は `BEFORE != AFTER` (= HIP の `0fac87b15` から Vulkan の `571d0d54` に切替) を主要な NEED_BUILD 判定に使っており、build-vulkan/ の rm -rf → cmake → make が走行した (mtime 実測 `build-vulkan/bin/llama-server` = 06:23、本セッション中の Vulkan 復帰と符号)。
+
+結果として、**本セッション終了時点の Vulkan 稼働バイナリは前セッション pp/tg 実測時 (`ded1561b4`) とは異なる HEAD (`571d0d54`) でビルドされたもの**である。前セッション実測で示した Vulkan pp 100k=191 t/s / tg=39.5 t/s の水準が現行 HEAD でそのまま維持されているかは実測未確認 (`git log --oneline ded1561b4..571d0d54 -- 'ggml/src/ggml-vulkan/**'` の差分を確認し、必要に応じ pp/tg 再実測が要)。
+
+**運用上の含意**:
+- 通常運用 (`MI25_BACKEND` 未指定 = Vulkan 継続) では毎回 master に checkout し直すが、master HEAD が動いていなければ NEED_BUILD=0 で通過するため再ビルドは走らない
+- **HIP fallback を試したあと Vulkan に戻す運用では、Vulkan 側の再ビルドが強制的に走る** (数分〜10 分オーダーのコスト)。頻繁に切り替える運用でなければ許容範囲
+- NEXT_SESSION.md 中優先タスク #2「Vulkan 32k / 100k の -9% / -12% 誤差要因の bisect」で `PINNED_COMMIT_VULKAN` を導入すれば、Vulkan 側も pin できてこの再ビルド問題も同時に緩和できる
+
+### (b) `git fetch origin` の gnutls_handshake エラー握り潰し
+
+`update_and_build-mi25.sh` の `git fetch origin 2>/dev/null || true` は本セッションで実際にエラーを吐いた (`fatal: unable to access 'https://github.com/ggml-org/llama.cpp.git/': gnutls_handshake() failed: Error in the pull function.`)。stderr は `2>/dev/null` で握り潰されるため運用継続に影響なし、ただし部分的に fetch 情報が更新されていた形跡があり、直後の `git checkout master` の挙動に上記 (a) のような副作用を生む場合がある。完全にオフライン運用したい場合はここが再現不能な不安定要因になる。
+
+### (c) HIP → Vulkan 切替時の一時的な SSH タイムアウト
+
+Vulkan 再起動フェーズで 1 回 `Timeout, server 10.1.4.13 not responding.` が発生。直後 (10 秒後) に SSH は復帰し、`uptime` で load average 6.81 → HIP フルビルド + モデルロードの直後で mi25 側の CPU/IO 負荷が瞬間的に高かったのが原因と推測。再試行で正常復旧するため運用への影響なし、次セッションで同事象が出たときの参考として記録。
 
 ## 参照レポート
 
