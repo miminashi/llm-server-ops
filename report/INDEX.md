@@ -177,6 +177,7 @@
 - [x] [2026-06-03_063647_llama_cpp_oom_regression_fix.md](2026-06-03_063647_llama_cpp_oom_regression_fix.md) — llama.cpp HEAD更新後のCUDA OOM 回帰を -ub 8192→4096 変更で解消（VRAM空き 0.6→5.4GB）
 - [x] [2026-06-10_213920_ttyd_startup_reliability.md](2026-06-10_213920_ttyd_startup_reliability.md) — ttyd 起動ロジックを単一冪等スクリプトに集約し、どの起動経路でも ttyd が確実に立ち上がる構造に改善
 - [x] [2026-06-20_052841_start_sh_gpu_visibility_autodetect.md](2026-06-20_052841_start_sh_gpu_visibility_autodetect.md) — start.sh の `GGML_VK_VISIBLE_DEVICES=0,1,2,3` ハードコードを撤廃し、起動前に vulkaninfo で RADV 物理 GPU を自動検出（llvmpipe 除外、3枚→`0,1,2`/4枚→`0,1,2,3`）。mi25/p100 に期待枚数チェック（警告のみ・非中断）を追加、ROCm/CUDA は可視性不介入
+- [x] [2026-07-19_231810_mi25_ttyd_llama_log.md](2026-07-19_231810_mi25_ttyd_llama_log.md) — mi25 で llama-server ログの ttyd 経由ブラウザ閲覧を開通。原因は mi25 に `ttyd` バイナリ未導入だっただけで、`ttyd-up.sh`/`start.sh` の mi25 分岐は 06-10 対応で実装済み。`sudo apt install ttyd` 後 `ttyd-up.sh mi25` 単体起動テストで **7682 (ログ) は成功**、7681 (GPU 監視) は既存の `/usr/bin/ttyd -i lo -p 7681 -O login` が居座り (pkill パターン `^ttyd --port` 非マッチ) 、LISTEN 検証誤検知で silent success する corner case を副次発見。SKILL.md に「サーバ側 ttyd バイナリ導入前提」を 1 行追記
 
 ## 11. mi25 への横展開（2台目 GPU サーバ）
 
