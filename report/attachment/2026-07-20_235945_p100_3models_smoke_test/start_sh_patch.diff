@@ -1,0 +1,70 @@
+diff --git a/.claude/skills/llama-server/scripts/start.sh b/.claude/skills/llama-server/scripts/start.sh
+index cdf160d0..e10a8bd6 100755
+--- a/.claude/skills/llama-server/scripts/start.sh
++++ b/.claude/skills/llama-server/scripts/start.sh
+@@ -338,32 +338,42 @@ esac
+ # --- チャットテンプレートオプション ---
+ CHAT_TEMPLATE_OPTS="--jinja"
+ 
+-# --- エイリアス ---
+-ALIAS="$HF_MODEL"
+-
+-# --- モデルパス解決 ---
+-# HF_MODEL形式: "org/repo:quantization" (例: "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M")
+-# huggingface-cliキャッシュからローカルパスを探し、なければ-hfでダウンロード
+-HF_REPO="${HF_MODEL%%:*}"    # org/repo部分
+-HF_QUANT="${HF_MODEL##*:}"   # quantization部分
++# --- モデルパス解決 & エイリアス ---
++# HF_MODEL が絶対パス (先頭 '/' かつ拡張子 .gguf) の場合はローカルパス直接指定として扱い、
++# HF ダウンロードをスキップする。それ以外は "org/repo:quantization" 形式として HF キャッシュを
++# 参照し、無ければ hf CLI でダウンロードする。
++if [[ "$HF_MODEL" == /*.gguf ]]; then
++  MODEL_PATH="$HF_MODEL"
++  ALIAS="$(basename "${HF_MODEL%.gguf}")"
++  echo "==> ローカルパス指定を検出: $MODEL_PATH"
++  if ! ssh "$SERVER" "test -f '$MODEL_PATH'"; then
++    echo "ERROR: $SERVER にファイルが見つかりません: $MODEL_PATH" >&2
++    exit 1
++  fi
++else
++  ALIAS="$HF_MODEL"
++  # HF_MODEL形式: "org/repo:quantization" (例: "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M")
++  HF_REPO="${HF_MODEL%%:*}"    # org/repo部分
++  HF_QUANT="${HF_MODEL##*:}"   # quantization部分
+ 
+-echo "==> $SERVER でモデルのローカルキャッシュを確認中..."
+-# huggingface-cliのキャッシュからGGUFファイルを検索
+-MODEL_PATH=$(ssh "$SERVER" "find ~/.cache/huggingface/hub/models--${HF_REPO//\//--}/ -name '*${HF_QUANT}*.gguf' -not -name '*.incomplete' 2>/dev/null | sort | head -1" || true)
++  echo "==> $SERVER でモデルのローカルキャッシュを確認中..."
++  # huggingface-cliのキャッシュからGGUFファイルを検索
++  MODEL_PATH=$(ssh "$SERVER" "find ~/.cache/huggingface/hub/models--${HF_REPO//\//--}/ -name '*${HF_QUANT}*.gguf' -not -name '*.incomplete' 2>/dev/null | sort | head -1" || true)
+ 
+-if [ -n "$MODEL_PATH" ]; then
+-  echo "    ローカルキャッシュを使用: $MODEL_PATH"
+-else
+-  echo "    ローカルキャッシュなし、huggingface-cli でダウンロードします"
+-  HF_TOKEN_OPT="${HF_TOKEN:+--token $HF_TOKEN}"
+-  ssh "$SERVER" "/home/llm/.local/bin/hf download '$HF_REPO' --include '*${HF_QUANT}*.gguf' $HF_TOKEN_OPT"
+-  # ダウンロード後にキャッシュからパスを再取得
+-  MODEL_PATH=$(ssh "$SERVER" "find ~/.cache/huggingface/hub/models--${HF_REPO//\//--}/ -name '*${HF_QUANT}*.gguf' -not -name '*.incomplete' 2>/dev/null | sort | head -1")
+-  if [ -z "$MODEL_PATH" ]; then
+-    echo "ERROR: ダウンロード後もGGUFファイルが見つかりません" >&2
+-    exit 1
++  if [ -n "$MODEL_PATH" ]; then
++    echo "    ローカルキャッシュを使用: $MODEL_PATH"
++  else
++    echo "    ローカルキャッシュなし、huggingface-cli でダウンロードします"
++    HF_TOKEN_OPT="${HF_TOKEN:+--token $HF_TOKEN}"
++    ssh "$SERVER" "/home/llm/.local/bin/hf download '$HF_REPO' --include '*${HF_QUANT}*.gguf' $HF_TOKEN_OPT"
++    # ダウンロード後にキャッシュからパスを再取得
++    MODEL_PATH=$(ssh "$SERVER" "find ~/.cache/huggingface/hub/models--${HF_REPO//\//--}/ -name '*${HF_QUANT}*.gguf' -not -name '*.incomplete' 2>/dev/null | sort | head -1")
++    if [ -z "$MODEL_PATH" ]; then
++      echo "ERROR: ダウンロード後もGGUFファイルが見つかりません" >&2
++      exit 1
++    fi
++    echo "    ダウンロード完了: $MODEL_PATH"
+   fi
+-  echo "    ダウンロード完了: $MODEL_PATH"
+ fi
+ MODEL_OPT="-m '$MODEL_PATH'"
+ 
