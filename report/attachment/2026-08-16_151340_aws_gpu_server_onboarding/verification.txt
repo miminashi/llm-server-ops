@@ -1,0 +1,110 @@
+# 登録後の疎通確認ログ
+# 取得日時: 2026-08-16 15:14:38 JST
+
+===== 1. lock-status.sh (全台) =====
+=== GPU Server Lock Status ===
+
+mi25: UNREACHABLE (SSH connection failed)
+
+t120h-p100: UNREACHABLE (SSH connection failed)
+
+t120h-m10: UNREACHABLE (SSH connection failed)
+
+aws-gpu01: available
+
+aws-gpu02: available
+
+
+===== 2. lock / unlock =====
+Lock acquired: aws-gpu01 (session: aws-mmns-generic-277972-20260816_151441)
+  exit=0
+aws-gpu01: LOCKED
+  Holder: aws-mmns-generic-277972-20260816_151441
+  Since:  2026-08-16 15:14:41
+Lock released: aws-gpu01 (was held by: aws-mmns-generic-277972-20260816_151441)
+  exit=0
+Lock acquired: aws-gpu02 (session: aws-mmns-generic-277999-20260816_151443)
+  exit=0
+aws-gpu02: LOCKED
+  Holder: aws-mmns-generic-277999-20260816_151443
+  Since:  2026-08-16 15:14:43
+Lock released: aws-gpu02 (was held by: aws-mmns-generic-277999-20260816_151443)
+  exit=0
+
+===== 3. 電源状態の読み取り (ガード対象外) =====
+aws-gpu01: System Power: on
+  exit=0
+aws-gpu02: System Power: on
+  exit=0
+power-ctl.sh 正規化出力:
+On
+  exit=0
+On
+  exit=0
+
+===== 4. 爆音ガードの拒否確認 (電源は変化しない) =====
+--- bmc-power.sh aws-gpu01 reset ---
+エラー: aws-gpu01 への電源操作 'reset' を拒否しました。
+
+aws-gpu01 は起動時にファンが爆音になるため、ユーザの明確な指示なしに
+リブート・電源投入・電源断を行わない運用になっています。
+
+ユーザの指示を得た上で意図的に実行する場合のみ、以下のように明示してください:
+  ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu01 reset
+  exit=20
+--- bmc-power.sh aws-gpu01 on ---
+エラー: aws-gpu01 への電源操作 'on' を拒否しました。
+
+aws-gpu01 は起動時にファンが爆音になるため、ユーザの明確な指示なしに
+リブート・電源投入・電源断を行わない運用になっています。
+
+ユーザの指示を得た上で意図的に実行する場合のみ、以下のように明示してください:
+  ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu01 on
+  exit=20
+--- bmc-power.sh aws-gpu02 off ---
+エラー: aws-gpu02 への電源操作 'off' を拒否しました。
+
+aws-gpu02 は起動時にファンが爆音になるため、ユーザの明確な指示なしに
+リブート・電源投入・電源断を行わない運用になっています。
+
+ユーザの指示を得た上で意図的に実行する場合のみ、以下のように明示してください:
+  ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu02 off
+  exit=20
+--- bmc-power.sh aws-gpu02 soft ---
+エラー: aws-gpu02 への電源操作 'soft' を拒否しました。
+
+aws-gpu02 は起動時にファンが爆音になるため、ユーザの明確な指示なしに
+リブート・電源投入・電源断を行わない運用になっています。
+
+ユーザの指示を得た上で意図的に実行する場合のみ、以下のように明示してください:
+  ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu02 soft
+  exit=20
+--- power-ctl.sh aws-gpu01 on ---
+エラー: aws-gpu01 への電源操作 'on' を拒否しました。
+
+aws-gpu01 は起動時にファンが爆音になるため、ユーザの明確な指示なしに
+リブート・電源投入・電源断を行わない運用になっています。
+
+ユーザの指示を得た上で意図的に実行する場合のみ、以下のように明示してください:
+  ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/power-ctl.sh aws-gpu01 on
+  exit=20
+--- power-ctl.sh aws-gpu02 off ---
+エラー: aws-gpu02 への電源操作 'off' を拒否しました。
+
+aws-gpu02 は起動時にファンが爆音になるため、ユーザの明確な指示なしに
+リブート・電源投入・電源断を行わない運用になっています。
+
+ユーザの指示を得た上で意図的に実行する場合のみ、以下のように明示してください:
+  ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/power-ctl.sh aws-gpu02 off
+  exit=20
+
+===== 5. 拒否後の電源状態 (副作用ゼロの裏取り) =====
+aws-gpu01: System Power: on
+aws-gpu02: System Power: on
+ 15:14:47 up 16:24,  2 users,  load average: 0.00, 0.00, 0.00
+ 15:14:47 up 16:01,  3 users,  load average: 0.02, 0.03, 0.00
+
+===== 6. ALLOW_FAN_NOISE=1 でガードを解除できること (status で無害に確認) =====
+  ※ 実際の電源操作は行わない。ガード関数が status を対象外にしていることの確認のみ:
+aws-gpu01: System Power: on
+  exit=0

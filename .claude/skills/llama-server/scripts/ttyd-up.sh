@@ -11,7 +11,7 @@ set -euo pipefail
 #   ttyd-up.sh <server>
 #
 # 引数:
-#   server   GPUサーバ名 (mi25, t120h-p100, t120h-m10)
+#   server   GPUサーバ名 (mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02)
 #
 # ロックは取得しない（ttyd は監視用途。必要なら呼び出し側で取得）。
 # 終了コード: 常に 0。LISTEN 検証に失敗したポートは WARNING を stderr に出す
@@ -19,7 +19,7 @@ set -euo pipefail
 
 if [ $# -lt 1 ]; then
   echo "Usage: ttyd-up.sh <server>" >&2
-  echo "  server: mi25, t120h-p100, t120h-m10" >&2
+  echo "  server: mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02" >&2
   exit 1
 fi
 
@@ -27,7 +27,7 @@ SERVER="$1"
 
 # --- サーバ名バリデーション ---
 case "$SERVER" in
-  mi25|t120h-p100|t120h-m10) ;;
+  mi25|t120h-p100|t120h-m10|aws-gpu01|aws-gpu02) ;;
   *)
     echo "ERROR: 不明なサーバ: $SERVER" >&2
     exit 1

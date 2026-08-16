@@ -1,0 +1,294 @@
+# aws-gpu01 / aws-gpu02 ハードウェアインベントリ
+# 取得日時: 2026-08-16 15:14:05 JST
+
+################ aws-gpu01 (BMC 10.11.12.1) ################
+----- ipmitool mc info -----
+Device ID                 : 32
+Device Revision           : 1
+Firmware Revision         : 3.86
+IPMI Version              : 2.0
+Manufacturer ID           : 10876
+Manufacturer Name         : Super Micro Computer Inc.
+Product ID                : 2194 (0x0892)
+Product Name              : X10DRG-O+-CPU
+Device Available          : yes
+Provides Device SDRs      : no
+Additional Device Support :
+    Sensor Device
+    SDR Repository Device
+    SEL Device
+    FRU Inventory Device
+    IPMB Event Receiver
+    IPMB Event Generator
+    Chassis Device
+Aux Firmware Rev Info     : 
+    0x00
+    0x00
+    0x00
+    0x00
+----- ipmitool fru -----
+FRU Device Description : Builtin FRU Device (ID 0)
+ Chassis Type          : Other
+ Chassis Part Number   : CSE-418GTS-R4000BP
+ Chassis Serial        : C4180AH17ND0207
+ Board Mfg Date        : Unspecified
+ Board Mfg             : Supermicro
+ Board Serial          : VM185S038801
+ Board Part Number     : X10DRG-OT+-CPU
+ Product Manufacturer  : Supermicro
+ Product Part Number   : SYS-4028GR-TRT2
+ Product Serial        : S240241X8731725
+
+----- chassis status -----
+System Power         : on
+Power Overload       : false
+Power Interlock      : inactive
+Main Power Fault     : false
+Power Control Fault  : false
+Power Restore Policy : always-off
+Last Power Event     : 
+Chassis Intrusion    : inactive
+Front-Panel Lockout  : inactive
+Drive Fault          : false
+Cooling/Fan Fault    : false
+----- sdr Fan -----
+FAN1             | 41h | ok  | 29.1 | 5000 RPM
+FAN2             | 42h | ok  | 29.2 | 5000 RPM
+FAN3             | 43h | ok  | 29.3 | 4800 RPM
+FAN4             | 44h | ok  | 29.4 | 4700 RPM
+FAN5             | 45h | ok  | 29.5 | 4900 RPM
+FAN6             | 46h | ok  | 29.6 | 4900 RPM
+FAN7             | 47h | ok  | 29.7 | 4800 RPM
+FAN8             | 48h | ok  | 29.8 | 4700 RPM
+----- sdr Temperature -----
+CPU1 Temp        | 01h | ok  |  3.1 | 36 degrees C
+CPU2 Temp        | 02h | ok  |  3.2 | 33 degrees C
+PCH Temp         | 0Ah | ok  |  7.3 | 46 degrees C
+System Temp      | 0Bh | ok  |  7.1 | 34 degrees C
+Peripheral Temp  | 0Ch | ok  |  7.2 | 35 degrees C
+MB_10G Temp      | 0Dh | ok  |  7.4 | 39 degrees C
+Vcpu1VRM Temp    | 10h | ok  |  8.1 | 40 degrees C
+Vcpu2VRM Temp    | 11h | ok  |  8.2 | 41 degrees C
+VmemABVRM Temp   | 12h | ok  |  8.3 | 35 degrees C
+VmemCDVRM Temp   | 13h | ok  |  8.4 | 36 degrees C
+VmemEFVRM Temp   | 14h | ok  |  8.5 | 37 degrees C
+VmemGHVRM Temp   | 15h | ok  |  8.6 | 36 degrees C
+P1-DIMMA1 Temp   | B0h | ok  | 32.64 | 31 degrees C
+P1-DIMMA2 Temp   | B1h | ok  | 32.65 | 31 degrees C
+P1-DIMMA3 Temp   | B2h | ok  | 32.66 | 32 degrees C
+P1-DIMMB1 Temp   | B4h | ns  | 32.68 | No Reading
+P1-DIMMB2 Temp   | B5h | ns  | 32.69 | No Reading
+P1-DIMMB3 Temp   | B6h | ns  | 32.70 | No Reading
+P1-DIMMC1 Temp   | B8h | ns  | 32.72 | No Reading
+P1-DIMMC2 Temp   | B9h | ns  | 32.73 | No Reading
+P1-DIMMC3 Temp   | BAh | ns  | 32.74 | No Reading
+P1-DIMMD1 Temp   | BCh | ns  | 32.76 | No Reading
+P1-DIMMD2 Temp   | BDh | ns  | 32.77 | No Reading
+P1-DIMMD3 Temp   | BEh | ns  | 32.78 | No Reading
+P2-DIMME1 Temp   | D0h | ok  | 32.80 | 32 degrees C
+P2-DIMME2 Temp   | D1h | ok  | 32.81 | 32 degrees C
+P2-DIMME3 Temp   | D2h | ns  | 32.82 | No Reading
+P2-DIMMF1 Temp   | D4h | ns  | 32.84 | No Reading
+P2-DIMMF2 Temp   | D5h | ns  | 32.85 | No Reading
+P2-DIMMF3 Temp   | D6h | ns  | 32.86 | No Reading
+P2-DIMMG1 Temp   | D8h | ns  | 32.88 | No Reading
+P2-DIMMG2 Temp   | D9h | ns  | 32.89 | No Reading
+P2-DIMMG3 Temp   | DAh | ns  | 32.90 | No Reading
+P2-DIMMH1 Temp   | DCh | ns  | 32.92 | No Reading
+P2-DIMMH2 Temp   | DDh | ns  | 32.93 | No Reading
+P2-DIMMH3 Temp   | DEh | ns  | 32.94 | No Reading
+AOC_SAS Temp     | 0Fh | ok  | 46.96 | 48 degrees C
+HDD Temp         | 50h | ok  |  4.32 | 43 degrees C
+GPU3 Temp        | 72h | ok  | 11.3 | 36 degrees C
+GPU4 Temp        | 73h | ok  | 11.4 | 37 degrees C
+GPU5 Temp        | 74h | ok  | 11.5 | 40 degrees C
+GPU7 Temp        | 76h | ok  | 11.7 | 39 degrees C
+GPU8 Temp        | 77h | ok  | 11.8 | 38 degrees C
+GPU9 Temp        | 78h | ok  | 11.9 | 41 degrees C
+GPU10 Temp       | 79h | ok  | 11.10 | 39 degrees C
+----- Power Supply -----
+PS1 Status       | C4h | ok  | 10.92 | Presence detected
+PS2 Status       | C5h | ok  | 10.91 | Presence detected
+PS3 Status       | C6h | ok  | 10.90 | Presence detected
+PS4 Status       | C7h | ok  | 10.89 | Presence detected
+----- SEL -----
+   1 | 2026年02月01日 | 22時09分13秒 JST | Unknown #0xff |  | Asserted
+   2 | 2014年01月01日 | 09時00分02秒 JST | Physical Security #0xaa | General Chassis intrusion () | Asserted
+   3 | 2014年01月01日 | 09時02分22秒 JST | Physical Security #0xaa | General Chassis intrusion () | Asserted
+   4 | 2014年01月01日 | 09時14分26秒 JST | Physical Security #0xaa | General Chassis intrusion () | Asserted
+   5 | 2014年01月01日 | 09時20分35秒 JST | Physical Security #0xaa | General Chassis intrusion () | Deasserted
+   6 | 2014年01月01日 | 09時28分29秒 JST | Physical Security #0xaa | General Chassis intrusion () | Asserted
+   7 | 2014年01月01日 | 09時30分11秒 JST | Physical Security #0xaa | General Chassis intrusion () | Deasserted
+   8 | 2014年01月01日 | 10時35分23秒 JST | Management Subsys Health #0x5e |  | Asserted
+   9 | 2014年01月01日 | 10時35分24秒 JST | Drive Slot / Bay #0x5f | Drive Present () | Asserted
+   a | 2014年01月01日 | 10時35分24秒 JST | Drive Slot / Bay #0x5f | Drive Present () | Asserted
+   b | 2014年01月01日 | 10時35分24秒 JST | Drive Slot / Bay #0x5f | Drive Present () | Asserted
+   c | 2014年01月01日 | 10時35分24秒 JST | Drive Slot / Bay #0x5f | Drive Present () | Asserted
+   d | 2026年02月03日 | 20時47分31秒 JST | Physical Security #0xaa | General Chassis intrusion () | Asserted
+   e | 2026年02月03日 | 21時58分56秒 JST | Physical Security #0xaa | General Chassis intrusion () | Deasserted
+   f | 2026年02月23日 | 17時56分34秒 JST | Power Supply #0xc4 | Failure detected () | Asserted
+  10 | 2026年02月23日 | 17時56分35秒 JST | Power Supply #0xc5 | Failure detected () | Asserted
+  11 | 2026年02月23日 | 21時06分52秒 JST | Power Supply #0xc4 | Failure detected () | Deasserted
+  12 | 2026年02月23日 | 21時06分52秒 JST | Power Supply #0xc5 | Failure detected () | Deasserted
+  13 | 2026年02月23日 | 21時09分21秒 JST | Power Supply #0xc7 | Failure detected () | Asserted
+  14 | 2026年02月23日 | 21時09分24秒 JST | Power Supply #0xc6 | Failure detected () | Asserted
+  15 | 2026年02月23日 | 21時13分03秒 JST | Power Supply #0xc7 | Failure detected () | Deasserted
+  16 | 2026年02月23日 | 21時13分06秒 JST | Power Supply #0xc6 | Failure detected () | Deasserted
+  17 | 2026年02月23日 | 21時13分39秒 JST | Power Supply #0xc4 | Failure detected () | Asserted
+  18 | 2026年02月23日 | 21時13分39秒 JST | Power Supply #0xc5 | Failure detected () | Asserted
+  19 | 2026年02月23日 | 21時15分36秒 JST | Power Supply #0xc4 | Failure detected () | Deasserted
+  1a | 2026年02月23日 | 21時15分36秒 JST | Power Supply #0xc5 | Failure detected () | Deasserted
+  1b | 2026年03月20日 | 14時20分23秒 JST | Unknown #0xff |  | Asserted
+  1c | 2026年03月20日 | 14時39分49秒 JST | Unknown #0xff |  | Asserted
+  1d | 2026年08月15日 | 22時40分39秒 JST | Unknown #0xff |  | Asserted
+
+################ aws-gpu02 (BMC 10.11.12.2) ################
+----- ipmitool mc info -----
+Device ID                 : 32
+Device Revision           : 1
+Firmware Revision         : 3.86
+IPMI Version              : 2.0
+Manufacturer ID           : 10876
+Manufacturer Name         : Super Micro Computer Inc.
+Product ID                : 2194 (0x0892)
+Product Name              : X10DRG-O+-CPU
+Device Available          : yes
+Provides Device SDRs      : no
+Additional Device Support :
+    Sensor Device
+    SDR Repository Device
+    SEL Device
+    FRU Inventory Device
+    IPMB Event Receiver
+    IPMB Event Generator
+    Chassis Device
+Aux Firmware Rev Info     : 
+    0x00
+    0x00
+    0x00
+    0x00
+----- ipmitool fru -----
+FRU Device Description : Builtin FRU Device (ID 0)
+ Chassis Type          : Other
+ Chassis Part Number   : CSE-418GTS-R3200BP
+ Chassis Serial        : C4180AE44A60203
+ Board Mfg Date        : Unspecified
+ Board Mfg             : Supermicro
+ Board Serial          : VM158S006353
+ Board Part Number     : X10DRG-OT+-CPU
+ Product Manufacturer  : Supermicro
+ Product Part Number   : SYS-4028GR-TRT
+ Product Serial        : S188918X6107112
+
+----- chassis status -----
+System Power         : on
+Power Overload       : false
+Power Interlock      : inactive
+Main Power Fault     : false
+Power Control Fault  : false
+Power Restore Policy : always-off
+Last Power Event     : 
+Chassis Intrusion    : inactive
+Front-Panel Lockout  : inactive
+Drive Fault          : false
+Cooling/Fan Fault    : false
+----- sdr Fan -----
+FAN1             | 41h | ok  | 29.1 | 4800 RPM
+FAN2             | 42h | ok  | 29.2 | 4700 RPM
+FAN3             | 43h | ok  | 29.3 | 5200 RPM
+FAN4             | 44h | ok  | 29.4 | 5200 RPM
+FAN5             | 45h | ok  | 29.5 | 4800 RPM
+FAN6             | 46h | ok  | 29.6 | 4700 RPM
+FAN7             | 47h | ns  | 29.7 | No Reading
+FAN8             | 48h | ok  | 29.8 | 5100 RPM
+----- sdr Temperature -----
+CPU1 Temp        | 01h | ok  |  3.1 | 40 degrees C
+CPU2 Temp        | 02h | ok  |  3.2 | 40 degrees C
+PCH Temp         | 0Ah | ok  |  7.3 | 44 degrees C
+System Temp      | 0Bh | ok  |  7.1 | 34 degrees C
+Peripheral Temp  | 0Ch | ok  |  7.2 | 36 degrees C
+MB_10G Temp      | 0Dh | ok  |  7.4 | 42 degrees C
+Vcpu1VRM Temp    | 10h | ok  |  8.1 | 40 degrees C
+Vcpu2VRM Temp    | 11h | ok  |  8.2 | 45 degrees C
+VmemABVRM Temp   | 12h | ok  |  8.3 | 36 degrees C
+VmemCDVRM Temp   | 13h | ok  |  8.4 | 35 degrees C
+VmemEFVRM Temp   | 14h | ok  |  8.5 | 36 degrees C
+VmemGHVRM Temp   | 15h | ok  |  8.6 | 37 degrees C
+P1-DIMMA1 Temp   | B0h | ok  | 32.64 | 32 degrees C
+P1-DIMMA2 Temp   | B1h | ok  | 32.65 | 31 degrees C
+P1-DIMMA3 Temp   | B2h | ok  | 32.66 | 31 degrees C
+P1-DIMMB1 Temp   | B4h | ns  | 32.68 | No Reading
+P1-DIMMB2 Temp   | B5h | ns  | 32.69 | No Reading
+P1-DIMMB3 Temp   | B6h | ns  | 32.70 | No Reading
+P1-DIMMC1 Temp   | B8h | ns  | 32.72 | No Reading
+P1-DIMMC2 Temp   | B9h | ns  | 32.73 | No Reading
+P1-DIMMC3 Temp   | BAh | ns  | 32.74 | No Reading
+P1-DIMMD1 Temp   | BCh | ns  | 32.76 | No Reading
+P1-DIMMD2 Temp   | BDh | ns  | 32.77 | No Reading
+P1-DIMMD3 Temp   | BEh | ns  | 32.78 | No Reading
+P2-DIMME1 Temp   | D0h | ns  | 32.80 | No Reading
+P2-DIMME2 Temp   | D1h | ns  | 32.81 | No Reading
+P2-DIMME3 Temp   | D2h | ns  | 32.82 | No Reading
+P2-DIMMF1 Temp   | D4h | ns  | 32.84 | No Reading
+P2-DIMMF2 Temp   | D5h | ns  | 32.85 | No Reading
+P2-DIMMF3 Temp   | D6h | ns  | 32.86 | No Reading
+P2-DIMMG1 Temp   | D8h | ns  | 32.88 | No Reading
+P2-DIMMG2 Temp   | D9h | ns  | 32.89 | No Reading
+P2-DIMMG3 Temp   | DAh | ns  | 32.90 | No Reading
+P2-DIMMH1 Temp   | DCh | ns  | 32.92 | No Reading
+P2-DIMMH2 Temp   | DDh | ns  | 32.93 | No Reading
+P2-DIMMH3 Temp   | DEh | ns  | 32.94 | No Reading
+GPU1 Temp        | 70h | ok  | 11.1 | 37 degrees C
+GPU2 Temp        | 71h | ok  | 11.2 | 41 degrees C
+GPU6 Temp        | 75h | ok  | 11.6 | 39 degrees C
+GPU7 Temp        | 76h | ok  | 11.7 | 37 degrees C
+GPU8 Temp        | 77h | ok  | 11.8 | 38 degrees C
+GPU3 Temp        | 72h | ok  | 11.3 | 38 degrees C
+----- Power Supply -----
+PS1 Status       | C4h | ok  | 10.92 | Presence detected
+PS2 Status       | C5h | ok  | 10.91 | Presence detected
+PS3 Status       | C6h | ok  | 10.90 | Presence detected
+PS4 Status       | C7h | ok  | 10.89 | Presence detected
+----- SEL -----
+   1 | 2019年11月15日 | 16時22分30秒 JST | Unknown #0xff |  | Asserted
+   2 | 2019年11月15日 | 16時29分48秒 JST | Unknown #0xff |  | Asserted
+   3 | 2019年11月15日 | 16時51分22秒 JST | Unknown #0xff |  | Asserted
+   4 | 2019年11月15日 | 16時22分29秒 JST | Unknown #0xff |  | Asserted
+   5 | 2026年01月24日 | 06時20分12秒 JST | Physical Security #0xaa | General Chassis intrusion () | Asserted
+   6 | 2026年01月25日 | 01時12分47秒 JST | Unknown #0xff |  | Asserted
+   7 | 2026年01月24日 | 20時53分06秒 JST | Power Supply #0xc6 | Failure detected () | Asserted
+   8 | 2026年01月24日 | 20時53分12秒 JST | Power Supply #0xc6 | Failure detected () | Deasserted
+   9 | 2026年01月24日 | 23時12分54秒 JST | Unknown #0xff |  | Asserted
+   a | 2026年01月25日 | 19時38分15秒 JST | Unknown #0xff |  | Asserted
+   b | 2026年01月25日 | 22時26分35秒 JST | Physical Security #0xaa | General Chassis intrusion () | Asserted
+   c | 2026年01月26日 | 21時16分55秒 JST | Physical Security #0xaa | General Chassis intrusion () | Deasserted
+   d | 2026年02月23日 | 17時56分31秒 JST | Power Supply #0xc4 | Failure detected () | Asserted
+   e | 2026年02月23日 | 17時56分31秒 JST | Power Supply #0xc5 | Failure detected () | Asserted
+   f | 2026年02月23日 | 21時06分48秒 JST | Power Supply #0xc4 | Failure detected () | Deasserted
+  10 | 2026年02月23日 | 21時06分49秒 JST | Power Supply #0xc5 | Failure detected () | Deasserted
+  11 | 2026年02月23日 | 21時09分21秒 JST | Power Supply #0xc6 | Failure detected () | Asserted
+  12 | 2026年02月23日 | 21時09分21秒 JST | Power Supply #0xc7 | Failure detected () | Asserted
+  13 | 2026年02月23日 | 21時13分01秒 JST | Power Supply #0xc6 | Failure detected () | Deasserted
+  14 | 2026年02月23日 | 21時13分05秒 JST | Power Supply #0xc7 | Failure detected () | Deasserted
+  15 | 2026年02月23日 | 21時13分36秒 JST | Power Supply #0xc4 | Failure detected () | Asserted
+  16 | 2026年02月23日 | 21時13分38秒 JST | Power Supply #0xc5 | Failure detected () | Asserted
+  17 | 2026年02月23日 | 21時15分34秒 JST | Power Supply #0xc5 | Failure detected () | Deasserted
+  18 | 2026年02月23日 | 21時15分35秒 JST | Power Supply #0xc4 | Failure detected () | Deasserted
+  19 | 2026年03月20日 | 14時20分24秒 JST | Unknown #0xff |  | Asserted
+  1a | 2026年03月20日 | 14時39分49秒 JST | Unknown #0xff |  | Asserted
+  1b | 2026年08月15日 | 22時40分36秒 JST | Unknown #0xff |  | Asserted
+  1c | 2026年08月15日 | 22時47分58秒 JST | Unknown #0xff |  | Asserted
+  1d | 2026年08月15日 | 22時47分58秒 JST | Unknown #0xff |  | Asserted
+  1e | 2026年08月15日 | 22時47分58秒 JST | Unknown #0xff |  | Asserted
+  1f | 2026年08月15日 | 22時47分58秒 JST | Unknown #0xff |  | Asserted
+  20 | 2026年08月15日 | 22時47分58秒 JST | Unknown #0xff |  | Asserted
+  21 | 2026年08月15日 | 22時47分58秒 JST | Unknown #0xff |  | Asserted
+  22 | 2026年08月15日 | 22時47分58秒 JST | Unknown #0xff |  | Asserted
+  23 | 2026年08月15日 | 23時11分56秒 JST | Unknown #0xff |  | Asserted
+  24 | 2026年08月15日 | 23時12分10秒 JST | Unknown #0xff |  | Asserted
+  25 | 2026年08月15日 | 23時12分10秒 JST | Unknown #0xff |  | Asserted
+  26 | 2026年08月15日 | 23時12分11秒 JST | Unknown #0xff |  | Asserted
+  27 | 2026年08月15日 | 23時12分11秒 JST | Unknown #0xff |  | Asserted
+  28 | 2026年08月15日 | 23時12分11秒 JST | Unknown #0xff |  | Asserted
+  29 | 2026年08月15日 | 23時12分11秒 JST | Unknown #0xff |  | Asserted
+  2a | 2026年08月15日 | 23時12分11秒 JST | Unknown #0xff |  | Asserted

@@ -1,6 +1,6 @@
 ---
 name: gpu-server
-description: GPUサーバ（mi25、t120h-p100、t120h-m10）の管理。排他制御（ロック）、リモートブラウザの管理、エンドポイント情報。GPUサーバ、リモートブラウザ、VRAM、サーバー切り替えに関する作業で使用。
+description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu02）の管理。排他制御（ロック）、リモートブラウザの管理、エンドポイント情報。GPUサーバ、リモートブラウザ、VRAM、サーバー切り替えに関する作業で使用。
 ---
 
 # GPUサーバ管理
@@ -18,11 +18,23 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10）の管理。排他�
 | `mi25` | AMD MI25 | 4 | 64GB | ROCm | 10.1.4.13 |
 | `t120h-p100` | NVIDIA Tesla P100 | 4 | 64GB | CUDA | 10.1.4.14 |
 | `t120h-m10` | NVIDIA Tesla M10 | 16 (15使用可) | 128GB | CUDA | 10.1.4.15 |
+| `aws-gpu01` | NVIDIA Tesla P100 16GB | 7 | 112GB | CUDA | 10.8.2.1 |
+| `aws-gpu02` | NVIDIA Tesla P100 16GB×4 + 12GB×2 | 6 | 88GB | CUDA | 10.8.2.2 |
 
 **t120h-m10の注意事項**:
 - nvidia-smiでは16個のGPUが見えるが、llama-cppでは15個のみ使用可能
 - CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14 を指定する必要あり
 - 他サーバより低速だが、大きなVRAMを活用可能
+
+**aws-gpu01 / aws-gpu02 の注意事項**:
+- **起動時にファンが爆音になるため、ユーザの明確な指示なしにリブート・電源投入・電源断を行わない**
+  （`bmc-power.sh` / `power-ctl.sh` が `ALLOW_FAN_NOISE=1` なしの電源操作を exit 20 で拒否する）
+- ワークステーションと**同一拠点**にあり通信が速い（RTT 0.3ms、約100MB/s）。
+  モデルは **HF から直接ダウンロード**するのが原則（WS 経由より速い）
+- SSH ユーザは `ubuntu`（既存3台は `llm`）。aws-gpu01 は他ユーザとの共用機
+- aws-gpu02 は VRAM が不均等（16/16/16/12/16/12 GB）なので tensor-split の流用に注意
+- llama-server の起動実績はまだ無い（2026-08-16 登録時点）
+- 詳細は [aws-gpu.md](./aws-gpu.md) を参照
 
 SSH経由でコマンドを実行できます。
 
@@ -46,12 +58,18 @@ SSH経由でコマンドを実行できます。
 | mi25 | `10.1.4.13` | `http://10.1.4.13:8000/v1` | `http://10.1.4.13:9222` | `http://10.1.4.13:9221` |
 | t120h-p100 | `10.1.4.14` | `http://10.1.4.14:8000/v1` | `http://10.1.4.14:9222` | `http://10.1.4.14:9221` |
 | t120h-m10 | `10.1.4.15` | `http://10.1.4.15:8000/v1` | `http://10.1.4.15:9222` | `http://10.1.4.15:9221` |
+| aws-gpu01 | `10.8.2.1` | `http://10.8.2.1:8000/v1` | （未整備） | （未整備） |
+| aws-gpu02 | `10.8.2.2` | `http://10.8.2.2:8000/v1` | （未整備） | （未整備） |
+
+aws-gpu01/02 は docker 未導入のためリモートブラウザ（CDP 9222 / 再起動API 9221）は未整備。
 
 **IPアドレスの動的取得**:
 ```bash
 ssh -G mi25 | grep ^hostname
 ssh -G t120h-p100 | grep ^hostname
 ssh -G t120h-m10 | grep ^hostname
+ssh -G aws-gpu01 | grep ^hostname
+ssh -G aws-gpu02 | grep ^hostname
 ```
 
 ## サーバー切り替え
@@ -78,7 +96,11 @@ GPUサーバーを使用する際は、以下の優先順位で選択してく�
 1. **P100（t120h-p100）を優先**: 高速なP100を最優先で使用
 2. **P100が使用中ならMI25**: P100がロックされている場合はMI25を使用
 3. **M10（t120h-m10）は特別用途**: 大きなVRAM（128GB）が必要な場合のみ使用（他サーバより低速）
-4. **全て使用中ならランダム**: どれもロックされている場合はランダムに選択（待機が必要な場合あり）
+4. **aws-gpu01 / aws-gpu02 は上記が全て使用中の場合**: 現時点では llama-server の起動実績が
+   無く未検証のため、既存3台を優先する。ただし**電源が入っている場合に限る** —
+   これらは爆音のためユーザ指示なしに電源投入できず、`Off` なら選択肢から外す
+   （`bmc-power.sh aws-gpu01 status` で確認できる）
+5. **全て使用中ならランダム**: どれもロックされている場合はランダムに選択（待機が必要な場合あり）
 
 ```bash
 # ロック状態を確認してサーバーを選択
@@ -147,6 +169,13 @@ Supermicro機（mi25）は Redfish が DCMS ライセンス未活性で使えな
 |--------|--------------|----------------|----------------|
 | mi25 | `10.1.4.7` | IPMI（Supermicro X10DRG-Q、Redfish不可） | `bmc-power.sh` |
 | t120h-p100 | `10.1.4.8` | Redfish（HPE iLO5） | `power.sh` |
+| aws-gpu01 | `10.11.12.1` | IPMI（Supermicro X10DRG-OT+、Redfish も可だが IPMI を正とする） | `bmc-power.sh` ※爆音ガードあり |
+| aws-gpu02 | `10.11.12.2` | IPMI（同上） | `bmc-power.sh` ※爆音ガードあり |
+
+**aws-gpu01 / aws-gpu02 の爆音ガード**: `on` / `off` / `soft` / `reset` / `cycle` は
+`ALLOW_FAN_NOISE=1` が無ければ **exit 20** で拒否される（`status` は常に可）。
+ユーザから明確な指示を得た場合のみ `ALLOW_FAN_NOISE=1 ... bmc-power.sh aws-gpu01 on` の形で
+実行すること。詳細は [aws-gpu.md](./aws-gpu.md)。
 
 `bmc-setup.sh` で `~/.config/gpu-server/.env` に `BMC_<SERVER>_HOST/USER/PASS` として保存される
 （iLO5用の `ILO_<SERVER>_*` とは別キー、`GPU_SERVER_ENV` でパス上書き可能）。
@@ -180,7 +209,7 @@ Supermicro機（mi25）は Redfish が DCMS ライセンス未活性で使えな
 .claude/skills/gpu-server/scripts/lock-status.sh
 
 # ロック取得（GPUサーバ使用前）
-.claude/skills/gpu-server/scripts/lock.sh t120h-p100   # または mi25, t120h-m10
+.claude/skills/gpu-server/scripts/lock.sh t120h-p100   # または mi25, t120h-m10, aws-gpu01, aws-gpu02
 
 # ロック解放（GPUサーバ使用後）
 .claude/skills/gpu-server/scripts/unlock.sh t120h-p100
@@ -279,5 +308,6 @@ GPUサーバ間で大きなファイル（モデルファイル等）を転送�
 ## 詳細リファレンス
 
 - [排他制御（ロック）](./lock.md) - GPUサーバの排他制御
+- [aws-gpu01 / aws-gpu02 リファレンス](./aws-gpu.md) - ハードウェア詳細、爆音制約、BMC、ネットワーク特性
 - [リモートブラウザ管理](./remote-browser.md) - Docker起動、再起動、注意事項
 - [llama-server起動・管理](../llama-server/SKILL.md) - 起動コマンド、パラメータ、モデル設定（別スキル）

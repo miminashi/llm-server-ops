@@ -133,10 +133,10 @@ fi
 
 # --- サーバ名バリデーション ---
 case "$SERVER" in
-  mi25|t120h-p100|t120h-m10) ;;
+  mi25|t120h-p100|t120h-m10|aws-gpu01|aws-gpu02) ;;
   *)
     echo "ERROR: 不明なサーバ: $SERVER" >&2
-    echo "有効なサーバ: mi25, t120h-p100, t120h-m10" >&2
+    echo "有効なサーバ: mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02" >&2
     exit 1
     ;;
 esac
@@ -279,6 +279,27 @@ case "$SERVER" in
     ENV_PREFIX="CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14"
     SERVER_OPTS="-b 4096 -ub 4096"
     ;;
+  aws-gpu01)
+    # Supermicro SYS-4028GR-TRT2。Tesla P100-PCIE 16GB x7 = 112GB (全 Gen3 x16)。
+    # t120h-p100 と同じ P100 (sm60) なので、実績のある -b 4096 -ub 4096 を踏襲する
+    # (ub=8192 は 2026-06-02 の llama.cpp master リグレッションで CUDA OOM。
+    #  詳細は t120h-p100 の分岐コメントと report/2026-06-03_*_llama_cpp_oom_regression_fix.md)。
+    # 未検証: 本サーバでの llama-server 起動は 2026-08-16 時点で未実施。初回起動時に
+    #         VRAM 実測を取り、必要なら ub を調整すること。
+    SERVER_OPTS="--flash-attn 1 --poll 0 -b 4096 -ub 4096"
+    AWS_GPU01_COUNT=$(ssh "$SERVER" "nvidia-smi --query-gpu=index --format=csv,noheader 2>/dev/null | wc -l" 2>/dev/null | tr -dc '0-9' || true)
+    warn_gpu_degraded "$SERVER" "${AWS_GPU01_COUNT:-}" 7
+    ;;
+  aws-gpu02)
+    # Supermicro SYS-4028GR-TRT。Tesla P100-PCIE 16GB x4 + 12GB x2 = 88GB (全 Gen3 x16)。
+    # 注意: VRAM 容量が不均等 (16/16/16/12/16/12 GB) なので、t120h-p100 の
+    #       --tensor-split 11,12,13,14 系プロファイルはそのまま流用できない。
+    #       大きなモデルを載せる場合は 12GB 枚 (index 3, 5) に合わせた split が必要。
+    # 未検証: 本サーバでの llama-server 起動は 2026-08-16 時点で未実施。
+    SERVER_OPTS="--flash-attn 1 --poll 0 -b 4096 -ub 4096"
+    AWS_GPU02_COUNT=$(ssh "$SERVER" "nvidia-smi --query-gpu=index --format=csv,noheader 2>/dev/null | wc -l" 2>/dev/null | tr -dc '0-9' || true)
+    warn_gpu_degraded "$SERVER" "${AWS_GPU02_COUNT:-}" 6
+    ;;
 esac
 
 # --- モデルプロファイル上書き (サーバ別 default を上書き) ---
@@ -365,7 +386,16 @@ else
   else
     echo "    ローカルキャッシュなし、huggingface-cli でダウンロードします"
     HF_TOKEN_OPT="${HF_TOKEN:+--token $HF_TOKEN}"
-    ssh "$SERVER" "/home/llm/.local/bin/hf download '$HF_REPO' --include '*${HF_QUANT}*.gguf' $HF_TOKEN_OPT"
+    # hf CLI のパスはサーバのログインユーザによって異なる (既存3台は llm ユーザで
+    # /home/llm/.local/bin/hf、aws-gpu01/02 は ubuntu ユーザで ~/.local/bin/hf)。
+    # PATH 上 → $HOME/.local/bin → /home/llm/.local/bin の順に解決する。
+    HF_BIN=$(ssh "$SERVER" 'for c in "$(command -v hf 2>/dev/null)" "$HOME/.local/bin/hf" /home/llm/.local/bin/hf; do if [ -n "$c" ] && [ -x "$c" ]; then echo "$c"; break; fi; done' 2>/dev/null || true)
+    if [ -z "$HF_BIN" ]; then
+      echo "ERROR: $SERVER に hf CLI が見つかりません（PATH / ~/.local/bin / /home/llm/.local/bin を確認）" >&2
+      echo "       pip install --user huggingface_hub 等で導入してください。" >&2
+      exit 1
+    fi
+    ssh "$SERVER" "$HF_BIN download '$HF_REPO' --include '*${HF_QUANT}*.gguf' $HF_TOKEN_OPT"
     # ダウンロード後にキャッシュからパスを再取得
     MODEL_PATH=$(ssh "$SERVER" "find ~/.cache/huggingface/hub/models--${HF_REPO//\//--}/ -name '*${HF_QUANT}*.gguf' -not -name '*.incomplete' 2>/dev/null | sort | head -1")
     if [ -z "$MODEL_PATH" ]; then

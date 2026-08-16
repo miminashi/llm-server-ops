@@ -16,6 +16,18 @@ GPU サーバを操作・観測するための手順。BMC（Baseboard Managemen
 |------|-----|----------|--------------------|-----------|
 | **mi25**（Supermicro X10DRG-Q） | ATEN/AMI, FW 3.94 | **IPMI**（`ipmitool`） | HTML5 KVM canvas | `bmc-power.sh` / `bmc-screenshot.sh` |
 | **t120h-p100**（HPE） | iLO5 | **Redfish**（`power.sh`） | （未整備） | `power.sh` |
+| **aws-gpu01**（Supermicro X10DRG-OT+） | ASPEED, FW 3.86 | **IPMI**（`ipmitool`）※爆音ガード | HTML5 KVM canvas | `bmc-power.sh` / `bmc-screenshot.sh` |
+| **aws-gpu02**（Supermicro X10DRG-OT+） | ASPEED, FW 3.86 | **IPMI**（`ipmitool`）※爆音ガード | HTML5 KVM canvas | `bmc-power.sh` / `bmc-screenshot.sh` |
+
+> **aws-gpu01/02 は Redfish も応答する**（mi25 と違い `/redfish/v1/Systems/1` が正常に返る）が、
+> 運用は既存 Supermicro 機と揃えて **IPMI を正**とする。`power-ctl.sh` の `server_type()` も
+> `supermicro` を返す。
+
+> **⚠️ aws-gpu01/02 の爆音ガード**: 両機は起動時にファンが爆音になるため、**ユーザの明確な
+> 指示なしにリブート・電源投入・電源断を行わない**。`bmc-power.sh` の
+> `on`/`off`/`soft`/`reset`/`cycle` と `power-ctl.sh` の `on`/`off` は、`ALLOW_FAN_NOISE=1`
+> が無ければ **exit 20** で拒否する（`status` とスクショは常に可）。
+> ガード対象は両スクリプトの `FAN_LOUD_SERVERS` で定義。詳細は [aws-gpu.md](./aws-gpu.md)。
 
 > **なぜ mi25 で Redfish を使わないか**: mi25 の BMC は Redfish API が
 > **DCMS（SUM DCMS OOB）ライセンス未活性**で `OemLicenseNotPassed` を返し、電源もスクショも
@@ -39,7 +51,13 @@ cd /home/ubuntu/projects/llm-server-ops
 
 # 2. BMC 認証情報を登録（ipmitool で疎通テスト後、~/.config/gpu-server/.env に保存）
 .claude/skills/gpu-server/scripts/bmc-setup.sh mi25 10.1.4.7 claude Claude123
+.claude/skills/gpu-server/scripts/bmc-setup.sh aws-gpu01 10.11.12.1 claude Claude123
+.claude/skills/gpu-server/scripts/bmc-setup.sh aws-gpu02 10.11.12.2 claude Claude123
 ```
+
+`bmc-setup.sh` にはサーバ別の既定 BMC IP が登録済みなので、IP を省略して
+`bmc-setup.sh aws-gpu01 "" claude Claude123` のようには書けない（引数は位置指定）。
+IP を明示するのが確実。
 
 認証情報は `~/.config/gpu-server/.env` に `BMC_<SERVER>_HOST/USER/PASS`（chmod 600）として保存され、
 `.gitignore` 済みでコミットされない。

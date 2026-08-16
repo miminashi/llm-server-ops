@@ -19,12 +19,21 @@
 #
 # サーバ種別の真実源はこのファイルの server_type() の case。サーバ追加時はここを更新する。
 #
+# 爆音ガード:
+#   FAN_LOUD_SERVERS のサーバに対する on/off は ALLOW_FAN_NOISE=1 が無い限り exit 20 で拒否する。
+#   下位の bmc-power.sh にも同じガードがあるが、llama-up.sh 等がこのディスパッチャ経由で
+#   電源を入れてしまうのを手前で止めるため二重化している。status は常に許可。
+#
 # 終了コード: 下位スクリプトの終了コードをそのまま伝播する。
 #   10 = 認証情報未設定 / 3 = IPMI接続失敗(Supermicro) / 1 = その他エラー / 2 = 引数エラー
+#   20 = 爆音ガードによる拒否
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# 起動時にファンが爆音になるサーバ（bmc-power.sh の同名変数と一致させること）
+FAN_LOUD_SERVERS="aws-gpu01 aws-gpu02"
 
 SERVER="${1:-}"
 ACTION="${2:-}"
@@ -42,9 +51,34 @@ server_type() {
         # t120h-m10 の BMC 方式は未確認。判明するまで既定の hpe(Redfish/power.sh)に倒す。
         # power.sh は認証情報未設定なら exit 10 で setup を案内するため、誤判定でも安全側。
         t120h-m10)   echo "hpe" ;;
+        # Supermicro X10DRG-OT+ (SYS-4028GR-TRT2 / TRT)。Redfish も応答するが、
+        # 既存 Supermicro 運用と揃えて IPMI (bmc-power.sh) を正とする。
+        aws-gpu01)   echo "supermicro" ;;
+        aws-gpu02)   echo "supermicro" ;;
         *)           echo "hpe" ;;
     esac
 }
+
+# 爆音サーバへの電源操作を ALLOW_FAN_NOISE=1 が無い限り拒否する（下位と二重化）
+guard_fan_noise() {
+    local server="$1" action="$2"
+    echo "$FAN_LOUD_SERVERS" | grep -qw "$server" || return 0
+    case "$action" in
+        on|off) ;;
+        *) return 0 ;;
+    esac
+    [[ "${ALLOW_FAN_NOISE:-}" == "1" ]] && return 0
+    echo "エラー: ${server} への電源操作 '${action}' を拒否しました。" >&2
+    echo "" >&2
+    echo "${server} は起動時にファンが爆音になるため、ユーザの明確な指示なしに" >&2
+    echo "リブート・電源投入・電源断を行わない運用になっています。" >&2
+    echo "" >&2
+    echo "ユーザの指示を得た上で意図的に実行する場合のみ、以下のように明示してください:" >&2
+    echo "  ALLOW_FAN_NOISE=1 $0 ${server} ${action}" >&2
+    exit 20
+}
+
+guard_fan_noise "$SERVER" "$ACTION"
 
 # 下位 status の生出力を受け取り、stdout に "On"/"Off"/"Unknown" の1語だけを返す。
 # 注意: 呼び出しは必ずトップレベル（local を使わない）。local だと下位スクリプトの

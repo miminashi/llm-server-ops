@@ -3,7 +3,7 @@
 # GPU Server Unlock - Release exclusive lock via SSH on the GPU server
 #
 # Usage: unlock.sh <server> [session_id]
-#   server     - Server name (mi25, t120h-p100, or t120h-m10)
+#   server     - Server name (mi25, t120h-p100, t120h-m10, aws-gpu01, or aws-gpu02)
 #   session_id - Optional session identifier (validates ownership before release)
 #
 # Exit codes:
@@ -20,13 +20,13 @@
 set -eu
 
 LOCK_DIR="/tmp/gpu-server-locks"
-VALID_SERVERS="mi25 t120h-p100 t120h-m10"
+VALID_SERVERS="mi25 t120h-p100 t120h-m10 aws-gpu01 aws-gpu02"
 SSH_OPTS="-o ConnectTimeout=5 -o BatchMode=yes"
 
 # Parse arguments
 if [ $# -lt 1 ]; then
     echo "Usage: $0 <server> [session_id]" >&2
-    echo "  server: mi25, t120h-p100, or t120h-m10" >&2
+    echo "  server: mi25, t120h-p100, t120h-m10, aws-gpu01, or aws-gpu02" >&2
     exit 2
 fi
 

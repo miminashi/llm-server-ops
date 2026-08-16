@@ -37,7 +37,7 @@
 
 | 引数 | 説明 |
 |------|------|
-| `server` | サーバ名（`mi25`、`t120h-p100`、または `t120h-m10`） |
+| `server` | サーバ名（`mi25`、`t120h-p100`、`t120h-m10`、`aws-gpu01`、`aws-gpu02`） |
 | `session_id` | セッション識別子（省略時: `hostname-pid-timestamp`） |
 
 ```bash
@@ -62,7 +62,7 @@
 
 | 引数 | 説明 |
 |------|------|
-| `server` | サーバ名（`mi25`、`t120h-p100`、または `t120h-m10`） |
+| `server` | サーバ名（`mi25`、`t120h-p100`、`t120h-m10`、`aws-gpu01`、`aws-gpu02`） |
 | `session_id` | セッション識別子（指定すると所有権を検証） |
 
 ```bash
@@ -104,6 +104,10 @@ t120h-p100: LOCKED
   Since:  2025-12-26 12:00:00
 
 t120h-m10: UNREACHABLE (SSH connection failed)
+
+aws-gpu01: available
+
+aws-gpu02: available
 ```
 
 ---

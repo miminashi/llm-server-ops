@@ -19,3 +19,5 @@ scp .claude/skills/llama-server/server-scripts/update_and_build-t120h-p100.sh \
 | `update_and_build-mi25.sh` | mi25 | ROCm (gfx900) |
 | `update_and_build-t120h-p100.sh` | t120h-p100 | CUDA (sm_60) |
 | `update_and_build-t120h-m10.sh` | t120h-m10 | CUDA (sm_52) |
+| `update_and_build-aws-gpu01.sh` | aws-gpu01 | CUDA (sm_60、`/usr/bin/nvcc` 12.0) ※未検証 |
+| `update_and_build-aws-gpu02.sh` | aws-gpu02 | CUDA (sm_60、`/usr/bin/nvcc` 12.0) ※未検証 |

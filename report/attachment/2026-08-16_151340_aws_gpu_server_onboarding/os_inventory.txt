@@ -1,0 +1,172 @@
+# aws-gpu01 / aws-gpu02 OS 側インベントリ
+# 取得日時: 2026-08-16 15:14:20 JST
+
+################ aws-gpu01 ################
+----- uname / os -----
+Linux chungpu 6.8.0-90-generic #91-Ubuntu SMP PREEMPT_DYNAMIC Tue Nov 18 14:14:30 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+Description:	Ubuntu 24.04.3 LTS
+----- cpu -----
+CPU(s):                               48
+Model name:                           Intel(R) Xeon(R) CPU E5-2687W v4 @ 3.00GHz
+Thread(s) per core:                   2
+Core(s) per socket:                   12
+Socket(s):                            2
+CPU(s) scaling MHz:                   49%
+----- mem -----
+               total        used        free      shared  buff/cache   available
+Mem:             157           3         154           0           0         154
+----- gpu (lspci) -----
+05:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+07:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+08:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+0c:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+0d:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+0e:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+0f:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+12:00.0 VGA compatible controller [0300]: ASPEED Technology, Inc. ASPEED Graphics Family [1a03:2000] (rev 30)
+----- gpu baseline -----
+index, pci.bus_id, name, serial, memory.total [MiB], ecc.mode.current, pcie.link.gen.current, pcie.link.width.current, power.limit [W]
+0, 00000000:05:00.0, Tesla P100-PCIE-16GB, 0320318031972, 16384 MiB, Disabled, 3, 16, 180.00 W
+1, 00000000:07:00.0, Tesla P100-PCIE-16GB, 0323818055114, 16384 MiB, Enabled, 3, 16, 180.00 W
+2, 00000000:08:00.0, Tesla P100-PCIE-16GB, 0323817102181, 16384 MiB, Enabled, 3, 16, 180.00 W
+3, 00000000:0C:00.0, Tesla P100-PCIE-16GB, 0322818134388, 16384 MiB, Enabled, 3, 16, 180.00 W
+4, 00000000:0D:00.0, Tesla P100-PCIE-16GB, 0320318067792, 16384 MiB, Enabled, 3, 16, 180.00 W
+5, 00000000:0E:00.0, Tesla P100-PCIE-16GB, 0320318033253, 16384 MiB, Disabled, 3, 16, 180.00 W
+6, 00000000:0F:00.0, Tesla P100-PCIE-16GB, 0324218044774, 16384 MiB, Enabled, 3, 16, 180.00 W
+----- driver/cuda -----
+535.288.01
+Cuda compilation tools, release 12.0, V12.0.140
+Build cuda_12.0.r12.0/compiler.32267302_0
+/usr/bin/nvcc
+----- topo -----
+	[4mGPU0	GPU1	GPU2	GPU3	GPU4	GPU5	GPU6	NIC0	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	PIX	PIX	PHB	PHB	PHB	PHB	PHB	0-11,24-35	0		N/A
+GPU1	PIX	 X 	PIX	PHB	PHB	PHB	PHB	PHB	0-11,24-35	0		N/A
+GPU2	PIX	PIX	 X 	PHB	PHB	PHB	PHB	PHB	0-11,24-35	0		N/A
+GPU3	PHB	PHB	PHB	 X 	PIX	PIX	PIX	PIX	0-11,24-35	0		N/A
+GPU4	PHB	PHB	PHB	PIX	 X 	PIX	PIX	PIX	0-11,24-35	0		N/A
+GPU5	PHB	PHB	PHB	PIX	PIX	 X 	PIX	PIX	0-11,24-35	0		N/A
+GPU6	PHB	PHB	PHB	PIX	PIX	PIX	 X 	PIX	0-11,24-35	0		N/A
+NIC0	PHB	PHB	PHB	PIX	PIX	PIX	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+
+----- disk -----
+Mounted on  Size Avail
+/           1.1T  707G
+/boot       2.0G  1.6G
+----- tools -----
+hf         none
+ttyd       /usr/bin/ttyd
+nvtop      /usr/bin/nvtop
+cmake      /usr/bin/cmake
+ninja      /usr/bin/ninja
+git        /usr/bin/git
+docker     none
+uv         none
+----- llama.cpp -----
+----- net -----
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+enp129s0f0       UP             192.168.39.165/24 metric 100 fe80::ae1f:6bff:feab:47b2/64 
+enp11s0np0       UP             192.168.100.1/24 fe80::526b:4bff:fe0d:1c5a/64 
+enp129s0f1       UP             10.8.2.1/8 fe80::ae1f:6bff:feab:47b3/64 
+----- home users -----
+myzk
+sizumita
+ubuntu
+
+################ aws-gpu02 ################
+----- uname / os -----
+Linux gpu02 6.8.0-90-generic #91-Ubuntu SMP PREEMPT_DYNAMIC Tue Nov 18 14:14:30 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+Description:	Ubuntu 24.04.3 LTS
+----- cpu -----
+CPU(s):                               40
+Model name:                           Intel(R) Xeon(R) CPU E5-2640 v4 @ 2.40GHz
+Thread(s) per core:                   2
+Core(s) per socket:                   10
+Socket(s):                            2
+CPU(s) scaling MHz:                   48%
+----- mem -----
+               total        used        free      shared  buff/cache   available
+Mem:              94           2          92           0           0          91
+----- gpu (lspci) -----
+05:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+08:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+09:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+0c:00.0 VGA compatible controller [0300]: ASPEED Technology, Inc. ASPEED Graphics Family [1a03:2000] (rev 30)
+84:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 12GB] [10de:15f7] (rev a1)
+88:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 16GB] [10de:15f8] (rev a1)
+89:00.0 3D controller [0302]: NVIDIA Corporation GP100GL [Tesla P100 PCIe 12GB] [10de:15f7] (rev a1)
+----- gpu baseline -----
+index, pci.bus_id, name, serial, memory.total [MiB], ecc.mode.current, pcie.link.gen.current, pcie.link.width.current, power.limit [W]
+0, 00000000:05:00.0, Tesla P100-PCIE-16GB, 0322818006546, 16384 MiB, Enabled, 3, 16, 180.00 W
+1, 00000000:08:00.0, Tesla P100-PCIE-16GB, 0320319086127, 16384 MiB, Enabled, 3, 16, 180.00 W
+2, 00000000:09:00.0, Tesla P100-PCIE-16GB, 0323818055058, 16384 MiB, Enabled, 3, 16, 180.00 W
+3, 00000000:84:00.0, Tesla P100-PCIE-12GB, 0322718237913, 12288 MiB, Enabled, 3, 16, 180.00 W
+4, 00000000:88:00.0, Tesla P100-PCIE-16GB, 0322818133689, 16384 MiB, Enabled, 3, 16, 180.00 W
+5, 00000000:89:00.0, Tesla P100-PCIE-12GB, 0322718237810, 12288 MiB, Enabled, 3, 16, 180.00 W
+----- driver/cuda -----
+535.288.01
+Cuda compilation tools, release 12.0, V12.0.140
+Build cuda_12.0.r12.0/compiler.32267302_0
+/usr/bin/nvcc
+----- topo -----
+	[4mGPU0	GPU1	GPU2	GPU3	GPU4	GPU5	NIC0	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	PHB	PHB	SYS	SYS	SYS	PIX	0-9,20-29	0		N/A
+GPU1	PHB	 X 	PIX	SYS	SYS	SYS	PHB	0-9,20-29	0		N/A
+GPU2	PHB	PIX	 X 	SYS	SYS	SYS	PHB	0-9,20-29	0		N/A
+GPU3	SYS	SYS	SYS	 X 	PHB	PHB	SYS	10-19,30-39		N/A		N/A
+GPU4	SYS	SYS	SYS	PHB	 X 	PIX	SYS	10-19,30-39		N/A		N/A
+GPU5	SYS	SYS	SYS	PHB	PIX	 X 	SYS	10-19,30-39		N/A		N/A
+NIC0	PIX	PHB	PHB	SYS	SYS	SYS	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+
+----- disk -----
+Mounted on                 Size Avail
+/sys/firmware/efi/efivars  256K  150K
+/                          457G  141G
+/boot/efi                  1.1G  1.1G
+----- tools -----
+hf         none
+ttyd       /usr/bin/ttyd
+nvtop      /usr/bin/nvtop
+cmake      /usr/bin/cmake
+ninja      none
+git        /usr/bin/git
+docker     none
+uv         none
+----- llama.cpp -----
+971facc38 opencl: add optimized q8_0 mm kernel for adreno (#18871)
+build/bin/llama-server
+----- net -----
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+enp129s0f0       UP             192.168.39.169/24 metric 100 fe80::ec4:7aff:febc:acc6/64 
+enp129s0f1       UP             10.8.2.2/8 fe80::ec4:7aff:febc:acc7/64 
+enp4s0np0        UP             192.168.100.2/24 fe80::526b:4bff:fe0b:aae2/64 
+----- home users -----
+ubuntu

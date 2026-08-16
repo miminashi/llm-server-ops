@@ -3,7 +3,7 @@
 # GPU Server Lock Status - Show current lock status via SSH
 #
 # Usage: lock-status.sh [server]
-#   server - Optional server name (mi25, t120h-p100, or t120h-m10)
+#   server - Optional server name (mi25, t120h-p100, t120h-m10, aws-gpu01, or aws-gpu02)
 #            If omitted, shows status for all servers
 #
 # Exit codes:
@@ -16,7 +16,7 @@
 set -eu
 
 LOCK_DIR="/tmp/gpu-server-locks"
-VALID_SERVERS="mi25 t120h-p100 t120h-m10"
+VALID_SERVERS="mi25 t120h-p100 t120h-m10 aws-gpu01 aws-gpu02"
 SSH_OPTS="-o ConnectTimeout=5 -o BatchMode=yes"
 
 # Query lock status from a remote server via a single SSH command

@@ -291,6 +291,13 @@ tmux split-window -v -b -d -l 3 \
 | t120h-p100 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | Flash Attention有効、マルチGPUポーリング無効。**`-ub 8192` は CUDA OOM**（下記参照） |
 | t120h-p100 × Qwen3.5-122B-A10B | `--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 --threads 40` + `numactl --cpunodebind=1 --membind=1` | Phase U-6 確定 128k fit プロファイル |
 | t120h-m10 | `CUDA_VISIBLE_DEVICES=0..14 -b 4096 -ub 4096` | GPU 15は使用不可 |
+| aws-gpu01 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **未検証**（2026-08-16 登録時点で起動実績なし）。P100 16GB×7=112GB。同じ P100 の t120h-p100 実績値を踏襲した推定値で、初回起動時に VRAM 実測して調整すること |
+| aws-gpu02 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **未検証**。P100 16GB×4 + **12GB×2** = 88GB。**VRAM 不均等**のため `--tensor-split 11,12,13,14` 系プロファイルは流用不可、12GB 枚（index 3, 5）に合わせた split が要る |
+
+**aws-gpu01 / aws-gpu02 の電源**: 起動時にファンが爆音になるため、`llama-up.sh` が内部で呼ぶ
+`power-ctl.sh on` は `ALLOW_FAN_NOISE=1` なしでは exit 20 で拒否される。電源 OFF の状態から
+起動する場合は必ずユーザの指示を得ること。詳細は
+[gpu-server/aws-gpu.md](../gpu-server/aws-gpu.md)。
 
 ### mi25 のバックエンド切替（Vulkan 既定 / ROCm fallback）
 
@@ -349,6 +356,8 @@ ssh -t t120h-p100 "cd ~/llama.cpp && ./update_and_build.sh"
 ssh mi25 "ps aux | grep llama-server | grep -v grep"
 ssh t120h-p100 "ps aux | grep llama-server | grep -v grep"
 ssh t120h-m10 "ps aux | grep llama-server | grep -v grep"
+ssh aws-gpu01 "ps aux | grep llama-server | grep -v grep"
+ssh aws-gpu02 "ps aux | grep llama-server | grep -v grep"
 ```
 
 **注意**: 既存のllama-serverが起動している場合、**勝手に終了しないでください**。人間や他のエージェントが使用中の可能性があります。自分で起動していないllama-serverを終了する必要がある場合は、必ずユーザに確認を取ってください。
@@ -359,6 +368,8 @@ ssh t120h-m10 "ps aux | grep llama-server | grep -v grep"
 # NVIDIA (P100/M10)
 ssh t120h-p100 "nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv"
 ssh t120h-m10 "nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv"
+ssh aws-gpu01 "nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv"
+ssh aws-gpu02 "nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv"
 
 # AMD (MI25)
 ssh mi25 "rocm-smi --showmeminfo vram"

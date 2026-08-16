@@ -3,7 +3,7 @@
 # setup-llama-cpp.sh - GPUサーバにllama.cppをセットアップ
 #
 # Usage: ./setup-llama-cpp.sh <server>
-#   server: mi25, t120h-p100, t120h-m10
+#   server: mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02
 #
 
 set -e
@@ -12,7 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 usage() {
     echo "Usage: $0 <server>"
-    echo "  server: mi25, t120h-p100, t120h-m10"
+    echo "  server: mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02"
     exit 1
 }
 
@@ -42,6 +42,22 @@ case "$SERVER" in
           -DGGML_CUDA=ON \
           -DGGML_CUDA_FA_ALL_QUANTS=ON \
           -DCMAKE_CUDA_COMPILER="/usr/local/cuda-12.9/bin/nvcc" \
+          -DCMAKE_CUDA_ARCHITECTURES="60" &&
+    cmake --build build --config Release -- -j $(nproc)
+}'
+        ;;
+    aws-gpu01|aws-gpu02)
+        GPU_TYPE="cuda"
+        # P100: compute capability 6.0 (Pascal)。t120h-p100 と違い
+        # /usr/local/cuda-12.9 は無く、Ubuntu パッケージ版の /usr/bin/nvcc (12.0) を使う。
+        BUILD_SCRIPT='build_llama_cpp() {
+  rm -rf build &&
+    cmake -B build \
+          -DLLAMA_OPENSSL=ON \
+          -DGGML_NATIVE=ON \
+          -DGGML_CUDA=ON \
+          -DGGML_CUDA_FA_ALL_QUANTS=ON \
+          -DCMAKE_CUDA_COMPILER="/usr/bin/nvcc" \
           -DCMAKE_CUDA_ARCHITECTURES="60" &&
     cmake --build build --config Release -- -j $(nproc)
 }'

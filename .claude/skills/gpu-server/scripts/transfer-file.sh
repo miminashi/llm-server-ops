@@ -13,9 +13,9 @@ usage() {
     echo "Usage: $0 <src-server> <src-path> <dst-server> <dst-path>"
     echo ""
     echo "Arguments:"
-    echo "  src-server  転送元サーバ (mi25, t120h-p100, t120h-m10)"
+    echo "  src-server  転送元サーバ (mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02)"
     echo "  src-path    転送元ファイルパス（絶対パスまたは~からの相対パス）"
-    echo "  dst-server  転送先サーバ (mi25, t120h-p100, t120h-m10)"
+    echo "  dst-server  転送先サーバ (mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02)"
     echo "  dst-path    転送先ファイルパス（絶対パスまたは~からの相対パス）"
     echo ""
     echo "Example:"
@@ -35,7 +35,7 @@ DST_PATH="$4"
 # サーバ確認
 for server in "$SRC_SERVER" "$DST_SERVER"; do
     case "$server" in
-        mi25|t120h-p100|t120h-m10)
+        mi25|t120h-p100|t120h-m10|aws-gpu01|aws-gpu02)
             ;;
         *)
             echo "Error: Unknown server '$server'"

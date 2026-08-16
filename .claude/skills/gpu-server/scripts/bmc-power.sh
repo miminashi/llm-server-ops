@@ -21,14 +21,28 @@
 #   未設定の場合は終了コード 10 で bmc-setup.sh の使用を案内する。
 #   （環境変数 GPU_SERVER_ENV で .env のパスを上書き可能）
 #
+# 終了コード:
+#   0 正常 / 1 その他エラー / 2 引数エラー / 3 IPMI接続失敗 / 10 認証情報未設定
+#   20 = ファン爆音サーバに対する電源操作を拒否（下記「爆音ガード」参照）
+#
+# 爆音ガード:
+#   FAN_LOUD_SERVERS に列挙したサーバは、起動時にファンが爆音になるため
+#   ユーザの明確な指示なしに電源を操作してはならない。該当サーバに対する
+#   on/off/soft/reset/cycle は ALLOW_FAN_NOISE=1 が無い限り exit 20 で拒否する。
+#   status は読み取りのみなので常に許可。
+#
 # 例:
 #   .claude/skills/gpu-server/scripts/bmc-power.sh mi25 status
 #   .claude/skills/gpu-server/scripts/bmc-power.sh mi25 reset
 #   .claude/skills/gpu-server/scripts/bmc-power.sh mi25 cycle 20
+#   ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu01 on
 
 set -euo pipefail
 
 ENV_FILE="${GPU_SERVER_ENV:-${XDG_CONFIG_HOME:-$HOME/.config}/gpu-server/.env}"
+
+# 起動時にファンが爆音になるサーバ（ユーザの明示指示なしに電源操作しない）
+FAN_LOUD_SERVERS="aws-gpu01 aws-gpu02"
 
 SERVER="${1:-}"
 ACTION="${2:-}"
@@ -38,6 +52,28 @@ if [[ -z "$SERVER" || -z "$ACTION" ]]; then
     echo "アクション: status, reset, cycle [wait], on, off, soft"
     exit 2
 fi
+
+# 爆音サーバへの電源操作を ALLOW_FAN_NOISE=1 が無い限り拒否する。
+# off/soft も対象にするのは、一度落とすと復帰に必ず爆音を伴う電源投入が要るため。
+guard_fan_noise() {
+    local server="$1" action="$2"
+    echo "$FAN_LOUD_SERVERS" | grep -qw "$server" || return 0
+    case "$action" in
+        on|off|soft|reset|cycle) ;;
+        *) return 0 ;;
+    esac
+    [[ "${ALLOW_FAN_NOISE:-}" == "1" ]] && return 0
+    echo "エラー: ${server} への電源操作 '${action}' を拒否しました。" >&2
+    echo "" >&2
+    echo "${server} は起動時にファンが爆音になるため、ユーザの明確な指示なしに" >&2
+    echo "リブート・電源投入・電源断を行わない運用になっています。" >&2
+    echo "" >&2
+    echo "ユーザの指示を得た上で意図的に実行する場合のみ、以下のように明示してください:" >&2
+    echo "  ALLOW_FAN_NOISE=1 $0 ${server} ${action}" >&2
+    exit 20
+}
+
+guard_fan_noise "$SERVER" "$ACTION"
 
 # サーバ名 → env変数名（ハイフン→アンダースコア、大文字化）
 VAR_PREFIX="BMC_$(echo "$SERVER" | tr '[:lower:]-' '[:upper:]_')"

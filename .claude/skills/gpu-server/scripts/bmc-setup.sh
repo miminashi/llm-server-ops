@@ -28,6 +28,8 @@ default_bmc_ip() {
     case "$1" in
         mi25)        echo "10.1.4.7" ;;
         t120h-p100)  echo "10.1.4.8" ;;
+        aws-gpu01)   echo "10.11.12.1" ;;
+        aws-gpu02)   echo "10.11.12.2" ;;
         *)           echo "" ;;
     esac
 }
