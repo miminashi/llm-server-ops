@@ -1,3 +1,21 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f491766ce24d34a83a1bd7f790291b72ec3225d140134262ddf5637424f7bb2e
-size 2161
+usage: rocm-smi [-h] [-V] [-d DEVICE [DEVICE ...]] [--alldevices] [--showhw] [-a] [-i] [-v] [-e [EVENT ...]]
+                [--showdriverversion] [--showtempgraph] [--showfwinfo [BLOCK ...]] [--showmclkrange] [--showmemvendor]
+                [--showsclkrange] [--showproductname] [--showserial] [--showuniqueid] [--showvoltagerange] [--showbus]
+                [--showpagesinfo] [--showpendingpages] [--showretiredpages] [--showunreservablepages] [-f] [-P] [-t]
+                [-u] [--showmemuse] [--showvoltage] [-b] [-c] [-g] [-l] [-M] [-m] [-o] [-p] [-S] [-s]
+                [--showmeminfo TYPE [TYPE ...]] [--showpids [VERBOSE]] [--showpidgpus [SHOWPIDGPUS ...]]
+                [--showreplaycount] [--showrasinfo [SHOWRASINFO ...]] [--showvc] [--showxgmierr] [--showtopo]
+                [--showtopoaccess] [--showtopoweight] [--showtopohops] [--showtopotype] [--showtoponuma]
+                [--showenergycounter] [--shownodesbw] [--showcomputepartition] [--showmemorypartition] [-r]
+                [--resetfans] [--resetprofile] [--resetpoweroverdrive] [--resetxgmierr] [--resetperfdeterminism]
+                [--resetcomputepartition] [--resetmemorypartition] [--setclock TYPE LEVEL] [--setsclk LEVEL [LEVEL ...]]
+                [--setmclk LEVEL [LEVEL ...]] [--setpcie LEVEL [LEVEL ...]] [--setslevel SCLKLEVEL SCLK SVOLT]
+                [--setmlevel MCLKLEVEL MCLK MVOLT] [--setvc POINT SCLK SVOLT] [--setsrange SCLKMIN SCLKMAX]
+                [--setextremum min|max sclk|mclk CLK] [--setmrange MCLKMIN MCLKMAX] [--setfan LEVEL]
+                [--setperflevel LEVEL] [--setoverdrive %] [--setmemoverdrive %] [--setpoweroverdrive WATTS]
+                [--setprofile SETPROFILE] [--setperfdeterminism SCLK]
+                [--setcomputepartition {SPX,DPX,TPX,QPX,CPX,spx,dpx,tpx,qpx,cpx}]
+                [--setmemorypartition {NPS1,NPS2,NPS4,NPS8,nps1,nps2,nps4,nps8}] [--rasenable BLOCK ERRTYPE]
+                [--rasdisable BLOCK ERRTYPE] [--rasinject BLOCK] [--gpureset] [--load FILE | --save FILE]
+                [--autorespond RESPONSE] [--loglevel LEVEL] [--json] [--csv]
+rocm-smi: error: unrecognized arguments: --showcurrentclocks

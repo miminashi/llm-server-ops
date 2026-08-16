@@ -1,3 +1,11 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:a9f5a60560a625bc3590ab78faca698c651869098a6ff821dfde52b26091dd30
-size 1325
+ggml_vulkan: Found 4 Vulkan devices:
+ggml_vulkan: 0 = Radeon Instinct MI25 (RADV VEGA10) (radv) | uma: 0 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 0 | matrix cores: none
+ggml_vulkan: 1 = Radeon Instinct MI25 (RADV VEGA10) (radv) | uma: 0 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 0 | matrix cores: none
+ggml_vulkan: 2 = Radeon Instinct MI25 (RADV VEGA10) (radv) | uma: 0 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 0 | matrix cores: none
+ggml_vulkan: 3 = Radeon Instinct MI25 (RADV VEGA10) (radv) | uma: 0 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 0 | matrix cores: none
+| model                          |       size |     params | backend    | ngl | type_k | type_v |  fa |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | --: | -----: | -----: | --: | --------------: | -------------------: |
+| gpt-oss 20B Q8_0               |  11.27 GiB |    20.91 B | Vulkan     | 999 |   q8_0 |   q8_0 |   1 |           pp512 |       553.94 ± 10.67 |
+| gpt-oss 20B Q8_0               |  11.27 GiB |    20.91 B | Vulkan     | 999 |   q8_0 |   q8_0 |   1 |           tg128 |         59.28 ± 0.39 |
+
+build: 571d0d540 (10068)

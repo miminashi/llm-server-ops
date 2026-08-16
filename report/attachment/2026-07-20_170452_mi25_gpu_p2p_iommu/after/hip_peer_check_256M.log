@@ -1,3 +1,33 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:51199a0fa1670c5ccd1e42573c2707fb83c82e21c820fc9e7406ab4124050198
-size 958
+Device count: 4
+Device 0: Radeon Instinct MI25  pciBusID=4 pciDeviceID=0 totalGlobalMem=16368MB
+Device 1: Radeon Instinct MI25  pciBusID=7 pciDeviceID=0 totalGlobalMem=16368MB
+Device 2: Radeon Instinct MI25  pciBusID=132 pciDeviceID=0 totalGlobalMem=16368MB
+Device 3: Radeon Instinct MI25  pciBusID=135 pciDeviceID=0 totalGlobalMem=16368MB
+
+=== canAccessPeer matrix ===
+      D0 D1 D2 D3
+D0 ->  -  1  1  1
+D1 ->  1  -  1  1
+D2 ->  1  1  -  1
+D3 ->  1  1  1  -
+
+=== EnablePeerAccess ===
+D0->D1: enabled
+D0->D2: enabled
+D0->D3: enabled
+D1->D0: enabled
+D1->D2: enabled
+D1->D3: enabled
+D2->D0: enabled
+D2->D1: enabled
+D2->D3: enabled
+D3->D0: enabled
+D3->D1: enabled
+D3->D2: enabled
+
+=== hipMemcpyPeerAsync bandwidth (buffer=256 MB, 10 iters averaged) ===
+src\dst      D0      D1      D2      D3     (GB/s)
+  D0         -    9.58    0.25    0.25
+  D1      9.51       -    0.25    0.25
+  D2      0.24    0.24       -    9.59
+  D3      0.24    0.24    9.59       -

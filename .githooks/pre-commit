@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# 巨大ファイルの commit を止める hook。
+#
+# GitHub は 100 MiB を超えるファイルの push を拒否し、50 MiB で警告を出す。
+# 本リポジトリの添付 (report/attachment 配下のログ) は反復の多いテキストで
+# zlib により 1〜7% まで縮むため、LFS には載せず通常の git 管理としている。
+# LFS は中身を無圧縮のまま保存するので、この種のログでは無料枠 (1 GB) を
+# 生バイトで食い潰すだけで容量的に不利になる。
+# したがってこの hook が防ぐのは容量ではなく「push が弾かれる事故」のみ。
+#
+# 有効化   : git config core.hooksPath .githooks
+# 一時回避 : git commit --no-verify
+
+set -uo pipefail
+
+BLOCK_MB=100
+WARN_MB=50
+block_bytes=$((BLOCK_MB * 1024 * 1024))
+warn_bytes=$((WARN_MB * 1024 * 1024))
+
+status=0
+
+# ステージ済みの追加/コピー/変更ファイルを、index 上の blob サイズで判定する
+while IFS= read -r -d '' path; do
+  size=$(git cat-file -s ":$path" 2>/dev/null) || continue
+  mb=$((size / 1048576))
+  if [ "$size" -ge "$block_bytes" ]; then
+    echo "ERROR: ${path} (${mb} MB) が ${BLOCK_MB} MB を超えています。GitHub が push を拒否します。" >&2
+    status=1
+  elif [ "$size" -ge "$warn_bytes" ]; then
+    echo "WARN : ${path} (${mb} MB) が ${WARN_MB} MB を超えています。GitHub が警告を出します。" >&2
+  fi
+done < <(git diff --cached --name-only --diff-filter=ACM -z)
+
+if [ "$status" -ne 0 ]; then
+  cat >&2 <<'MSG'
+
+対処: gzip で圧縮するか分割してから commit し直すか、添付から外してください。
+      24h のテレメトリログが約 67 MB なので、48h 相当を素で置くと超えます。
+      意図的に通す場合は git commit --no-verify。
+MSG
+fi
+
+exit $status

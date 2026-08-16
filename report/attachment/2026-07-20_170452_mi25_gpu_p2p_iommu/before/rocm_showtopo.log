@@ -1,3 +1,40 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:2aa0da97f600c78e14601f7768ebe476116ca42529cc842d486dd1d965db6e38
-size 2077
+
+
+============================ ROCm System Management Interface ============================
+======================================= Unique ID ========================================
+GPU[0]		: Unique ID: 0x2150172bdcc3164
+GPU[1]		: Unique ID: 0x215026e14c448c4
+GPU[2]		: Unique ID: 0x21501edbcec48c4
+GPU[3]		: Unique ID: 0x2150040969a48e4
+==========================================================================================
+================================ Weight between two GPUs =================================
+       GPU0         GPU1         GPU2         GPU3         
+GPU0   0            40           61           61           
+GPU1   40           0            61           61           
+GPU2   61           61           0            40           
+GPU3   61           61           40           0            
+
+================================= Hops between two GPUs ==================================
+       GPU0         GPU1         GPU2         GPU3         
+GPU0   0            2            3            3            
+GPU1   2            0            3            3            
+GPU2   3            3            0            2            
+GPU3   3            3            2            0            
+
+=============================== Link Type between two GPUs ===============================
+       GPU0         GPU1         GPU2         GPU3         
+GPU0   0            PCIE         PCIE         PCIE         
+GPU1   PCIE         0            PCIE         PCIE         
+GPU2   PCIE         PCIE         0            PCIE         
+GPU3   PCIE         PCIE         PCIE         0            
+
+======================================= Numa Nodes =======================================
+GPU[0]		: (Topology) Numa Node: 0
+GPU[0]		: (Topology) Numa Affinity: 0
+GPU[1]		: (Topology) Numa Node: 0
+GPU[1]		: (Topology) Numa Affinity: 0
+GPU[2]		: (Topology) Numa Node: 1
+GPU[2]		: (Topology) Numa Affinity: 1
+GPU[3]		: (Topology) Numa Node: 1
+GPU[3]		: (Topology) Numa Affinity: 1
+================================== End of ROCm SMI Log ===================================
