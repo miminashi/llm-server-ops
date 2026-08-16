@@ -1,0 +1,1334 @@
+main: force disabling memory mapping because it would result in-read-only pointers to the weights
+main: force changing k cache type to f32 due to a lack of f16 support for OUT_PROD
+main: force changing v cache type to f32 due to a lack of f16 support for OUT_PROD
+build: 6290 (a6a58d647) with cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0 for x86_64-linux-gnu
+llama_model_loader: loaded meta data with 39 key-value pairs and 272 tensors from gguf/smollm2-135m-instruct.f32.gguf (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = llama
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = SmolLM2 135M Instruct
+llama_model_loader: - kv   3:                           general.finetune str              = Instruct
+llama_model_loader: - kv   4:                           general.basename str              = SmolLM2
+llama_model_loader: - kv   5:                         general.size_label str              = 135M
+llama_model_loader: - kv   6:                            general.license str              = apache-2.0
+llama_model_loader: - kv   7:                   general.base_model.count u32              = 1
+llama_model_loader: - kv   8:                  general.base_model.0.name str              = SmolLM2 135M
+llama_model_loader: - kv   9:          general.base_model.0.organization str              = HuggingFaceTB
+llama_model_loader: - kv  10:              general.base_model.0.repo_url str              = https://huggingface.co/HuggingFaceTB/...
+llama_model_loader: - kv  11:                               general.tags arr[str,4]       = ["safetensors", "onnx", "transformers...
+llama_model_loader: - kv  12:                          general.languages arr[str,1]       = ["en"]
+llama_model_loader: - kv  13:                          llama.block_count u32              = 30
+llama_model_loader: - kv  14:                       llama.context_length u32              = 8192
+llama_model_loader: - kv  15:                     llama.embedding_length u32              = 576
+llama_model_loader: - kv  16:                  llama.feed_forward_length u32              = 1536
+llama_model_loader: - kv  17:                 llama.attention.head_count u32              = 9
+llama_model_loader: - kv  18:              llama.attention.head_count_kv u32              = 3
+llama_model_loader: - kv  19:                       llama.rope.freq_base f32              = 100000.000000
+llama_model_loader: - kv  20:     llama.attention.layer_norm_rms_epsilon f32              = 0.000010
+llama_model_loader: - kv  21:                 llama.attention.key_length u32              = 64
+llama_model_loader: - kv  22:               llama.attention.value_length u32              = 64
+llama_model_loader: - kv  23:                          general.file_type u32              = 0
+llama_model_loader: - kv  24:                           llama.vocab_size u32              = 49152
+llama_model_loader: - kv  25:                 llama.rope.dimension_count u32              = 64
+llama_model_loader: - kv  26:               general.quantization_version u32              = 2
+llama_model_loader: - kv  27:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  28:                         tokenizer.ggml.pre str              = smollm
+llama_model_loader: - kv  29:                      tokenizer.ggml.tokens arr[str,49152]   = ["<|endoftext|>", "<|im_start|>", "<|...
+llama_model_loader: - kv  30:                  tokenizer.ggml.token_type arr[i32,49152]   = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, ...
+llama_model_loader: - kv  31:                      tokenizer.ggml.merges arr[str,48900]   = ["Ġ t", "Ġ a", "i n", "h e", "Ġ Ġ...
+llama_model_loader: - kv  32:                tokenizer.ggml.bos_token_id u32              = 1
+llama_model_loader: - kv  33:                tokenizer.ggml.eos_token_id u32              = 2
+llama_model_loader: - kv  34:            tokenizer.ggml.unknown_token_id u32              = 0
+llama_model_loader: - kv  35:            tokenizer.ggml.padding_token_id u32              = 2
+llama_model_loader: - kv  36:                    tokenizer.chat_template str              = {% for message in messages %}{% if lo...
+llama_model_loader: - kv  37:            tokenizer.ggml.add_space_prefix bool             = false
+llama_model_loader: - kv  38:               tokenizer.ggml.add_bos_token bool             = false
+llama_model_loader: - type  f32:  272 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = all F32
+print_info: file size   = 513.13 MiB (32.00 BPW) 
+load: printing all EOG tokens:
+load:   - 0 ('<|endoftext|>')
+load:   - 2 ('<|im_end|>')
+load:   - 4 ('<reponame>')
+load: special tokens cache size = 17
+load: token to piece cache size = 0.3170 MB
+print_info: arch             = llama
+print_info: vocab_only       = 0
+print_info: n_ctx_train      = 8192
+print_info: n_embd           = 576
+print_info: n_layer          = 30
+print_info: n_head           = 9
+print_info: n_head_kv        = 3
+print_info: n_rot            = 64
+print_info: n_swa            = 0
+print_info: is_swa_any       = 0
+print_info: n_embd_head_k    = 64
+print_info: n_embd_head_v    = 64
+print_info: n_gqa            = 3
+print_info: n_embd_k_gqa     = 192
+print_info: n_embd_v_gqa     = 192
+print_info: f_norm_eps       = 0.0e+00
+print_info: f_norm_rms_eps   = 1.0e-05
+print_info: f_clamp_kqv      = 0.0e+00
+print_info: f_max_alibi_bias = 0.0e+00
+print_info: f_logit_scale    = 0.0e+00
+print_info: f_attn_scale     = 0.0e+00
+print_info: n_ff             = 1536
+print_info: n_expert         = 0
+print_info: n_expert_used    = 0
+print_info: causal attn      = 1
+print_info: pooling type     = 0
+print_info: rope type        = 0
+print_info: rope scaling     = linear
+print_info: freq_base_train  = 100000.0
+print_info: freq_scale_train = 1
+print_info: n_ctx_orig_yarn  = 8192
+print_info: rope_finetuned   = unknown
+print_info: model type       = 256M
+print_info: model params     = 134.52 M
+print_info: general.name     = SmolLM2 135M Instruct
+print_info: vocab type       = BPE
+print_info: n_vocab          = 49152
+print_info: n_merges         = 48900
+print_info: BOS token        = 1 '<|im_start|>'
+print_info: EOS token        = 2 '<|im_end|>'
+print_info: EOT token        = 0 '<|endoftext|>'
+print_info: UNK token        = 0 '<|endoftext|>'
+print_info: PAD token        = 2 '<|im_end|>'
+print_info: LF token         = 198 'Ċ'
+print_info: FIM REP token    = 4 '<reponame>'
+print_info: EOG token        = 0 '<|endoftext|>'
+print_info: EOG token        = 2 '<|im_end|>'
+print_info: EOG token        = 4 '<reponame>'
+print_info: max token length = 162
+load_tensors: loading model tensors, this can take a while... (mmap = false)
+load_tensors:          CPU model buffer size =   513.13 MiB
+................................................................................
+llama_context: constructing llama_context
+llama_context: non-unified KV cache requires ggml_set_rows() - forcing unified KV cache
+llama_context: n_seq_max     = 1
+llama_context: n_ctx         = 512
+llama_context: n_ctx_per_seq = 512
+llama_context: n_batch       = 512
+llama_context: n_ubatch      = 512
+llama_context: causal_attn   = 1
+llama_context: flash_attn    = 0
+llama_context: kv_unified    = true
+llama_context: freq_base     = 100000.0
+llama_context: freq_scale    = 1
+llama_context: n_ctx_per_seq (512) < n_ctx_train (8192) -- the full capacity of the model will not be utilized
+llama_context:        CPU  output buffer size =     0.19 MiB
+llama_kv_cache:        CPU KV buffer size =    22.50 MiB
+llama_kv_cache: size =   22.50 MiB (   512 cells,  30 layers,  1/1 seqs), K (f32):   11.25 MiB, V (f32):   11.25 MiB
+llama_kv_cache: LLAMA_SET_ROWS=0, using old ggml_cpy() method for backwards compatibility
+llama_context:        CPU compute buffer size =   101.51 MiB
+llama_context: graph nodes  = 1116
+llama_context: graph splits = 1
+common_init_from_params: added <|endoftext|> logit bias = -inf
+common_init_from_params: added <|im_end|> logit bias = -inf
+common_init_from_params: added <reponame> logit bias = -inf
+common_init_from_params: setting dry_penalty_last_n to ctx_size = 512
+common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+
+system_info: n_threads = 64 (n_threads_batch = 64) / 94 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+-optimizer adamw -lr0 1e-05 -wd 0 -lr-min -1 -min-epochs -1 -epochs 2 -period 1 -val 0.05
+epoch 0 lr=1e-05
+train: [        ] data=0000001/0001123 loss=2.78207±nan acc=49.61±2.21% t=00:00:09 ETA=02:53:52 epoch 0 lr=1e-05
+train: [        ] data=0000002/0001123 loss=2.85522±0.07315 acc=48.44±1.56% t=00:00:10 ETA=01:38:42 epoch 0 lr=1e-05
+train: [        ] data=0000003/0001123 loss=2.99632±0.14729 acc=45.83±1.27% t=00:00:11 ETA=01:13:36 epoch 0 lr=1e-05
+train: [        ] data=0000004/0001123 loss=3.09464±0.14323 acc=44.92±1.10% t=00:00:13 ETA=01:01:05 epoch 0 lr=1e-05
+train: [        ] data=0000005/0001123 loss=3.11933±0.11366 acc=44.38±0.98% t=00:00:14 ETA=00:53:32 epoch 0 lr=1e-05
+train: [        ] data=0000006/0001123 loss=3.15049±0.09789 acc=43.29±0.89% t=00:00:15 ETA=00:48:31 epoch 0 lr=1e-05
+train: [        ] data=0000007/0001123 loss=3.16782±0.08453 acc=42.41±0.83% t=00:00:16 ETA=00:44:56 epoch 0 lr=1e-05
+train: [        ] data=0000008/0001123 loss=3.17276±0.07337 acc=41.82±0.77% t=00:00:18 ETA=00:42:13 epoch 0 lr=1e-05
+train: [        ] data=0000009/0001123 loss=3.17096±0.06473 acc=41.54±0.73% t=00:00:19 ETA=00:40:07 epoch 0 lr=1e-05
+train: [        ] data=0000010/0001123 loss=3.15499±0.06006 acc=41.62±0.69% t=00:00:20 ETA=00:38:27 epoch 0 lr=1e-05
+train: [        ] data=0000011/0001123 loss=3.13791±0.05695 acc=41.55±0.66% t=00:00:22 ETA=00:37:04 epoch 0 lr=1e-05
+train: [        ] data=0000012/0001123 loss=3.14582±0.05258 acc=41.11±0.63% t=00:00:23 ETA=00:35:55 epoch 0 lr=1e-05
+train: [        ] data=0000013/0001123 loss=3.15423±0.04910 acc=40.75±0.60% t=00:00:24 ETA=00:34:56 epoch 0 lr=1e-05
+train: [        ] data=0000014/0001123 loss=3.15221±0.04550 acc=40.68±0.58% t=00:00:25 ETA=00:34:04 epoch 0 lr=1e-05
+train: [        ] data=0000015/0001123 loss=3.16139±0.04334 acc=40.30±0.56% t=00:00:27 ETA=00:33:19 epoch 0 lr=1e-05
+train: [        ] data=0000016/0001123 loss=3.17877±0.04411 acc=40.10±0.54% t=00:00:28 ETA=00:32:41 epoch 0 lr=1e-05
+train: [        ] data=0000017/0001123 loss=3.20714±0.05022 acc=39.86±0.52% t=00:00:29 ETA=00:32:06 epoch 0 lr=1e-05
+train: [▏       ] data=0000018/0001123 loss=3.24647±0.06155 acc=39.40±0.51% t=00:00:30 ETA=00:31:36 epoch 0 lr=1e-05
+train: [▏       ] data=0000019/0001123 loss=3.26990±0.06276 acc=39.03±0.49% t=00:00:32 ETA=00:31:08 epoch 0 lr=1e-05
+train: [▏       ] data=0000020/0001123 loss=3.27621±0.05987 acc=38.90±0.48% t=00:00:33 ETA=00:30:44 epoch 0 lr=1e-05
+train: [▏       ] data=0000021/0001123 loss=3.27756±0.05696 acc=38.91±0.47% t=00:00:34 ETA=00:30:21 epoch 0 lr=1e-05
+train: [▏       ] data=0000022/0001123 loss=3.27696±0.05432 acc=38.88±0.46% t=00:00:35 ETA=00:30:00 epoch 0 lr=1e-05
+train: [▏       ] data=0000023/0001123 loss=3.27926±0.05195 acc=38.80±0.45% t=00:00:37 ETA=00:29:40 epoch 0 lr=1e-05
+train: [▏       ] data=0000024/0001123 loss=3.28196±0.04981 acc=38.70±0.44% t=00:00:38 ETA=00:29:23 epoch 0 lr=1e-05
+train: [▏       ] data=0000025/0001123 loss=3.28738±0.04809 acc=38.59±0.43% t=00:00:39 ETA=00:29:07 epoch 0 lr=1e-05
+train: [▏       ] data=0000026/0001123 loss=3.30444±0.04925 acc=38.38±0.42% t=00:00:41 ETA=00:28:52 epoch 0 lr=1e-05
+train: [▏       ] data=0000027/0001123 loss=3.32652±0.05228 acc=38.09±0.41% t=00:00:42 ETA=00:28:38 epoch 0 lr=1e-05
+train: [▏       ] data=0000028/0001123 loss=3.32245±0.05054 acc=38.15±0.41% t=00:00:43 ETA=00:28:25 epoch 0 lr=1e-05
+train: [▏       ] data=0000029/0001123 loss=3.32147±0.04878 acc=38.14±0.40% t=00:00:44 ETA=00:28:12 epoch 0 lr=1e-05
+train: [▏       ] data=0000030/0001123 loss=3.31747±0.04729 acc=38.14±0.39% t=00:00:46 ETA=00:28:00 epoch 0 lr=1e-05
+train: [▏       ] data=0000031/0001123 loss=3.31342±0.04592 acc=38.16±0.39% t=00:00:47 ETA=00:27:49 epoch 0 lr=1e-05
+train: [▏       ] data=0000032/0001123 loss=3.31620±0.04455 acc=38.18±0.38% t=00:00:48 ETA=00:27:39 epoch 0 lr=1e-05
+train: [▏       ] data=0000033/0001123 loss=3.30086±0.04582 acc=38.44±0.37% t=00:00:49 ETA=00:27:29 epoch 0 lr=1e-05
+train: [▏       ] data=0000034/0001123 loss=3.27714±0.05039 acc=38.76±0.37% t=00:00:51 ETA=00:27:21 epoch 0 lr=1e-05
+train: [▏       ] data=0000035/0001123 loss=3.27449±0.04900 acc=38.81±0.36% t=00:00:52 ETA=00:27:12 epoch 0 lr=1e-05
+train: [▎       ] data=0000036/0001123 loss=3.27886±0.04782 acc=38.82±0.36% t=00:00:53 ETA=00:27:04 epoch 0 lr=1e-05
+train: [▎       ] data=0000037/0001123 loss=3.28566±0.04700 acc=38.81±0.35% t=00:00:55 ETA=00:26:56 epoch 0 lr=1e-05
+train: [▎       ] data=0000038/0001123 loss=3.28800±0.04581 acc=38.87±0.35% t=00:00:56 ETA=00:26:48 epoch 0 lr=1e-05
+train: [▎       ] data=0000039/0001123 loss=3.28949±0.04464 acc=38.97±0.35% t=00:00:57 ETA=00:26:41 epoch 0 lr=1e-05
+train: [▎       ] data=0000040/0001123 loss=3.28682±0.04359 acc=39.11±0.34% t=00:00:58 ETA=00:26:33 epoch 0 lr=1e-05
+train: [▎       ] data=0000041/0001123 loss=3.28028±0.04302 acc=39.21±0.34% t=00:01:00 ETA=00:26:26 epoch 0 lr=1e-05
+train: [▎       ] data=0000042/0001123 loss=3.26633±0.04424 acc=39.40±0.33% t=00:01:01 ETA=00:26:20 epoch 0 lr=1e-05
+train: [▎       ] data=0000043/0001123 loss=3.25631±0.04434 acc=39.58±0.33% t=00:01:02 ETA=00:26:14 epoch 0 lr=1e-05
+train: [▎       ] data=0000044/0001123 loss=3.25387±0.04339 acc=39.65±0.33% t=00:01:03 ETA=00:26:08 epoch 0 lr=1e-05
+train: [▎       ] data=0000045/0001123 loss=3.24607±0.04313 acc=39.70±0.32% t=00:01:05 ETA=00:26:03 epoch 0 lr=1e-05
+train: [▎       ] data=0000046/0001123 loss=3.23012±0.04509 acc=39.84±0.32% t=00:01:06 ETA=00:25:57 epoch 0 lr=1e-05
+train: [▎       ] data=0000047/0001123 loss=3.21805±0.04574 acc=39.95±0.32% t=00:01:07 ETA=00:25:52 epoch 0 lr=1e-05
+train: [▎       ] data=0000048/0001123 loss=3.20226±0.04748 acc=40.11±0.31% t=00:01:09 ETA=00:25:47 epoch 0 lr=1e-05
+train: [▎       ] data=0000049/0001123 loss=3.18319±0.05027 acc=40.36±0.31% t=00:01:10 ETA=00:25:42 epoch 0 lr=1e-05
+train: [▎       ] data=0000050/0001123 loss=3.17263±0.05037 acc=40.46±0.31% t=00:01:11 ETA=00:25:38 epoch 0 lr=1e-05
+train: [▎       ] data=0000051/0001123 loss=3.16280±0.05034 acc=40.51±0.30% t=00:01:12 ETA=00:25:33 epoch 0 lr=1e-05
+train: [▎       ] data=0000052/0001123 loss=3.15066±0.05083 acc=40.68±0.30% t=00:01:14 ETA=00:25:29 epoch 0 lr=1e-05
+train: [▍       ] data=0000053/0001123 loss=3.13913±0.05118 acc=40.82±0.30% t=00:01:15 ETA=00:25:24 epoch 0 lr=1e-05
+train: [▍       ] data=0000054/0001123 loss=3.12188±0.05310 acc=41.02±0.30% t=00:01:16 ETA=00:25:20 epoch 0 lr=1e-05
+train: [▍       ] data=0000055/0001123 loss=3.11448±0.05265 acc=41.11±0.29% t=00:01:18 ETA=00:25:16 epoch 0 lr=1e-05
+train: [▍       ] data=0000056/0001123 loss=3.11333±0.05172 acc=41.16±0.29% t=00:01:19 ETA=00:25:11 epoch 0 lr=1e-05
+train: [▍       ] data=0000057/0001123 loss=3.10653±0.05125 acc=41.29±0.29% t=00:01:20 ETA=00:25:07 epoch 0 lr=1e-05
+train: [▍       ] data=0000058/0001123 loss=3.10544±0.05037 acc=41.33±0.29% t=00:01:21 ETA=00:25:03 epoch 0 lr=1e-05
+train: [▍       ] data=0000059/0001123 loss=3.10232±0.04961 acc=41.40±0.28% t=00:01:23 ETA=00:24:59 epoch 0 lr=1e-05
+train: [▍       ] data=0000060/0001123 loss=3.09936±0.04887 acc=41.47±0.28% t=00:01:24 ETA=00:24:55 epoch 0 lr=1e-05
+train: [▍       ] data=0000061/0001123 loss=3.10110±0.04809 acc=41.49±0.28% t=00:01:25 ETA=00:24:51 epoch 0 lr=1e-05
+train: [▍       ] data=0000062/0001123 loss=3.10347±0.04737 acc=41.48±0.28% t=00:01:26 ETA=00:24:47 epoch 0 lr=1e-05
+train: [▍       ] data=0000063/0001123 loss=3.10353±0.04661 acc=41.49±0.27% t=00:01:28 ETA=00:24:44 epoch 0 lr=1e-05
+train: [▍       ] data=0000064/0001123 loss=3.09850±0.04615 acc=41.56±0.27% t=00:01:29 ETA=00:24:40 epoch 0 lr=1e-05
+train: [▍       ] data=0000065/0001123 loss=3.09824±0.04544 acc=41.61±0.27% t=00:01:30 ETA=00:24:37 epoch 0 lr=1e-05
+train: [▍       ] data=0000066/0001123 loss=3.09637±0.04478 acc=41.63±0.27% t=00:01:32 ETA=00:24:33 epoch 0 lr=1e-05
+train: [▍       ] data=0000067/0001123 loss=3.09569±0.04411 acc=41.62±0.27% t=00:01:33 ETA=00:24:30 epoch 0 lr=1e-05
+train: [▍       ] data=0000068/0001123 loss=3.09598±0.04346 acc=41.62±0.26% t=00:01:34 ETA=00:24:27 epoch 0 lr=1e-05
+train: [▍       ] data=0000069/0001123 loss=3.09813±0.04288 acc=41.61±0.26% t=00:01:35 ETA=00:24:24 epoch 0 lr=1e-05
+train: [▍       ] data=0000070/0001123 loss=3.10146±0.04239 acc=41.53±0.26% t=00:01:37 ETA=00:24:20 epoch 0 lr=1e-05
+train: [▌       ] data=0000071/0001123 loss=3.10379±0.04186 acc=41.43±0.26% t=00:01:38 ETA=00:24:17 epoch 0 lr=1e-05
+train: [▌       ] data=0000072/0001123 loss=3.10464±0.04128 acc=41.40±0.26% t=00:01:39 ETA=00:24:14 epoch 0 lr=1e-05
+train: [▌       ] data=0000073/0001123 loss=3.10589±0.04073 acc=41.38±0.25% t=00:01:40 ETA=00:24:11 epoch 0 lr=1e-05
+train: [▌       ] data=0000074/0001123 loss=3.10998±0.04038 acc=41.30±0.25% t=00:01:42 ETA=00:24:08 epoch 0 lr=1e-05
+train: [▌       ] data=0000075/0001123 loss=3.11294±0.03995 acc=41.25±0.25% t=00:01:43 ETA=00:24:05 epoch 0 lr=1e-05
+train: [▌       ] data=0000076/0001123 loss=3.11698±0.03963 acc=41.16±0.25% t=00:01:44 ETA=00:24:02 epoch 0 lr=1e-05
+train: [▌       ] data=0000077/0001123 loss=3.11849±0.03914 acc=41.18±0.25% t=00:01:46 ETA=00:24:00 epoch 0 lr=1e-05
+train: [▌       ] data=0000078/0001123 loss=3.11488±0.03880 acc=41.29±0.25% t=00:01:47 ETA=00:23:58 epoch 0 lr=1e-05
+train: [▌       ] data=0000079/0001123 loss=3.11122±0.03848 acc=41.36±0.24% t=00:01:48 ETA=00:23:55 epoch 0 lr=1e-05
+train: [▌       ] data=0000080/0001123 loss=3.11789±0.03858 acc=41.26±0.24% t=00:01:49 ETA=00:23:52 epoch 0 lr=1e-05
+train: [▌       ] data=0000081/0001123 loss=3.12356±0.03852 acc=41.21±0.24% t=00:01:51 ETA=00:23:50 epoch 0 lr=1e-05
+train: [▌       ] data=0000082/0001123 loss=3.12190±0.03808 acc=41.26±0.24% t=00:01:52 ETA=00:23:47 epoch 0 lr=1e-05
+train: [▌       ] data=0000083/0001123 loss=3.12091±0.03764 acc=41.28±0.24% t=00:01:53 ETA=00:23:44 epoch 0 lr=1e-05
+train: [▌       ] data=0000084/0001123 loss=3.11918±0.03723 acc=41.30±0.24% t=00:01:55 ETA=00:23:42 epoch 0 lr=1e-05
+train: [▌       ] data=0000085/0001123 loss=3.11847±0.03679 acc=41.28±0.24% t=00:01:56 ETA=00:23:40 epoch 0 lr=1e-05
+train: [▌       ] data=0000086/0001123 loss=3.12064±0.03643 acc=41.24±0.23% t=00:01:57 ETA=00:23:38 epoch 0 lr=1e-05
+train: [▌       ] data=0000087/0001123 loss=3.12180±0.03602 acc=41.24±0.23% t=00:01:58 ETA=00:23:35 epoch 0 lr=1e-05
+train: [▋       ] data=0000088/0001123 loss=3.12203±0.03561 acc=41.22±0.23% t=00:02:00 ETA=00:23:33 epoch 0 lr=1e-05
+train: [▋       ] data=0000089/0001123 loss=3.12148±0.03521 acc=41.18±0.23% t=00:02:01 ETA=00:23:31 epoch 0 lr=1e-05
+train: [▋       ] data=0000090/0001123 loss=3.11619±0.03522 acc=41.22±0.23% t=00:02:02 ETA=00:23:28 epoch 0 lr=1e-05
+train: [▋       ] data=0000091/0001123 loss=3.11691±0.03484 acc=41.19±0.23% t=00:02:04 ETA=00:23:26 epoch 0 lr=1e-05
+train: [▋       ] data=0000092/0001123 loss=3.11685±0.03446 acc=41.19±0.23% t=00:02:05 ETA=00:23:24 epoch 0 lr=1e-05
+train: [▋       ] data=0000093/0001123 loss=3.11290±0.03431 acc=41.24±0.23% t=00:02:06 ETA=00:23:22 epoch 0 lr=1e-05
+train: [▋       ] data=0000094/0001123 loss=3.10996±0.03407 acc=41.26±0.22% t=00:02:07 ETA=00:23:20 epoch 0 lr=1e-05
+train: [▋       ] data=0000095/0001123 loss=3.11303±0.03385 acc=41.23±0.22% t=00:02:09 ETA=00:23:17 epoch 0 lr=1e-05
+train: [▋       ] data=0000096/0001123 loss=3.11824±0.03390 acc=41.18±0.22% t=00:02:10 ETA=00:23:15 epoch 0 lr=1e-05
+train: [▋       ] data=0000097/0001123 loss=3.12208±0.03377 acc=41.11±0.22% t=00:02:11 ETA=00:23:13 epoch 0 lr=1e-05
+train: [▋       ] data=0000098/0001123 loss=3.12323±0.03344 acc=41.07±0.22% t=00:02:13 ETA=00:23:11 epoch 0 lr=1e-05
+train: [▋       ] data=0000099/0001123 loss=3.11970±0.03329 acc=41.09±0.22% t=00:02:14 ETA=00:23:09 epoch 0 lr=1e-05
+train: [▋       ] data=0000100/0001123 loss=3.11378±0.03348 acc=41.15±0.22% t=00:02:15 ETA=00:23:07 epoch 0 lr=1e-05
+train: [▋       ] data=0000101/0001123 loss=3.11309±0.03316 acc=41.15±0.22% t=00:02:16 ETA=00:23:05 epoch 0 lr=1e-05
+train: [▋       ] data=0000102/0001123 loss=3.11292±0.03283 acc=41.14±0.22% t=00:02:18 ETA=00:23:02 epoch 0 lr=1e-05
+train: [▋       ] data=0000103/0001123 loss=3.11296±0.03251 acc=41.13±0.21% t=00:02:19 ETA=00:23:00 epoch 0 lr=1e-05
+train: [▋       ] data=0000104/0001123 loss=3.11122±0.03224 acc=41.15±0.21% t=00:02:20 ETA=00:22:58 epoch 0 lr=1e-05
+train: [▋       ] data=0000105/0001123 loss=3.10997±0.03196 acc=41.17±0.21% t=00:02:21 ETA=00:22:56 epoch 0 lr=1e-05
+train: [▊       ] data=0000106/0001123 loss=3.11156±0.03170 acc=41.14±0.21% t=00:02:23 ETA=00:22:54 epoch 0 lr=1e-05
+train: [▊       ] data=0000107/0001123 loss=3.11251±0.03141 acc=41.12±0.21% t=00:02:24 ETA=00:22:52 epoch 0 lr=1e-05
+train: [▊       ] data=0000108/0001123 loss=3.11424±0.03117 acc=41.10±0.21% t=00:02:25 ETA=00:22:50 epoch 0 lr=1e-05
+train: [▊       ] data=0000109/0001123 loss=3.11620±0.03094 acc=41.07±0.21% t=00:02:27 ETA=00:22:48 epoch 0 lr=1e-05
+train: [▊       ] data=0000110/0001123 loss=3.11677±0.03067 acc=41.05±0.21% t=00:02:28 ETA=00:22:46 epoch 0 lr=1e-05
+train: [▊       ] data=0000111/0001123 loss=3.11732±0.03039 acc=41.05±0.21% t=00:02:29 ETA=00:22:43 epoch 0 lr=1e-05
+train: [▊       ] data=0000112/0001123 loss=3.12111±0.03036 acc=41.00±0.21% t=00:02:30 ETA=00:22:41 epoch 0 lr=1e-05
+train: [▊       ] data=0000113/0001123 loss=3.12501±0.03034 acc=40.93±0.20% t=00:02:32 ETA=00:22:39 epoch 0 lr=1e-05
+train: [▊       ] data=0000114/0001123 loss=3.12680±0.03013 acc=40.93±0.20% t=00:02:33 ETA=00:22:37 epoch 0 lr=1e-05
+train: [▊       ] data=0000115/0001123 loss=3.12807±0.02989 acc=40.91±0.20% t=00:02:34 ETA=00:22:35 epoch 0 lr=1e-05
+train: [▊       ] data=0000116/0001123 loss=3.12651±0.02967 acc=40.93±0.20% t=00:02:35 ETA=00:22:33 epoch 0 lr=1e-05
+train: [▊       ] data=0000117/0001123 loss=3.12795±0.02945 acc=40.93±0.20% t=00:02:37 ETA=00:22:31 epoch 0 lr=1e-05
+train: [▊       ] data=0000118/0001123 loss=3.13145±0.02941 acc=40.89±0.20% t=00:02:38 ETA=00:22:29 epoch 0 lr=1e-05
+train: [▊       ] data=0000119/0001123 loss=3.13471±0.02934 acc=40.87±0.20% t=00:02:39 ETA=00:22:27 epoch 0 lr=1e-05
+train: [▊       ] data=0000120/0001123 loss=3.13684±0.02918 acc=40.86±0.20% t=00:02:41 ETA=00:22:25 epoch 0 lr=1e-05
+train: [▊       ] data=0000121/0001123 loss=3.13785±0.02895 acc=40.87±0.20% t=00:02:42 ETA=00:22:24 epoch 0 lr=1e-05
+train: [▊       ] data=0000122/0001123 loss=3.14011±0.02880 acc=40.88±0.20% t=00:02:43 ETA=00:22:22 epoch 0 lr=1e-05
+train: [▉       ] data=0000123/0001123 loss=3.14198±0.02863 acc=40.87±0.20% t=00:02:44 ETA=00:22:20 epoch 0 lr=1e-05
+train: [▉       ] data=0000124/0001123 loss=3.14240±0.02840 acc=40.87±0.20% t=00:02:46 ETA=00:22:18 epoch 0 lr=1e-05
+train: [▉       ] data=0000125/0001123 loss=3.14287±0.02818 acc=40.85±0.19% t=00:02:47 ETA=00:22:17 epoch 0 lr=1e-05
+train: [▉       ] data=0000126/0001123 loss=3.14466±0.02801 acc=40.80±0.19% t=00:02:48 ETA=00:22:15 epoch 0 lr=1e-05
+train: [▉       ] data=0000127/0001123 loss=3.14663±0.02786 acc=40.78±0.19% t=00:02:50 ETA=00:22:13 epoch 0 lr=1e-05
+train: [▉       ] data=0000128/0001123 loss=3.14741±0.02765 acc=40.77±0.19% t=00:02:51 ETA=00:22:12 epoch 0 lr=1e-05
+train: [▉       ] data=0000129/0001123 loss=3.14848±0.02746 acc=40.73±0.19% t=00:02:52 ETA=00:22:10 epoch 0 lr=1e-05
+train: [▉       ] data=0000130/0001123 loss=3.15307±0.02763 acc=40.66±0.19% t=00:02:53 ETA=00:22:08 epoch 0 lr=1e-05
+train: [▉       ] data=0000131/0001123 loss=3.15762±0.02779 acc=40.59±0.19% t=00:02:55 ETA=00:22:07 epoch 0 lr=1e-05
+train: [▉       ] data=0000132/0001123 loss=3.16087±0.02777 acc=40.53±0.19% t=00:02:56 ETA=00:22:05 epoch 0 lr=1e-05
+train: [▉       ] data=0000133/0001123 loss=3.16392±0.02773 acc=40.48±0.19% t=00:02:57 ETA=00:22:03 epoch 0 lr=1e-05
+train: [▉       ] data=0000134/0001123 loss=3.16616±0.02761 acc=40.43±0.19% t=00:02:59 ETA=00:22:01 epoch 0 lr=1e-05
+train: [▉       ] data=0000135/0001123 loss=3.16852±0.02751 acc=40.39±0.19% t=00:03:00 ETA=00:22:00 epoch 0 lr=1e-05
+train: [▉       ] data=0000136/0001123 loss=3.17095±0.02741 acc=40.36±0.19% t=00:03:01 ETA=00:21:58 epoch 0 lr=1e-05
+train: [▉       ] data=0000137/0001123 loss=3.17088±0.02721 acc=40.37±0.19% t=00:03:02 ETA=00:21:56 epoch 0 lr=1e-05
+train: [▉       ] data=0000138/0001123 loss=3.17143±0.02702 acc=40.37±0.18% t=00:03:04 ETA=00:21:55 epoch 0 lr=1e-05
+train: [▉       ] data=0000139/0001123 loss=3.17213±0.02683 acc=40.36±0.18% t=00:03:05 ETA=00:21:53 epoch 0 lr=1e-05
+train: [▉       ] data=0000140/0001123 loss=3.17237±0.02664 acc=40.34±0.18% t=00:03:06 ETA=00:21:51 epoch 0 lr=1e-05
+train: [█       ] data=0000141/0001123 loss=3.17275±0.02646 acc=40.33±0.18% t=00:03:08 ETA=00:21:50 epoch 0 lr=1e-05
+train: [█       ] data=0000142/0001123 loss=3.17224±0.02627 acc=40.32±0.18% t=00:03:09 ETA=00:21:48 epoch 0 lr=1e-05
+train: [█       ] data=0000143/0001123 loss=3.17266±0.02609 acc=40.33±0.18% t=00:03:10 ETA=00:21:47 epoch 0 lr=1e-05
+train: [█       ] data=0000144/0001123 loss=3.17479±0.02600 acc=40.31±0.18% t=00:03:12 ETA=00:21:45 epoch 0 lr=1e-05
+train: [█       ] data=0000145/0001123 loss=3.17675±0.02589 acc=40.27±0.18% t=00:03:13 ETA=00:21:43 epoch 0 lr=1e-05
+train: [█       ] data=0000146/0001123 loss=3.17585±0.02573 acc=40.27±0.18% t=00:03:14 ETA=00:21:42 epoch 0 lr=1e-05
+train: [█       ] data=0000147/0001123 loss=3.17485±0.02557 acc=40.28±0.18% t=00:03:15 ETA=00:21:40 epoch 0 lr=1e-05
+train: [█       ] data=0000148/0001123 loss=3.17484±0.02540 acc=40.28±0.18% t=00:03:17 ETA=00:21:39 epoch 0 lr=1e-05
+train: [█       ] data=0000149/0001123 loss=3.17602±0.02526 acc=40.28±0.18% t=00:03:18 ETA=00:21:37 epoch 0 lr=1e-05
+train: [█       ] data=0000150/0001123 loss=3.17762±0.02514 acc=40.29±0.18% t=00:03:19 ETA=00:21:35 epoch 0 lr=1e-05
+train: [█       ] data=0000151/0001123 loss=3.17619±0.02501 acc=40.32±0.18% t=00:03:21 ETA=00:21:34 epoch 0 lr=1e-05
+train: [█       ] data=0000152/0001123 loss=3.17686±0.02486 acc=40.32±0.18% t=00:03:22 ETA=00:21:32 epoch 0 lr=1e-05
+train: [█       ] data=0000153/0001123 loss=3.17843±0.02474 acc=40.34±0.18% t=00:03:23 ETA=00:21:30 epoch 0 lr=1e-05
+train: [█       ] data=0000154/0001123 loss=3.17751±0.02460 acc=40.39±0.17% t=00:03:24 ETA=00:21:29 epoch 0 lr=1e-05
+train: [█       ] data=0000155/0001123 loss=3.17527±0.02454 acc=40.43±0.17% t=00:03:26 ETA=00:21:27 epoch 0 lr=1e-05
+train: [█       ] data=0000156/0001123 loss=3.17486±0.02439 acc=40.45±0.17% t=00:03:27 ETA=00:21:26 epoch 0 lr=1e-05
+train: [█       ] data=0000157/0001123 loss=3.17486±0.02423 acc=40.46±0.17% t=00:03:28 ETA=00:21:24 epoch 0 lr=1e-05
+train: [█▏      ] data=0000158/0001123 loss=3.17327±0.02413 acc=40.51±0.17% t=00:03:30 ETA=00:21:23 epoch 0 lr=1e-05
+train: [█▏      ] data=0000159/0001123 loss=3.16882±0.02439 acc=40.61±0.17% t=00:03:31 ETA=00:21:21 epoch 0 lr=1e-05
+train: [█▏      ] data=0000160/0001123 loss=3.16543±0.02447 acc=40.69±0.17% t=00:03:32 ETA=00:21:20 epoch 0 lr=1e-05
+train: [█▏      ] data=0000161/0001123 loss=3.16273±0.02447 acc=40.73±0.17% t=00:03:33 ETA=00:21:18 epoch 0 lr=1e-05
+train: [█▏      ] data=0000162/0001123 loss=3.16097±0.02438 acc=40.75±0.17% t=00:03:35 ETA=00:21:17 epoch 0 lr=1e-05
+train: [█▏      ] data=0000163/0001123 loss=3.15866±0.02434 acc=40.78±0.17% t=00:03:36 ETA=00:21:15 epoch 0 lr=1e-05
+train: [█▏      ] data=0000164/0001123 loss=3.15731±0.02423 acc=40.80±0.17% t=00:03:37 ETA=00:21:13 epoch 0 lr=1e-05
+train: [█▏      ] data=0000165/0001123 loss=3.15763±0.02408 acc=40.81±0.17% t=00:03:39 ETA=00:21:12 epoch 0 lr=1e-05
+train: [█▏      ] data=0000166/0001123 loss=3.16009±0.02406 acc=40.78±0.17% t=00:03:40 ETA=00:21:10 epoch 0 lr=1e-05
+train: [█▏      ] data=0000167/0001123 loss=3.16164±0.02397 acc=40.76±0.17% t=00:03:41 ETA=00:21:09 epoch 0 lr=1e-05
+train: [█▏      ] data=0000168/0001123 loss=3.16309±0.02387 acc=40.73±0.17% t=00:03:43 ETA=00:21:07 epoch 0 lr=1e-05
+train: [█▏      ] data=0000169/0001123 loss=3.16555±0.02386 acc=40.67±0.17% t=00:03:44 ETA=00:21:06 epoch 0 lr=1e-05
+train: [█▏      ] data=0000170/0001123 loss=3.16600±0.02372 acc=40.65±0.17% t=00:03:45 ETA=00:21:04 epoch 0 lr=1e-05
+train: [█▏      ] data=0000171/0001123 loss=3.16441±0.02363 acc=40.65±0.17% t=00:03:46 ETA=00:21:02 epoch 0 lr=1e-05
+train: [█▏      ] data=0000172/0001123 loss=3.16508±0.02351 acc=40.63±0.17% t=00:03:48 ETA=00:21:00 epoch 0 lr=1e-05
+train: [█▏      ] data=0000173/0001123 loss=3.16768±0.02351 acc=40.61±0.17% t=00:03:49 ETA=00:20:59 epoch 0 lr=1e-05
+train: [█▏      ] data=0000174/0001123 loss=3.17140±0.02367 acc=40.58±0.16% t=00:03:50 ETA=00:20:57 epoch 0 lr=1e-05
+train: [█▏      ] data=0000175/0001123 loss=3.17522±0.02384 acc=40.55±0.16% t=00:03:51 ETA=00:20:55 epoch 0 lr=1e-05
+train: [█▎      ] data=0000176/0001123 loss=3.17790±0.02386 acc=40.53±0.16% t=00:03:53 ETA=00:20:54 epoch 0 lr=1e-05
+train: [█▎      ] data=0000177/0001123 loss=3.17882±0.02374 acc=40.53±0.16% t=00:03:54 ETA=00:20:52 epoch 0 lr=1e-05
+train: [█▎      ] data=0000178/0001123 loss=3.17915±0.02361 acc=40.54±0.16% t=00:03:55 ETA=00:20:50 epoch 0 lr=1e-05
+train: [█▎      ] data=0000179/0001123 loss=3.17941±0.02348 acc=40.54±0.16% t=00:03:56 ETA=00:20:49 epoch 0 lr=1e-05
+train: [█▎      ] data=0000180/0001123 loss=3.17979±0.02335 acc=40.55±0.16% t=00:03:58 ETA=00:20:47 epoch 0 lr=1e-05
+train: [█▎      ] data=0000181/0001123 loss=3.17940±0.02323 acc=40.55±0.16% t=00:03:59 ETA=00:20:46 epoch 0 lr=1e-05
+train: [█▎      ] data=0000182/0001123 loss=3.17855±0.02311 acc=40.56±0.16% t=00:04:00 ETA=00:20:44 epoch 0 lr=1e-05
+train: [█▎      ] data=0000183/0001123 loss=3.18041±0.02306 acc=40.54±0.16% t=00:04:01 ETA=00:20:42 epoch 0 lr=1e-05
+train: [█▎      ] data=0000184/0001123 loss=3.18317±0.02310 acc=40.50±0.16% t=00:04:03 ETA=00:20:41 epoch 0 lr=1e-05
+train: [█▎      ] data=0000185/0001123 loss=3.18307±0.02298 acc=40.49±0.16% t=00:04:04 ETA=00:20:39 epoch 0 lr=1e-05
+train: [█▎      ] data=0000186/0001123 loss=3.18256±0.02286 acc=40.49±0.16% t=00:04:05 ETA=00:20:38 epoch 0 lr=1e-05
+train: [█▎      ] data=0000187/0001123 loss=3.18235±0.02274 acc=40.50±0.16% t=00:04:07 ETA=00:20:36 epoch 0 lr=1e-05
+train: [█▎      ] data=0000188/0001123 loss=3.18389±0.02267 acc=40.50±0.16% t=00:04:08 ETA=00:20:35 epoch 0 lr=1e-05
+train: [█▎      ] data=0000189/0001123 loss=3.18643±0.02269 acc=40.48±0.16% t=00:04:09 ETA=00:20:33 epoch 0 lr=1e-05
+train: [█▎      ] data=0000190/0001123 loss=3.18791±0.02262 acc=40.47±0.16% t=00:04:10 ETA=00:20:31 epoch 0 lr=1e-05
+train: [█▎      ] data=0000191/0001123 loss=3.18869±0.02251 acc=40.48±0.16% t=00:04:12 ETA=00:20:30 epoch 0 lr=1e-05
+train: [█▎      ] data=0000192/0001123 loss=3.18930±0.02241 acc=40.47±0.16% t=00:04:13 ETA=00:20:28 epoch 0 lr=1e-05
+train: [█▎      ] data=0000193/0001123 loss=3.18999±0.02230 acc=40.45±0.16% t=00:04:14 ETA=00:20:27 epoch 0 lr=1e-05
+train: [█▍      ] data=0000194/0001123 loss=3.19130±0.02222 acc=40.43±0.16% t=00:04:15 ETA=00:20:25 epoch 0 lr=1e-05
+train: [█▍      ] data=0000195/0001123 loss=3.19145±0.02211 acc=40.43±0.16% t=00:04:17 ETA=00:20:24 epoch 0 lr=1e-05
+train: [█▍      ] data=0000196/0001123 loss=3.19034±0.02202 acc=40.44±0.15% t=00:04:18 ETA=00:20:22 epoch 0 lr=1e-05
+train: [█▍      ] data=0000197/0001123 loss=3.19230±0.02200 acc=40.42±0.15% t=00:04:19 ETA=00:20:20 epoch 0 lr=1e-05
+train: [█▍      ] data=0000198/0001123 loss=3.19416±0.02197 acc=40.40±0.15% t=00:04:20 ETA=00:20:19 epoch 0 lr=1e-05
+train: [█▍      ] data=0000199/0001123 loss=3.19385±0.02186 acc=40.42±0.15% t=00:04:22 ETA=00:20:17 epoch 0 lr=1e-05
+train: [█▍      ] data=0000200/0001123 loss=3.19384±0.02175 acc=40.43±0.15% t=00:04:23 ETA=00:20:16 epoch 0 lr=1e-05
+train: [█▍      ] data=0000201/0001123 loss=3.19408±0.02164 acc=40.44±0.15% t=00:04:24 ETA=00:20:14 epoch 0 lr=1e-05
+train: [█▍      ] data=0000202/0001123 loss=3.19560±0.02159 acc=40.43±0.15% t=00:04:26 ETA=00:20:13 epoch 0 lr=1e-05
+train: [█▍      ] data=0000203/0001123 loss=3.19882±0.02172 acc=40.41±0.15% t=00:04:27 ETA=00:20:11 epoch 0 lr=1e-05
+train: [█▍      ] data=0000204/0001123 loss=3.20147±0.02178 acc=40.40±0.15% t=00:04:28 ETA=00:20:10 epoch 0 lr=1e-05
+train: [█▍      ] data=0000205/0001123 loss=3.20348±0.02176 acc=40.39±0.15% t=00:04:29 ETA=00:20:08 epoch 0 lr=1e-05
+train: [█▍      ] data=0000206/0001123 loss=3.20510±0.02172 acc=40.39±0.15% t=00:04:31 ETA=00:20:07 epoch 0 lr=1e-05
+train: [█▍      ] data=0000207/0001123 loss=3.20487±0.02161 acc=40.41±0.15% t=00:04:32 ETA=00:20:05 epoch 0 lr=1e-05
+train: [█▍      ] data=0000208/0001123 loss=3.20526±0.02151 acc=40.42±0.15% t=00:04:33 ETA=00:20:04 epoch 0 lr=1e-05
+train: [█▍      ] data=0000209/0001123 loss=3.20698±0.02148 acc=40.40±0.15% t=00:04:34 ETA=00:20:02 epoch 0 lr=1e-05
+train: [█▍      ] data=0000210/0001123 loss=3.20637±0.02138 acc=40.41±0.15% t=00:04:36 ETA=00:20:01 epoch 0 lr=1e-05
+train: [█▌      ] data=0000211/0001123 loss=3.20624±0.02128 acc=40.43±0.15% t=00:04:37 ETA=00:19:59 epoch 0 lr=1e-05
+train: [█▌      ] data=0000212/0001123 loss=3.20800±0.02125 acc=40.43±0.15% t=00:04:38 ETA=00:19:58 epoch 0 lr=1e-05
+train: [█▌      ] data=0000213/0001123 loss=3.20963±0.02122 acc=40.44±0.15% t=00:04:40 ETA=00:19:56 epoch 0 lr=1e-05
+train: [█▌      ] data=0000214/0001123 loss=3.20914±0.02112 acc=40.45±0.15% t=00:04:41 ETA=00:19:54 epoch 0 lr=1e-05
+train: [█▌      ] data=0000215/0001123 loss=3.20987±0.02104 acc=40.45±0.15% t=00:04:42 ETA=00:19:53 epoch 0 lr=1e-05
+train: [█▌      ] data=0000216/0001123 loss=3.21187±0.02104 acc=40.44±0.15% t=00:04:43 ETA=00:19:51 epoch 0 lr=1e-05
+train: [█▌      ] data=0000217/0001123 loss=3.21430±0.02108 acc=40.41±0.15% t=00:04:45 ETA=00:19:50 epoch 0 lr=1e-05
+train: [█▌      ] data=0000218/0001123 loss=3.21655±0.02110 acc=40.36±0.15% t=00:04:46 ETA=00:19:49 epoch 0 lr=1e-05
+train: [█▌      ] data=0000219/0001123 loss=3.21916±0.02117 acc=40.34±0.15% t=00:04:47 ETA=00:19:47 epoch 0 lr=1e-05
+train: [█▌      ] data=0000220/0001123 loss=3.22129±0.02118 acc=40.34±0.15% t=00:04:48 ETA=00:19:46 epoch 0 lr=1e-05
+train: [█▌      ] data=0000221/0001123 loss=3.22229±0.02111 acc=40.33±0.15% t=00:04:50 ETA=00:19:44 epoch 0 lr=1e-05
+train: [█▌      ] data=0000222/0001123 loss=3.22428±0.02110 acc=40.31±0.15% t=00:04:51 ETA=00:19:43 epoch 0 lr=1e-05
+train: [█▌      ] data=0000223/0001123 loss=3.22732±0.02123 acc=40.28±0.15% t=00:04:52 ETA=00:19:41 epoch 0 lr=1e-05
+train: [█▌      ] data=0000224/0001123 loss=3.23126±0.02150 acc=40.25±0.14% t=00:04:54 ETA=00:19:40 epoch 0 lr=1e-05
+train: [█▌      ] data=0000225/0001123 loss=3.23447±0.02164 acc=40.24±0.14% t=00:04:55 ETA=00:19:38 epoch 0 lr=1e-05
+train: [█▌      ] data=0000226/0001123 loss=3.23739±0.02174 acc=40.21±0.14% t=00:04:56 ETA=00:19:37 epoch 0 lr=1e-05
+train: [█▌      ] data=0000227/0001123 loss=3.23705±0.02165 acc=40.22±0.14% t=00:04:57 ETA=00:19:35 epoch 0 lr=1e-05
+train: [█▌      ] data=0000228/0001123 loss=3.23622±0.02157 acc=40.25±0.14% t=00:04:59 ETA=00:19:34 epoch 0 lr=1e-05
+train: [█▋      ] data=0000229/0001123 loss=3.23863±0.02161 acc=40.23±0.14% t=00:05:00 ETA=00:19:32 epoch 0 lr=1e-05
+train: [█▋      ] data=0000230/0001123 loss=3.24139±0.02169 acc=40.21±0.14% t=00:05:01 ETA=00:19:31 epoch 0 lr=1e-05
+train: [█▋      ] data=0000231/0001123 loss=3.24378±0.02173 acc=40.18±0.14% t=00:05:02 ETA=00:19:29 epoch 0 lr=1e-05
+train: [█▋      ] data=0000232/0001123 loss=3.24678±0.02184 acc=40.15±0.14% t=00:05:04 ETA=00:19:28 epoch 0 lr=1e-05
+train: [█▋      ] data=0000233/0001123 loss=3.24816±0.02179 acc=40.14±0.14% t=00:05:05 ETA=00:19:26 epoch 0 lr=1e-05
+train: [█▋      ] data=0000234/0001123 loss=3.24762±0.02171 acc=40.16±0.14% t=00:05:06 ETA=00:19:25 epoch 0 lr=1e-05
+train: [█▋      ] data=0000235/0001123 loss=3.24599±0.02167 acc=40.19±0.14% t=00:05:08 ETA=00:19:23 epoch 0 lr=1e-05
+train: [█▋      ] data=0000236/0001123 loss=3.24513±0.02160 acc=40.20±0.14% t=00:05:09 ETA=00:19:22 epoch 0 lr=1e-05
+train: [█▋      ] data=0000237/0001123 loss=3.24438±0.02152 acc=40.21±0.14% t=00:05:10 ETA=00:19:21 epoch 0 lr=1e-05
+train: [█▋      ] data=0000238/0001123 loss=3.24313±0.02147 acc=40.23±0.14% t=00:05:11 ETA=00:19:19 epoch 0 lr=1e-05
+train: [█▋      ] data=0000239/0001123 loss=3.24295±0.02138 acc=40.24±0.14% t=00:05:13 ETA=00:19:18 epoch 0 lr=1e-05
+train: [█▋      ] data=0000240/0001123 loss=3.24232±0.02130 acc=40.26±0.14% t=00:05:14 ETA=00:19:16 epoch 0 lr=1e-05
+train: [█▋      ] data=0000241/0001123 loss=3.24272±0.02121 acc=40.28±0.14% t=00:05:15 ETA=00:19:15 epoch 0 lr=1e-05
+train: [█▋      ] data=0000242/0001123 loss=3.24338±0.02114 acc=40.28±0.14% t=00:05:16 ETA=00:19:13 epoch 0 lr=1e-05
+train: [█▋      ] data=0000243/0001123 loss=3.24501±0.02111 acc=40.25±0.14% t=00:05:18 ETA=00:19:12 epoch 0 lr=1e-05
+train: [█▋      ] data=0000244/0001123 loss=3.24516±0.02103 acc=40.25±0.14% t=00:05:19 ETA=00:19:10 epoch 0 lr=1e-05
+train: [█▋      ] data=0000245/0001123 loss=3.24515±0.02094 acc=40.26±0.14% t=00:05:20 ETA=00:19:09 epoch 0 lr=1e-05
+train: [█▊      ] data=0000246/0001123 loss=3.24565±0.02086 acc=40.26±0.14% t=00:05:22 ETA=00:19:07 epoch 0 lr=1e-05
+train: [█▊      ] data=0000247/0001123 loss=3.24559±0.02078 acc=40.27±0.14% t=00:05:23 ETA=00:19:06 epoch 0 lr=1e-05
+train: [█▊      ] data=0000248/0001123 loss=3.24534±0.02069 acc=40.28±0.14% t=00:05:24 ETA=00:19:05 epoch 0 lr=1e-05
+train: [█▊      ] data=0000249/0001123 loss=3.24489±0.02062 acc=40.31±0.14% t=00:05:25 ETA=00:19:03 epoch 0 lr=1e-05
+train: [█▊      ] data=0000250/0001123 loss=3.24565±0.02055 acc=40.32±0.14% t=00:05:27 ETA=00:19:02 epoch 0 lr=1e-05
+train: [█▊      ] data=0000251/0001123 loss=3.24589±0.02047 acc=40.32±0.14% t=00:05:28 ETA=00:19:00 epoch 0 lr=1e-05
+train: [█▊      ] data=0000252/0001123 loss=3.24602±0.02039 acc=40.33±0.14% t=00:05:29 ETA=00:18:59 epoch 0 lr=1e-05
+train: [█▊      ] data=0000253/0001123 loss=3.24642±0.02031 acc=40.33±0.14% t=00:05:30 ETA=00:18:58 epoch 0 lr=1e-05
+train: [█▊      ] data=0000254/0001123 loss=3.24624±0.02023 acc=40.33±0.14% t=00:05:32 ETA=00:18:56 epoch 0 lr=1e-05
+train: [█▊      ] data=0000255/0001123 loss=3.24608±0.02015 acc=40.34±0.14% t=00:05:33 ETA=00:18:55 epoch 0 lr=1e-05
+train: [█▊      ] data=0000256/0001123 loss=3.24593±0.02007 acc=40.36±0.14% t=00:05:34 ETA=00:18:53 epoch 0 lr=1e-05
+train: [█▊      ] data=0000257/0001123 loss=3.24539±0.02000 acc=40.37±0.14% t=00:05:36 ETA=00:18:52 epoch 0 lr=1e-05
+train: [█▊      ] data=0000258/0001123 loss=3.24415±0.01996 acc=40.41±0.14% t=00:05:37 ETA=00:18:51 epoch 0 lr=1e-05
+train: [█▊      ] data=0000259/0001123 loss=3.24356±0.01989 acc=40.43±0.13% t=00:05:38 ETA=00:18:49 epoch 0 lr=1e-05
+train: [█▊      ] data=0000260/0001123 loss=3.24265±0.01984 acc=40.44±0.13% t=00:05:39 ETA=00:18:48 epoch 0 lr=1e-05
+train: [█▊      ] data=0000261/0001123 loss=3.24111±0.01982 acc=40.46±0.13% t=00:05:41 ETA=00:18:46 epoch 0 lr=1e-05
+train: [█▊      ] data=0000262/0001123 loss=3.24116±0.01975 acc=40.47±0.13% t=00:05:42 ETA=00:18:45 epoch 0 lr=1e-05
+train: [█▊      ] data=0000263/0001123 loss=3.24054±0.01968 acc=40.49±0.13% t=00:05:43 ETA=00:18:44 epoch 0 lr=1e-05
+train: [█▉      ] data=0000264/0001123 loss=3.23939±0.01964 acc=40.51±0.13% t=00:05:45 ETA=00:18:42 epoch 0 lr=1e-05
+train: [█▉      ] data=0000265/0001123 loss=3.23978±0.01957 acc=40.51±0.13% t=00:05:46 ETA=00:18:41 epoch 0 lr=1e-05
+train: [█▉      ] data=0000266/0001123 loss=3.24135±0.01956 acc=40.50±0.13% t=00:05:47 ETA=00:18:40 epoch 0 lr=1e-05
+train: [█▉      ] data=0000267/0001123 loss=3.24191±0.01949 acc=40.50±0.13% t=00:05:49 ETA=00:18:39 epoch 0 lr=1e-05
+train: [█▉      ] data=0000268/0001123 loss=3.24253±0.01943 acc=40.50±0.13% t=00:05:50 ETA=00:18:37 epoch 0 lr=1e-05
+train: [█▉      ] data=0000269/0001123 loss=3.24298±0.01936 acc=40.50±0.13% t=00:05:51 ETA=00:18:36 epoch 0 lr=1e-05
+train: [█▉      ] data=0000270/0001123 loss=3.24353±0.01930 acc=40.49±0.13% t=00:05:52 ETA=00:18:34 epoch 0 lr=1e-05
+train: [█▉      ] data=0000271/0001123 loss=3.24420±0.01924 acc=40.48±0.13% t=00:05:54 ETA=00:18:33 epoch 0 lr=1e-05
+train: [█▉      ] data=0000272/0001123 loss=3.24423±0.01917 acc=40.47±0.13% t=00:05:55 ETA=00:18:31 epoch 0 lr=1e-05
+train: [█▉      ] data=0000273/0001123 loss=3.24424±0.01910 acc=40.49±0.13% t=00:05:56 ETA=00:18:30 epoch 0 lr=1e-05
+train: [█▉      ] data=0000274/0001123 loss=3.24357±0.01904 acc=40.51±0.13% t=00:05:57 ETA=00:18:28 epoch 0 lr=1e-05
+train: [█▉      ] data=0000275/0001123 loss=3.24337±0.01897 acc=40.52±0.13% t=00:05:59 ETA=00:18:27 epoch 0 lr=1e-05
+train: [█▉      ] data=0000276/0001123 loss=3.24243±0.01893 acc=40.53±0.13% t=00:06:00 ETA=00:18:25 epoch 0 lr=1e-05
+train: [█▉      ] data=0000277/0001123 loss=3.24128±0.01889 acc=40.53±0.13% t=00:06:01 ETA=00:18:24 epoch 0 lr=1e-05
+train: [█▉      ] data=0000278/0001123 loss=3.24121±0.01882 acc=40.53±0.13% t=00:06:02 ETA=00:18:22 epoch 0 lr=1e-05
+train: [█▉      ] data=0000279/0001123 loss=3.24173±0.01876 acc=40.52±0.13% t=00:06:04 ETA=00:18:21 epoch 0 lr=1e-05
+train: [█▉      ] data=0000280/0001123 loss=3.24247±0.01871 acc=40.50±0.13% t=00:06:05 ETA=00:18:20 epoch 0 lr=1e-05
+train: [██      ] data=0000281/0001123 loss=3.24302±0.01865 acc=40.50±0.13% t=00:06:06 ETA=00:18:18 epoch 0 lr=1e-05
+train: [██      ] data=0000282/0001123 loss=3.24466±0.01866 acc=40.49±0.13% t=00:06:07 ETA=00:18:17 epoch 0 lr=1e-05
+train: [██      ] data=0000283/0001123 loss=3.24646±0.01868 acc=40.48±0.13% t=00:06:09 ETA=00:18:15 epoch 0 lr=1e-05
+train: [██      ] data=0000284/0001123 loss=3.24827±0.01870 acc=40.45±0.13% t=00:06:10 ETA=00:18:14 epoch 0 lr=1e-05
+train: [██      ] data=0000285/0001123 loss=3.24899±0.01865 acc=40.44±0.13% t=00:06:11 ETA=00:18:12 epoch 0 lr=1e-05
+train: [██      ] data=0000286/0001123 loss=3.25051±0.01865 acc=40.42±0.13% t=00:06:12 ETA=00:18:11 epoch 0 lr=1e-05
+train: [██      ] data=0000287/0001123 loss=3.25224±0.01866 acc=40.40±0.13% t=00:06:14 ETA=00:18:10 epoch 0 lr=1e-05
+train: [██      ] data=0000288/0001123 loss=3.25281±0.01861 acc=40.38±0.13% t=00:06:15 ETA=00:18:08 epoch 0 lr=1e-05
+train: [██      ] data=0000289/0001123 loss=3.25525±0.01870 acc=40.36±0.13% t=00:06:16 ETA=00:18:07 epoch 0 lr=1e-05
+train: [██      ] data=0000290/0001123 loss=3.25792±0.01883 acc=40.34±0.13% t=00:06:18 ETA=00:18:05 epoch 0 lr=1e-05
+train: [██      ] data=0000291/0001123 loss=3.25942±0.01882 acc=40.34±0.13% t=00:06:19 ETA=00:18:04 epoch 0 lr=1e-05
+train: [██      ] data=0000292/0001123 loss=3.25852±0.01878 acc=40.35±0.13% t=00:06:20 ETA=00:18:02 epoch 0 lr=1e-05
+train: [██      ] data=0000293/0001123 loss=3.25909±0.01872 acc=40.35±0.13% t=00:06:21 ETA=00:18:01 epoch 0 lr=1e-05
+train: [██      ] data=0000294/0001123 loss=3.25925±0.01866 acc=40.34±0.13% t=00:06:23 ETA=00:18:00 epoch 0 lr=1e-05
+train: [██      ] data=0000295/0001123 loss=3.25840±0.01862 acc=40.34±0.13% t=00:06:24 ETA=00:17:58 epoch 0 lr=1e-05
+train: [██      ] data=0000296/0001123 loss=3.25868±0.01856 acc=40.34±0.13% t=00:06:25 ETA=00:17:57 epoch 0 lr=1e-05
+train: [██      ] data=0000297/0001123 loss=3.25899±0.01850 acc=40.33±0.13% t=00:06:26 ETA=00:17:55 epoch 0 lr=1e-05
+train: [██      ] data=0000298/0001123 loss=3.25929±0.01844 acc=40.32±0.13% t=00:06:28 ETA=00:17:54 epoch 0 lr=1e-05
+train: [██▏     ] data=0000299/0001123 loss=3.26066±0.01842 acc=40.30±0.13% t=00:06:29 ETA=00:17:52 epoch 0 lr=1e-05
+train: [██▏     ] data=0000300/0001123 loss=3.26141±0.01838 acc=40.29±0.13% t=00:06:30 ETA=00:17:51 epoch 0 lr=1e-05
+train: [██▏     ] data=0000301/0001123 loss=3.26212±0.01833 acc=40.28±0.12% t=00:06:31 ETA=00:17:50 epoch 0 lr=1e-05
+train: [██▏     ] data=0000302/0001123 loss=3.26451±0.01843 acc=40.28±0.12% t=00:06:33 ETA=00:17:48 epoch 0 lr=1e-05
+train: [██▏     ] data=0000303/0001123 loss=3.26546±0.01839 acc=40.27±0.12% t=00:06:34 ETA=00:17:47 epoch 0 lr=1e-05
+train: [██▏     ] data=0000304/0001123 loss=3.26561±0.01833 acc=40.27±0.12% t=00:06:35 ETA=00:17:45 epoch 0 lr=1e-05
+train: [██▏     ] data=0000305/0001123 loss=3.26619±0.01828 acc=40.26±0.12% t=00:06:36 ETA=00:17:44 epoch 0 lr=1e-05
+train: [██▏     ] data=0000306/0001123 loss=3.26836±0.01835 acc=40.25±0.12% t=00:06:38 ETA=00:17:43 epoch 0 lr=1e-05
+train: [██▏     ] data=0000307/0001123 loss=3.26991±0.01835 acc=40.23±0.12% t=00:06:39 ETA=00:17:41 epoch 0 lr=1e-05
+train: [██▏     ] data=0000308/0001123 loss=3.27094±0.01832 acc=40.22±0.12% t=00:06:40 ETA=00:17:40 epoch 0 lr=1e-05
+train: [██▏     ] data=0000309/0001123 loss=3.27110±0.01826 acc=40.22±0.12% t=00:06:41 ETA=00:17:38 epoch 0 lr=1e-05
+train: [██▏     ] data=0000310/0001123 loss=3.27062±0.01821 acc=40.21±0.12% t=00:06:43 ETA=00:17:37 epoch 0 lr=1e-05
+train: [██▏     ] data=0000311/0001123 loss=3.27131±0.01817 acc=40.19±0.12% t=00:06:44 ETA=00:17:35 epoch 0 lr=1e-05
+train: [██▏     ] data=0000312/0001123 loss=3.27295±0.01818 acc=40.16±0.12% t=00:06:45 ETA=00:17:34 epoch 0 lr=1e-05
+train: [██▏     ] data=0000313/0001123 loss=3.27480±0.01822 acc=40.15±0.12% t=00:06:46 ETA=00:17:33 epoch 0 lr=1e-05
+train: [██▏     ] data=0000314/0001123 loss=3.27574±0.01818 acc=40.14±0.12% t=00:06:48 ETA=00:17:31 epoch 0 lr=1e-05
+train: [██▏     ] data=0000315/0001123 loss=3.27650±0.01814 acc=40.13±0.12% t=00:06:49 ETA=00:17:30 epoch 0 lr=1e-05
+train: [██▎     ] data=0000316/0001123 loss=3.27810±0.01816 acc=40.11±0.12% t=00:06:50 ETA=00:17:28 epoch 0 lr=1e-05
+train: [██▎     ] data=0000317/0001123 loss=3.27897±0.01812 acc=40.09±0.12% t=00:06:52 ETA=00:17:27 epoch 0 lr=1e-05
+train: [██▎     ] data=0000318/0001123 loss=3.27984±0.01808 acc=40.07±0.12% t=00:06:53 ETA=00:17:26 epoch 0 lr=1e-05
+train: [██▎     ] data=0000319/0001123 loss=3.28083±0.01805 acc=40.05±0.12% t=00:06:54 ETA=00:17:24 epoch 0 lr=1e-05
+train: [██▎     ] data=0000320/0001123 loss=3.28143±0.01801 acc=40.04±0.12% t=00:06:55 ETA=00:17:23 epoch 0 lr=1e-05
+train: [██▎     ] data=0000321/0001123 loss=3.28208±0.01796 acc=40.03±0.12% t=00:06:57 ETA=00:17:22 epoch 0 lr=1e-05
+train: [██▎     ] data=0000322/0001123 loss=3.28377±0.01799 acc=40.01±0.12% t=00:06:58 ETA=00:17:20 epoch 0 lr=1e-05
+train: [██▎     ] data=0000323/0001123 loss=3.28592±0.01806 acc=39.98±0.12% t=00:06:59 ETA=00:17:19 epoch 0 lr=1e-05
+train: [██▎     ] data=0000324/0001123 loss=3.28731±0.01806 acc=39.97±0.12% t=00:07:00 ETA=00:17:17 epoch 0 lr=1e-05
+train: [██▎     ] data=0000325/0001123 loss=3.28950±0.01813 acc=39.94±0.12% t=00:07:02 ETA=00:17:16 epoch 0 lr=1e-05
+train: [██▎     ] data=0000326/0001123 loss=3.29262±0.01835 acc=39.91±0.12% t=00:07:03 ETA=00:17:15 epoch 0 lr=1e-05
+train: [██▎     ] data=0000327/0001123 loss=3.29398±0.01834 acc=39.89±0.12% t=00:07:04 ETA=00:17:13 epoch 0 lr=1e-05
+train: [██▎     ] data=0000328/0001123 loss=3.29508±0.01832 acc=39.87±0.12% t=00:07:05 ETA=00:17:12 epoch 0 lr=1e-05
+train: [██▎     ] data=0000329/0001123 loss=3.29612±0.01829 acc=39.85±0.12% t=00:07:07 ETA=00:17:10 epoch 0 lr=1e-05
+train: [██▎     ] data=0000330/0001123 loss=3.29711±0.01826 acc=39.83±0.12% t=00:07:08 ETA=00:17:09 epoch 0 lr=1e-05
+train: [██▎     ] data=0000331/0001123 loss=3.29815±0.01824 acc=39.81±0.12% t=00:07:09 ETA=00:17:08 epoch 0 lr=1e-05
+train: [██▎     ] data=0000332/0001123 loss=3.29952±0.01823 acc=39.80±0.12% t=00:07:10 ETA=00:17:06 epoch 0 lr=1e-05
+train: [██▎     ] data=0000333/0001123 loss=3.30104±0.01824 acc=39.78±0.12% t=00:07:12 ETA=00:17:05 epoch 0 lr=1e-05
+train: [██▍     ] data=0000334/0001123 loss=3.30409±0.01844 acc=39.75±0.12% t=00:07:13 ETA=00:17:03 epoch 0 lr=1e-05
+train: [██▍     ] data=0000335/0001123 loss=3.30729±0.01866 acc=39.73±0.12% t=00:07:14 ETA=00:17:02 epoch 0 lr=1e-05
+train: [██▍     ] data=0000336/0001123 loss=3.30832±0.01864 acc=39.73±0.12% t=00:07:15 ETA=00:17:01 epoch 0 lr=1e-05
+train: [██▍     ] data=0000337/0001123 loss=3.31098±0.01877 acc=39.72±0.12% t=00:07:17 ETA=00:16:59 epoch 0 lr=1e-05
+train: [██▍     ] data=0000338/0001123 loss=3.31499±0.01914 acc=39.69±0.12% t=00:07:18 ETA=00:16:58 epoch 0 lr=1e-05
+train: [██▍     ] data=0000339/0001123 loss=3.31831±0.01937 acc=39.67±0.12% t=00:07:19 ETA=00:16:57 epoch 0 lr=1e-05
+train: [██▍     ] data=0000340/0001123 loss=3.31995±0.01938 acc=39.66±0.12% t=00:07:21 ETA=00:16:55 epoch 0 lr=1e-05
+train: [██▍     ] data=0000341/0001123 loss=3.32084±0.01935 acc=39.65±0.12% t=00:07:22 ETA=00:16:54 epoch 0 lr=1e-05
+train: [██▍     ] data=0000342/0001123 loss=3.32346±0.01947 acc=39.62±0.12% t=00:07:23 ETA=00:16:52 epoch 0 lr=1e-05
+train: [██▍     ] data=0000343/0001123 loss=3.32733±0.01979 acc=39.58±0.12% t=00:07:24 ETA=00:16:51 epoch 0 lr=1e-05
+train: [██▍     ] data=0000344/0001123 loss=3.33063±0.02001 acc=39.56±0.12% t=00:07:26 ETA=00:16:50 epoch 0 lr=1e-05
+train: [██▍     ] data=0000345/0001123 loss=3.33331±0.02013 acc=39.54±0.12% t=00:07:27 ETA=00:16:48 epoch 0 lr=1e-05
+train: [██▍     ] data=0000346/0001123 loss=3.33613±0.02027 acc=39.51±0.12% t=00:07:28 ETA=00:16:47 epoch 0 lr=1e-05
+train: [██▍     ] data=0000347/0001123 loss=3.33837±0.02033 acc=39.48±0.12% t=00:07:29 ETA=00:16:46 epoch 0 lr=1e-05
+train: [██▍     ] data=0000348/0001123 loss=3.34024±0.02036 acc=39.45±0.12% t=00:07:31 ETA=00:16:44 epoch 0 lr=1e-05
+train: [██▍     ] data=0000349/0001123 loss=3.34335±0.02054 acc=39.42±0.12% t=00:07:32 ETA=00:16:43 epoch 0 lr=1e-05
+train: [██▍     ] data=0000350/0001123 loss=3.34699±0.02080 acc=39.39±0.12% t=00:07:33 ETA=00:16:41 epoch 0 lr=1e-05
+train: [██▌     ] data=0000351/0001123 loss=3.34876±0.02082 acc=39.37±0.12% t=00:07:34 ETA=00:16:40 epoch 0 lr=1e-05
+train: [██▌     ] data=0000352/0001123 loss=3.35110±0.02089 acc=39.35±0.12% t=00:07:36 ETA=00:16:39 epoch 0 lr=1e-05
+train: [██▌     ] data=0000353/0001123 loss=3.35503±0.02120 acc=39.33±0.11% t=00:07:37 ETA=00:16:37 epoch 0 lr=1e-05
+train: [██▌     ] data=0000354/0001123 loss=3.35827±0.02138 acc=39.31±0.11% t=00:07:38 ETA=00:16:36 epoch 0 lr=1e-05
+train: [██▌     ] data=0000355/0001123 loss=3.36022±0.02141 acc=39.30±0.11% t=00:07:39 ETA=00:16:35 epoch 0 lr=1e-05
+train: [██▌     ] data=0000356/0001123 loss=3.36247±0.02147 acc=39.28±0.11% t=00:07:41 ETA=00:16:33 epoch 0 lr=1e-05
+train: [██▌     ] data=0000357/0001123 loss=3.36509±0.02157 acc=39.26±0.11% t=00:07:42 ETA=00:16:32 epoch 0 lr=1e-05
+train: [██▌     ] data=0000358/0001123 loss=3.36799±0.02170 acc=39.24±0.11% t=00:07:43 ETA=00:16:30 epoch 0 lr=1e-05
+train: [██▌     ] data=0000359/0001123 loss=3.37121±0.02188 acc=39.21±0.11% t=00:07:45 ETA=00:16:29 epoch 0 lr=1e-05
+train: [██▌     ] data=0000360/0001123 loss=3.37408±0.02201 acc=39.18±0.11% t=00:07:46 ETA=00:16:28 epoch 0 lr=1e-05
+train: [██▌     ] data=0000361/0001123 loss=3.37682±0.02212 acc=39.16±0.11% t=00:07:47 ETA=00:16:26 epoch 0 lr=1e-05
+train: [██▌     ] data=0000362/0001123 loss=3.37912±0.02218 acc=39.14±0.11% t=00:07:48 ETA=00:16:25 epoch 0 lr=1e-05
+train: [██▌     ] data=0000363/0001123 loss=3.38061±0.02216 acc=39.13±0.11% t=00:07:50 ETA=00:16:24 epoch 0 lr=1e-05
+train: [██▌     ] data=0000364/0001123 loss=3.38166±0.02213 acc=39.12±0.11% t=00:07:51 ETA=00:16:22 epoch 0 lr=1e-05
+train: [██▌     ] data=0000365/0001123 loss=3.38500±0.02232 acc=39.09±0.11% t=00:07:52 ETA=00:16:21 epoch 0 lr=1e-05
+train: [██▌     ] data=0000366/0001123 loss=3.38937±0.02268 acc=39.05±0.11% t=00:07:53 ETA=00:16:20 epoch 0 lr=1e-05
+train: [██▌     ] data=0000367/0001123 loss=3.39223±0.02280 acc=39.03±0.11% t=00:07:55 ETA=00:16:18 epoch 0 lr=1e-05
+train: [██▌     ] data=0000368/0001123 loss=3.39479±0.02288 acc=39.00±0.11% t=00:07:56 ETA=00:16:17 epoch 0 lr=1e-05
+train: [██▋     ] data=0000369/0001123 loss=3.39768±0.02300 acc=38.97±0.11% t=00:07:57 ETA=00:16:15 epoch 0 lr=1e-05
+train: [██▋     ] data=0000370/0001123 loss=3.40080±0.02315 acc=38.94±0.11% t=00:07:58 ETA=00:16:14 epoch 0 lr=1e-05
+train: [██▋     ] data=0000371/0001123 loss=3.40395±0.02330 acc=38.91±0.11% t=00:08:00 ETA=00:16:13 epoch 0 lr=1e-05
+train: [██▋     ] data=0000372/0001123 loss=3.40622±0.02335 acc=38.89±0.11% t=00:08:01 ETA=00:16:11 epoch 0 lr=1e-05
+train: [██▋     ] data=0000373/0001123 loss=3.40815±0.02337 acc=38.86±0.11% t=00:08:02 ETA=00:16:10 epoch 0 lr=1e-05
+train: [██▋     ] data=0000374/0001123 loss=3.40993±0.02337 acc=38.85±0.11% t=00:08:03 ETA=00:16:08 epoch 0 lr=1e-05
+train: [██▋     ] data=0000375/0001123 loss=3.41253±0.02346 acc=38.83±0.11% t=00:08:05 ETA=00:16:07 epoch 0 lr=1e-05
+train: [██▋     ] data=0000376/0001123 loss=3.41510±0.02353 acc=38.81±0.11% t=00:08:06 ETA=00:16:06 epoch 0 lr=1e-05
+train: [██▋     ] data=0000377/0001123 loss=3.41691±0.02354 acc=38.80±0.11% t=00:08:07 ETA=00:16:04 epoch 0 lr=1e-05
+train: [██▋     ] data=0000378/0001123 loss=3.41926±0.02360 acc=38.79±0.11% t=00:08:08 ETA=00:16:03 epoch 0 lr=1e-05
+train: [██▋     ] data=0000379/0001123 loss=3.42272±0.02379 acc=38.77±0.11% t=00:08:10 ETA=00:16:02 epoch 0 lr=1e-05
+train: [██▋     ] data=0000380/0001123 loss=3.42564±0.02390 acc=38.74±0.11% t=00:08:11 ETA=00:16:00 epoch 0 lr=1e-05
+train: [██▋     ] data=0000381/0001123 loss=3.42717±0.02389 acc=38.72±0.11% t=00:08:12 ETA=00:15:59 epoch 0 lr=1e-05
+train: [██▋     ] data=0000382/0001123 loss=3.43036±0.02404 acc=38.69±0.11% t=00:08:13 ETA=00:15:57 epoch 0 lr=1e-05
+train: [██▋     ] data=0000383/0001123 loss=3.43397±0.02425 acc=38.66±0.11% t=00:08:15 ETA=00:15:56 epoch 0 lr=1e-05
+train: [██▋     ] data=0000384/0001123 loss=3.43782±0.02449 acc=38.63±0.11% t=00:08:16 ETA=00:15:55 epoch 0 lr=1e-05
+train: [██▋     ] data=0000385/0001123 loss=3.44169±0.02473 acc=38.59±0.11% t=00:08:17 ETA=00:15:53 epoch 0 lr=1e-05
+train: [██▋     ] data=0000386/0001123 loss=3.44507±0.02490 acc=38.56±0.11% t=00:08:18 ETA=00:15:52 epoch 0 lr=1e-05
+train: [██▊     ] data=0000387/0001123 loss=3.44938±0.02520 acc=38.52±0.11% t=00:08:20 ETA=00:15:51 epoch 0 lr=1e-05
+train: [██▊     ] data=0000388/0001123 loss=3.45538±0.02584 acc=38.47±0.11% t=00:08:21 ETA=00:15:49 epoch 0 lr=1e-05
+train: [██▊     ] data=0000389/0001123 loss=3.46191±0.02659 acc=38.42±0.11% t=00:08:22 ETA=00:15:48 epoch 0 lr=1e-05
+train: [██▊     ] data=0000390/0001123 loss=3.46618±0.02686 acc=38.38±0.11% t=00:08:23 ETA=00:15:47 epoch 0 lr=1e-05
+train: [██▊     ] data=0000391/0001123 loss=3.46912±0.02696 acc=38.35±0.11% t=00:08:25 ETA=00:15:45 epoch 0 lr=1e-05
+train: [██▊     ] data=0000392/0001123 loss=3.47255±0.02711 acc=38.32±0.11% t=00:08:26 ETA=00:15:44 epoch 0 lr=1e-05
+train: [██▊     ] data=0000393/0001123 loss=3.47482±0.02713 acc=38.29±0.11% t=00:08:27 ETA=00:15:43 epoch 0 lr=1e-05
+train: [██▊     ] data=0000394/0001123 loss=3.47728±0.02717 acc=38.26±0.11% t=00:08:28 ETA=00:15:41 epoch 0 lr=1e-05
+train: [██▊     ] data=0000395/0001123 loss=3.48187±0.02749 acc=38.23±0.11% t=00:08:30 ETA=00:15:40 epoch 0 lr=1e-05
+train: [██▊     ] data=0000396/0001123 loss=3.48626±0.02777 acc=38.19±0.11% t=00:08:31 ETA=00:15:39 epoch 0 lr=1e-05
+train: [██▊     ] data=0000397/0001123 loss=3.48863±0.02780 acc=38.17±0.11% t=00:08:32 ETA=00:15:37 epoch 0 lr=1e-05
+train: [██▊     ] data=0000398/0001123 loss=3.49090±0.02783 acc=38.15±0.11% t=00:08:34 ETA=00:15:36 epoch 0 lr=1e-05
+train: [██▊     ] data=0000399/0001123 loss=3.49372±0.02790 acc=38.13±0.11% t=00:08:35 ETA=00:15:35 epoch 0 lr=1e-05
+train: [██▊     ] data=0000400/0001123 loss=3.49845±0.02823 acc=38.10±0.11% t=00:08:36 ETA=00:15:33 epoch 0 lr=1e-05
+train: [██▊     ] data=0000401/0001123 loss=3.50306±0.02853 acc=38.06±0.11% t=00:08:37 ETA=00:15:32 epoch 0 lr=1e-05
+train: [██▊     ] data=0000402/0001123 loss=3.50743±0.02879 acc=38.03±0.11% t=00:08:39 ETA=00:15:31 epoch 0 lr=1e-05
+train: [██▊     ] data=0000403/0001123 loss=3.51200±0.02908 acc=37.99±0.11% t=00:08:40 ETA=00:15:29 epoch 0 lr=1e-05
+train: [██▉     ] data=0000404/0001123 loss=3.51780±0.02959 acc=37.96±0.11% t=00:08:41 ETA=00:15:28 epoch 0 lr=1e-05
+train: [██▉     ] data=0000405/0001123 loss=3.52396±0.03015 acc=37.92±0.11% t=00:08:42 ETA=00:15:26 epoch 0 lr=1e-05
+train: [██▉     ] data=0000406/0001123 loss=3.52836±0.03040 acc=37.88±0.11% t=00:08:44 ETA=00:15:25 epoch 0 lr=1e-05
+train: [██▉     ] data=0000407/0001123 loss=3.53228±0.03057 acc=37.85±0.11% t=00:08:45 ETA=00:15:24 epoch 0 lr=1e-05
+train: [██▉     ] data=0000408/0001123 loss=3.53559±0.03068 acc=37.83±0.11% t=00:08:46 ETA=00:15:22 epoch 0 lr=1e-05
+train: [██▉     ] data=0000409/0001123 loss=3.53899±0.03079 acc=37.80±0.11% t=00:08:47 ETA=00:15:21 epoch 0 lr=1e-05
+train: [██▉     ] data=0000410/0001123 loss=3.54299±0.03097 acc=37.77±0.11% t=00:08:49 ETA=00:15:20 epoch 0 lr=1e-05
+train: [██▉     ] data=0000411/0001123 loss=3.54712±0.03117 acc=37.73±0.11% t=00:08:50 ETA=00:15:18 epoch 0 lr=1e-05
+train: [██▉     ] data=0000412/0001123 loss=3.55024±0.03125 acc=37.69±0.11% t=00:08:51 ETA=00:15:17 epoch 0 lr=1e-05
+train: [██▉     ] data=0000413/0001123 loss=3.55300±0.03130 acc=37.66±0.11% t=00:08:52 ETA=00:15:16 epoch 0 lr=1e-05
+train: [██▉     ] data=0000414/0001123 loss=3.55633±0.03140 acc=37.63±0.11% t=00:08:54 ETA=00:15:14 epoch 0 lr=1e-05
+train: [██▉     ] data=0000415/0001123 loss=3.55989±0.03153 acc=37.60±0.11% t=00:08:55 ETA=00:15:13 epoch 0 lr=1e-05
+train: [██▉     ] data=0000416/0001123 loss=3.56230±0.03154 acc=37.58±0.10% t=00:08:56 ETA=00:15:11 epoch 0 lr=1e-05
+train: [██▉     ] data=0000417/0001123 loss=3.56520±0.03160 acc=37.56±0.10% t=00:08:57 ETA=00:15:10 epoch 0 lr=1e-05
+train: [██▉     ] data=0000418/0001123 loss=3.57000±0.03189 acc=37.53±0.10% t=00:08:59 ETA=00:15:09 epoch 0 lr=1e-05
+train: [██▉     ] data=0000419/0001123 loss=3.57323±0.03198 acc=37.50±0.10% t=00:09:00 ETA=00:15:07 epoch 0 lr=1e-05
+train: [██▉     ] data=0000420/0001123 loss=3.57583±0.03201 acc=37.48±0.10% t=00:09:01 ETA=00:15:06 epoch 0 lr=1e-05
+train: [██▉     ] data=0000421/0001123 loss=3.57892±0.03208 acc=37.45±0.10% t=00:09:02 ETA=00:15:05 epoch 0 lr=1e-05
+train: [███     ] data=0000422/0001123 loss=3.58383±0.03238 acc=37.43±0.10% t=00:09:04 ETA=00:15:03 epoch 0 lr=1e-05
+train: [███     ] data=0000423/0001123 loss=3.58791±0.03256 acc=37.40±0.10% t=00:09:05 ETA=00:15:02 epoch 0 lr=1e-05
+train: [███     ] data=0000424/0001123 loss=3.59409±0.03306 acc=37.36±0.10% t=00:09:06 ETA=00:15:01 epoch 0 lr=1e-05
+train: [███     ] data=0000425/0001123 loss=3.60222±0.03397 acc=37.31±0.10% t=00:09:07 ETA=00:14:59 epoch 0 lr=1e-05
+train: [███     ] data=0000426/0001123 loss=3.60864±0.03449 acc=37.27±0.10% t=00:09:09 ETA=00:14:58 epoch 0 lr=1e-05
+train: [███     ] data=0000427/0001123 loss=3.61262±0.03464 acc=37.23±0.10% t=00:09:10 ETA=00:14:57 epoch 0 lr=1e-05
+train: [███     ] data=0000428/0001123 loss=3.61682±0.03482 acc=37.19±0.10% t=00:09:11 ETA=00:14:55 epoch 0 lr=1e-05
+train: [███     ] data=0000429/0001123 loss=3.62164±0.03507 acc=37.15±0.10% t=00:09:12 ETA=00:14:54 epoch 0 lr=1e-05
+train: [███     ] data=0000430/0001123 loss=3.62762±0.03549 acc=37.11±0.10% t=00:09:14 ETA=00:14:53 epoch 0 lr=1e-05
+train: [███     ] data=0000431/0001123 loss=3.63435±0.03604 acc=37.05±0.10% t=00:09:15 ETA=00:14:51 epoch 0 lr=1e-05
+train: [███     ] data=0000432/0001123 loss=3.63993±0.03639 acc=37.01±0.10% t=00:09:16 ETA=00:14:50 epoch 0 lr=1e-05
+train: [███     ] data=0000433/0001123 loss=3.64525±0.03669 acc=36.97±0.10% t=00:09:17 ETA=00:14:49 epoch 0 lr=1e-05
+train: [███     ] data=0000434/0001123 loss=3.65193±0.03721 acc=36.93±0.10% t=00:09:19 ETA=00:14:47 epoch 0 lr=1e-05
+train: [███     ] data=0000435/0001123 loss=3.65830±0.03767 acc=36.88±0.10% t=00:09:20 ETA=00:14:46 epoch 0 lr=1e-05
+train: [███     ] data=0000436/0001123 loss=3.66862±0.03898 acc=36.83±0.10% t=00:09:21 ETA=00:14:45 epoch 0 lr=1e-05
+train: [███     ] data=0000437/0001123 loss=3.67549±0.03949 acc=36.79±0.10% t=00:09:23 ETA=00:14:43 epoch 0 lr=1e-05
+train: [███     ] data=0000438/0001123 loss=3.68210±0.03995 acc=36.75±0.10% t=00:09:24 ETA=00:14:42 epoch 0 lr=1e-05
+train: [███▏    ] data=0000439/0001123 loss=3.69448±0.04174 acc=36.69±0.10% t=00:09:25 ETA=00:14:41 epoch 0 lr=1e-05
+train: [███▏    ] data=0000440/0001123 loss=3.70586±0.04317 acc=36.64±0.10% t=00:09:26 ETA=00:14:39 epoch 0 lr=1e-05
+train: [███▏    ] data=0000441/0001123 loss=3.71356±0.04375 acc=36.60±0.10% t=00:09:28 ETA=00:14:38 epoch 0 lr=1e-05
+train: [███▏    ] data=0000442/0001123 loss=3.72250±0.04456 acc=36.55±0.10% t=00:09:29 ETA=00:14:37 epoch 0 lr=1e-05
+train: [███▏    ] data=0000443/0001123 loss=3.73741±0.04689 acc=36.49±0.10% t=00:09:30 ETA=00:14:35 epoch 0 lr=1e-05
+train: [███▏    ] data=0000444/0001123 loss=3.75450±0.04981 acc=36.42±0.10% t=00:09:31 ETA=00:14:34 epoch 0 lr=1e-05
+train: [███▏    ] data=0000445/0001123 loss=3.76792±0.05148 acc=36.37±0.10% t=00:09:33 ETA=00:14:33 epoch 0 lr=1e-05
+train: [███▏    ] data=0000446/0001123 loss=3.77608±0.05201 acc=36.32±0.10% t=00:09:34 ETA=00:14:31 epoch 0 lr=1e-05
+train: [███▏    ] data=0000447/0001123 loss=3.78698±0.05302 acc=36.26±0.10% t=00:09:35 ETA=00:14:30 epoch 0 lr=1e-05
+train: [███▏    ] data=0000448/0001123 loss=3.79772±0.05398 acc=36.21±0.10% t=00:09:36 ETA=00:14:29 epoch 0 lr=1e-05
+train: [███▏    ] data=0000449/0001123 loss=3.80547±0.05442 acc=36.16±0.10% t=00:09:38 ETA=00:14:27 epoch 0 lr=1e-05
+train: [███▏    ] data=0000450/0001123 loss=3.81677±0.05546 acc=36.10±0.10% t=00:09:39 ETA=00:14:26 epoch 0 lr=1e-05
+train: [███▏    ] data=0000451/0001123 loss=3.82884±0.05664 acc=36.04±0.10% t=00:09:40 ETA=00:14:25 epoch 0 lr=1e-05
+train: [███▏    ] data=0000452/0001123 loss=3.83555±0.05691 acc=36.00±0.10% t=00:09:42 ETA=00:14:24 epoch 0 lr=1e-05
+train: [███▏    ] data=0000453/0001123 loss=3.84443±0.05747 acc=35.95±0.10% t=00:09:43 ETA=00:14:22 epoch 0 lr=1e-05
+train: [███▏    ] data=0000454/0001123 loss=3.85801±0.05893 acc=35.89±0.10% t=00:09:44 ETA=00:14:21 epoch 0 lr=1e-05
+train: [███▏    ] data=0000455/0001123 loss=3.87760±0.06198 acc=35.82±0.10% t=00:09:45 ETA=00:14:20 epoch 0 lr=1e-05
+train: [███▏    ] data=0000456/0001123 loss=3.88968±0.06301 acc=35.76±0.10% t=00:09:47 ETA=00:14:18 epoch 0 lr=1e-05
+train: [███▎    ] data=0000457/0001123 loss=3.90263±0.06419 acc=35.69±0.10% t=00:09:48 ETA=00:14:17 epoch 0 lr=1e-05
+train: [███▎    ] data=0000458/0001123 loss=3.91515±0.06527 acc=35.63±0.10% t=00:09:49 ETA=00:14:16 epoch 0 lr=1e-05
+train: [███▎    ] data=0000459/0001123 loss=3.92683±0.06616 acc=35.57±0.10% t=00:09:50 ETA=00:14:14 epoch 0 lr=1e-05
+train: [███▎    ] data=0000460/0001123 loss=3.94399±0.06821 acc=35.51±0.10% t=00:09:52 ETA=00:14:13 epoch 0 lr=1e-05
+train: [███▎    ] data=0000461/0001123 loss=3.96096±0.07015 acc=35.45±0.10% t=00:09:53 ETA=00:14:12 epoch 0 lr=1e-05
+train: [███▎    ] data=0000462/0001123 loss=3.97701±0.07181 acc=35.39±0.10% t=00:09:54 ETA=00:14:10 epoch 0 lr=1e-05
+train: [███▎    ] data=0000463/0001123 loss=3.99154±0.07312 acc=35.33±0.10% t=00:09:55 ETA=00:14:09 epoch 0 lr=1e-05
+train: [███▎    ] data=0000464/0001123 loss=4.00167±0.07366 acc=35.27±0.10% t=00:09:57 ETA=00:14:08 epoch 0 lr=1e-05
+train: [███▎    ] data=0000465/0001123 loss=4.01053±0.07403 acc=35.22±0.10% t=00:09:58 ETA=00:14:06 epoch 0 lr=1e-05
+train: [███▎    ] data=0000466/0001123 loss=4.02028±0.07451 acc=35.17±0.10% t=00:09:59 ETA=00:14:05 epoch 0 lr=1e-05
+train: [███▎    ] data=0000467/0001123 loss=4.03224±0.07531 acc=35.11±0.10% t=00:10:01 ETA=00:14:04 epoch 0 lr=1e-05
+train: [███▎    ] data=0000468/0001123 loss=4.04194±0.07577 acc=35.06±0.10% t=00:10:02 ETA=00:14:02 epoch 0 lr=1e-05
+train: [███▎    ] data=0000469/0001123 loss=4.05281±0.07639 acc=35.00±0.10% t=00:10:03 ETA=00:14:01 epoch 0 lr=1e-05
+train: [███▎    ] data=0000470/0001123 loss=4.06239±0.07682 acc=34.94±0.10% t=00:10:04 ETA=00:14:00 epoch 0 lr=1e-05
+train: [███▎    ] data=0000471/0001123 loss=4.07023±0.07706 acc=34.89±0.10% t=00:10:06 ETA=00:13:58 epoch 0 lr=1e-05
+train: [███▎    ] data=0000472/0001123 loss=4.07766±0.07726 acc=34.85±0.10% t=00:10:07 ETA=00:13:57 epoch 0 lr=1e-05
+train: [███▎    ] data=0000473/0001123 loss=4.08745±0.07771 acc=34.79±0.10% t=00:10:08 ETA=00:13:56 epoch 0 lr=1e-05
+train: [███▍    ] data=0000474/0001123 loss=4.09487±0.07790 acc=34.75±0.10% t=00:10:09 ETA=00:13:55 epoch 0 lr=1e-05
+train: [███▍    ] data=0000475/0001123 loss=4.10236±0.07810 acc=34.70±0.10% t=00:10:11 ETA=00:13:53 epoch 0 lr=1e-05
+train: [███▍    ] data=0000476/0001123 loss=4.10956±0.07827 acc=34.66±0.10% t=00:10:12 ETA=00:13:52 epoch 0 lr=1e-05
+train: [███▍    ] data=0000477/0001123 loss=4.11697±0.07845 acc=34.61±0.10% t=00:10:13 ETA=00:13:51 epoch 0 lr=1e-05
+train: [███▍    ] data=0000478/0001123 loss=4.12578±0.07878 acc=34.56±0.10% t=00:10:14 ETA=00:13:49 epoch 0 lr=1e-05
+train: [███▍    ] data=0000479/0001123 loss=4.13185±0.07885 acc=34.52±0.10% t=00:10:16 ETA=00:13:48 epoch 0 lr=1e-05
+train: [███▍    ] data=0000480/0001123 loss=4.14035±0.07914 acc=34.47±0.10% t=00:10:17 ETA=00:13:47 epoch 0 lr=1e-05
+train: [███▍    ] data=0000481/0001123 loss=4.14888±0.07944 acc=34.42±0.10% t=00:10:18 ETA=00:13:45 epoch 0 lr=1e-05
+train: [███▍    ] data=0000482/0001123 loss=4.15742±0.07973 acc=34.37±0.10% t=00:10:19 ETA=00:13:44 epoch 0 lr=1e-05
+train: [███▍    ] data=0000483/0001123 loss=4.16647±0.08008 acc=34.32±0.10% t=00:10:21 ETA=00:13:43 epoch 0 lr=1e-05
+train: [███▍    ] data=0000484/0001123 loss=4.17532±0.08040 acc=34.27±0.10% t=00:10:22 ETA=00:13:41 epoch 0 lr=1e-05
+train: [███▍    ] data=0000485/0001123 loss=4.18340±0.08064 acc=34.22±0.10% t=00:10:23 ETA=00:13:40 epoch 0 lr=1e-05
+train: [███▍    ] data=0000486/0001123 loss=4.19085±0.08082 acc=34.18±0.10% t=00:10:25 ETA=00:13:39 epoch 0 lr=1e-05
+train: [███▍    ] data=0000487/0001123 loss=4.19720±0.08090 acc=34.13±0.09% t=00:10:26 ETA=00:13:37 epoch 0 lr=1e-05
+train: [███▍    ] data=0000488/0001123 loss=4.20336±0.08097 acc=34.09±0.09% t=00:10:27 ETA=00:13:36 epoch 0 lr=1e-05
+train: [███▍    ] data=0000489/0001123 loss=4.21140±0.08121 acc=34.04±0.09% t=00:10:28 ETA=00:13:35 epoch 0 lr=1e-05
+train: [███▍    ] data=0000490/0001123 loss=4.22023±0.08152 acc=34.00±0.09% t=00:10:30 ETA=00:13:33 epoch 0 lr=1e-05
+train: [███▍    ] data=0000491/0001123 loss=4.22643±0.08159 acc=33.96±0.09% t=00:10:31 ETA=00:13:32 epoch 0 lr=1e-05
+train: [███▌    ] data=0000492/0001123 loss=4.23204±0.08162 acc=33.92±0.09% t=00:10:32 ETA=00:13:31 epoch 0 lr=1e-05
+train: [███▌    ] data=0000493/0001123 loss=4.23819±0.08168 acc=33.88±0.09% t=00:10:33 ETA=00:13:30 epoch 0 lr=1e-05
+train: [███▌    ] data=0000494/0001123 loss=4.24693±0.08198 acc=33.83±0.09% t=00:10:35 ETA=00:13:28 epoch 0 lr=1e-05
+train: [███▌    ] data=0000495/0001123 loss=4.25420±0.08214 acc=33.78±0.09% t=00:10:36 ETA=00:13:27 epoch 0 lr=1e-05
+train: [███▌    ] data=0000496/0001123 loss=4.26146±0.08230 acc=33.73±0.09% t=00:10:37 ETA=00:13:26 epoch 0 lr=1e-05
+train: [███▌    ] data=0000497/0001123 loss=4.26928±0.08250 acc=33.69±0.09% t=00:10:38 ETA=00:13:24 epoch 0 lr=1e-05
+train: [███▌    ] data=0000498/0001123 loss=4.27754±0.08275 acc=33.64±0.09% t=00:10:40 ETA=00:13:23 epoch 0 lr=1e-05
+train: [███▌    ] data=0000499/0001123 loss=4.28424±0.08285 acc=33.60±0.09% t=00:10:41 ETA=00:13:22 epoch 0 lr=1e-05
+train: [███▌    ] data=0000500/0001123 loss=4.29174±0.08303 acc=33.55±0.09% t=00:10:42 ETA=00:13:20 epoch 0 lr=1e-05
+train: [███▌    ] data=0000501/0001123 loss=4.29881±0.08316 acc=33.50±0.09% t=00:10:44 ETA=00:13:19 epoch 0 lr=1e-05
+train: [███▌    ] data=0000502/0001123 loss=4.30452±0.08319 acc=33.46±0.09% t=00:10:45 ETA=00:13:18 epoch 0 lr=1e-05
+train: [███▌    ] data=0000503/0001123 loss=4.31071±0.08326 acc=33.41±0.09% t=00:10:46 ETA=00:13:17 epoch 0 lr=1e-05
+train: [███▌    ] data=0000504/0001123 loss=4.31661±0.08330 acc=33.37±0.09% t=00:10:47 ETA=00:13:15 epoch 0 lr=1e-05
+train: [███▌    ] data=0000505/0001123 loss=4.32244±0.08334 acc=33.33±0.09% t=00:10:49 ETA=00:13:14 epoch 0 lr=1e-05
+train: [███▌    ] data=0000506/0001123 loss=4.32887±0.08342 acc=33.29±0.09% t=00:10:50 ETA=00:13:13 epoch 0 lr=1e-05
+train: [███▌    ] data=0000507/0001123 loss=4.33471±0.08346 acc=33.24±0.09% t=00:10:51 ETA=00:13:11 epoch 0 lr=1e-05
+train: [███▌    ] data=0000508/0001123 loss=4.34065±0.08351 acc=33.20±0.09% t=00:10:52 ETA=00:13:10 epoch 0 lr=1e-05
+train: [███▋    ] data=0000509/0001123 loss=4.34907±0.08377 acc=33.15±0.09% t=00:10:54 ETA=00:13:09 epoch 0 lr=1e-05
+train: [███▋    ] data=0000510/0001123 loss=4.35347±0.08372 acc=33.12±0.09% t=00:10:55 ETA=00:13:07 epoch 0 lr=1e-05
+train: [███▋    ] data=0000511/0001123 loss=4.36059±0.08386 acc=33.07±0.09% t=00:10:56 ETA=00:13:06 epoch 0 lr=1e-05
+train: [███▋    ] data=0000512/0001123 loss=4.36785±0.08401 acc=33.03±0.09% t=00:10:58 ETA=00:13:05 epoch 0 lr=1e-05
+train: [███▋    ] data=0000513/0001123 loss=4.37176±0.08394 acc=33.00±0.09% t=00:10:59 ETA=00:13:03 epoch 0 lr=1e-05
+train: [███▋    ] data=0000514/0001123 loss=4.37583±0.08387 acc=32.97±0.09% t=00:11:00 ETA=00:13:02 epoch 0 lr=1e-05
+train: [███▋    ] data=0000515/0001123 loss=4.38130±0.08389 acc=32.93±0.09% t=00:11:01 ETA=00:13:01 epoch 0 lr=1e-05
+train: [███▋    ] data=0000516/0001123 loss=4.38635±0.08388 acc=32.90±0.09% t=00:11:03 ETA=00:13:00 epoch 0 lr=1e-05
+train: [███▋    ] data=0000517/0001123 loss=4.39270±0.08396 acc=32.85±0.09% t=00:11:04 ETA=00:12:58 epoch 0 lr=1e-05
+train: [███▋    ] data=0000518/0001123 loss=4.39998±0.08411 acc=32.81±0.09% t=00:11:05 ETA=00:12:57 epoch 0 lr=1e-05
+train: [███▋    ] data=0000519/0001123 loss=4.40851±0.08438 acc=32.76±0.09% t=00:11:06 ETA=00:12:56 epoch 0 lr=1e-05
+train: [███▋    ] data=0000520/0001123 loss=4.41954±0.08494 acc=32.71±0.09% t=00:11:08 ETA=00:12:54 epoch 0 lr=1e-05
+train: [███▋    ] data=0000521/0001123 loss=4.43251±0.08576 acc=32.66±0.09% t=00:11:09 ETA=00:12:53 epoch 0 lr=1e-05
+train: [███▋    ] data=0000522/0001123 loss=4.44973±0.08731 acc=32.60±0.09% t=00:11:10 ETA=00:12:52 epoch 0 lr=1e-05
+train: [███▋    ] data=0000523/0001123 loss=4.46275±0.08811 acc=32.55±0.09% t=00:11:11 ETA=00:12:50 epoch 0 lr=1e-05
+train: [███▋    ] data=0000524/0001123 loss=4.47303±0.08854 acc=32.50±0.09% t=00:11:13 ETA=00:12:49 epoch 0 lr=1e-05
+train: [███▋    ] data=0000525/0001123 loss=4.48248±0.08888 acc=32.44±0.09% t=00:11:14 ETA=00:12:48 epoch 0 lr=1e-05
+train: [███▋    ] data=0000526/0001123 loss=4.49225±0.08925 acc=32.40±0.09% t=00:11:15 ETA=00:12:46 epoch 0 lr=1e-05
+train: [███▊    ] data=0000527/0001123 loss=4.50244±0.08966 acc=32.35±0.09% t=00:11:17 ETA=00:12:45 epoch 0 lr=1e-05
+train: [███▊    ] data=0000528/0001123 loss=4.51667±0.09061 acc=32.30±0.09% t=00:11:18 ETA=00:12:44 epoch 0 lr=1e-05
+train: [███▊    ] data=0000529/0001123 loss=4.52590±0.09091 acc=32.25±0.09% t=00:11:19 ETA=00:12:43 epoch 0 lr=1e-05
+train: [███▊    ] data=0000530/0001123 loss=4.53599±0.09130 acc=32.21±0.09% t=00:11:20 ETA=00:12:41 epoch 0 lr=1e-05
+train: [███▊    ] data=0000531/0001123 loss=4.54459±0.09153 acc=32.16±0.09% t=00:11:22 ETA=00:12:40 epoch 0 lr=1e-05
+train: [███▊    ] data=0000532/0001123 loss=4.55098±0.09158 acc=32.12±0.09% t=00:11:23 ETA=00:12:39 epoch 0 lr=1e-05
+train: [███▊    ] data=0000533/0001123 loss=4.55874±0.09174 acc=32.08±0.09% t=00:11:24 ETA=00:12:37 epoch 0 lr=1e-05
+train: [███▊    ] data=0000534/0001123 loss=4.56718±0.09195 acc=32.03±0.09% t=00:11:25 ETA=00:12:36 epoch 0 lr=1e-05
+train: [███▊    ] data=0000535/0001123 loss=4.57413±0.09204 acc=31.99±0.09% t=00:11:27 ETA=00:12:35 epoch 0 lr=1e-05
+train: [███▊    ] data=0000536/0001123 loss=4.58264±0.09226 acc=31.95±0.09% t=00:11:28 ETA=00:12:33 epoch 0 lr=1e-05
+train: [███▊    ] data=0000537/0001123 loss=4.58966±0.09236 acc=31.90±0.09% t=00:11:29 ETA=00:12:32 epoch 0 lr=1e-05
+train: [███▊    ] data=0000538/0001123 loss=4.59733±0.09251 acc=31.85±0.09% t=00:11:30 ETA=00:12:31 epoch 0 lr=1e-05
+train: [███▊    ] data=0000539/0001123 loss=4.60499±0.09265 acc=31.81±0.09% t=00:11:32 ETA=00:12:29 epoch 0 lr=1e-05
+train: [███▊    ] data=0000540/0001123 loss=4.62008±0.09370 acc=31.76±0.09% t=00:11:33 ETA=00:12:28 epoch 0 lr=1e-05
+train: [███▊    ] data=0000541/0001123 loss=4.63114±0.09418 acc=31.71±0.09% t=00:11:34 ETA=00:12:27 epoch 0 lr=1e-05
+train: [███▊    ] data=0000542/0001123 loss=4.64111±0.09453 acc=31.67±0.09% t=00:11:35 ETA=00:12:25 epoch 0 lr=1e-05
+train: [███▊    ] data=0000543/0001123 loss=4.64852±0.09465 acc=31.62±0.09% t=00:11:37 ETA=00:12:24 epoch 0 lr=1e-05
+train: [███▉    ] data=0000544/0001123 loss=4.65632±0.09480 acc=31.58±0.09% t=00:11:38 ETA=00:12:23 epoch 0 lr=1e-05
+train: [███▉    ] data=0000545/0001123 loss=4.66792±0.09533 acc=31.54±0.09% t=00:11:39 ETA=00:12:22 epoch 0 lr=1e-05
+train: [███▉    ] data=0000546/0001123 loss=4.67636±0.09553 acc=31.49±0.09% t=00:11:40 ETA=00:12:20 epoch 0 lr=1e-05
+train: [███▉    ] data=0000547/0001123 loss=4.68455±0.09571 acc=31.44±0.09% t=00:11:42 ETA=00:12:19 epoch 0 lr=1e-05
+train: [███▉    ] data=0000548/0001123 loss=4.69547±0.09616 acc=31.39±0.09% t=00:11:43 ETA=00:12:18 epoch 0 lr=1e-05
+train: [███▉    ] data=0000549/0001123 loss=4.70453±0.09641 acc=31.35±0.09% t=00:11:44 ETA=00:12:16 epoch 0 lr=1e-05
+train: [███▉    ] data=0000550/0001123 loss=4.71626±0.09694 acc=31.31±0.09% t=00:11:46 ETA=00:12:15 epoch 0 lr=1e-05
+train: [███▉    ] data=0000551/0001123 loss=4.72938±0.09765 acc=31.26±0.09% t=00:11:47 ETA=00:12:14 epoch 0 lr=1e-05
+train: [███▉    ] data=0000552/0001123 loss=4.74382±0.09854 acc=31.21±0.09% t=00:11:48 ETA=00:12:12 epoch 0 lr=1e-05
+train: [███▉    ] data=0000553/0001123 loss=4.75755±0.09931 acc=31.16±0.09% t=00:11:49 ETA=00:12:11 epoch 0 lr=1e-05
+train: [███▉    ] data=0000554/0001123 loss=4.76881±0.09977 acc=31.11±0.09% t=00:11:51 ETA=00:12:10 epoch 0 lr=1e-05
+train: [███▉    ] data=0000555/0001123 loss=4.77675±0.09991 acc=31.07±0.09% t=00:11:52 ETA=00:12:09 epoch 0 lr=1e-05
+train: [███▉    ] data=0000556/0001123 loss=4.78323±0.09994 acc=31.03±0.09% t=00:11:53 ETA=00:12:07 epoch 0 lr=1e-05
+train: [███▉    ] data=0000557/0001123 loss=4.80310±0.10172 acc=30.98±0.09% t=00:11:54 ETA=00:12:06 epoch 0 lr=1e-05
+train: [███▉    ] data=0000558/0001123 loss=4.82546±0.10397 acc=30.92±0.09% t=00:11:56 ETA=00:12:05 epoch 0 lr=1e-05
+train: [███▉    ] data=0000559/0001123 loss=4.84097±0.10494 acc=30.87±0.09% t=00:11:57 ETA=00:12:03 epoch 0 lr=1e-05
+train: [███▉    ] data=0000560/0001123 loss=4.85835±0.10618 acc=30.82±0.09% t=00:11:58 ETA=00:12:02 epoch 0 lr=1e-05
+train: [███▉    ] data=0000561/0001123 loss=4.86867±0.10649 acc=30.78±0.09% t=00:11:59 ETA=00:12:01 epoch 0 lr=1e-05
+train: [████    ] data=0000562/0001123 loss=4.87861±0.10677 acc=30.74±0.09% t=00:12:01 ETA=00:11:59 epoch 0 lr=1e-05
+train: [████    ] data=0000563/0001123 loss=4.89672±0.10810 acc=30.69±0.09% t=00:12:02 ETA=00:11:58 epoch 0 lr=1e-05
+train: [████    ] data=0000564/0001123 loss=4.91948±0.11029 acc=30.63±0.09% t=00:12:03 ETA=00:11:57 epoch 0 lr=1e-05
+train: [████    ] data=0000565/0001123 loss=4.93501±0.11118 acc=30.58±0.09% t=00:12:04 ETA=00:11:55 epoch 0 lr=1e-05
+train: [████    ] data=0000566/0001123 loss=4.94924±0.11189 acc=30.54±0.09% t=00:12:06 ETA=00:11:54 epoch 0 lr=1e-05
+train: [████    ] data=0000567/0001123 loss=4.97412±0.11443 acc=30.49±0.09% t=00:12:07 ETA=00:11:53 epoch 0 lr=1e-05
+train: [████    ] data=0000568/0001123 loss=4.99547±0.11621 acc=30.44±0.09% t=00:12:08 ETA=00:11:52 epoch 0 lr=1e-05
+train: [████    ] data=0000569/0001123 loss=5.00957±0.11686 acc=30.39±0.09% t=00:12:09 ETA=00:11:50 epoch 0 lr=1e-05
+train: [████    ] data=0000570/0001123 loss=5.03392±0.11917 acc=30.34±0.09% t=00:12:11 ETA=00:11:49 epoch 0 lr=1e-05
+train: [████    ] data=0000571/0001123 loss=5.05654±0.12109 acc=30.29±0.08% t=00:12:12 ETA=00:11:48 epoch 0 lr=1e-05
+train: [████    ] data=0000572/0001123 loss=5.08567±0.12434 acc=30.24±0.08% t=00:12:13 ETA=00:11:46 epoch 0 lr=1e-05
+train: [████    ] data=0000573/0001123 loss=5.11027±0.12654 acc=30.19±0.08% t=00:12:15 ETA=00:11:45 epoch 0 lr=1e-05
+train: [████    ] data=0000574/0001123 loss=5.13888±0.12952 acc=30.13±0.08% t=00:12:16 ETA=00:11:44 epoch 0 lr=1e-05
+train: [████    ] data=0000575/0001123 loss=5.16142±0.13124 acc=30.08±0.08% t=00:12:17 ETA=00:11:42 epoch 0 lr=1e-05
+train: [████    ] data=0000576/0001123 loss=5.18139±0.13252 acc=30.03±0.08% t=00:12:18 ETA=00:11:41 epoch 0 lr=1e-05
+train: [████    ] data=0000577/0001123 loss=5.19332±0.13283 acc=29.99±0.08% t=00:12:20 ETA=00:11:40 epoch 0 lr=1e-05
+train: [████    ] data=0000578/0001123 loss=5.20018±0.13278 acc=29.95±0.08% t=00:12:21 ETA=00:11:39 epoch 0 lr=1e-05
+train: [████    ] data=0000579/0001123 loss=5.20988±0.13290 acc=29.92±0.08% t=00:12:22 ETA=00:11:37 epoch 0 lr=1e-05
+train: [████▏   ] data=0000580/0001123 loss=5.21755±0.13290 acc=29.88±0.08% t=00:12:23 ETA=00:11:36 epoch 0 lr=1e-05
+train: [████▏   ] data=0000581/0001123 loss=5.22479±0.13286 acc=29.84±0.08% t=00:12:25 ETA=00:11:35 epoch 0 lr=1e-05
+train: [████▏   ] data=0000582/0001123 loss=5.23802±0.13329 acc=29.79±0.08% t=00:12:26 ETA=00:11:33 epoch 0 lr=1e-05
+train: [████▏   ] data=0000583/0001123 loss=5.25205±0.13380 acc=29.75±0.08% t=00:12:27 ETA=00:11:32 epoch 0 lr=1e-05
+train: [████▏   ] data=0000584/0001123 loss=5.26225±0.13396 acc=29.71±0.08% t=00:12:28 ETA=00:11:31 epoch 0 lr=1e-05
+train: [████▏   ] data=0000585/0001123 loss=5.27610±0.13445 acc=29.66±0.08% t=00:12:30 ETA=00:11:29 epoch 0 lr=1e-05
+train: [████▏   ] data=0000586/0001123 loss=5.29097±0.13504 acc=29.62±0.08% t=00:12:31 ETA=00:11:28 epoch 0 lr=1e-05
+train: [████▏   ] data=0000587/0001123 loss=5.30293±0.13534 acc=29.57±0.08% t=00:12:32 ETA=00:11:27 epoch 0 lr=1e-05
+train: [████▏   ] data=0000588/0001123 loss=5.31129±0.13537 acc=29.53±0.08% t=00:12:33 ETA=00:11:25 epoch 0 lr=1e-05
+train: [████▏   ] data=0000589/0001123 loss=5.31746±0.13528 acc=29.50±0.08% t=00:12:35 ETA=00:11:24 epoch 0 lr=1e-05
+train: [████▏   ] data=0000590/0001123 loss=5.32434±0.13522 acc=29.47±0.08% t=00:12:36 ETA=00:11:23 epoch 0 lr=1e-05
+train: [████▏   ] data=0000591/0001123 loss=5.33231±0.13523 acc=29.43±0.08% t=00:12:37 ETA=00:11:21 epoch 0 lr=1e-05
+train: [████▏   ] data=0000592/0001123 loss=5.34078±0.13527 acc=29.39±0.08% t=00:12:38 ETA=00:11:20 epoch 0 lr=1e-05
+train: [████▏   ] data=0000593/0001123 loss=5.35044±0.13538 acc=29.35±0.08% t=00:12:40 ETA=00:11:19 epoch 0 lr=1e-05
+train: [████▏   ] data=0000594/0001123 loss=5.36402±0.13584 acc=29.31±0.08% t=00:12:41 ETA=00:11:18 epoch 0 lr=1e-05
+train: [████▏   ] data=0000595/0001123 loss=5.37519±0.13607 acc=29.27±0.08% t=00:12:42 ETA=00:11:16 epoch 0 lr=1e-05
+train: [████▏   ] data=0000596/0001123 loss=5.38745±0.13639 acc=29.22±0.08% t=00:12:43 ETA=00:11:15 epoch 0 lr=1e-05
+train: [████▎   ] data=0000597/0001123 loss=5.39962±0.13671 acc=29.18±0.08% t=00:12:45 ETA=00:11:14 epoch 0 lr=1e-05
+train: [████▎   ] data=0000598/0001123 loss=5.41459±0.13729 acc=29.13±0.08% t=00:12:46 ETA=00:11:12 epoch 0 lr=1e-05
+train: [████▎   ] data=0000599/0001123 loss=5.42783±0.13770 acc=29.09±0.08% t=00:12:47 ETA=00:11:11 epoch 0 lr=1e-05
+train: [████▎   ] data=0000600/0001123 loss=5.44175±0.13818 acc=29.04±0.08% t=00:12:48 ETA=00:11:10 epoch 0 lr=1e-05
+train: [████▎   ] data=0000601/0001123 loss=5.46026±0.13918 acc=29.00±0.08% t=00:12:50 ETA=00:11:09 epoch 0 lr=1e-05
+train: [████▎   ] data=0000602/0001123 loss=5.47336±0.13957 acc=28.95±0.08% t=00:12:51 ETA=00:11:07 epoch 0 lr=1e-05
+train: [████▎   ] data=0000603/0001123 loss=5.48723±0.14002 acc=28.91±0.08% t=00:12:52 ETA=00:11:06 epoch 0 lr=1e-05
+train: [████▎   ] data=0000604/0001123 loss=5.50628±0.14108 acc=28.86±0.08% t=00:12:54 ETA=00:11:05 epoch 0 lr=1e-05
+train: [████▎   ] data=0000605/0001123 loss=5.52948±0.14275 acc=28.82±0.08% t=00:12:55 ETA=00:11:03 epoch 0 lr=1e-05
+train: [████▎   ] data=0000606/0001123 loss=5.55143±0.14419 acc=28.77±0.08% t=00:12:56 ETA=00:11:02 epoch 0 lr=1e-05
+train: [████▎   ] data=0000607/0001123 loss=5.56888±0.14501 acc=28.72±0.08% t=00:12:57 ETA=00:11:01 epoch 0 lr=1e-05
+train: [████▎   ] data=0000608/0001123 loss=5.58489±0.14565 acc=28.68±0.08% t=00:12:59 ETA=00:10:59 epoch 0 lr=1e-05
+train: [████▎   ] data=0000609/0001123 loss=5.60795±0.14723 acc=28.63±0.08% t=00:13:00 ETA=00:10:58 epoch 0 lr=1e-05
+train: [████▎   ] data=0000610/0001123 loss=5.63675±0.14978 acc=28.58±0.08% t=00:13:01 ETA=00:10:57 epoch 0 lr=1e-05
+train: [████▎   ] data=0000611/0001123 loss=5.65994±0.15133 acc=28.54±0.08% t=00:13:02 ETA=00:10:55 epoch 0 lr=1e-05
+train: [████▎   ] data=0000612/0001123 loss=5.68454±0.15307 acc=28.49±0.08% t=00:13:04 ETA=00:10:54 epoch 0 lr=1e-05
+train: [████▎   ] data=0000613/0001123 loss=5.70890±0.15475 acc=28.45±0.08% t=00:13:05 ETA=00:10:53 epoch 0 lr=1e-05
+train: [████▎   ] data=0000614/0001123 loss=5.72744±0.15560 acc=28.40±0.08% t=00:13:06 ETA=00:10:52 epoch 0 lr=1e-05
+train: [████▍   ] data=0000615/0001123 loss=5.75046±0.15705 acc=28.36±0.08% t=00:13:07 ETA=00:10:50 epoch 0 lr=1e-05
+train: [████▍   ] data=0000616/0001123 loss=5.77429±0.15859 acc=28.31±0.08% t=00:13:09 ETA=00:10:49 epoch 0 lr=1e-05
+train: [████▍   ] data=0000617/0001123 loss=5.79133±0.15925 acc=28.27±0.08% t=00:13:10 ETA=00:10:48 epoch 0 lr=1e-05
+train: [████▍   ] data=0000618/0001123 loss=5.81598±0.16089 acc=28.22±0.08% t=00:13:11 ETA=00:10:46 epoch 0 lr=1e-05
+train: [████▍   ] data=0000619/0001123 loss=5.83555±0.16182 acc=28.18±0.08% t=00:13:12 ETA=00:10:45 epoch 0 lr=1e-05
+train: [████▍   ] data=0000620/0001123 loss=5.85143±0.16234 acc=28.13±0.08% t=00:13:14 ETA=00:10:44 epoch 0 lr=1e-05
+train: [████▍   ] data=0000621/0001123 loss=5.87011±0.16315 acc=28.09±0.08% t=00:13:15 ETA=00:10:42 epoch 0 lr=1e-05
+train: [████▍   ] data=0000622/0001123 loss=5.88729±0.16379 acc=28.05±0.08% t=00:13:16 ETA=00:10:41 epoch 0 lr=1e-05
+train: [████▍   ] data=0000623/0001123 loss=5.90891±0.16495 acc=28.00±0.08% t=00:13:17 ETA=00:10:40 epoch 0 lr=1e-05
+train: [████▍   ] data=0000624/0001123 loss=5.93059±0.16611 acc=27.96±0.08% t=00:13:19 ETA=00:10:39 epoch 0 lr=1e-05
+train: [████▍   ] data=0000625/0001123 loss=5.94838±0.16679 acc=27.91±0.08% t=00:13:20 ETA=00:10:37 epoch 0 lr=1e-05
+train: [████▍   ] data=0000626/0001123 loss=5.97111±0.16807 acc=27.87±0.08% t=00:13:21 ETA=00:10:36 epoch 0 lr=1e-05
+train: [████▍   ] data=0000627/0001123 loss=5.99109±0.16899 acc=27.82±0.08% t=00:13:22 ETA=00:10:35 epoch 0 lr=1e-05
+train: [████▍   ] data=0000628/0001123 loss=6.01543±0.17046 acc=27.78±0.08% t=00:13:24 ETA=00:10:33 epoch 0 lr=1e-05
+train: [████▍   ] data=0000629/0001123 loss=6.03595±0.17142 acc=27.74±0.08% t=00:13:25 ETA=00:10:32 epoch 0 lr=1e-05
+train: [████▍   ] data=0000630/0001123 loss=6.05422±0.17212 acc=27.69±0.08% t=00:13:26 ETA=00:10:31 epoch 0 lr=1e-05
+train: [████▍   ] data=0000631/0001123 loss=6.07487±0.17309 acc=27.65±0.08% t=00:13:27 ETA=00:10:29 epoch 0 lr=1e-05
+train: [████▌   ] data=0000632/0001123 loss=6.09565±0.17406 acc=27.60±0.08% t=00:13:29 ETA=00:10:28 epoch 0 lr=1e-05
+train: [████▌   ] data=0000633/0001123 loss=6.11542±0.17490 acc=27.56±0.08% t=00:13:30 ETA=00:10:27 epoch 0 lr=1e-05
+train: [████▌   ] data=0000634/0001123 loss=6.13384±0.17560 acc=27.52±0.08% t=00:13:31 ETA=00:10:26 epoch 0 lr=1e-05
+train: [████▌   ] data=0000635/0001123 loss=6.15330±0.17640 acc=27.47±0.08% t=00:13:32 ETA=00:10:24 epoch 0 lr=1e-05
+train: [████▌   ] data=0000636/0001123 loss=6.16937±0.17685 acc=27.43±0.08% t=00:13:34 ETA=00:10:23 epoch 0 lr=1e-05
+train: [████▌   ] data=0000637/0001123 loss=6.18851±0.17761 acc=27.39±0.08% t=00:13:35 ETA=00:10:22 epoch 0 lr=1e-05
+train: [████▌   ] data=0000638/0001123 loss=6.20788±0.17838 acc=27.34±0.08% t=00:13:36 ETA=00:10:20 epoch 0 lr=1e-05
+train: [████▌   ] data=0000639/0001123 loss=6.22745±0.17917 acc=27.30±0.08% t=00:13:38 ETA=00:10:19 epoch 0 lr=1e-05
+train: [████▌   ] data=0000640/0001123 loss=6.24616±0.17987 acc=27.26±0.08% t=00:13:39 ETA=00:10:18 epoch 0 lr=1e-05
+train: [████▌   ] data=0000641/0001123 loss=6.26129±0.18023 acc=27.22±0.08% t=00:13:40 ETA=00:10:16 epoch 0 lr=1e-05
+train: [████▌   ] data=0000642/0001123 loss=6.27810±0.18073 acc=27.17±0.08% t=00:13:41 ETA=00:10:15 epoch 0 lr=1e-05
+train: [████▌   ] data=0000643/0001123 loss=6.29387±0.18114 acc=27.13±0.08% t=00:13:43 ETA=00:10:14 epoch 0 lr=1e-05
+train: [████▌   ] data=0000644/0001123 loss=6.30941±0.18152 acc=27.09±0.08% t=00:13:44 ETA=00:10:13 epoch 0 lr=1e-05
+train: [████▌   ] data=0000645/0001123 loss=6.32391±0.18182 acc=27.05±0.08% t=00:13:45 ETA=00:10:11 epoch 0 lr=1e-05
+train: [████▌   ] data=0000646/0001123 loss=6.33993±0.18224 acc=27.01±0.08% t=00:13:46 ETA=00:10:10 epoch 0 lr=1e-05
+train: [████▌   ] data=0000647/0001123 loss=6.35832±0.18289 acc=26.97±0.08% t=00:13:48 ETA=00:10:09 epoch 0 lr=1e-05
+train: [████▌   ] data=0000648/0001123 loss=6.37489±0.18335 acc=26.92±0.08% t=00:13:49 ETA=00:10:07 epoch 0 lr=1e-05
+train: [████▌   ] data=0000649/0001123 loss=6.38979±0.18368 acc=26.88±0.08% t=00:13:50 ETA=00:10:06 epoch 0 lr=1e-05
+train: [████▋   ] data=0000650/0001123 loss=6.40435±0.18397 acc=26.84±0.08% t=00:13:51 ETA=00:10:05 epoch 0 lr=1e-05
+train: [████▋   ] data=0000651/0001123 loss=6.41952±0.18431 acc=26.80±0.08% t=00:13:53 ETA=00:10:04 epoch 0 lr=1e-05
+train: [████▋   ] data=0000652/0001123 loss=6.43495±0.18468 acc=26.76±0.08% t=00:13:54 ETA=00:10:02 epoch 0 lr=1e-05
+train: [████▋   ] data=0000653/0001123 loss=6.44983±0.18499 acc=26.72±0.08% t=00:13:55 ETA=00:10:01 epoch 0 lr=1e-05
+train: [████▋   ] data=0000654/0001123 loss=6.46439±0.18528 acc=26.68±0.08% t=00:13:56 ETA=00:10:00 epoch 0 lr=1e-05
+train: [████▋   ] data=0000655/0001123 loss=6.47821±0.18552 acc=26.64±0.08% t=00:13:58 ETA=00:09:58 epoch 0 lr=1e-05
+train: [████▋   ] data=0000656/0001123 loss=6.49217±0.18576 acc=26.60±0.08% t=00:13:59 ETA=00:09:57 epoch 0 lr=1e-05
+train: [████▋   ] data=0000657/0001123 loss=6.50529±0.18594 acc=26.56±0.08% t=00:14:00 ETA=00:09:56 epoch 0 lr=1e-05
+train: [████▋   ] data=0000658/0001123 loss=6.51979±0.18622 acc=26.52±0.08% t=00:14:01 ETA=00:09:54 epoch 0 lr=1e-05
+train: [████▋   ] data=0000659/0001123 loss=6.53275±0.18639 acc=26.47±0.08% t=00:14:03 ETA=00:09:53 epoch 0 lr=1e-05
+train: [████▋   ] data=0000660/0001123 loss=6.54701±0.18665 acc=26.43±0.08% t=00:14:04 ETA=00:09:52 epoch 0 lr=1e-05
+train: [████▋   ] data=0000661/0001123 loss=6.56069±0.18687 acc=26.39±0.08% t=00:14:05 ETA=00:09:51 epoch 0 lr=1e-05
+train: [████▋   ] data=0000662/0001123 loss=6.57573±0.18719 acc=26.35±0.08% t=00:14:06 ETA=00:09:49 epoch 0 lr=1e-05
+train: [████▋   ] data=0000663/0001123 loss=6.59236±0.18765 acc=26.32±0.08% t=00:14:08 ETA=00:09:48 epoch 0 lr=1e-05
+train: [████▋   ] data=0000664/0001123 loss=6.60652±0.18790 acc=26.28±0.08% t=00:14:09 ETA=00:09:47 epoch 0 lr=1e-05
+train: [████▋   ] data=0000665/0001123 loss=6.62269±0.18831 acc=26.24±0.08% t=00:14:10 ETA=00:09:45 epoch 0 lr=1e-05
+train: [████▋   ] data=0000666/0001123 loss=6.63835±0.18868 acc=26.20±0.08% t=00:14:11 ETA=00:09:44 epoch 0 lr=1e-05
+train: [████▊   ] data=0000667/0001123 loss=6.65308±0.18897 acc=26.16±0.08% t=00:14:13 ETA=00:09:43 epoch 0 lr=1e-05
+train: [████▊   ] data=0000668/0001123 loss=6.66733±0.18923 acc=26.12±0.08% t=00:14:14 ETA=00:09:42 epoch 0 lr=1e-05
+train: [████▊   ] data=0000669/0001123 loss=6.68161±0.18948 acc=26.08±0.08% t=00:14:15 ETA=00:09:40 epoch 0 lr=1e-05
+train: [████▊   ] data=0000670/0001123 loss=6.69649±0.18978 acc=26.04±0.07% t=00:14:16 ETA=00:09:39 epoch 0 lr=1e-05
+train: [████▊   ] data=0000671/0001123 loss=6.71111±0.19006 acc=26.00±0.07% t=00:14:18 ETA=00:09:38 epoch 0 lr=1e-05
+train: [████▊   ] data=0000672/0001123 loss=6.72702±0.19045 acc=25.96±0.07% t=00:14:19 ETA=00:09:36 epoch 0 lr=1e-05
+train: [████▊   ] data=0000673/0001123 loss=6.74195±0.19075 acc=25.92±0.07% t=00:14:20 ETA=00:09:35 epoch 0 lr=1e-05
+train: [████▊   ] data=0000674/0001123 loss=6.75612±0.19099 acc=25.89±0.07% t=00:14:22 ETA=00:09:34 epoch 0 lr=1e-05
+train: [████▊   ] data=0000675/0001123 loss=6.77107±0.19129 acc=25.85±0.07% t=00:14:23 ETA=00:09:32 epoch 0 lr=1e-05
+train: [████▊   ] data=0000676/0001123 loss=6.78766±0.19173 acc=25.81±0.07% t=00:14:24 ETA=00:09:31 epoch 0 lr=1e-05
+train: [████▊   ] data=0000677/0001123 loss=6.80202±0.19198 acc=25.77±0.07% t=00:14:25 ETA=00:09:30 epoch 0 lr=1e-05
+train: [████▊   ] data=0000678/0001123 loss=6.81476±0.19212 acc=25.73±0.07% t=00:14:27 ETA=00:09:29 epoch 0 lr=1e-05
+train: [████▊   ] data=0000679/0001123 loss=6.83024±0.19246 acc=25.69±0.07% t=00:14:28 ETA=00:09:27 epoch 0 lr=1e-05
+train: [████▊   ] data=0000680/0001123 loss=6.84544±0.19278 acc=25.66±0.07% t=00:14:29 ETA=00:09:26 epoch 0 lr=1e-05
+train: [████▊   ] data=0000681/0001123 loss=6.85947±0.19301 acc=25.62±0.07% t=00:14:30 ETA=00:09:25 epoch 0 lr=1e-05
+train: [████▊   ] data=0000682/0001123 loss=6.87458±0.19332 acc=25.58±0.07% t=00:14:32 ETA=00:09:23 epoch 0 lr=1e-05
+train: [████▊   ] data=0000683/0001123 loss=6.89046±0.19369 acc=25.54±0.07% t=00:14:33 ETA=00:09:22 epoch 0 lr=1e-05
+train: [████▊   ] data=0000684/0001123 loss=6.90417±0.19389 acc=25.51±0.07% t=00:14:34 ETA=00:09:21 epoch 0 lr=1e-05
+train: [████▉   ] data=0000685/0001123 loss=6.91762±0.19407 acc=25.47±0.07% t=00:14:35 ETA=00:09:20 epoch 0 lr=1e-05
+train: [████▉   ] data=0000686/0001123 loss=6.93074±0.19423 acc=25.43±0.07% t=00:14:37 ETA=00:09:18 epoch 0 lr=1e-05
+train: [████▉   ] data=0000687/0001123 loss=6.94507±0.19448 acc=25.40±0.07% t=00:14:38 ETA=00:09:17 epoch 0 lr=1e-05
+train: [████▉   ] data=0000688/0001123 loss=6.95872±0.19467 acc=25.36±0.07% t=00:14:39 ETA=00:09:16 epoch 0 lr=1e-05
+train: [████▉   ] data=0000689/0001123 loss=6.97459±0.19504 acc=25.32±0.07% t=00:14:40 ETA=00:09:14 epoch 0 lr=1e-05
+train: [████▉   ] data=0000690/0001123 loss=6.98868±0.19526 acc=25.29±0.07% t=00:14:42 ETA=00:09:13 epoch 0 lr=1e-05
+train: [████▉   ] data=0000691/0001123 loss=7.00420±0.19560 acc=25.25±0.07% t=00:14:43 ETA=00:09:12 epoch 0 lr=1e-05
+train: [████▉   ] data=0000692/0001123 loss=7.02063±0.19601 acc=25.21±0.07% t=00:14:44 ETA=00:09:11 epoch 0 lr=1e-05
+train: [████▉   ] data=0000693/0001123 loss=7.03735±0.19643 acc=25.18±0.07% t=00:14:45 ETA=00:09:09 epoch 0 lr=1e-05
+train: [████▉   ] data=0000694/0001123 loss=7.05337±0.19680 acc=25.14±0.07% t=00:14:47 ETA=00:09:08 epoch 0 lr=1e-05
+train: [████▉   ] data=0000695/0001123 loss=7.06974±0.19720 acc=25.10±0.07% t=00:14:48 ETA=00:09:07 epoch 0 lr=1e-05
+train: [████▉   ] data=0000696/0001123 loss=7.08534±0.19754 acc=25.07±0.07% t=00:14:49 ETA=00:09:05 epoch 0 lr=1e-05
+train: [████▉   ] data=0000697/0001123 loss=7.10202±0.19796 acc=25.03±0.07% t=00:14:50 ETA=00:09:04 epoch 0 lr=1e-05
+train: [████▉   ] data=0000698/0001123 loss=7.11798±0.19831 acc=25.00±0.07% t=00:14:52 ETA=00:09:03 epoch 0 lr=1e-05
+train: [████▉   ] data=0000699/0001123 loss=7.13287±0.19859 acc=24.96±0.07% t=00:14:53 ETA=00:09:01 epoch 0 lr=1e-05
+train: [████▉   ] data=0000700/0001123 loss=7.14864±0.19893 acc=24.92±0.07% t=00:14:54 ETA=00:09:00 epoch 0 lr=1e-05
+train: [████▉   ] data=0000701/0001123 loss=7.16370±0.19922 acc=24.89±0.07% t=00:14:55 ETA=00:08:59 epoch 0 lr=1e-05
+train: [█████   ] data=0000702/0001123 loss=7.18019±0.19962 acc=24.85±0.07% t=00:14:57 ETA=00:08:58 epoch 0 lr=1e-05
+train: [█████   ] data=0000703/0001123 loss=7.19566±0.19993 acc=24.82±0.07% t=00:14:58 ETA=00:08:56 epoch 0 lr=1e-05
+train: [█████   ] data=0000704/0001123 loss=7.21097±0.20023 acc=24.78±0.07% t=00:14:59 ETA=00:08:55 epoch 0 lr=1e-05
+train: [█████   ] data=0000705/0001123 loss=7.22526±0.20046 acc=24.75±0.07% t=00:15:00 ETA=00:08:54 epoch 0 lr=1e-05
+train: [█████   ] data=0000706/0001123 loss=7.24025±0.20074 acc=24.71±0.07% t=00:15:02 ETA=00:08:52 epoch 0 lr=1e-05
+train: [█████   ] data=0000707/0001123 loss=7.25532±0.20102 acc=24.68±0.07% t=00:15:03 ETA=00:08:51 epoch 0 lr=1e-05
+train: [█████   ] data=0000708/0001123 loss=7.27006±0.20127 acc=24.64±0.07% t=00:15:04 ETA=00:08:50 epoch 0 lr=1e-05
+train: [█████   ] data=0000709/0001123 loss=7.28489±0.20154 acc=24.61±0.07% t=00:15:05 ETA=00:08:48 epoch 0 lr=1e-05
+train: [█████   ] data=0000710/0001123 loss=7.29907±0.20175 acc=24.57±0.07% t=00:15:07 ETA=00:08:47 epoch 0 lr=1e-05
+train: [█████   ] data=0000711/0001123 loss=7.31412±0.20203 acc=24.54±0.07% t=00:15:08 ETA=00:08:46 epoch 0 lr=1e-05
+train: [█████   ] data=0000712/0001123 loss=7.32913±0.20230 acc=24.50±0.07% t=00:15:09 ETA=00:08:45 epoch 0 lr=1e-05
+train: [█████   ] data=0000713/0001123 loss=7.34354±0.20253 acc=24.47±0.07% t=00:15:10 ETA=00:08:43 epoch 0 lr=1e-05
+train: [█████   ] data=0000714/0001123 loss=7.35713±0.20270 acc=24.44±0.07% t=00:15:12 ETA=00:08:42 epoch 0 lr=1e-05
+train: [█████   ] data=0000715/0001123 loss=7.37112±0.20290 acc=24.40±0.07% t=00:15:13 ETA=00:08:41 epoch 0 lr=1e-05
+train: [█████   ] data=0000716/0001123 loss=7.38558±0.20313 acc=24.37±0.07% t=00:15:14 ETA=00:08:39 epoch 0 lr=1e-05
+train: [█████   ] data=0000717/0001123 loss=7.39947±0.20333 acc=24.33±0.07% t=00:15:15 ETA=00:08:38 epoch 0 lr=1e-05
+train: [█████   ] data=0000718/0001123 loss=7.41352±0.20353 acc=24.30±0.07% t=00:15:17 ETA=00:08:37 epoch 0 lr=1e-05
+train: [█████   ] data=0000719/0001123 loss=7.42830±0.20378 acc=24.27±0.07% t=00:15:18 ETA=00:08:36 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000720/0001123 loss=7.44197±0.20396 acc=24.23±0.07% t=00:15:19 ETA=00:08:34 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000721/0001123 loss=7.45368±0.20401 acc=24.20±0.07% t=00:15:20 ETA=00:08:33 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000722/0001123 loss=7.46679±0.20415 acc=24.16±0.07% t=00:15:22 ETA=00:08:32 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000723/0001123 loss=7.48045±0.20432 acc=24.13±0.07% t=00:15:23 ETA=00:08:30 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000724/0001123 loss=7.49393±0.20449 acc=24.10±0.07% t=00:15:24 ETA=00:08:29 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000725/0001123 loss=7.50727±0.20464 acc=24.06±0.07% t=00:15:25 ETA=00:08:28 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000726/0001123 loss=7.52074±0.20480 acc=24.03±0.07% t=00:15:27 ETA=00:08:26 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000727/0001123 loss=7.53363±0.20492 acc=24.00±0.07% t=00:15:28 ETA=00:08:25 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000728/0001123 loss=7.54581±0.20500 acc=23.97±0.07% t=00:15:29 ETA=00:08:24 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000729/0001123 loss=7.55751±0.20506 acc=23.93±0.07% t=00:15:30 ETA=00:08:23 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000730/0001123 loss=7.57011±0.20516 acc=23.90±0.07% t=00:15:32 ETA=00:08:21 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000731/0001123 loss=7.58174±0.20521 acc=23.87±0.07% t=00:15:33 ETA=00:08:20 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000732/0001123 loss=7.59334±0.20526 acc=23.83±0.07% t=00:15:34 ETA=00:08:19 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000733/0001123 loss=7.60435±0.20528 acc=23.80±0.07% t=00:15:35 ETA=00:08:17 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000734/0001123 loss=7.61704±0.20539 acc=23.77±0.07% t=00:15:37 ETA=00:08:16 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000735/0001123 loss=7.62865±0.20544 acc=23.74±0.07% t=00:15:38 ETA=00:08:15 epoch 0 lr=1e-05
+train: [█████▏  ] data=0000736/0001123 loss=7.64106±0.20553 acc=23.71±0.07% t=00:15:39 ETA=00:08:14 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000737/0001123 loss=7.65462±0.20570 acc=23.67±0.07% t=00:15:40 ETA=00:08:12 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000738/0001123 loss=7.66777±0.20584 acc=23.64±0.07% t=00:15:42 ETA=00:08:11 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000739/0001123 loss=7.68012±0.20593 acc=23.61±0.07% t=00:15:43 ETA=00:08:10 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000740/0001123 loss=7.69126±0.20596 acc=23.58±0.07% t=00:15:44 ETA=00:08:08 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000741/0001123 loss=7.70289±0.20601 acc=23.55±0.07% t=00:15:45 ETA=00:08:07 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000742/0001123 loss=7.71424±0.20604 acc=23.51±0.07% t=00:15:47 ETA=00:08:06 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000743/0001123 loss=7.72667±0.20614 acc=23.48±0.07% t=00:15:48 ETA=00:08:05 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000744/0001123 loss=7.73800±0.20617 acc=23.45±0.07% t=00:15:49 ETA=00:08:03 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000745/0001123 loss=7.74872±0.20618 acc=23.42±0.07% t=00:15:50 ETA=00:08:02 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000746/0001123 loss=7.75961±0.20619 acc=23.39±0.07% t=00:15:52 ETA=00:08:01 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000747/0001123 loss=7.77027±0.20619 acc=23.36±0.07% t=00:15:53 ETA=00:07:59 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000748/0001123 loss=7.78173±0.20623 acc=23.32±0.07% t=00:15:54 ETA=00:07:58 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000749/0001123 loss=7.79207±0.20621 acc=23.29±0.07% t=00:15:55 ETA=00:07:57 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000750/0001123 loss=7.80335±0.20625 acc=23.26±0.07% t=00:15:57 ETA=00:07:55 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000751/0001123 loss=7.81411±0.20625 acc=23.23±0.07% t=00:15:58 ETA=00:07:54 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000752/0001123 loss=7.82543±0.20629 acc=23.20±0.07% t=00:15:59 ETA=00:07:53 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000753/0001123 loss=7.83694±0.20634 acc=23.17±0.07% t=00:16:00 ETA=00:07:52 epoch 0 lr=1e-05
+train: [█████▎  ] data=0000754/0001123 loss=7.84850±0.20639 acc=23.14±0.07% t=00:16:02 ETA=00:07:50 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000755/0001123 loss=7.86059±0.20647 acc=23.11±0.07% t=00:16:03 ETA=00:07:49 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000756/0001123 loss=7.87051±0.20643 acc=23.08±0.07% t=00:16:04 ETA=00:07:48 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000757/0001123 loss=7.88026±0.20639 acc=23.05±0.07% t=00:16:05 ETA=00:07:47 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000758/0001123 loss=7.89086±0.20639 acc=23.02±0.07% t=00:16:07 ETA=00:07:45 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000759/0001123 loss=7.90119±0.20638 acc=22.99±0.07% t=00:16:08 ETA=00:07:44 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000760/0001123 loss=7.91202±0.20639 acc=22.96±0.07% t=00:16:09 ETA=00:07:43 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000761/0001123 loss=7.92170±0.20635 acc=22.93±0.07% t=00:16:10 ETA=00:07:41 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000762/0001123 loss=7.93110±0.20629 acc=22.90±0.07% t=00:16:12 ETA=00:07:40 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000763/0001123 loss=7.93704±0.20610 acc=22.87±0.07% t=00:16:13 ETA=00:07:39 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000764/0001123 loss=7.94619±0.20604 acc=22.84±0.07% t=00:16:14 ETA=00:07:37 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000765/0001123 loss=7.95611±0.20601 acc=22.81±0.07% t=00:16:15 ETA=00:07:36 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000766/0001123 loss=7.96667±0.20601 acc=22.78±0.07% t=00:16:17 ETA=00:07:35 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000767/0001123 loss=7.97695±0.20600 acc=22.75±0.07% t=00:16:18 ETA=00:07:34 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000768/0001123 loss=7.98560±0.20591 acc=22.72±0.07% t=00:16:19 ETA=00:07:32 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000769/0001123 loss=7.99439±0.20583 acc=22.69±0.07% t=00:16:20 ETA=00:07:31 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000770/0001123 loss=8.00399±0.20579 acc=22.66±0.07% t=00:16:22 ETA=00:07:30 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000771/0001123 loss=8.01094±0.20564 acc=22.63±0.07% t=00:16:23 ETA=00:07:28 epoch 0 lr=1e-05
+train: [█████▍  ] data=0000772/0001123 loss=8.02022±0.20558 acc=22.60±0.07% t=00:16:24 ETA=00:07:27 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000773/0001123 loss=8.03029±0.20556 acc=22.57±0.07% t=00:16:25 ETA=00:07:26 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000774/0001123 loss=8.03934±0.20549 acc=22.54±0.07% t=00:16:27 ETA=00:07:25 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000775/0001123 loss=8.04820±0.20542 acc=22.51±0.07% t=00:16:28 ETA=00:07:23 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000776/0001123 loss=8.05624±0.20531 acc=22.48±0.07% t=00:16:29 ETA=00:07:22 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000777/0001123 loss=8.06484±0.20523 acc=22.45±0.07% t=00:16:30 ETA=00:07:21 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000778/0001123 loss=8.07419±0.20518 acc=22.43±0.07% t=00:16:32 ETA=00:07:19 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000779/0001123 loss=8.08425±0.20516 acc=22.40±0.07% t=00:16:33 ETA=00:07:18 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000780/0001123 loss=8.09388±0.20512 acc=22.37±0.07% t=00:16:34 ETA=00:07:17 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000781/0001123 loss=8.10208±0.20502 acc=22.34±0.07% t=00:16:35 ETA=00:07:16 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000782/0001123 loss=8.11130±0.20497 acc=22.31±0.07% t=00:16:37 ETA=00:07:14 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000783/0001123 loss=8.11978±0.20488 acc=22.28±0.07% t=00:16:38 ETA=00:07:13 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000784/0001123 loss=8.12952±0.20485 acc=22.25±0.07% t=00:16:39 ETA=00:07:12 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000785/0001123 loss=8.13766±0.20475 acc=22.23±0.07% t=00:16:40 ETA=00:07:11 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000786/0001123 loss=8.14627±0.20467 acc=22.20±0.07% t=00:16:42 ETA=00:07:09 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000787/0001123 loss=8.15496±0.20460 acc=22.17±0.07% t=00:16:43 ETA=00:07:08 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000788/0001123 loss=8.16296±0.20450 acc=22.14±0.07% t=00:16:44 ETA=00:07:07 epoch 0 lr=1e-05
+train: [█████▌  ] data=0000789/0001123 loss=8.16866±0.20432 acc=22.11±0.07% t=00:16:46 ETA=00:07:05 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000790/0001123 loss=8.17471±0.20415 acc=22.09±0.07% t=00:16:47 ETA=00:07:04 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000791/0001123 loss=8.18467±0.20413 acc=22.06±0.07% t=00:16:48 ETA=00:07:03 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000792/0001123 loss=8.19378±0.20408 acc=22.03±0.07% t=00:16:49 ETA=00:07:02 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000793/0001123 loss=8.20325±0.20404 acc=22.00±0.07% t=00:16:51 ETA=00:07:00 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000794/0001123 loss=8.21165±0.20396 acc=21.97±0.06% t=00:16:52 ETA=00:06:59 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000795/0001123 loss=8.22139±0.20393 acc=21.95±0.06% t=00:16:53 ETA=00:06:58 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000796/0001123 loss=8.22990±0.20385 acc=21.92±0.06% t=00:16:54 ETA=00:06:56 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000797/0001123 loss=8.23885±0.20379 acc=21.89±0.06% t=00:16:56 ETA=00:06:55 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000798/0001123 loss=8.24564±0.20365 acc=21.86±0.06% t=00:16:57 ETA=00:06:54 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000799/0001123 loss=8.25323±0.20354 acc=21.84±0.06% t=00:16:58 ETA=00:06:53 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000800/0001123 loss=8.26178±0.20346 acc=21.81±0.06% t=00:16:59 ETA=00:06:51 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000801/0001123 loss=8.27029±0.20339 acc=21.78±0.06% t=00:17:01 ETA=00:06:50 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000802/0001123 loss=8.27898±0.20332 acc=21.76±0.06% t=00:17:02 ETA=00:06:49 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000803/0001123 loss=8.28757±0.20325 acc=21.73±0.06% t=00:17:03 ETA=00:06:47 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000804/0001123 loss=8.29577±0.20316 acc=21.70±0.06% t=00:17:04 ETA=00:06:46 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000805/0001123 loss=8.30202±0.20300 acc=21.67±0.06% t=00:17:06 ETA=00:06:45 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000806/0001123 loss=8.31069±0.20294 acc=21.65±0.06% t=00:17:07 ETA=00:06:44 epoch 0 lr=1e-05
+train: [█████▋  ] data=0000807/0001123 loss=8.31875±0.20285 acc=21.62±0.06% t=00:17:08 ETA=00:06:42 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000808/0001123 loss=8.32690±0.20276 acc=21.59±0.06% t=00:17:09 ETA=00:06:41 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000809/0001123 loss=8.33269±0.20259 acc=21.57±0.06% t=00:17:11 ETA=00:06:40 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000810/0001123 loss=8.33983±0.20247 acc=21.54±0.06% t=00:17:12 ETA=00:06:38 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000811/0001123 loss=8.34798±0.20238 acc=21.51±0.06% t=00:17:13 ETA=00:06:37 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000812/0001123 loss=8.35637±0.20230 acc=21.49±0.06% t=00:17:14 ETA=00:06:36 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000813/0001123 loss=8.36363±0.20219 acc=21.46±0.06% t=00:17:16 ETA=00:06:35 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000814/0001123 loss=8.37174±0.20210 acc=21.44±0.06% t=00:17:17 ETA=00:06:33 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000815/0001123 loss=8.37914±0.20199 acc=21.41±0.06% t=00:17:18 ETA=00:06:32 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000816/0001123 loss=8.38658±0.20188 acc=21.38±0.06% t=00:17:19 ETA=00:06:31 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000817/0001123 loss=8.39393±0.20176 acc=21.36±0.06% t=00:17:21 ETA=00:06:29 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000818/0001123 loss=8.40102±0.20164 acc=21.33±0.06% t=00:17:22 ETA=00:06:28 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000819/0001123 loss=8.40761±0.20150 acc=21.30±0.06% t=00:17:23 ETA=00:06:27 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000820/0001123 loss=8.41560±0.20142 acc=21.28±0.06% t=00:17:24 ETA=00:06:26 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000821/0001123 loss=8.42205±0.20127 acc=21.25±0.06% t=00:17:26 ETA=00:06:24 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000822/0001123 loss=8.43071±0.20122 acc=21.23±0.06% t=00:17:27 ETA=00:06:23 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000823/0001123 loss=8.43942±0.20116 acc=21.20±0.06% t=00:17:28 ETA=00:06:22 epoch 0 lr=1e-05
+train: [█████▊  ] data=0000824/0001123 loss=8.44861±0.20112 acc=21.18±0.06% t=00:17:29 ETA=00:06:20 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000825/0001123 loss=8.45633±0.20103 acc=21.15±0.06% t=00:17:31 ETA=00:06:19 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000826/0001123 loss=8.46343±0.20091 acc=21.12±0.06% t=00:17:32 ETA=00:06:18 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000827/0001123 loss=8.47193±0.20085 acc=21.10±0.06% t=00:17:33 ETA=00:06:17 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000828/0001123 loss=8.47989±0.20076 acc=21.07±0.06% t=00:17:34 ETA=00:06:15 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000829/0001123 loss=8.48864±0.20071 acc=21.05±0.06% t=00:17:36 ETA=00:06:14 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000830/0001123 loss=8.49548±0.20059 acc=21.02±0.06% t=00:17:37 ETA=00:06:13 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000831/0001123 loss=8.50332±0.20050 acc=21.00±0.06% t=00:17:38 ETA=00:06:11 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000832/0001123 loss=8.51191±0.20044 acc=20.97±0.06% t=00:17:39 ETA=00:06:10 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000833/0001123 loss=8.51974±0.20035 acc=20.95±0.06% t=00:17:41 ETA=00:06:09 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000834/0001123 loss=8.52696±0.20024 acc=20.92±0.06% t=00:17:42 ETA=00:06:08 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000835/0001123 loss=8.53422±0.20014 acc=20.90±0.06% t=00:17:43 ETA=00:06:06 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000836/0001123 loss=8.54101±0.20001 acc=20.87±0.06% t=00:17:44 ETA=00:06:05 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000837/0001123 loss=8.54861±0.19992 acc=20.85±0.06% t=00:17:46 ETA=00:06:04 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000838/0001123 loss=8.55665±0.19984 acc=20.82±0.06% t=00:17:47 ETA=00:06:03 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000839/0001123 loss=8.56431±0.19975 acc=20.80±0.06% t=00:17:48 ETA=00:06:01 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000840/0001123 loss=8.57147±0.19964 acc=20.77±0.06% t=00:17:49 ETA=00:06:00 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000841/0001123 loss=8.57816±0.19951 acc=20.75±0.06% t=00:17:51 ETA=00:05:59 epoch 0 lr=1e-05
+train: [█████▉  ] data=0000842/0001123 loss=8.58574±0.19942 acc=20.72±0.06% t=00:17:52 ETA=00:05:57 epoch 0 lr=1e-05
+train: [██████  ] data=0000843/0001123 loss=8.59319±0.19932 acc=20.70±0.06% t=00:17:53 ETA=00:05:56 epoch 0 lr=1e-05
+train: [██████  ] data=0000844/0001123 loss=8.60067±0.19923 acc=20.67±0.06% t=00:17:54 ETA=00:05:55 epoch 0 lr=1e-05
+train: [██████  ] data=0000845/0001123 loss=8.60857±0.19915 acc=20.65±0.06% t=00:17:56 ETA=00:05:54 epoch 0 lr=1e-05
+train: [██████  ] data=0000846/0001123 loss=8.61513±0.19902 acc=20.62±0.06% t=00:17:57 ETA=00:05:52 epoch 0 lr=1e-05
+train: [██████  ] data=0000847/0001123 loss=8.62235±0.19892 acc=20.60±0.06% t=00:17:58 ETA=00:05:51 epoch 0 lr=1e-05
+train: [██████  ] data=0000848/0001123 loss=8.62973±0.19882 acc=20.58±0.06% t=00:17:59 ETA=00:05:50 epoch 0 lr=1e-05
+train: [██████  ] data=0000849/0001123 loss=8.63702±0.19872 acc=20.55±0.06% t=00:18:01 ETA=00:05:48 epoch 0 lr=1e-05
+train: [██████  ] data=0000850/0001123 loss=8.64429±0.19862 acc=20.53±0.06% t=00:18:02 ETA=00:05:47 epoch 0 lr=1e-05
+train: [██████  ] data=0000851/0001123 loss=8.65188±0.19853 acc=20.50±0.06% t=00:18:03 ETA=00:05:46 epoch 0 lr=1e-05
+train: [██████  ] data=0000852/0001123 loss=8.65909±0.19843 acc=20.48±0.06% t=00:18:04 ETA=00:05:45 epoch 0 lr=1e-05
+train: [██████  ] data=0000853/0001123 loss=8.66417±0.19826 acc=20.46±0.06% t=00:18:06 ETA=00:05:43 epoch 0 lr=1e-05
+train: [██████  ] data=0000854/0001123 loss=8.67132±0.19816 acc=20.43±0.06% t=00:18:07 ETA=00:05:42 epoch 0 lr=1e-05
+train: [██████  ] data=0000855/0001123 loss=8.67878±0.19806 acc=20.41±0.06% t=00:18:08 ETA=00:05:41 epoch 0 lr=1e-05
+train: [██████  ] data=0000856/0001123 loss=8.68641±0.19798 acc=20.38±0.06% t=00:18:09 ETA=00:05:39 epoch 0 lr=1e-05
+train: [██████  ] data=0000857/0001123 loss=8.69340±0.19787 acc=20.36±0.06% t=00:18:11 ETA=00:05:38 epoch 0 lr=1e-05
+train: [██████  ] data=0000858/0001123 loss=8.70005±0.19775 acc=20.34±0.06% t=00:18:12 ETA=00:05:37 epoch 0 lr=1e-05
+train: [██████  ] data=0000859/0001123 loss=8.70766±0.19767 acc=20.31±0.06% t=00:18:13 ETA=00:05:36 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000860/0001123 loss=8.71536±0.19759 acc=20.29±0.06% t=00:18:14 ETA=00:05:34 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000861/0001123 loss=8.72221±0.19748 acc=20.27±0.06% t=00:18:16 ETA=00:05:33 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000862/0001123 loss=8.72891±0.19736 acc=20.24±0.06% t=00:18:17 ETA=00:05:32 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000863/0001123 loss=8.73512±0.19723 acc=20.22±0.06% t=00:18:18 ETA=00:05:30 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000864/0001123 loss=8.74124±0.19710 acc=20.20±0.06% t=00:18:19 ETA=00:05:29 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000865/0001123 loss=8.74813±0.19699 acc=20.17±0.06% t=00:18:21 ETA=00:05:28 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000866/0001123 loss=8.75459±0.19687 acc=20.15±0.06% t=00:18:22 ETA=00:05:27 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000867/0001123 loss=8.76160±0.19677 acc=20.13±0.06% t=00:18:23 ETA=00:05:25 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000868/0001123 loss=8.76778±0.19664 acc=20.10±0.06% t=00:18:24 ETA=00:05:24 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000869/0001123 loss=8.77457±0.19653 acc=20.08±0.06% t=00:18:26 ETA=00:05:23 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000870/0001123 loss=8.78069±0.19640 acc=20.06±0.06% t=00:18:27 ETA=00:05:22 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000871/0001123 loss=8.78739±0.19629 acc=20.03±0.06% t=00:18:28 ETA=00:05:20 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000872/0001123 loss=8.79429±0.19618 acc=20.01±0.06% t=00:18:29 ETA=00:05:19 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000873/0001123 loss=8.80053±0.19606 acc=19.99±0.06% t=00:18:31 ETA=00:05:18 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000874/0001123 loss=8.80695±0.19594 acc=19.96±0.06% t=00:18:32 ETA=00:05:16 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000875/0001123 loss=8.81350±0.19582 acc=19.94±0.06% t=00:18:33 ETA=00:05:15 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000876/0001123 loss=8.82060±0.19573 acc=19.92±0.06% t=00:18:34 ETA=00:05:14 epoch 0 lr=1e-05
+train: [██████▏ ] data=0000877/0001123 loss=8.82816±0.19565 acc=19.90±0.06% t=00:18:36 ETA=00:05:13 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000878/0001123 loss=8.83549±0.19557 acc=19.87±0.06% t=00:18:37 ETA=00:05:11 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000879/0001123 loss=8.84172±0.19544 acc=19.85±0.06% t=00:18:38 ETA=00:05:10 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000880/0001123 loss=8.84796±0.19532 acc=19.83±0.06% t=00:18:39 ETA=00:05:09 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000881/0001123 loss=8.85517±0.19523 acc=19.81±0.06% t=00:18:41 ETA=00:05:07 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000882/0001123 loss=8.86224±0.19514 acc=19.78±0.06% t=00:18:42 ETA=00:05:06 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000883/0001123 loss=8.86926±0.19504 acc=19.76±0.06% t=00:18:43 ETA=00:05:05 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000884/0001123 loss=8.87703±0.19498 acc=19.74±0.06% t=00:18:44 ETA=00:05:04 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000885/0001123 loss=8.88373±0.19487 acc=19.72±0.06% t=00:18:46 ETA=00:05:02 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000886/0001123 loss=8.89055±0.19477 acc=19.69±0.06% t=00:18:47 ETA=00:05:01 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000887/0001123 loss=8.89651±0.19464 acc=19.67±0.06% t=00:18:48 ETA=00:05:00 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000888/0001123 loss=8.90336±0.19455 acc=19.65±0.06% t=00:18:49 ETA=00:04:59 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000889/0001123 loss=8.90942±0.19442 acc=19.63±0.06% t=00:18:51 ETA=00:04:57 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000890/0001123 loss=8.91590±0.19431 acc=19.61±0.06% t=00:18:52 ETA=00:04:56 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000891/0001123 loss=8.92298±0.19422 acc=19.58±0.06% t=00:18:53 ETA=00:04:55 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000892/0001123 loss=8.93012±0.19413 acc=19.56±0.06% t=00:18:54 ETA=00:04:53 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000893/0001123 loss=8.93653±0.19402 acc=19.54±0.06% t=00:18:56 ETA=00:04:52 epoch 0 lr=1e-05
+train: [██████▎ ] data=0000894/0001123 loss=8.94329±0.19392 acc=19.52±0.06% t=00:18:57 ETA=00:04:51 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000895/0001123 loss=8.94901±0.19379 acc=19.50±0.06% t=00:18:58 ETA=00:04:50 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000896/0001123 loss=8.95541±0.19368 acc=19.47±0.06% t=00:18:59 ETA=00:04:48 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000897/0001123 loss=8.96242±0.19359 acc=19.45±0.06% t=00:19:01 ETA=00:04:47 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000898/0001123 loss=8.96923±0.19350 acc=19.43±0.06% t=00:19:02 ETA=00:04:46 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000899/0001123 loss=8.97590±0.19340 acc=19.41±0.06% t=00:19:03 ETA=00:04:44 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000900/0001123 loss=8.98402±0.19335 acc=19.39±0.06% t=00:19:04 ETA=00:04:43 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000901/0001123 loss=8.99128±0.19327 acc=19.37±0.06% t=00:19:06 ETA=00:04:42 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000902/0001123 loss=8.99773±0.19317 acc=19.34±0.06% t=00:19:07 ETA=00:04:41 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000903/0001123 loss=9.00400±0.19305 acc=19.32±0.06% t=00:19:08 ETA=00:04:39 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000904/0001123 loss=9.01062±0.19295 acc=19.30±0.06% t=00:19:09 ETA=00:04:38 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000905/0001123 loss=9.01792±0.19288 acc=19.28±0.06% t=00:19:11 ETA=00:04:37 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000906/0001123 loss=9.02467±0.19278 acc=19.26±0.06% t=00:19:12 ETA=00:04:36 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000907/0001123 loss=9.03158±0.19270 acc=19.24±0.06% t=00:19:13 ETA=00:04:34 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000908/0001123 loss=9.03855±0.19261 acc=19.22±0.06% t=00:19:14 ETA=00:04:33 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000909/0001123 loss=9.04600±0.19254 acc=19.20±0.06% t=00:19:16 ETA=00:04:32 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000910/0001123 loss=9.05247±0.19244 acc=19.17±0.06% t=00:19:17 ETA=00:04:30 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000911/0001123 loss=9.05818±0.19231 acc=19.15±0.06% t=00:19:18 ETA=00:04:29 epoch 0 lr=1e-05
+train: [██████▍ ] data=0000912/0001123 loss=9.06424±0.19220 acc=19.13±0.06% t=00:19:20 ETA=00:04:28 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000913/0001123 loss=9.07098±0.19210 acc=19.11±0.06% t=00:19:21 ETA=00:04:27 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000914/0001123 loss=9.07822±0.19203 acc=19.09±0.06% t=00:19:22 ETA=00:04:25 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000915/0001123 loss=9.08470±0.19193 acc=19.07±0.06% t=00:19:23 ETA=00:04:24 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000916/0001123 loss=9.09052±0.19181 acc=19.05±0.06% t=00:19:25 ETA=00:04:23 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000917/0001123 loss=9.09701±0.19171 acc=19.03±0.06% t=00:19:26 ETA=00:04:22 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000918/0001123 loss=9.10414±0.19163 acc=19.01±0.06% t=00:19:27 ETA=00:04:20 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000919/0001123 loss=9.11025±0.19152 acc=18.99±0.06% t=00:19:29 ETA=00:04:19 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000920/0001123 loss=9.11626±0.19141 acc=18.97±0.06% t=00:19:30 ETA=00:04:18 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000921/0001123 loss=9.12270±0.19131 acc=18.95±0.06% t=00:19:31 ETA=00:04:16 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000922/0001123 loss=9.12940±0.19122 acc=18.92±0.06% t=00:19:33 ETA=00:04:15 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000923/0001123 loss=9.13572±0.19111 acc=18.90±0.06% t=00:19:34 ETA=00:04:14 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000924/0001123 loss=9.14261±0.19103 acc=18.88±0.06% t=00:19:35 ETA=00:04:13 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000925/0001123 loss=9.14904±0.19093 acc=18.86±0.06% t=00:19:36 ETA=00:04:11 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000926/0001123 loss=9.15561±0.19084 acc=18.84±0.06% t=00:19:38 ETA=00:04:10 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000927/0001123 loss=9.16233±0.19075 acc=18.82±0.06% t=00:19:39 ETA=00:04:09 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000928/0001123 loss=9.16874±0.19066 acc=18.80±0.06% t=00:19:40 ETA=00:04:08 epoch 0 lr=1e-05
+train: [██████▌ ] data=0000929/0001123 loss=9.17472±0.19054 acc=18.78±0.06% t=00:19:41 ETA=00:04:06 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000930/0001123 loss=9.18118±0.19045 acc=18.76±0.06% t=00:19:43 ETA=00:04:05 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000931/0001123 loss=9.18716±0.19034 acc=18.74±0.06% t=00:19:44 ETA=00:04:04 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000932/0001123 loss=9.19278±0.19022 acc=18.72±0.06% t=00:19:45 ETA=00:04:03 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000933/0001123 loss=9.19872±0.19011 acc=18.70±0.06% t=00:19:47 ETA=00:04:01 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000934/0001123 loss=9.20477±0.19000 acc=18.68±0.06% t=00:19:48 ETA=00:04:00 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000935/0001123 loss=9.21096±0.18990 acc=18.66±0.06% t=00:19:49 ETA=00:03:59 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000936/0001123 loss=9.21640±0.18977 acc=18.64±0.06% t=00:19:50 ETA=00:03:57 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000937/0001123 loss=9.22293±0.18968 acc=18.62±0.06% t=00:19:52 ETA=00:03:56 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000938/0001123 loss=9.22899±0.18958 acc=18.60±0.06% t=00:19:53 ETA=00:03:55 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000939/0001123 loss=9.23483±0.18946 acc=18.58±0.06% t=00:19:54 ETA=00:03:54 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000940/0001123 loss=9.24073±0.18935 acc=18.56±0.06% t=00:19:56 ETA=00:03:52 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000941/0001123 loss=9.24649±0.18924 acc=18.54±0.06% t=00:19:57 ETA=00:03:51 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000942/0001123 loss=9.25226±0.18913 acc=18.52±0.06% t=00:19:58 ETA=00:03:50 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000943/0001123 loss=9.25856±0.18903 acc=18.50±0.06% t=00:19:59 ETA=00:03:49 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000944/0001123 loss=9.26550±0.18896 acc=18.48±0.06% t=00:20:01 ETA=00:03:47 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000945/0001123 loss=9.27108±0.18884 acc=18.46±0.06% t=00:20:02 ETA=00:03:46 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000946/0001123 loss=9.27766±0.18876 acc=18.44±0.06% t=00:20:03 ETA=00:03:45 epoch 0 lr=1e-05
+train: [██████▋ ] data=0000947/0001123 loss=9.28353±0.18865 acc=18.43±0.06% t=00:20:04 ETA=00:03:43 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000948/0001123 loss=9.28943±0.18854 acc=18.41±0.06% t=00:20:06 ETA=00:03:42 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000949/0001123 loss=9.29558±0.18844 acc=18.39±0.06% t=00:20:07 ETA=00:03:41 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000950/0001123 loss=9.30145±0.18834 acc=18.37±0.06% t=00:20:08 ETA=00:03:40 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000951/0001123 loss=9.30736±0.18823 acc=18.35±0.06% t=00:20:10 ETA=00:03:38 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000952/0001123 loss=9.31363±0.18814 acc=18.33±0.06% t=00:20:11 ETA=00:03:37 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000953/0001123 loss=9.31960±0.18803 acc=18.31±0.06% t=00:20:12 ETA=00:03:36 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000954/0001123 loss=9.32552±0.18793 acc=18.29±0.06% t=00:20:13 ETA=00:03:35 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000955/0001123 loss=9.33183±0.18784 acc=18.27±0.06% t=00:20:15 ETA=00:03:33 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000956/0001123 loss=9.33808±0.18775 acc=18.25±0.06% t=00:20:16 ETA=00:03:32 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000957/0001123 loss=9.34465±0.18767 acc=18.23±0.06% t=00:20:17 ETA=00:03:31 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000958/0001123 loss=9.35129±0.18759 acc=18.21±0.06% t=00:20:19 ETA=00:03:29 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000959/0001123 loss=9.35715±0.18748 acc=18.20±0.06% t=00:20:20 ETA=00:03:28 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000960/0001123 loss=9.36298±0.18738 acc=18.18±0.06% t=00:20:21 ETA=00:03:27 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000961/0001123 loss=9.36920±0.18729 acc=18.16±0.05% t=00:20:22 ETA=00:03:26 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000962/0001123 loss=9.37642±0.18723 acc=18.14±0.05% t=00:20:24 ETA=00:03:24 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000963/0001123 loss=9.38311±0.18716 acc=18.12±0.05% t=00:20:25 ETA=00:03:23 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000964/0001123 loss=9.38987±0.18708 acc=18.10±0.05% t=00:20:26 ETA=00:03:22 epoch 0 lr=1e-05
+train: [██████▊ ] data=0000965/0001123 loss=9.39606±0.18699 acc=18.08±0.05% t=00:20:28 ETA=00:03:21 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000966/0001123 loss=9.40281±0.18692 acc=18.06±0.05% t=00:20:29 ETA=00:03:19 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000967/0001123 loss=9.40918±0.18684 acc=18.04±0.05% t=00:20:30 ETA=00:03:18 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000968/0001123 loss=9.41539±0.18675 acc=18.03±0.05% t=00:20:31 ETA=00:03:17 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000969/0001123 loss=9.42147±0.18665 acc=18.01±0.05% t=00:20:33 ETA=00:03:15 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000970/0001123 loss=9.42848±0.18659 acc=17.99±0.05% t=00:20:34 ETA=00:03:14 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000971/0001123 loss=9.43493±0.18651 acc=17.97±0.05% t=00:20:35 ETA=00:03:13 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000972/0001123 loss=9.44059±0.18640 acc=17.95±0.05% t=00:20:37 ETA=00:03:12 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000973/0001123 loss=9.44666±0.18631 acc=17.93±0.05% t=00:20:38 ETA=00:03:10 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000974/0001123 loss=9.45205±0.18620 acc=17.91±0.05% t=00:20:39 ETA=00:03:09 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000975/0001123 loss=9.45786±0.18610 acc=17.90±0.05% t=00:20:40 ETA=00:03:08 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000976/0001123 loss=9.46452±0.18603 acc=17.88±0.05% t=00:20:42 ETA=00:03:07 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000977/0001123 loss=9.47031±0.18593 acc=17.86±0.05% t=00:20:43 ETA=00:03:05 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000978/0001123 loss=9.47611±0.18583 acc=17.84±0.05% t=00:20:44 ETA=00:03:04 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000979/0001123 loss=9.48183±0.18573 acc=17.82±0.05% t=00:20:46 ETA=00:03:03 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000980/0001123 loss=9.48739±0.18562 acc=17.81±0.05% t=00:20:47 ETA=00:03:02 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000981/0001123 loss=9.49277±0.18551 acc=17.79±0.05% t=00:20:48 ETA=00:03:00 epoch 0 lr=1e-05
+train: [██████▉ ] data=0000982/0001123 loss=9.49857±0.18541 acc=17.77±0.05% t=00:20:49 ETA=00:02:59 epoch 0 lr=1e-05
+train: [███████ ] data=0000983/0001123 loss=9.50428±0.18531 acc=17.75±0.05% t=00:20:51 ETA=00:02:58 epoch 0 lr=1e-05
+train: [███████ ] data=0000984/0001123 loss=9.51006±0.18521 acc=17.73±0.05% t=00:20:52 ETA=00:02:56 epoch 0 lr=1e-05
+train: [███████ ] data=0000985/0001123 loss=9.51564±0.18511 acc=17.71±0.05% t=00:20:53 ETA=00:02:55 epoch 0 lr=1e-05
+train: [███████ ] data=0000986/0001123 loss=9.52118±0.18500 acc=17.70±0.05% t=00:20:55 ETA=00:02:54 epoch 0 lr=1e-05
+train: [███████ ] data=0000987/0001123 loss=9.52699±0.18490 acc=17.68±0.05% t=00:20:56 ETA=00:02:53 epoch 0 lr=1e-05
+train: [███████ ] data=0000988/0001123 loss=9.53254±0.18480 acc=17.66±0.05% t=00:20:57 ETA=00:02:51 epoch 0 lr=1e-05
+train: [███████ ] data=0000989/0001123 loss=9.53916±0.18473 acc=17.64±0.05% t=00:20:58 ETA=00:02:50 epoch 0 lr=1e-05
+train: [███████ ] data=0000990/0001123 loss=9.54527±0.18465 acc=17.63±0.05% t=00:21:00 ETA=00:02:49 epoch 0 lr=1e-05
+train: [███████ ] data=0000991/0001123 loss=9.55107±0.18455 acc=17.61±0.05% t=00:21:01 ETA=00:02:48 epoch 0 lr=1e-05
+train: [███████ ] data=0000992/0001123 loss=9.55702±0.18446 acc=17.59±0.05% t=00:21:02 ETA=00:02:46 epoch 0 lr=1e-05
+train: [███████ ] data=0000993/0001123 loss=9.56262±0.18436 acc=17.57±0.05% t=00:21:03 ETA=00:02:45 epoch 0 lr=1e-05
+train: [███████ ] data=0000994/0001123 loss=9.56781±0.18425 acc=17.55±0.05% t=00:21:05 ETA=00:02:44 epoch 0 lr=1e-05
+train: [███████ ] data=0000995/0001123 loss=9.57386±0.18416 acc=17.54±0.05% t=00:21:06 ETA=00:02:42 epoch 0 lr=1e-05
+train: [███████ ] data=0000996/0001123 loss=9.57990±0.18408 acc=17.52±0.05% t=00:21:07 ETA=00:02:41 epoch 0 lr=1e-05
+train: [███████ ] data=0000997/0001123 loss=9.58606±0.18400 acc=17.50±0.05% t=00:21:08 ETA=00:02:40 epoch 0 lr=1e-05
+train: [███████ ] data=0000998/0001123 loss=9.59217±0.18391 acc=17.48±0.05% t=00:21:10 ETA=00:02:39 epoch 0 lr=1e-05
+train: [███████ ] data=0000999/0001123 loss=9.59792±0.18382 acc=17.47±0.05% t=00:21:11 ETA=00:02:37 epoch 0 lr=1e-05
+train: [███████ ] data=0001000/0001123 loss=9.60407±0.18374 acc=17.45±0.05% t=00:21:12 ETA=00:02:36 epoch 0 lr=1e-05
+train: [███████▏] data=0001001/0001123 loss=9.60999±0.18365 acc=17.43±0.05% t=00:21:14 ETA=00:02:35 epoch 0 lr=1e-05
+train: [███████▏] data=0001002/0001123 loss=9.61588±0.18356 acc=17.41±0.05% t=00:21:15 ETA=00:02:34 epoch 0 lr=1e-05
+train: [███████▏] data=0001003/0001123 loss=9.62120±0.18345 acc=17.40±0.05% t=00:21:16 ETA=00:02:32 epoch 0 lr=1e-05
+train: [███████▏] data=0001004/0001123 loss=9.62606±0.18334 acc=17.38±0.05% t=00:21:17 ETA=00:02:31 epoch 0 lr=1e-05
+train: [███████▏] data=0001005/0001123 loss=9.63207±0.18325 acc=17.36±0.05% t=00:21:19 ETA=00:02:30 epoch 0 lr=1e-05
+train: [███████▏] data=0001006/0001123 loss=9.63832±0.18318 acc=17.34±0.05% t=00:21:20 ETA=00:02:28 epoch 0 lr=1e-05
+train: [███████▏] data=0001007/0001123 loss=9.64441±0.18310 acc=17.33±0.05% t=00:21:21 ETA=00:02:27 epoch 0 lr=1e-05
+train: [███████▏] data=0001008/0001123 loss=9.64989±0.18300 acc=17.31±0.05% t=00:21:23 ETA=00:02:26 epoch 0 lr=1e-05
+train: [███████▏] data=0001009/0001123 loss=9.65561±0.18290 acc=17.29±0.05% t=00:21:24 ETA=00:02:25 epoch 0 lr=1e-05
+train: [███████▏] data=0001010/0001123 loss=9.66178±0.18283 acc=17.28±0.05% t=00:21:25 ETA=00:02:23 epoch 0 lr=1e-05
+train: [███████▏] data=0001011/0001123 loss=9.66794±0.18275 acc=17.26±0.05% t=00:21:26 ETA=00:02:22 epoch 0 lr=1e-05
+train: [███████▏] data=0001012/0001123 loss=9.67358±0.18266 acc=17.24±0.05% t=00:21:28 ETA=00:02:21 epoch 0 lr=1e-05
+train: [███████▏] data=0001013/0001123 loss=9.67954±0.18257 acc=17.23±0.05% t=00:21:29 ETA=00:02:20 epoch 0 lr=1e-05
+train: [███████▏] data=0001014/0001123 loss=9.68570±0.18250 acc=17.21±0.05% t=00:21:30 ETA=00:02:18 epoch 0 lr=1e-05
+train: [███████▏] data=0001015/0001123 loss=9.69161±0.18241 acc=17.19±0.05% t=00:21:32 ETA=00:02:17 epoch 0 lr=1e-05
+train: [███████▏] data=0001016/0001123 loss=9.69782±0.18234 acc=17.17±0.05% t=00:21:33 ETA=00:02:16 epoch 0 lr=1e-05
+train: [███████▏] data=0001017/0001123 loss=9.70423±0.18227 acc=17.16±0.05% t=00:21:34 ETA=00:02:14 epoch 0 lr=1e-05
+train: [███████▎] data=0001018/0001123 loss=9.71056±0.18220 acc=17.14±0.05% t=00:21:35 ETA=00:02:13 epoch 0 lr=1e-05
+train: [███████▎] data=0001019/0001123 loss=9.71694±0.18214 acc=17.12±0.05% t=00:21:37 ETA=00:02:12 epoch 0 lr=1e-05
+train: [███████▎] data=0001020/0001123 loss=9.72302±0.18206 acc=17.11±0.05% t=00:21:38 ETA=00:02:11 epoch 0 lr=1e-05
+train: [███████▎] data=0001021/0001123 loss=9.72925±0.18199 acc=17.09±0.05% t=00:21:39 ETA=00:02:09 epoch 0 lr=1e-05
+train: [███████▎] data=0001022/0001123 loss=9.73555±0.18192 acc=17.07±0.05% t=00:21:40 ETA=00:02:08 epoch 0 lr=1e-05
+train: [███████▎] data=0001023/0001123 loss=9.74184±0.18185 acc=17.06±0.05% t=00:21:42 ETA=00:02:07 epoch 0 lr=1e-05
+train: [███████▎] data=0001024/0001123 loss=9.74725±0.18175 acc=17.04±0.05% t=00:21:43 ETA=00:02:06 epoch 0 lr=1e-05
+train: [███████▎] data=0001025/0001123 loss=9.75297±0.18166 acc=17.02±0.05% t=00:21:44 ETA=00:02:04 epoch 0 lr=1e-05
+train: [███████▎] data=0001026/0001123 loss=9.75867±0.18158 acc=17.01±0.05% t=00:21:46 ETA=00:02:03 epoch 0 lr=1e-05
+train: [███████▎] data=0001027/0001123 loss=9.76472±0.18150 acc=16.99±0.05% t=00:21:47 ETA=00:02:02 epoch 0 lr=1e-05
+train: [███████▎] data=0001028/0001123 loss=9.77036±0.18141 acc=16.97±0.05% t=00:21:48 ETA=00:02:00 epoch 0 lr=1e-05
+train: [███████▎] data=0001029/0001123 loss=9.77644±0.18134 acc=16.96±0.05% t=00:21:49 ETA=00:01:59 epoch 0 lr=1e-05
+train: [███████▎] data=0001030/0001123 loss=9.78288±0.18128 acc=16.94±0.05% t=00:21:51 ETA=00:01:58 epoch 0 lr=1e-05
+train: [███████▎] data=0001031/0001123 loss=9.78890±0.18120 acc=16.92±0.05% t=00:21:52 ETA=00:01:57 epoch 0 lr=1e-05
+train: [███████▎] data=0001032/0001123 loss=9.79527±0.18114 acc=16.91±0.05% t=00:21:53 ETA=00:01:55 epoch 0 lr=1e-05
+train: [███████▎] data=0001033/0001123 loss=9.80130±0.18106 acc=16.89±0.05% t=00:21:54 ETA=00:01:54 epoch 0 lr=1e-05
+train: [███████▎] data=0001034/0001123 loss=9.80711±0.18098 acc=16.88±0.05% t=00:21:56 ETA=00:01:53 epoch 0 lr=1e-05
+train: [███████▎] data=0001035/0001123 loss=9.81323±0.18091 acc=16.86±0.05% t=00:21:57 ETA=00:01:52 epoch 0 lr=1e-05
+train: [███████▍] data=0001036/0001123 loss=9.81954±0.18084 acc=16.84±0.05% t=00:21:58 ETA=00:01:50 epoch 0 lr=1e-05
+train: [███████▍] data=0001037/0001123 loss=9.82536±0.18076 acc=16.83±0.05% t=00:21:59 ETA=00:01:49 epoch 0 lr=1e-05
+train: [███████▍] data=0001038/0001123 loss=9.83159±0.18070 acc=16.81±0.05% t=00:22:01 ETA=00:01:48 epoch 0 lr=1e-05
+train: [███████▍] data=0001039/0001123 loss=9.83756±0.18062 acc=16.79±0.05% t=00:22:02 ETA=00:01:46 epoch 0 lr=1e-05
+train: [███████▍] data=0001040/0001123 loss=9.84312±0.18053 acc=16.78±0.05% t=00:22:03 ETA=00:01:45 epoch 0 lr=1e-05
+train: [███████▍] data=0001041/0001123 loss=9.84896±0.18045 acc=16.76±0.05% t=00:22:05 ETA=00:01:44 epoch 0 lr=1e-05
+train: [███████▍] data=0001042/0001123 loss=9.85509±0.18038 acc=16.75±0.05% t=00:22:06 ETA=00:01:43 epoch 0 lr=1e-05
+train: [███████▍] data=0001043/0001123 loss=9.86112±0.18031 acc=16.73±0.05% t=00:22:07 ETA=00:01:41 epoch 0 lr=1e-05
+train: [███████▍] data=0001044/0001123 loss=9.86705±0.18024 acc=16.71±0.05% t=00:22:08 ETA=00:01:40 epoch 0 lr=1e-05
+train: [███████▍] data=0001045/0001123 loss=9.87298±0.18016 acc=16.70±0.05% t=00:22:10 ETA=00:01:39 epoch 0 lr=1e-05
+train: [███████▍] data=0001046/0001123 loss=9.87872±0.18008 acc=16.68±0.05% t=00:22:11 ETA=00:01:38 epoch 0 lr=1e-05
+train: [███████▍] data=0001047/0001123 loss=9.88445±0.18000 acc=16.67±0.05% t=00:22:12 ETA=00:01:36 epoch 0 lr=1e-05
+train: [███████▍] data=0001048/0001123 loss=9.88980±0.17991 acc=16.65±0.05% t=00:22:13 ETA=00:01:35 epoch 0 lr=1e-05
+train: [███████▍] data=0001049/0001123 loss=9.89514±0.17982 acc=16.63±0.05% t=00:22:15 ETA=00:01:34 epoch 0 lr=1e-05
+train: [███████▍] data=0001050/0001123 loss=9.90092±0.17974 acc=16.62±0.05% t=00:22:16 ETA=00:01:32 epoch 0 lr=1e-05
+train: [███████▍] data=0001051/0001123 loss=9.90653±0.17965 acc=16.60±0.05% t=00:22:17 ETA=00:01:31 epoch 0 lr=1e-05
+train: [███████▍] data=0001052/0001123 loss=9.91220±0.17957 acc=16.59±0.05% t=00:22:18 ETA=00:01:30 epoch 0 lr=1e-05
+train: [███████▌] data=0001053/0001123 loss=9.91788±0.17949 acc=16.57±0.05% t=00:22:20 ETA=00:01:29 epoch 0 lr=1e-05
+train: [███████▌] data=0001054/0001123 loss=9.92348±0.17941 acc=16.56±0.05% t=00:22:21 ETA=00:01:27 epoch 0 lr=1e-05
+train: [███████▌] data=0001055/0001123 loss=9.92872±0.17932 acc=16.54±0.05% t=00:22:22 ETA=00:01:26 epoch 0 lr=1e-05
+train: [███████▌] data=0001056/0001123 loss=9.93393±0.17922 acc=16.52±0.05% t=00:22:23 ETA=00:01:25 epoch 0 lr=1e-05
+train: [███████▌] data=0001057/0001123 loss=9.94035±0.17917 acc=16.51±0.05% t=00:22:25 ETA=00:01:23 epoch 0 lr=1e-05
+train: [███████▌] data=0001058/0001123 loss=9.94649±0.17910 acc=16.49±0.05% t=00:22:26 ETA=00:01:22 epoch 0 lr=1e-05
+train: [███████▌] data=0001059/0001123 loss=9.95192±0.17902 acc=16.48±0.05% t=00:22:27 ETA=00:01:21 epoch 0 lr=1e-05
+train: [███████▌] data=0001060/0001123 loss=9.95763±0.17894 acc=16.46±0.05% t=00:22:28 ETA=00:01:20 epoch 0 lr=1e-05
+train: [███████▌] data=0001061/0001123 loss=9.96323±0.17886 acc=16.45±0.05% t=00:22:30 ETA=00:01:18 epoch 0 lr=1e-05
+train: [███████▌] data=0001062/0001123 loss=9.96875±0.17877 acc=16.43±0.05% t=00:22:31 ETA=00:01:17 epoch 0 lr=1e-05
+train: [███████▌] data=0001063/0001123 loss=9.97367±0.17867 acc=16.41±0.05% t=00:22:32 ETA=00:01:16 epoch 0 lr=1e-05
+train: [███████▌] data=0001064/0001123 loss=9.97921±0.17859 acc=16.40±0.05% t=00:22:34 ETA=00:01:15 epoch 0 lr=1e-05
+train: [███████▌] data=0001065/0001123 loss=9.98475±0.17851 acc=16.38±0.05% t=00:22:35 ETA=00:01:13 epoch 0 lr=1e-05
+train: [███████▌] data=0001066/0001123 loss=9.99047±0.17843 acc=16.37±0.05% t=00:22:36 ETA=00:01:12 epoch 0 lr=1e-05
+train: [███████▌] data=0001067/0001123 loss=9.99627±0.17836 acc=16.35±0.05% t=00:22:37 ETA=00:01:11 epoch 0 lr=1e-05
+train: [███████▌] data=0001068/0001123 loss=10.00206±0.17829 acc=16.34±0.05% t=00:22:39 ETA=00:01:09 epoch 0 lr=1e-05
+train: [███████▌] data=0001069/0001123 loss=10.00787±0.17822 acc=16.32±0.05% t=00:22:40 ETA=00:01:08 epoch 0 lr=1e-05
+train: [███████▌] data=0001070/0001123 loss=10.01331±0.17813 acc=16.31±0.05% t=00:22:41 ETA=00:01:07 epoch 0 lr=1e-05
+train: [███████▋] data=0001071/0001123 loss=10.01924±0.17806 acc=16.29±0.05% t=00:22:42 ETA=00:01:06 epoch 0 lr=1e-05
+train: [███████▋] data=0001072/0001123 loss=10.02501±0.17799 acc=16.28±0.05% t=00:22:44 ETA=00:01:04 epoch 0 lr=1e-05
+train: [███████▋] data=0001073/0001123 loss=10.03061±0.17791 acc=16.26±0.05% t=00:22:45 ETA=00:01:03 epoch 0 lr=1e-05
+train: [███████▋] data=0001074/0001123 loss=10.03665±0.17785 acc=16.25±0.05% t=00:22:46 ETA=00:01:02 epoch 0 lr=1e-05
+train: [███████▋] data=0001075/0001123 loss=10.04166±0.17776 acc=16.23±0.05% t=00:22:47 ETA=00:01:01 epoch 0 lr=1e-05
+train: [███████▋] data=0001076/0001123 loss=10.04702±0.17767 acc=16.22±0.05% t=00:22:49 ETA=00:00:59 epoch 0 lr=1e-05
+train: [███████▋] data=0001077/0001123 loss=10.05259±0.17759 acc=16.20±0.05% t=00:22:50 ETA=00:00:58 epoch 0 lr=1e-05
+train: [███████▋] data=0001078/0001123 loss=10.05866±0.17753 acc=16.19±0.05% t=00:22:51 ETA=00:00:57 epoch 0 lr=1e-05
+train: [███████▋] data=0001079/0001123 loss=10.06477±0.17747 acc=16.17±0.05% t=00:22:52 ETA=00:00:55 epoch 0 lr=1e-05
+train: [███████▋] data=0001080/0001123 loss=10.07065±0.17741 acc=16.16±0.05% t=00:22:54 ETA=00:00:54 epoch 0 lr=1e-05
+train: [███████▋] data=0001081/0001123 loss=10.07598±0.17732 acc=16.14±0.05% t=00:22:55 ETA=00:00:53 epoch 0 lr=1e-05
+train: [███████▋] data=0001082/0001123 loss=10.08133±0.17724 acc=16.13±0.05% t=00:22:56 ETA=00:00:52 epoch 0 lr=1e-05
+train: [███████▋] data=0001083/0001123 loss=10.08661±0.17715 acc=16.11±0.05% t=00:22:57 ETA=00:00:50 epoch 0 lr=1e-05
+train: [███████▋] data=0001084/0001123 loss=10.09235±0.17708 acc=16.10±0.05% t=00:22:59 ETA=00:00:49 epoch 0 lr=1e-05
+train: [███████▋] data=0001085/0001123 loss=10.09735±0.17699 acc=16.08±0.05% t=00:23:00 ETA=00:00:48 epoch 0 lr=1e-05
+train: [███████▋] data=0001086/0001123 loss=10.10275±0.17691 acc=16.07±0.05% t=00:23:01 ETA=00:00:47 epoch 0 lr=1e-05
+train: [███████▋] data=0001087/0001123 loss=10.10831±0.17683 acc=16.05±0.05% t=00:23:02 ETA=00:00:45 epoch 0 lr=1e-05
+train: [███████▊] data=0001088/0001123 loss=10.11357±0.17675 acc=16.04±0.05% t=00:23:04 ETA=00:00:44 epoch 0 lr=1e-05
+train: [███████▊] data=0001089/0001123 loss=10.11930±0.17668 acc=16.02±0.05% t=00:23:05 ETA=00:00:43 epoch 0 lr=1e-05
+train: [███████▊] data=0001090/0001123 loss=10.12500±0.17661 acc=16.01±0.05% t=00:23:06 ETA=00:00:41 epoch 0 lr=1e-05
+train: [███████▊] data=0001091/0001123 loss=10.13015±0.17652 acc=15.99±0.05% t=00:23:08 ETA=00:00:40 epoch 0 lr=1e-05
+train: [███████▊] data=0001092/0001123 loss=10.13494±0.17643 acc=15.98±0.05% t=00:23:09 ETA=00:00:39 epoch 0 lr=1e-05
+train: [███████▊] data=0001093/0001123 loss=10.13947±0.17632 acc=15.96±0.05% t=00:23:10 ETA=00:00:38 epoch 0 lr=1e-05
+train: [███████▊] data=0001094/0001123 loss=10.14436±0.17623 acc=15.95±0.05% t=00:23:11 ETA=00:00:36 epoch 0 lr=1e-05
+train: [███████▊] data=0001095/0001123 loss=10.14916±0.17614 acc=15.94±0.05% t=00:23:13 ETA=00:00:35 epoch 0 lr=1e-05
+train: [███████▊] data=0001096/0001123 loss=10.15394±0.17604 acc=15.92±0.05% t=00:23:14 ETA=00:00:34 epoch 0 lr=1e-05
+train: [███████▊] data=0001097/0001123 loss=10.15882±0.17595 acc=15.91±0.05% t=00:23:15 ETA=00:00:33 epoch 0 lr=1e-05
+train: [███████▊] data=0001098/0001123 loss=10.16424±0.17587 acc=15.89±0.05% t=00:23:16 ETA=00:00:31 epoch 0 lr=1e-05
+train: [███████▊] data=0001099/0001123 loss=10.16952±0.17579 acc=15.88±0.05% t=00:23:18 ETA=00:00:30 epoch 0 lr=1e-05
+train: [███████▊] data=0001100/0001123 loss=10.17452±0.17570 acc=15.86±0.05% t=00:23:19 ETA=00:00:29 epoch 0 lr=1e-05
+train: [███████▊] data=0001101/0001123 loss=10.17968±0.17562 acc=15.85±0.05% t=00:23:20 ETA=00:00:27 epoch 0 lr=1e-05
+train: [███████▊] data=0001102/0001123 loss=10.18451±0.17552 acc=15.83±0.05% t=00:23:21 ETA=00:00:26 epoch 0 lr=1e-05
+train: [███████▊] data=0001103/0001123 loss=10.18978±0.17544 acc=15.82±0.05% t=00:23:23 ETA=00:00:25 epoch 0 lr=1e-05
+train: [███████▊] data=0001104/0001123 loss=10.19550±0.17538 acc=15.81±0.05% t=00:23:24 ETA=00:00:24 epoch 0 lr=1e-05
+train: [███████▊] data=0001105/0001123 loss=10.20093±0.17530 acc=15.79±0.05% t=00:23:25 ETA=00:00:22 epoch 0 lr=1e-05
+train: [███████▉] data=0001106/0001123 loss=10.20617±0.17522 acc=15.78±0.05% t=00:23:27 ETA=00:00:21 epoch 0 lr=1e-05
+train: [███████▉] data=0001107/0001123 loss=10.21113±0.17513 acc=15.76±0.05% t=00:23:28 ETA=00:00:20 epoch 0 lr=1e-05
+train: [███████▉] data=0001108/0001123 loss=10.21615±0.17505 acc=15.75±0.05% t=00:23:29 ETA=00:00:19 epoch 0 lr=1e-05
+train: [███████▉] data=0001109/0001123 loss=10.22143±0.17497 acc=15.73±0.05% t=00:23:30 ETA=00:00:17 epoch 0 lr=1e-05
+train: [███████▉] data=0001110/0001123 loss=10.22661±0.17489 acc=15.72±0.05% t=00:23:32 ETA=00:00:16 epoch 0 lr=1e-05
+train: [███████▉] data=0001111/0001123 loss=10.23172±0.17481 acc=15.71±0.05% t=00:23:33 ETA=00:00:15 epoch 0 lr=1e-05
+train: [███████▉] data=0001112/0001123 loss=10.23650±0.17471 acc=15.69±0.05% t=00:23:34 ETA=00:00:13 epoch 0 lr=1e-05
+train: [███████▉] data=0001113/0001123 loss=10.24138±0.17463 acc=15.68±0.05% t=00:23:35 ETA=00:00:12 epoch 0 lr=1e-05
+train: [███████▉] data=0001114/0001123 loss=10.24673±0.17455 acc=15.66±0.05% t=00:23:37 ETA=00:00:11 epoch 0 lr=1e-05
+train: [███████▉] data=0001115/0001123 loss=10.25177±0.17447 acc=15.65±0.05% t=00:23:38 ETA=00:00:10 epoch 0 lr=1e-05
+train: [███████▉] data=0001116/0001123 loss=10.25688±0.17439 acc=15.64±0.05% t=00:23:39 ETA=00:00:08 epoch 0 lr=1e-05
+train: [███████▉] data=0001117/0001123 loss=10.26127±0.17428 acc=15.62±0.05% t=00:23:40 ETA=00:00:07 epoch 0 lr=1e-05
+train: [███████▉] data=0001118/0001123 loss=10.26592±0.17419 acc=15.61±0.05% t=00:23:42 ETA=00:00:06 epoch 0 lr=1e-05
+train: [███████▉] data=0001119/0001123 loss=10.27070±0.17410 acc=15.59±0.05% t=00:23:43 ETA=00:00:05 epoch 0 lr=1e-05
+train: [███████▉] data=0001120/0001123 loss=10.27561±0.17401 acc=15.58±0.05% t=00:23:44 ETA=00:00:03 epoch 0 lr=1e-05
+train: [███████▉] data=0001121/0001123 loss=10.28091±0.17394 acc=15.57±0.05% t=00:23:45 ETA=00:00:02 epoch 0 lr=1e-05
+train: [███████▉] data=0001122/0001123 loss=10.28640±0.17387 acc=15.55±0.05% t=00:23:47 ETA=00:00:01 epoch 0 lr=1e-05
+train: [███████▉] data=0001123/0001123 loss=10.29179±0.17380 acc=15.54±0.05% t=00:23:48 ETA=00:00:00 
+val:   [▏       ] data=0000001/0000060 loss=15.66465±nan acc=0.00±0.00% t=00:00:00 ETA=00:00:24 val:   [▎       ] data=0000002/0000060 loss=15.65985±0.00433 acc=0.00±0.00% t=00:00:00 ETA=00:00:23 val:   [▍       ] data=0000003/0000060 loss=15.86411±0.20428 acc=0.00±0.00% t=00:00:01 ETA=00:00:22 val:   [▌       ] data=0000004/0000060 loss=15.92068±0.15513 acc=0.00±0.00% t=00:00:01 ETA=00:00:21 val:   [▋       ] data=0000005/0000060 loss=15.86880±0.13089 acc=0.00±0.00% t=00:00:01 ETA=00:00:21 val:   [▊       ] data=0000006/0000060 loss=15.86491±0.10694 acc=0.00±0.00% t=00:00:02 ETA=00:00:21 val:   [▉       ] data=0000007/0000060 loss=15.93538±0.11461 acc=0.00±0.00% t=00:00:02 ETA=00:00:20 val:   [█       ] data=0000008/0000060 loss=15.99984±0.11835 acc=0.00±0.00% t=00:00:03 ETA=00:00:20 val:   [█▏      ] data=0000009/0000060 loss=15.99376±0.10455 acc=0.00±0.00% t=00:00:03 ETA=00:00:19 val:   [█▎      ] data=0000010/0000060 loss=15.97545±0.09529 acc=0.00±0.00% t=00:00:03 ETA=00:00:19 val:   [█▍      ] data=0000011/0000060 loss=15.97309±0.08623 acc=0.00±0.00% t=00:00:04 ETA=00:00:18 val:   [█▌      ] data=0000012/0000060 loss=16.01608±0.08969 acc=0.00±0.00% t=00:00:04 ETA=00:00:18 val:   [█▋      ] data=0000013/0000060 loss=16.00658±0.08305 acc=0.00±0.00% t=00:00:05 ETA=00:00:18 val:   [█▊      ] data=0000014/0000060 loss=15.96425±0.08777 acc=0.00±0.00% t=00:00:05 ETA=00:00:17 val:   [█▉      ] data=0000015/0000060 loss=15.94349±0.08430 acc=0.00±0.00% t=00:00:05 ETA=00:00:17 val:   [██▏     ] data=0000016/0000060 loss=15.92473±0.08106 acc=0.00±0.00% t=00:00:06 ETA=00:00:16 val:   [██▎     ] data=0000017/0000060 loss=15.92738±0.07619 acc=0.00±0.00% t=00:00:06 ETA=00:00:16 val:   [██▍     ] data=0000018/0000060 loss=15.90426±0.07546 acc=0.00±0.00% t=00:00:06 ETA=00:00:16 val:   [██▌     ] data=0000019/0000060 loss=15.89143±0.07252 acc=0.00±0.00% t=00:00:07 ETA=00:00:15 val:   [██▋     ] data=0000020/0000060 loss=15.90358±0.06986 acc=0.00±0.00% t=00:00:07 ETA=00:00:15 val:   [██▊     ] data=0000021/0000060 loss=15.89166±0.06752 acc=0.00±0.00% t=00:00:08 ETA=00:00:15 val:   [██▉     ] data=0000022/0000060 loss=15.89778±0.06466 acc=0.00±0.00% t=00:00:08 ETA=00:00:14 val:   [███     ] data=0000023/0000060 loss=15.90029±0.06184 acc=0.00±0.00% t=00:00:08 ETA=00:00:14 val:   [███▏    ] data=0000024/0000060 loss=15.90432±0.05934 acc=0.00±0.00% t=00:00:09 ETA=00:00:13 val:   [███▎    ] data=0000025/0000060 loss=15.92164±0.05950 acc=0.00±0.00% t=00:00:09 ETA=00:00:13 val:   [███▍    ] data=0000026/0000060 loss=15.93165±0.05803 acc=0.00±0.00% t=00:00:09 ETA=00:00:13 val:   [███▌    ] data=0000027/0000060 loss=15.93676±0.05607 acc=0.00±0.00% t=00:00:10 ETA=00:00:12 val:   [███▋    ] data=0000028/0000060 loss=15.93316±0.05415 acc=0.00±0.00% t=00:00:10 ETA=00:00:12 val:   [███▊    ] data=0000029/0000060 loss=15.94981±0.05484 acc=0.00±0.00% t=00:00:11 ETA=00:00:11 val:   [███▉    ] data=0000030/0000060 loss=15.95371±0.05313 acc=0.00±0.00% t=00:00:11 ETA=00:00:11 val:   [████▏   ] data=0000031/0000060 loss=15.95898±0.05165 acc=0.00±0.00% t=00:00:11 ETA=00:00:11 val:   [████▎   ] data=0000032/0000060 loss=15.97394±0.05220 acc=0.00±0.00% t=00:00:12 ETA=00:00:10 val:   [████▍   ] data=0000033/0000060 loss=15.97126±0.05067 acc=0.00±0.00% t=00:00:12 ETA=00:00:10 val:   [████▌   ] data=0000034/0000060 loss=15.96065±0.05029 acc=0.00±0.00% t=00:00:13 ETA=00:00:09 val:   [████▋   ] data=0000035/0000060 loss=15.95158±0.04966 acc=0.00±0.00% t=00:00:13 ETA=00:00:09 val:   [████▊   ] data=0000036/0000060 loss=15.95485±0.04838 acc=0.00±0.00% t=00:00:13 ETA=00:00:09 val:   [████▉   ] data=0000037/0000060 loss=15.96322±0.04779 acc=0.00±0.00% t=00:00:14 ETA=00:00:08 val:   [█████   ] data=0000038/0000060 loss=15.97306±0.04754 acc=0.00±0.00% t=00:00:14 ETA=00:00:08 val:   [█████▏  ] data=0000039/0000060 loss=15.97695±0.04647 acc=0.00±0.00% t=00:00:14 ETA=00:00:08 val:   [█████▎  ] data=0000040/0000060 loss=15.97607±0.04530 acc=0.00±0.00% t=00:00:15 ETA=00:00:07 val:   [█████▍  ] data=0000041/0000060 loss=15.97704±0.04420 acc=0.00±0.00% t=00:00:15 ETA=00:00:07 val:   [█████▌  ] data=0000042/0000060 loss=15.98706±0.04428 acc=0.00±0.00% t=00:00:16 ETA=00:00:06 val:   [█████▋  ] data=0000043/0000060 loss=15.98991±0.04333 acc=0.00±0.00% t=00:00:16 ETA=00:00:06 val:   [█████▊  ] data=0000044/0000060 loss=15.99588±0.04275 acc=0.00±0.00% t=00:00:16 ETA=00:00:06 val:   [█████▉  ] data=0000045/0000060 loss=16.00681±0.04320 acc=0.00±0.00% t=00:00:17 ETA=00:00:05 val:   [██████▏ ] data=0000046/0000060 loss=16.01568±0.04317 acc=0.00±0.00% t=00:00:17 ETA=00:00:05 val:   [██████▎ ] data=0000047/0000060 loss=16.02813±0.04404 acc=0.00±0.00% t=00:00:18 ETA=00:00:04 val:   [██████▍ ] data=0000048/0000060 loss=16.03995±0.04470 acc=0.00±0.00% t=00:00:18 ETA=00:00:04 val:   [██████▌ ] data=0000049/0000060 loss=16.04551±0.04413 acc=0.00±0.00% t=00:00:18 ETA=00:00:04 val:   [██████▋ ] data=0000050/0000060 loss=16.05278±0.04385 acc=0.00±0.00% t=00:00:19 ETA=00:00:03 val:   [██████▊ ] data=0000051/0000060 loss=16.06024±0.04362 acc=0.00±0.00% t=00:00:19 ETA=00:00:03 val:   [██████▉ ] data=0000052/0000060 loss=16.06937±0.04374 acc=0.00±0.00% t=00:00:19 ETA=00:00:03 val:   [███████ ] data=0000053/0000060 loss=16.07437±0.04319 acc=0.00±0.00% t=00:00:20 ETA=00:00:02 val:   [███████▏] data=0000054/0000060 loss=16.06209±0.04413 acc=0.00±0.00% t=00:00:20 ETA=00:00:02 val:   [███████▎] data=0000055/0000060 loss=16.06924±0.04391 acc=0.00±0.00% t=00:00:21 ETA=00:00:01 val:   [███████▍] data=0000056/0000060 loss=16.06759±0.04315 acc=0.00±0.00% t=00:00:21 ETA=00:00:01 val:   [███████▌] data=0000057/0000060 loss=16.08915±0.04755 acc=0.00±0.00% t=00:00:21 ETA=00:00:01 val:   [███████▋] data=0000058/0000060 loss=16.09329±0.04691 acc=0.00±0.00% t=00:00:22 ETA=00:00:00 val:   [███████▊] data=0000059/0000060 loss=16.10869±0.04861 acc=0.00±0.00% t=00:00:22 ETA=00:00:00 val:   [███████▉] data=0000060/0000060 loss=16.11736±0.04857 acc=0.00±0.00% t=00:00:22 ETA=00:00:00 
+
+epoch 1 lr=1e-05
+train: [        ] data=0000001/0001123 loss=16.60072±nan acc=0.00±0.00% t=00:00:01 ETA=00:23:31 epoch 1 lr=1e-05
+train: [        ] data=0000002/0001123 loss=16.66811±0.06744 acc=0.00±0.00% t=00:00:02 ETA=00:23:37 epoch 1 lr=1e-05
+train: [        ] data=0000003/0001123 loss=16.50539±0.16731 acc=0.00±0.00% t=00:00:03 ETA=00:23:36 epoch 1 lr=1e-05
+train: [        ] data=0000004/0001123 loss=16.55620±0.12876 acc=0.00±0.00% t=00:00:05 ETA=00:23:38 epoch 1 lr=1e-05
+train: [        ] data=0000005/0001123 loss=16.65648±0.14144 acc=0.00±0.00% t=00:00:06 ETA=00:23:33 epoch 1 lr=1e-05
+train: [        ] data=0000006/0001123 loss=16.50168±0.19313 acc=0.00±0.00% t=00:00:07 ETA=00:23:36 epoch 1 lr=1e-05
+train: [        ] data=0000007/0001123 loss=16.38565±0.20027 acc=0.00±0.00% t=00:00:08 ETA=00:23:33 epoch 1 lr=1e-05
+train: [        ] data=0000008/0001123 loss=16.28469±0.20068 acc=0.00±0.00% t=00:00:10 ETA=00:23:31 epoch 1 lr=1e-05
+train: [        ] data=0000009/0001123 loss=16.26130±0.17852 acc=0.00±0.00% t=00:00:11 ETA=00:23:29 epoch 1 lr=1e-05
+train: [        ] data=0000010/0001123 loss=16.25983±0.15968 acc=0.00±0.00% t=00:00:12 ETA=00:23:27 epoch 1 lr=1e-05
+train: [        ] data=0000011/0001123 loss=16.20255±0.15538 acc=0.00±0.00% t=00:00:13 ETA=00:23:24 epoch 1 lr=1e-05
+train: [        ] data=0000012/0001123 loss=16.14760±0.15212 acc=0.00±0.00% t=00:00:15 ETA=00:23:23 epoch 1 lr=1e-05
+train: [        ] data=0000013/0001123 loss=16.16468±0.14096 acc=0.00±0.00% t=00:00:16 ETA=00:23:21 epoch 1 lr=1e-05
+train: [        ] data=0000014/0001123 loss=16.16812±0.13055 acc=0.00±0.00% t=00:00:17 ETA=00:23:20 epoch 1 lr=1e-05
+train: [        ] data=0000015/0001123 loss=16.15040±0.12282 acc=0.00±0.00% t=00:00:18 ETA=00:23:18 epoch 1 lr=1e-05
+train: [        ] data=0000016/0001123 loss=16.14319±0.11512 acc=0.00±0.00% t=00:00:20 ETA=00:23:16 epoch 1 lr=1e-05
+train: [        ] data=0000017/0001123 loss=16.17099±0.11165 acc=0.00±0.00% t=00:00:21 ETA=00:23:15 epoch 1 lr=1e-05
+train: [▏       ] data=0000018/0001123 loss=16.19391±0.10773 acc=0.00±0.00% t=00:00:22 ETA=00:23:13 epoch 1 lr=1e-05
+train: [▏       ] data=0000019/0001123 loss=16.23035±0.10822 acc=0.00±0.00% t=00:00:23 ETA=00:23:12 epoch 1 lr=1e-05
+train: [▏       ] data=0000020/0001123 loss=16.21232±0.10424 acc=0.00±0.00% t=00:00:25 ETA=00:23:12 epoch 1 lr=1e-05
+train: [▏       ] data=0000021/0001123 loss=16.17491±0.10598 acc=0.00±0.00% t=00:00:26 ETA=00:23:11 epoch 1 lr=1e-05
+train: [▏       ] data=0000022/0001123 loss=16.18665±0.10172 acc=0.00±0.00% t=00:00:27 ETA=00:23:10 epoch 1 lr=1e-05
+train: [▏       ] data=0000023/0001123 loss=16.20772±0.09946 acc=0.00±0.00% t=00:00:29 ETA=00:23:09 epoch 1 lr=1e-05
+train: [▏       ] data=0000024/0001123 loss=16.19157±0.09658 acc=0.00±0.00% t=00:00:30 ETA=00:23:08 epoch 1 lr=1e-05
+train: [▏       ] data=0000025/0001123 loss=16.18152±0.09318 acc=0.00±0.00% t=00:00:31 ETA=00:23:07 epoch 1 lr=1e-05
+train: [▏       ] data=0000026/0001123 loss=16.15223±0.09420 acc=0.00±0.00% t=00:00:32 ETA=00:23:06 epoch 1 lr=1e-05
+train: [▏       ] data=0000027/0001123 loss=16.15179±0.09064 acc=0.00±0.00% t=00:00:34 ETA=00:23:05 epoch 1 lr=1e-05
+train: [▏       ] data=0000028/0001123 loss=16.17500±0.09038 acc=0.00±0.00% t=00:00:35 ETA=00:23:04 epoch 1 lr=1e-05
+train: [▏       ] data=0000029/0001123 loss=16.18084±0.08740 acc=0.00±0.00% t=00:00:36 ETA=00:23:03 epoch 1 lr=1e-05
+train: [▏       ] data=0000030/0001123 loss=16.17994±0.08444 acc=0.00±0.00% t=00:00:37 ETA=00:23:02 epoch 1 lr=1e-05
+train: [▏       ] data=0000031/0001123 loss=16.17792±0.08170 acc=0.00±0.00% t=00:00:39 ETA=00:23:01 epoch 1 lr=1e-05
+train: [▏       ] data=0000032/0001123 loss=16.17250±0.07929 acc=0.00±0.00% t=00:00:40 ETA=00:23:00 epoch 1 lr=1e-05
+train: [▏       ] data=0000033/0001123 loss=16.16949±0.07691 acc=0.00±0.00% t=00:00:41 ETA=00:22:59 epoch 1 lr=1e-05
+train: [▏       ] data=0000034/0001123 loss=16.15737±0.07559 acc=0.00±0.00% t=00:00:43 ETA=00:22:57 epoch 1 lr=1e-05
+train: [▏       ] data=0000035/0001123 loss=16.16080±0.07348 acc=0.00±0.00% t=00:00:44 ETA=00:22:57 epoch 1 lr=1e-05
+train: [▎       ] data=0000036/0001123 loss=16.18023±0.07400 acc=0.00±0.00% t=00:00:45 ETA=00:22:56 epoch 1 lr=1e-05
+train: [▎       ] data=0000037/0001123 loss=16.19416±0.07331 acc=0.00±0.00% t=00:00:46 ETA=00:22:54 epoch 1 lr=1e-05
+train: [▎       ] data=0000038/0001123 loss=16.20634±0.07239 acc=0.00±0.00% t=00:00:48 ETA=00:22:53 epoch 1 lr=1e-05
+train: [▎       ] data=0000039/0001123 loss=16.21423±0.07095 acc=0.00±0.00% t=00:00:49 ETA=00:22:52 epoch 1 lr=1e-05
+train: [▎       ] data=0000040/0001123 loss=16.21210±0.06918 acc=0.00±0.00% t=00:00:50 ETA=00:22:51 epoch 1 lr=1e-05
+train: [▎       ] data=0000041/0001123 loss=16.21159±0.06748 acc=0.00±0.00% t=00:00:51 ETA=00:22:50 epoch 1 lr=1e-05
+train: [▎       ] data=0000042/0001123 loss=16.22276±0.06679 acc=0.00±0.00% t=00:00:53 ETA=00:22:49 epoch 1 lr=1e-05
+train: [▎       ] data=0000043/0001123 loss=16.22391±0.06523 acc=0.00±0.00% t=00:00:54 ETA=00:22:47 epoch 1 lr=1e-05
+train: [▎       ] data=0000044/0001123 loss=16.22429±0.06373 acc=0.00±0.00% t=00:00:55 ETA=00:22:46 epoch 1 lr=1e-05
+train: [▎       ] data=0000045/0001123 loss=16.24603±0.06598 acc=0.00±0.00% t=00:00:56 ETA=00:22:44 epoch 1 lr=1e-05
+train: [▎       ] data=0000046/0001123 loss=16.25101±0.06473 acc=0.00±0.00% t=00:00:58 ETA=00:22:43 epoch 1 lr=1e-05
+train: [▎       ] data=0000047/0001123 loss=16.25935±0.06388 acc=0.00±0.00% t=00:00:59 ETA=00:22:42 epoch 1 lr=1e-05
+train: [▎       ] data=0000048/0001123 loss=16.26622±0.06291 acc=0.00±0.00% t=00:01:00 ETA=00:22:40 epoch 1 lr=1e-05
+train: [▎       ] data=0000049/0001123 loss=16.27862±0.06285 acc=0.00±0.00% t=00:01:02 ETA=00:22:39 epoch 1 lr=1e-05
+train: [▎       ] data=0000050/0001123 loss=16.29478±0.06367 acc=0.00±0.00% t=00:01:03 ETA=00:22:38 epoch 1 lr=1e-05
+train: [▎       ] data=0000051/0001123 loss=16.30724±0.06364 acc=0.00±0.00% t=00:01:04 ETA=00:22:37 epoch 1 lr=1e-05
+train: [▎       ] data=0000052/0001123 loss=16.30118±0.06270 acc=0.00±0.00% t=00:01:05 ETA=00:22:36 epoch 1 lr=1e-05
+train: [▍       ] data=0000053/0001123 loss=16.29624±0.06170 acc=0.00±0.00% t=00:01:07 ETA=00:22:34 epoch 1 lr=1e-05
+train: [▍       ] data=0000054/0001123 loss=16.30426±0.06107 acc=0.00±0.00% t=00:01:08 ETA=00:22:33 epoch 1 lr=1e-05
+train: [▍       ] data=0000055/0001123 loss=16.31431±0.06079 acc=0.00±0.00% t=00:01:09 ETA=00:22:32 epoch 1 lr=1e-05
+train: [▍       ] data=0000056/0001123 loss=16.30942±0.05990 acc=0.00±0.00% t=00:01:10 ETA=00:22:31 epoch 1 lr=1e-05
+train: [▍       ] data=0000057/0001123 loss=16.30392±0.05909 acc=0.00±0.00% t=00:01:12 ETA=00:22:30 epoch 1 lr=1e-05
+train: [▍       ] data=0000058/0001123 loss=16.28601±0.06076 acc=0.00±0.00% t=00:01:13 ETA=00:22:28 epoch 1 lr=1e-05
+train: [▍       ] data=0000059/0001123 loss=16.27690±0.06041 acc=0.00±0.00% t=00:01:14 ETA=00:22:27 epoch 1 lr=1e-05
+train: [▍       ] data=0000060/0001123 loss=16.25474±0.06340 acc=0.00±0.00% t=00:01:16 ETA=00:22:26 epoch 1 lr=1e-05
+train: [▍       ] data=0000061/0001123 loss=16.23414±0.06567 acc=0.00±0.00% t=00:01:17 ETA=00:22:25 epoch 1 lr=1e-05
+train: [▍       ] data=0000062/0001123 loss=16.21111±0.06858 acc=0.00±0.00% t=00:01:18 ETA=00:22:24 epoch 1 lr=1e-05
+train: [▍       ] data=0000063/0001123 loss=16.19129±0.07034 acc=0.00±0.00% t=00:01:19 ETA=00:22:23 epoch 1 lr=1e-05
+train: [▍       ] data=0000064/0001123 loss=16.18030±0.07009 acc=0.00±0.00% t=00:01:21 ETA=00:22:22 epoch 1 lr=1e-05
+train: [▍       ] data=0000065/0001123 loss=16.17201±0.06950 acc=0.00±0.00% t=00:01:22 ETA=00:22:21 epoch 1 lr=1e-05
+train: [▍       ] data=0000066/0001123 loss=16.16056±0.06939 acc=0.00±0.00% t=00:01:23 ETA=00:22:20 epoch 1 lr=1e-05
+train: [▍       ] data=0000067/0001123 loss=16.14840±0.06942 acc=0.00±0.00% t=00:01:24 ETA=00:22:19 epoch 1 lr=1e-05
+train: [▍       ] data=0000068/0001123 loss=16.13786±0.06920 acc=0.00±0.00% t=00:01:26 ETA=00:22:17 epoch 1 lr=1e-05
+train: [▍       ] data=0000069/0001123 loss=16.13143±0.06849 acc=0.00±0.00% t=00:01:27 ETA=00:22:16 epoch 1 lr=1e-05
+train: [▍       ] data=0000070/0001123 loss=16.12993±0.06753 acc=0.00±0.00% t=00:01:28 ETA=00:22:15 epoch 1 lr=1e-05
+train: [▌       ] data=0000071/0001123 loss=16.11792±0.06764 acc=0.00±0.00% t=00:01:30 ETA=00:22:14 epoch 1 lr=1e-05
+train: [▌       ] data=0000072/0001123 loss=16.10440±0.06805 acc=0.00±0.00% t=00:01:31 ETA=00:22:13 epoch 1 lr=1e-05

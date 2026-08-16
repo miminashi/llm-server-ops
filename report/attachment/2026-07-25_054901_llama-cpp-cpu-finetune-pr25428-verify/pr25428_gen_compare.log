@@ -1,0 +1,42 @@
+=== before ===
+0.01.097.340 I  - Press Return to return control to the AI.
+ - To return control without starting a new line, end your input with '/'.
+ - If you want to submit another line, end your input with '\'.
+0.01.097.349 I  - Not using system message. To change it, set a different value via -sys PROMPT
+0.01.097.350 I 
+user
+Barack Obama was born in 
+assistant
+Obama was born in 1961 in Chicago, Illinois, to a middle-class family. His father, Barack Obama Sr., was a lawyer and a member of the Democratic Party. His mother, Michelle Obama, was a teacher and a member of the Republican Party. Obama was raised in a family that was known for its liberal values and its emphasis on education and civic engagement. His father was
+> EOF by user
+
+
+0.08.458.114 I common_perf_print:    sampling time =      53.08 ms
+0.08.458.122 I common_perf_print:    samplers time =      17.01 ms /    95 tokens
+0.08.458.129 I common_perf_print:        load time =     505.56 ms
+0.08.458.131 I common_perf_print: prompt eval time =      99.08 ms /    15 tokens (    6.61 ms per token,   151.39 tokens per second)
+0.08.458.140 I common_perf_print:        eval time =    7114.64 ms /    79 runs   (   90.06 ms per token,    11.10 tokens per second)
+0.08.458.141 I common_perf_print:       total time =    7361.59 ms /    94 tokens
+0.08.458.143 I common_perf_print: unaccounted time =      94.79 ms /   1.3 %      (total - sampling - prompt eval - eval) / (total)
+0.08.458.143 I common_perf_print:    graphs reused =         79
+===after ===
+0.01.199.201 I 
+0.01.199.326 I sampler seed: 42
+0.01.199.347 I sampler params: 
+	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = -1
+	top_k = 40, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.000
+	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+0.01.199.358 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> dist 
+0.01.199.364 I generate: n_ctx = 512, n_batch = 2048, n_predict = 80, n_keep = 0
+0.01.199.364 I 
+Barack Obama was born in 1000000000000 , (100000000000000 , (000 (0 ( ( (000 ( ( ( ( ( (10 ( (000 ( (000 ( (0000000 (0000 (00 (0
+
+0.11.772.950 I common_perf_print:    sampling time =      52.83 ms
+0.11.772.952 I common_perf_print:    samplers time =      16.54 ms /    87 tokens
+0.11.772.958 I common_perf_print:        load time =     533.98 ms
+0.11.772.961 I common_perf_print: prompt eval time =     137.77 ms /     7 tokens (   19.68 ms per token,    50.81 tokens per second)
+0.11.772.963 I common_perf_print:        eval time =   10378.51 ms /    79 runs   (  131.37 ms per token,     7.61 tokens per second)
+0.11.772.964 I common_perf_print:       total time =   10573.93 ms /    86 tokens
+0.11.772.968 I common_perf_print: unaccounted time =       4.82 ms /   0.0 %      (total - sampling - prompt eval - eval) / (total)
+0.11.772.975 I common_perf_print:    graphs reused =         78

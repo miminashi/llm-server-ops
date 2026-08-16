@@ -1,0 +1,57 @@
+0.00.011.334 I main: force disabling memory mapping because it would result in-read-only pointers to the weights
+0.00.011.343 I main: force changing k cache type to f32 due to a lack of f16 support for OUT_PROD
+0.00.011.343 I main: force changing v cache type to f32 due to a lack of f16 support for OUT_PROD
+0.00.012.295 I common_init_result: fitting params to device memory ...
+0.00.012.301 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.00.481.912 I common_params_fit_impl: projected to use 1971 MiB of host memory vs. 64269 MiB of total host memory
+0.00.727.336 W load: control-looking token: 128247 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.02.164.877 W llama_context: n_ctx_seq (512) < n_ctx_train (32768) -- the full capacity of the model will not be utilized
+0.02.190.883 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.02.314.961 I 
+0.02.315.083 I system_info: n_threads = 64 (n_threads_batch = 64) / 94 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.03.336.208 I -optimizer adamw -lr0 1e-05 -wd 0 -lr-min -1 -min-epochs -1 -epochs 1 -period 1 -val 0.05
+0.06.728.531 I epoch 0 lr=1e-05
+train: [        ] data=0000001/0004428 loss=2.69532±nan acc=52.34±4.43% t=00:00:06 ETA=08:00:14 0.09.870.664 I epoch 0 lr=1e-05
+train: [        ] data=0000002/0004428 loss=3.01646±0.32115 acc=48.05±3.13% t=00:00:08 ETA=05:08:55 0.11.734.649 I epoch 0 lr=1e-05
+train: [        ] data=0000003/0004428 loss=2.99740±0.18639 acc=49.48±2.55% t=00:00:10 ETA=04:13:24 0.13.666.050 I epoch 0 lr=1e-05
+train: [        ] data=0000004/0004428 loss=2.92740±0.14924 acc=50.39±2.21% t=00:00:12 ETA=03:44:56 0.15.563.097 I epoch 0 lr=1e-05
+train: [        ] data=0000005/0004428 loss=2.76931±0.19585 acc=52.97±1.97% t=00:00:14 ETA=03:27:30 0.17.433.296 I epoch 0 lr=1e-05
+train: [        ] data=0000006/0004428 loss=2.64975±0.19966 acc=54.43±1.80% t=00:00:15 ETA=03:15:22 0.19.262.609 I epoch 0 lr=1e-05
+train: [        ] data=0000007/0004428 loss=2.65176±0.16875 acc=53.12±1.67% t=00:00:17 ETA=03:06:34 0.21.083.799 I epoch 0 lr=1e-05
+train: [        ] data=0000008/0004428 loss=2.64621±0.14625 acc=53.12±1.56% t=00:00:19 ETA=03:00:06 0.22.918.978 I epoch 0 lr=1e-05
+train: [        ] data=0000009/0004428 loss=2.60915±0.13420 acc=53.12±1.47% t=00:00:21 ETA=02:55:36 0.24.817.283 I epoch 0 lr=1e-05
+train: [        ] data=0000010/0004428 loss=2.56200±0.12896 acc=53.83±1.39% t=00:00:23 ETA=02:51:45 0.26.683.972 I epoch 0 lr=1e-05
+train: [        ] data=0000011/0004428 loss=2.59171±0.12037 acc=53.05±1.33% t=00:00:25 ETA=02:48:39 0.28.559.251 I epoch 0 lr=1e-05
+train: [        ] data=0000012/0004428 loss=2.63883±0.11956 acc=52.47±1.27% t=00:00:27 ETA=02:46:12 0.30.458.525 I epoch 0 lr=1e-05
+train: [        ] data=0000013/0004428 loss=2.63424±0.11008 acc=52.22±1.22% t=00:00:29 ETA=02:44:09 0.32.358.571 I epoch 0 lr=1e-05
+train: [        ] data=0000014/0004428 loss=2.65206±0.10346 acc=51.90±1.18% t=00:00:30 ETA=02:42:20 0.34.251.096 I epoch 0 lr=1e-05
+train: [        ] data=0000015/0004428 loss=2.65922±0.09658 acc=51.67±1.14% t=00:00:32 ETA=02:40:34 0.36.108.192 I epoch 0 lr=1e-05
+train: [        ] data=0000016/0004428 loss=2.69141±0.09591 acc=51.27±1.10% t=00:00:34 ETA=02:38:54 0.37.936.082 I epoch 0 lr=1e-05
+train: [        ] data=0000017/0004428 loss=2.66904±0.09282 acc=51.38±1.07% t=00:00:36 ETA=02:37:48 0.39.849.701 I epoch 0 lr=1e-05
+train: [        ] data=0000018/0004428 loss=2.67796±0.08797 acc=51.17±1.04% t=00:00:38 ETA=02:36:38 0.41.720.603 I epoch 0 lr=1e-05
+train: [        ] data=0000019/0004428 loss=2.69025±0.08411 acc=51.11±1.01% t=00:00:40 ETA=02:35:32 0.43.576.255 I epoch 0 lr=1e-05
+train: [        ] data=0000020/0004428 loss=2.71583±0.08379 acc=50.35±0.99% t=00:00:42 ETA=02:34:29 0.45.421.616 I epoch 0 lr=1e-05
+train: [        ] data=0000021/0004428 loss=2.70265±0.08079 acc=50.52±0.96% t=00:00:44 ETA=02:33:54 0.47.363.057 I epoch 0 lr=1e-05
+train: [        ] data=0000022/0004428 loss=2.71443±0.07792 acc=49.96±0.94% t=00:00:45 ETA=02:33:17 0.49.285.534 I epoch 0 lr=1e-05
+train: [        ] data=0000023/0004428 loss=2.76692±0.09110 acc=49.56±0.92% t=00:00:47 ETA=02:32:27 0.51.119.775 I epoch 0 lr=1e-05
+train: [        ] data=0000024/0004428 loss=2.81176±0.09808 acc=48.70±0.90% t=00:00:49 ETA=02:31:44 0.52.977.935 I epoch 0 lr=1e-05
+train: [        ] data=0000025/0004428 loss=2.84044±0.09834 acc=48.59±0.88% t=00:00:51 ETA=02:30:55 0.54.774.957 I epoch 0 lr=1e-05
+train: [        ] data=0000026/0004428 loss=2.87068±0.09921 acc=47.99±0.87% t=00:00:53 ETA=02:30:16 0.56.613.913 I epoch 0 lr=1e-05
+train: [        ] data=0000027/0004428 loss=2.88269±0.09621 acc=47.45±0.85% t=00:00:55 ETA=02:29:49 0.58.505.872 I epoch 0 lr=1e-05
+train: [        ] data=0000028/0004428 loss=2.89223±0.09320 acc=47.24±0.83% t=00:00:57 ETA=02:29:28 1.00.430.619 I epoch 0 lr=1e-05
+train: [        ] data=0000029/0004428 loss=2.89482±0.08997 acc=46.90±0.82% t=00:00:58 ETA=02:28:55 1.02.264.631 I epoch 0 lr=1e-05
+train: [        ] data=0000030/0004428 loss=2.89593±0.08693 acc=46.80±0.81% t=00:01:00 ETA=02:28:26 1.04.109.912 I epoch 0 lr=1e-05
+train: [        ] data=0000031/0004428 loss=2.92762±0.08985 acc=46.04±0.79% t=00:01:02 ETA=02:27:55 1.05.930.093 I epoch 0 lr=1e-05
+train: [        ] data=0000032/0004428 loss=2.93256±0.08713 acc=45.80±0.78% t=00:01:04 ETA=02:27:31 1.07.789.788 I epoch 0 lr=1e-05
+train: [        ] data=0000033/0004428 loss=2.95239±0.08675 acc=45.27±0.77% t=00:01:06 ETA=02:27:11 1.09.672.084 I epoch 0 lr=1e-05
+train: [        ] data=0000034/0004428 loss=2.95246±0.08416 acc=45.04±0.75% t=00:01:08 ETA=02:26:52 1.11.544.764 I epoch 0 lr=1e-05
+train: [        ] data=0000035/0004428 loss=2.97510±0.08480 acc=44.55±0.74% t=00:01:10 ETA=02:26:40 1.13.472.880 I epoch 0 lr=1e-05
+train: [        ] data=0000036/0004428 loss=2.97492±0.08241 acc=44.42±0.73% t=00:01:11 ETA=02:26:14 1.15.282.599 I epoch 0 lr=1e-05
+train: [        ] data=0000037/0004428 loss=2.99149±0.08185 acc=43.94±0.72% t=00:01:13 ETA=02:25:50 1.17.096.385 I epoch 0 lr=1e-05
+train: [        ] data=0000038/0004428 loss=2.98652±0.07982 acc=43.91±0.71% t=00:01:15 ETA=02:25:25 1.18.882.573 I epoch 0 lr=1e-05
+train: [        ] data=0000039/0004428 loss=2.99679±0.07842 acc=43.57±0.70% t=00:01:17 ETA=02:25:05 1.20.716.067 I epoch 0 lr=1e-05
+train: [        ] data=0000040/0004428 loss=3.01252±0.07804 acc=43.36±0.69% t=00:01:19 ETA=02:24:43 1.22.517.608 I epoch 0 lr=1e-05
+train: [        ] data=0000041/0004428 loss=3.01738±0.07626 acc=43.06±0.68% t=00:01:21 ETA=02:24:31 1.24.400.144 I epoch 0 lr=1e-05
+train: [        ] data=0000042/0004428 loss=3.02724±0.07508 acc=42.95±0.68% t=00:01:22 ETA=02:24:14 1.26.231.756 I epoch 0 lr=1e-05
+train: [        ] data=0000043/0004428 loss=3.04296±0.07498 acc=42.73±0.67% t=00:01:24 ETA=02:23:54 1.28.030.590 I epoch 0 lr=1e-05
+train: [        ] data=0000044/0004428 loss=3.05841±0.07486 acc=42.45±0.66% t=00:01:26 ETA=02:23:36 1.29.839.344 I epoch 0 lr=1e-05

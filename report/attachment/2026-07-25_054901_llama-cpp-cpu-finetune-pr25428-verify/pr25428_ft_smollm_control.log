@@ -1,0 +1,25 @@
+0.00.018.792 I main: force disabling memory mapping because it would result in-read-only pointers to the weights
+0.00.018.842 I main: force changing k cache type to f32 due to a lack of f16 support for OUT_PROD
+0.00.018.842 I main: force changing v cache type to f32 due to a lack of f16 support for OUT_PROD
+0.00.020.700 I common_init_result: fitting params to device memory ...
+0.00.020.708 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.00.276.833 I common_params_fit_impl: projected to use 560 MiB of host memory vs. 64269 MiB of total host memory
+0.01.036.497 W llama_context: n_ctx_seq (512) < n_ctx_train (8192) -- the full capacity of the model will not be utilized
+0.01.087.728 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.01.144.985 I 
+0.01.145.188 I system_info: n_threads = 8 (n_threads_batch = 8) / 94 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.02.791.522 I -optimizer adamw -lr0 1e-05 -wd 0 -lr-min -1 -min-epochs -1 -epochs 1 -period 1 -val 0.05
+/home/ubuntu/llama-worktrees/pr-25428/ggml/src/ggml.c:7074: GGML_ASSERT(!node->view_src || node->op == GGML_OP_CPY || node->op == GGML_OP_VIEW || node->op == GGML_OP_RESHAPE || node->op == GGML_OP_PERMUTE || node->op == GGML_OP_TRANSPOSE) failed
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(+0x1c1ab)[0x72d000b931ab]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(ggml_print_backtrace+0x21c)[0x72d000b9362c]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(ggml_abort+0x15b)[0x72d000b9380b]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(ggml_build_backward_expand+0x1c73)[0x72d000ba50e3]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(+0x533e6)[0x72d000bca3e6]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(ggml_opt_alloc+0x12d)[0x72d000bcb16d]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libllama.so.0(_ZN13llama_context14opt_epoch_iterEP16ggml_opt_datasetP15ggml_opt_resultRKSt6vectorIiSaIiEES8_R11llama_batchPFvbP16ggml_opt_contextS1_S3_lllEblll+0x403)[0x72d0002e9fc3]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libllama.so.0(_ZN13llama_context9opt_epochEP16ggml_opt_datasetP15ggml_opt_resultS3_lPFvbP16ggml_opt_contextS1_S3_lllES7_+0x285)[0x72d0002ea665]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/llama-finetune(+0x2941)[0x58e96ac88941]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca)[0x72cfffa2a1ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b)[0x72cfffa2a28b]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/llama-finetune(+0x2b45)[0x58e96ac88b45]
+timeout: the monitored command dumped core

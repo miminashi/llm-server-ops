@@ -1,0 +1,264 @@
+main: force disabling memory mapping because it would result in-read-only pointers to the weights
+main: force changing k cache type to f32 due to a lack of f16 support for OUT_PROD
+main: force changing v cache type to f32 due to a lack of f16 support for OUT_PROD
+build: 6290 (a6a58d647) with cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0 for x86_64-linux-gnu
+llama_model_loader: loaded meta data with 39 key-value pairs and 272 tensors from gguf/smollm2-135m-instruct.f32.gguf (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = llama
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = SmolLM2 135M Instruct
+llama_model_loader: - kv   3:                           general.finetune str              = Instruct
+llama_model_loader: - kv   4:                           general.basename str              = SmolLM2
+llama_model_loader: - kv   5:                         general.size_label str              = 135M
+llama_model_loader: - kv   6:                            general.license str              = apache-2.0
+llama_model_loader: - kv   7:                   general.base_model.count u32              = 1
+llama_model_loader: - kv   8:                  general.base_model.0.name str              = SmolLM2 135M
+llama_model_loader: - kv   9:          general.base_model.0.organization str              = HuggingFaceTB
+llama_model_loader: - kv  10:              general.base_model.0.repo_url str              = https://huggingface.co/HuggingFaceTB/...
+llama_model_loader: - kv  11:                               general.tags arr[str,4]       = ["safetensors", "onnx", "transformers...
+llama_model_loader: - kv  12:                          general.languages arr[str,1]       = ["en"]
+llama_model_loader: - kv  13:                          llama.block_count u32              = 30
+llama_model_loader: - kv  14:                       llama.context_length u32              = 8192
+llama_model_loader: - kv  15:                     llama.embedding_length u32              = 576
+llama_model_loader: - kv  16:                  llama.feed_forward_length u32              = 1536
+llama_model_loader: - kv  17:                 llama.attention.head_count u32              = 9
+llama_model_loader: - kv  18:              llama.attention.head_count_kv u32              = 3
+llama_model_loader: - kv  19:                       llama.rope.freq_base f32              = 100000.000000
+llama_model_loader: - kv  20:     llama.attention.layer_norm_rms_epsilon f32              = 0.000010
+llama_model_loader: - kv  21:                 llama.attention.key_length u32              = 64
+llama_model_loader: - kv  22:               llama.attention.value_length u32              = 64
+llama_model_loader: - kv  23:                          general.file_type u32              = 0
+llama_model_loader: - kv  24:                           llama.vocab_size u32              = 49152
+llama_model_loader: - kv  25:                 llama.rope.dimension_count u32              = 64
+llama_model_loader: - kv  26:               general.quantization_version u32              = 2
+llama_model_loader: - kv  27:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  28:                         tokenizer.ggml.pre str              = smollm
+llama_model_loader: - kv  29:                      tokenizer.ggml.tokens arr[str,49152]   = ["<|endoftext|>", "<|im_start|>", "<|...
+llama_model_loader: - kv  30:                  tokenizer.ggml.token_type arr[i32,49152]   = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, ...
+llama_model_loader: - kv  31:                      tokenizer.ggml.merges arr[str,48900]   = ["Ġ t", "Ġ a", "i n", "h e", "Ġ Ġ...
+llama_model_loader: - kv  32:                tokenizer.ggml.bos_token_id u32              = 1
+llama_model_loader: - kv  33:                tokenizer.ggml.eos_token_id u32              = 2
+llama_model_loader: - kv  34:            tokenizer.ggml.unknown_token_id u32              = 0
+llama_model_loader: - kv  35:            tokenizer.ggml.padding_token_id u32              = 2
+llama_model_loader: - kv  36:                    tokenizer.chat_template str              = {% for message in messages %}{% if lo...
+llama_model_loader: - kv  37:            tokenizer.ggml.add_space_prefix bool             = false
+llama_model_loader: - kv  38:               tokenizer.ggml.add_bos_token bool             = false
+llama_model_loader: - type  f32:  272 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = all F32
+print_info: file size   = 513.13 MiB (32.00 BPW) 
+load: printing all EOG tokens:
+load:   - 0 ('<|endoftext|>')
+load:   - 2 ('<|im_end|>')
+load:   - 4 ('<reponame>')
+load: special tokens cache size = 17
+load: token to piece cache size = 0.3170 MB
+print_info: arch             = llama
+print_info: vocab_only       = 0
+print_info: n_ctx_train      = 8192
+print_info: n_embd           = 576
+print_info: n_layer          = 30
+print_info: n_head           = 9
+print_info: n_head_kv        = 3
+print_info: n_rot            = 64
+print_info: n_swa            = 0
+print_info: is_swa_any       = 0
+print_info: n_embd_head_k    = 64
+print_info: n_embd_head_v    = 64
+print_info: n_gqa            = 3
+print_info: n_embd_k_gqa     = 192
+print_info: n_embd_v_gqa     = 192
+print_info: f_norm_eps       = 0.0e+00
+print_info: f_norm_rms_eps   = 1.0e-05
+print_info: f_clamp_kqv      = 0.0e+00
+print_info: f_max_alibi_bias = 0.0e+00
+print_info: f_logit_scale    = 0.0e+00
+print_info: f_attn_scale     = 0.0e+00
+print_info: n_ff             = 1536
+print_info: n_expert         = 0
+print_info: n_expert_used    = 0
+print_info: causal attn      = 1
+print_info: pooling type     = 0
+print_info: rope type        = 0
+print_info: rope scaling     = linear
+print_info: freq_base_train  = 100000.0
+print_info: freq_scale_train = 1
+print_info: n_ctx_orig_yarn  = 8192
+print_info: rope_finetuned   = unknown
+print_info: model type       = 256M
+print_info: model params     = 134.52 M
+print_info: general.name     = SmolLM2 135M Instruct
+print_info: vocab type       = BPE
+print_info: n_vocab          = 49152
+print_info: n_merges         = 48900
+print_info: BOS token        = 1 '<|im_start|>'
+print_info: EOS token        = 2 '<|im_end|>'
+print_info: EOT token        = 0 '<|endoftext|>'
+print_info: UNK token        = 0 '<|endoftext|>'
+print_info: PAD token        = 2 '<|im_end|>'
+print_info: LF token         = 198 'Ċ'
+print_info: FIM REP token    = 4 '<reponame>'
+print_info: EOG token        = 0 '<|endoftext|>'
+print_info: EOG token        = 2 '<|im_end|>'
+print_info: EOG token        = 4 '<reponame>'
+print_info: max token length = 162
+load_tensors: loading model tensors, this can take a while... (mmap = false)
+load_tensors:          CPU model buffer size =   513.13 MiB
+................................................................................
+llama_context: constructing llama_context
+llama_context: non-unified KV cache requires ggml_set_rows() - forcing unified KV cache
+llama_context: n_seq_max     = 1
+llama_context: n_ctx         = 512
+llama_context: n_ctx_per_seq = 512
+llama_context: n_batch       = 512
+llama_context: n_ubatch      = 512
+llama_context: causal_attn   = 1
+llama_context: flash_attn    = 0
+llama_context: kv_unified    = true
+llama_context: freq_base     = 100000.0
+llama_context: freq_scale    = 1
+llama_context: n_ctx_per_seq (512) < n_ctx_train (8192) -- the full capacity of the model will not be utilized
+llama_context:        CPU  output buffer size =     0.19 MiB
+llama_kv_cache:        CPU KV buffer size =    22.50 MiB
+llama_kv_cache: size =   22.50 MiB (   512 cells,  30 layers,  1/1 seqs), K (f32):   11.25 MiB, V (f32):   11.25 MiB
+llama_kv_cache: LLAMA_SET_ROWS=0, using old ggml_cpy() method for backwards compatibility
+llama_context:        CPU compute buffer size =   101.51 MiB
+llama_context: graph nodes  = 1116
+llama_context: graph splits = 1
+common_init_from_params: added <|endoftext|> logit bias = -inf
+common_init_from_params: added <|im_end|> logit bias = -inf
+common_init_from_params: added <reponame> logit bias = -inf
+common_init_from_params: setting dry_penalty_last_n to ctx_size = 512
+common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+
+system_info: n_threads = 64 (n_threads_batch = 64) / 94 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+-optimizer sgd -lr0 0.0001 -wd 0 -lr-min -1 -min-epochs -1 -epochs 1 -period 1 -val 0.05
+epoch 0 lr=0.0001
+train: [        ] data=0000001/0001123 loss=2.78207±nan acc=49.61±2.21% t=00:00:08 ETA=02:43:39 epoch 0 lr=0.0001
+train: [        ] data=0000002/0001123 loss=2.85522±0.07315 acc=48.44±1.56% t=00:00:09 ETA=01:33:02 epoch 0 lr=0.0001
+train: [        ] data=0000003/0001123 loss=2.99973±0.15055 acc=45.70±1.27% t=00:00:11 ETA=01:09:22 epoch 0 lr=0.0001
+train: [        ] data=0000004/0001123 loss=3.10396±0.14899 acc=44.58±1.10% t=00:00:12 ETA=00:57:31 epoch 0 lr=0.0001
+train: [        ] data=0000005/0001123 loss=3.33776±0.26074 acc=41.17±0.97% t=00:00:13 ETA=00:50:24 epoch 0 lr=0.0001
+train: [        ] data=0000006/0001123 loss=4.31693±1.00204 acc=34.57±0.86% t=00:00:14 ETA=00:45:43 epoch 0 lr=0.0001
+train: [        ] data=0000007/0001123 loss=5.20394±1.22638 acc=29.66±0.76% t=00:00:15 ETA=00:42:19 epoch 0 lr=0.0001
+train: [        ] data=0000008/0001123 loss=5.97141±1.31034 acc=25.95±0.69% t=00:00:17 ETA=00:39:45 epoch 0 lr=0.0001
+train: [        ] data=0000009/0001123 loss=6.60348±1.31718 acc=23.07±0.62% t=00:00:18 ETA=00:37:47 epoch 0 lr=0.0001
+train: [        ] data=0000010/0001123 loss=7.09576±1.27683 acc=20.76±0.57% t=00:00:19 ETA=00:36:11 epoch 0 lr=0.0001
+train: [        ] data=0000011/0001123 loss=7.54202±1.23816 acc=18.87±0.52% t=00:00:20 ETA=00:34:52 epoch 0 lr=0.0001
+train: [        ] data=0000012/0001123 loss=7.86960±1.17679 acc=17.32±0.48% t=00:00:21 ETA=00:33:48 epoch 0 lr=0.0001
+train: [        ] data=0000013/0001123 loss=8.07898±1.10255 acc=15.99±0.45% t=00:00:23 ETA=00:32:51 epoch 0 lr=0.0001
+train: [        ] data=0000014/0001123 loss=8.21754±1.03013 acc=14.93±0.42% t=00:00:24 ETA=00:32:04 epoch 0 lr=0.0001
+train: [        ] data=0000015/0001123 loss=8.39071±0.97451 acc=14.00±0.40% t=00:00:25 ETA=00:31:22 epoch 0 lr=0.0001
+train: [        ] data=0000016/0001123 loss=8.53581±0.92304 acc=13.15±0.37% t=00:00:26 ETA=00:30:45 epoch 0 lr=0.0001
+train: [        ] data=0000017/0001123 loss=8.72356±0.88714 acc=12.40±0.35% t=00:00:27 ETA=00:30:12 epoch 0 lr=0.0001
+train: [▏       ] data=0000018/0001123 loss=8.95739±0.86848 acc=11.72±0.34% t=00:00:29 ETA=00:29:44 epoch 0 lr=0.0001
+train: [▏       ] data=0000019/0001123 loss=9.21030±0.85955 acc=11.11±0.32% t=00:00:30 ETA=00:29:18 epoch 0 lr=0.0001
+train: [▏       ] data=0000020/0001123 loss=9.46279±0.85363 acc=10.59±0.30% t=00:00:31 ETA=00:28:55 epoch 0 lr=0.0001
+train: [▏       ] data=0000021/0001123 loss=9.70968±0.84867 acc=10.10±0.29% t=00:00:32 ETA=00:28:35 epoch 0 lr=0.0001
+train: [▏       ] data=0000022/0001123 loss=9.97588±0.85184 acc=9.66±0.28% t=00:00:33 ETA=00:28:15 epoch 0 lr=0.0001
+train: [▏       ] data=0000023/0001123 loss=10.27838±0.86835 acc=9.29±0.27% t=00:00:35 ETA=00:27:58 epoch 0 lr=0.0001
+train: [▏       ] data=0000024/0001123 loss=10.61678±0.89762 acc=8.97±0.26% t=00:00:36 ETA=00:27:42 epoch 0 lr=0.0001
+train: [▏       ] data=0000025/0001123 loss=10.98261±0.93546 acc=8.64±0.25% t=00:00:37 ETA=00:27:27 epoch 0 lr=0.0001
+train: [▏       ] data=0000026/0001123 loss=11.34892±0.97054 acc=8.32±0.24% t=00:00:38 ETA=00:27:13 epoch 0 lr=0.0001
+train: [▏       ] data=0000027/0001123 loss=11.71511±1.00313 acc=8.04±0.23% t=00:00:39 ETA=00:27:00 epoch 0 lr=0.0001
+train: [▏       ] data=0000028/0001123 loss=12.07364±1.03099 acc=7.85±0.22% t=00:00:41 ETA=00:26:48 epoch 0 lr=0.0001
+train: [▏       ] data=0000029/0001123 loss=12.39427±1.04520 acc=7.67±0.22% t=00:00:42 ETA=00:26:37 epoch 0 lr=0.0001
+train: [▏       ] data=0000030/0001123 loss=12.65953±1.04402 acc=7.50±0.21% t=00:00:43 ETA=00:26:26 epoch 0 lr=0.0001
+train: [▏       ] data=0000031/0001123 loss=12.88713±1.03511 acc=7.33±0.21% t=00:00:44 ETA=00:26:16 epoch 0 lr=0.0001
+train: [▏       ] data=0000032/0001123 loss=13.08678±1.02193 acc=7.18±0.20% t=00:00:45 ETA=00:26:06 epoch 0 lr=0.0001
+train: [▏       ] data=0000033/0001123 loss=13.21810±0.99915 acc=7.16±0.20% t=00:00:47 ETA=00:25:57 epoch 0 lr=0.0001
+train: [▏       ] data=0000034/0001123 loss=13.31598±0.97425 acc=7.13±0.20% t=00:00:48 ETA=00:25:48 epoch 0 lr=0.0001
+train: [▏       ] data=0000035/0001123 loss=13.42292±0.95203 acc=6.99±0.19% t=00:00:49 ETA=00:25:40 epoch 0 lr=0.0001
+train: [▎       ] data=0000036/0001123 loss=13.50497±0.92884 acc=6.85±0.19% t=00:00:50 ETA=00:25:33 epoch 0 lr=0.0001
+train: [▎       ] data=0000037/0001123 loss=13.55593±0.90482 acc=6.71±0.18% t=00:00:52 ETA=00:25:26 epoch 0 lr=0.0001
+train: [▎       ] data=0000038/0001123 loss=13.60400±0.88200 acc=6.57±0.18% t=00:00:53 ETA=00:25:19 epoch 0 lr=0.0001
+train: [▎       ] data=0000039/0001123 loss=13.66872±0.86152 acc=6.40±0.17% t=00:00:54 ETA=00:25:13 epoch 0 lr=0.0001
+train: [▎       ] data=0000040/0001123 loss=13.73562±0.84237 acc=6.25±0.17% t=00:00:55 ETA=00:25:06 epoch 0 lr=0.0001
+train: [▎       ] data=0000041/0001123 loss=13.78024±0.82277 acc=6.09±0.17% t=00:00:56 ETA=00:24:59 epoch 0 lr=0.0001
+train: [▎       ] data=0000042/0001123 loss=13.82274±0.80407 acc=5.95±0.16% t=00:00:58 ETA=00:24:53 epoch 0 lr=0.0001
+train: [▎       ] data=0000043/0001123 loss=13.86773±0.78644 acc=5.81±0.16% t=00:00:59 ETA=00:24:46 epoch 0 lr=0.0001
+train: [▎       ] data=0000044/0001123 loss=13.91687±0.76992 acc=5.68±0.15% t=00:01:00 ETA=00:24:41 epoch 0 lr=0.0001
+train: [▎       ] data=0000045/0001123 loss=13.96326±0.75405 acc=5.55±0.15% t=00:01:01 ETA=00:24:35 epoch 0 lr=0.0001
+train: [▎       ] data=0000046/0001123 loss=14.01257±0.73912 acc=5.43±0.15% t=00:01:02 ETA=00:24:29 epoch 0 lr=0.0001
+train: [▎       ] data=0000047/0001123 loss=14.05989±0.72477 acc=5.31±0.14% t=00:01:03 ETA=00:24:24 epoch 0 lr=0.0001
+train: [▎       ] data=0000048/0001123 loss=14.10864±0.71118 acc=5.20±0.14% t=00:01:05 ETA=00:24:19 epoch 0 lr=0.0001
+train: [▎       ] data=0000049/0001123 loss=14.15816±0.69828 acc=5.10±0.14% t=00:01:06 ETA=00:24:14 epoch 0 lr=0.0001
+train: [▎       ] data=0000050/0001123 loss=14.20321±0.68565 acc=5.00±0.14% t=00:01:07 ETA=00:24:10 epoch 0 lr=0.0001
+train: [▎       ] data=0000051/0001123 loss=14.23335±0.67275 acc=4.90±0.13% t=00:01:08 ETA=00:24:05 epoch 0 lr=0.0001
+train: [▎       ] data=0000052/0001123 loss=14.25813±0.66015 acc=4.80±0.13% t=00:01:10 ETA=00:24:01 epoch 0 lr=0.0001
+train: [▍       ] data=0000053/0001123 loss=14.27988±0.64794 acc=4.71±0.13% t=00:01:11 ETA=00:23:57 epoch 0 lr=0.0001
+train: [▍       ] data=0000054/0001123 loss=14.29353±0.63597 acc=4.63±0.13% t=00:01:12 ETA=00:23:53 epoch 0 lr=0.0001
+train: [▍       ] data=0000055/0001123 loss=14.30239±0.62436 acc=4.54±0.12% t=00:01:13 ETA=00:23:50 epoch 0 lr=0.0001
+train: [▍       ] data=0000056/0001123 loss=14.31704±0.61329 acc=4.46±0.12% t=00:01:14 ETA=00:23:46 epoch 0 lr=0.0001
+train: [▍       ] data=0000057/0001123 loss=14.32069±0.60244 acc=4.38±0.12% t=00:01:16 ETA=00:23:42 epoch 0 lr=0.0001
+train: [▍       ] data=0000058/0001123 loss=14.33809±0.59222 acc=4.31±0.12% t=00:01:17 ETA=00:23:38 epoch 0 lr=0.0001
+train: [▍       ] data=0000059/0001123 loss=14.37388±0.58320 acc=4.23±0.12% t=00:01:18 ETA=00:23:35 epoch 0 lr=0.0001
+train: [▍       ] data=0000060/0001123 loss=14.42745±0.57589 acc=4.16±0.11% t=00:01:19 ETA=00:23:31 epoch 0 lr=0.0001
+train: [▍       ] data=0000061/0001123 loss=14.48935±0.56974 acc=4.10±0.11% t=00:01:20 ETA=00:23:28 epoch 0 lr=0.0001
+train: [▍       ] data=0000062/0001123 loss=14.54082±0.56284 acc=4.03±0.11% t=00:01:22 ETA=00:23:24 epoch 0 lr=0.0001
+train: [▍       ] data=0000063/0001123 loss=14.57987±0.55521 acc=3.97±0.11% t=00:01:23 ETA=00:23:21 epoch 0 lr=0.0001
+train: [▍       ] data=0000064/0001123 loss=14.60772±0.54717 acc=3.90±0.11% t=00:01:24 ETA=00:23:18 epoch 0 lr=0.0001
+train: [▍       ] data=0000065/0001123 loss=14.67452±0.54281 acc=3.84±0.11% t=00:01:25 ETA=00:23:15 epoch 0 lr=0.0001
+train: [▍       ] data=0000066/0001123 loss=14.78640±0.54611 acc=3.78±0.10% t=00:01:26 ETA=00:23:12 epoch 0 lr=0.0001
+train: [▍       ] data=0000067/0001123 loss=14.91553±0.55318 acc=3.73±0.10% t=00:01:28 ETA=00:23:09 epoch 0 lr=0.0001
+train: [▍       ] data=0000068/0001123 loss=14.98075±0.54887 acc=3.67±0.10% t=00:01:29 ETA=00:23:06 epoch 0 lr=0.0001
+train: [▍       ] data=0000069/0001123 loss=15.00829±0.54156 acc=3.62±0.10% t=00:01:30 ETA=00:23:03 epoch 0 lr=0.0001
+train: [▍       ] data=0000070/0001123 loss=15.03623±0.53450 acc=3.57±0.10% t=00:01:31 ETA=00:23:00 epoch 0 lr=0.0001
+train: [▌       ] data=0000071/0001123 loss=15.05452±0.52723 acc=3.52±0.10% t=00:01:33 ETA=00:22:58 epoch 0 lr=0.0001
+train: [▌       ] data=0000072/0001123 loss=15.06797±0.52003 acc=3.47±0.10% t=00:01:34 ETA=00:22:55 epoch 0 lr=0.0001
+train: [▌       ] data=0000073/0001123 loss=15.08441±0.51312 acc=3.42±0.09% t=00:01:35 ETA=00:22:52 epoch 0 lr=0.0001
+train: [▌       ] data=0000074/0001123 loss=15.09889±0.50635 acc=3.38±0.09% t=00:01:36 ETA=00:22:49 epoch 0 lr=0.0001
+train: [▌       ] data=0000075/0001123 loss=15.11638±0.49986 acc=3.33±0.09% t=00:01:37 ETA=00:22:46 epoch 0 lr=0.0001
+train: [▌       ] data=0000076/0001123 loss=15.13435±0.49356 acc=3.29±0.09% t=00:01:39 ETA=00:22:44 epoch 0 lr=0.0001
+train: [▌       ] data=0000077/0001123 loss=15.15779±0.48768 acc=3.25±0.09% t=00:01:40 ETA=00:22:41 epoch 0 lr=0.0001
+train: [▌       ] data=0000078/0001123 loss=15.17783±0.48180 acc=3.21±0.09% t=00:01:41 ETA=00:22:38 epoch 0 lr=0.0001
+train: [▌       ] data=0000079/0001123 loss=15.19799±0.47609 acc=3.17±0.09% t=00:01:42 ETA=00:22:36 epoch 0 lr=0.0001
+train: [▌       ] data=0000080/0001123 loss=15.21885±0.47056 acc=3.13±0.09% t=00:01:43 ETA=00:22:34 epoch 0 lr=0.0001
+train: [▌       ] data=0000081/0001123 loss=15.23642±0.46505 acc=3.09±0.08% t=00:01:45 ETA=00:22:31 epoch 0 lr=0.0001
+train: [▌       ] data=0000082/0001123 loss=15.26093±0.46000 acc=3.05±0.08% t=00:01:46 ETA=00:22:29 epoch 0 lr=0.0001
+train: [▌       ] data=0000083/0001123 loss=15.27323±0.45459 acc=3.01±0.08% t=00:01:47 ETA=00:22:27 epoch 0 lr=0.0001
+train: [▌       ] data=0000084/0001123 loss=15.28793±0.44938 acc=2.98±0.08% t=00:01:48 ETA=00:22:24 epoch 0 lr=0.0001
+train: [▌       ] data=0000085/0001123 loss=15.30514±0.44440 acc=2.94±0.08% t=00:01:49 ETA=00:22:22 epoch 0 lr=0.0001
+train: [▌       ] data=0000086/0001123 loss=15.31557±0.43932 acc=2.91±0.08% t=00:01:51 ETA=00:22:20 epoch 0 lr=0.0001
+train: [▌       ] data=0000087/0001123 loss=15.32271±0.43430 acc=2.88±0.08% t=00:01:52 ETA=00:22:17 epoch 0 lr=0.0001
+train: [▋       ] data=0000088/0001123 loss=15.32432±0.42934 acc=2.84±0.08% t=00:01:53 ETA=00:22:15 epoch 0 lr=0.0001
+train: [▋       ] data=0000089/0001123 loss=15.32565±0.42449 acc=2.81±0.08% t=00:01:54 ETA=00:22:13 epoch 0 lr=0.0001
+train: [▋       ] data=0000090/0001123 loss=15.32264±0.41976 acc=2.78±0.08% t=00:01:56 ETA=00:22:11 epoch 0 lr=0.0001
+train: [▋       ] data=0000091/0001123 loss=15.32219±0.41512 acc=2.75±0.08% t=00:01:57 ETA=00:22:09 epoch 0 lr=0.0001
+train: [▋       ] data=0000092/0001123 loss=15.32315±0.41059 acc=2.72±0.07% t=00:01:58 ETA=00:22:07 epoch 0 lr=0.0001
+train: [▋       ] data=0000093/0001123 loss=15.33037±0.40621 acc=2.69±0.07% t=00:01:59 ETA=00:22:06 epoch 0 lr=0.0001
+train: [▋       ] data=0000094/0001123 loss=15.34255±0.40205 acc=2.67±0.07% t=00:02:00 ETA=00:22:04 epoch 0 lr=0.0001
+train: [▋       ] data=0000095/0001123 loss=15.35086±0.39789 acc=2.64±0.07% t=00:02:02 ETA=00:22:01 epoch 0 lr=0.0001
+train: [▋       ] data=0000096/0001123 loss=15.36203±0.39388 acc=2.61±0.07% t=00:02:03 ETA=00:21:59 epoch 0 lr=0.0001
+train: [▋       ] data=0000097/0001123 loss=15.37440±0.38999 acc=2.59±0.07% t=00:02:04 ETA=00:21:57 epoch 0 lr=0.0001
+train: [▋       ] data=0000098/0001123 loss=15.38666±0.38619 acc=2.57±0.07% t=00:02:05 ETA=00:21:55 epoch 0 lr=0.0001
+train: [▋       ] data=0000099/0001123 loss=15.40056±0.38252 acc=2.54±0.07% t=00:02:07 ETA=00:21:53 epoch 0 lr=0.0001
+train: [▋       ] data=0000100/0001123 loss=15.41266±0.37887 acc=2.52±0.07% t=00:02:08 ETA=00:21:51 epoch 0 lr=0.0001
+train: [▋       ] data=0000101/0001123 loss=15.42400±0.37527 acc=2.49±0.07% t=00:02:09 ETA=00:21:49 epoch 0 lr=0.0001
+train: [▋       ] data=0000102/0001123 loss=15.43711±0.37180 acc=2.47±0.07% t=00:02:10 ETA=00:21:47 epoch 0 lr=0.0001
+train: [▋       ] data=0000103/0001123 loss=15.45321±0.36853 acc=2.44±0.07% t=00:02:11 ETA=00:21:45 epoch 0 lr=0.0001
+train: [▋       ] data=0000104/0001123 loss=15.46955±0.36533 acc=2.42±0.07% t=00:02:13 ETA=00:21:43 epoch 0 lr=0.0001
+train: [▋       ] data=0000105/0001123 loss=15.48510±0.36217 acc=2.40±0.07% t=00:02:14 ETA=00:21:41 epoch 0 lr=0.0001
+train: [▊       ] data=0000106/0001123 loss=15.50215±0.35914 acc=2.37±0.07% t=00:02:15 ETA=00:21:39 epoch 0 lr=0.0001
+train: [▊       ] data=0000107/0001123 loss=15.51959±0.35620 acc=2.35±0.06% t=00:02:16 ETA=00:21:37 epoch 0 lr=0.0001
+train: [▊       ] data=0000108/0001123 loss=15.53635±0.35328 acc=2.34±0.06% t=00:02:17 ETA=00:21:35 epoch 0 lr=0.0001
+train: [▊       ] data=0000109/0001123 loss=15.54796±0.35022 acc=2.32±0.06% t=00:02:19 ETA=00:21:33 epoch 0 lr=0.0001
+train: [▊       ] data=0000110/0001123 loss=15.55742±0.34715 acc=2.31±0.06% t=00:02:20 ETA=00:21:31 epoch 0 lr=0.0001
+train: [▊       ] data=0000111/0001123 loss=15.56623±0.34412 acc=2.30±0.06% t=00:02:21 ETA=00:21:29 epoch 0 lr=0.0001
+train: [▊       ] data=0000112/0001123 loss=15.56674±0.34103 acc=2.28±0.06% t=00:02:22 ETA=00:21:27 epoch 0 lr=0.0001
+train: [▊       ] data=0000113/0001123 loss=15.56340±0.33802 acc=2.27±0.06% t=00:02:23 ETA=00:21:26 epoch 0 lr=0.0001
+train: [▊       ] data=0000114/0001123 loss=15.56062±0.33505 acc=2.26±0.06% t=00:02:25 ETA=00:21:24 epoch 0 lr=0.0001
+train: [▊       ] data=0000115/0001123 loss=15.55866±0.33213 acc=2.25±0.06% t=00:02:26 ETA=00:21:22 epoch 0 lr=0.0001
+train: [▊       ] data=0000116/0001123 loss=15.55955±0.32926 acc=2.23±0.06% t=00:02:27 ETA=00:21:20 epoch 0 lr=0.0001
+train: [▊       ] data=0000117/0001123 loss=15.56784±0.32653 acc=2.22±0.06% t=00:02:28 ETA=00:21:18 epoch 0 lr=0.0001
+train: [▊       ] data=0000118/0001123 loss=15.57719±0.32389 acc=2.20±0.06% t=00:02:29 ETA=00:21:16 epoch 0 lr=0.0001
+train: [▊       ] data=0000119/0001123 loss=15.58987±0.32141 acc=2.19±0.06% t=00:02:31 ETA=00:21:14 epoch 0 lr=0.0001
+train: [▊       ] data=0000120/0001123 loss=15.60743±0.31920 acc=2.18±0.06% t=00:02:32 ETA=00:21:12 epoch 0 lr=0.0001
+train: [▊       ] data=0000121/0001123 loss=15.62609±0.31710 acc=2.16±0.06% t=00:02:33 ETA=00:21:11 epoch 0 lr=0.0001
+train: [▊       ] data=0000122/0001123 loss=15.64744±0.31522 acc=2.14±0.06% t=00:02:34 ETA=00:21:09 epoch 0 lr=0.0001
+train: [▉       ] data=0000123/0001123 loss=15.66890±0.31338 acc=2.12±0.06% t=00:02:35 ETA=00:21:07 epoch 0 lr=0.0001
+train: [▉       ] data=0000124/0001123 loss=15.68577±0.31130 acc=2.11±0.06% t=00:02:37 ETA=00:21:06 epoch 0 lr=0.0001
+train: [▉       ] data=0000125/0001123 loss=15.70739±0.30955 acc=2.09±0.06% t=00:02:38 ETA=00:21:04 epoch 0 lr=0.0001
+train: [▉       ] data=0000126/0001123 loss=15.73697±0.30851 acc=2.08±0.06% t=00:02:39 ETA=00:21:02 epoch 0 lr=0.0001
+train: [▉       ] data=0000127/0001123 loss=15.76845±0.30768 acc=2.06±0.06% t=00:02:40 ETA=00:21:00 epoch 0 lr=0.0001
+train: [▉       ] data=0000128/0001123 loss=15.79146±0.30614 acc=2.05±0.06% t=00:02:41 ETA=00:20:59 epoch 0 lr=0.0001

@@ -1,0 +1,24 @@
+0.00.011.751 I main: force disabling memory mapping because it would result in-read-only pointers to the weights
+0.00.011.760 I main: force changing k cache type to f32 due to a lack of f16 support for OUT_PROD
+0.00.011.761 I main: force changing v cache type to f32 due to a lack of f16 support for OUT_PROD
+0.00.012.783 I common_init_result: fitting params to device memory ...
+0.00.012.791 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.00.472.753 I common_params_fit_impl: projected to use 1971 MiB of host memory vs. 64269 MiB of total host memory
+0.00.716.728 W load: control-looking token: 128247 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.02.135.694 W llama_context: n_ctx_seq (512) < n_ctx_train (32768) -- the full capacity of the model will not be utilized
+0.02.149.891 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.02.274.469 I 
+0.02.274.604 I system_info: n_threads = 64 (n_threads_batch = 64) / 94 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.03.305.757 I -optimizer adamw -lr0 1e-05 -wd 0 -lr-min -1 -min-epochs -1 -epochs 1 -period 1 -val 0.05
+/home/ubuntu/llama-worktrees/pr-25428/ggml/src/ggml-backend.cpp:1866: GGML_ASSERT((int)sched->hash_set.size >= graph->n_nodes + graph->n_leafs) failed
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(+0x1c1ab)[0x7839da8fb1ab]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(ggml_print_backtrace+0x21c)[0x7839da8fb62c]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(ggml_abort+0x15b)[0x7839da8fb80b]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(ggml_backend_sched_alloc_graph+0x25a)[0x7839da917c5a]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libggml-base.so.0(ggml_opt_alloc+0xac)[0x7839da9330ec]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libllama.so.0(_ZN13llama_context14opt_epoch_iterEP16ggml_opt_datasetP15ggml_opt_resultRKSt6vectorIiSaIiEES8_R11llama_batchPFvbP16ggml_opt_contextS1_S3_lllEblll+0x403)[0x7839da0e9fc3]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/libllama.so.0(_ZN13llama_context9opt_epochEP16ggml_opt_datasetP15ggml_opt_resultS3_lPFvbP16ggml_opt_contextS1_S3_lllES7_+0x285)[0x7839da0ea665]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/llama-finetune(+0x2941)[0x6134aad6c941]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca)[0x7839d982a1ca]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b)[0x7839d982a28b]
+/home/ubuntu/llama-worktrees/pr-25428/build/bin/llama-finetune(+0x2b45)[0x6134aad6cb45]

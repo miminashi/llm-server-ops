@@ -1,0 +1,555 @@
+===============================================================
+ llama.cpp fine-tuning 経緯調査 — git 集計生ログ
+ 生成日時: 2026-07-25 20:11:07 JST
+ リポジトリ HEAD: 95a923a64c7d493ed1cb347d3b55d039fa3b8097 2026-07-24 19:28:14 +0200 ui: fix MCP server display name conflicts in tools lists (#26011)
+ 総コミット数: 10118
+===============================================================
+
+対象パス (training 関連):
+  - examples/baby-llama
+  - examples/train-text-from-scratch
+  - examples/finetune
+  - examples/training
+  - common/train.cpp
+  - common/train.h
+  - ggml/src/ggml-opt.cpp
+  - ggml/include/ggml-opt.h
+  - src/llama-model-saver.cpp
+
+===============================================================
+ [1] training 関連パスの月別コミット数
+===============================================================
+2023-05	1
+2023-06	9
+2023-07	7
+2023-08	5
+2023-09	9
+2023-10	8
+2023-11	11
+2023-12	5
+2024-01	8
+2024-02	5
+2024-03	1
+2024-04	1
+2024-05	5
+2024-06	2
+2024-07	5
+2024-08	2
+2024-09	1
+2024-11	4
+2025-05	3
+2025-06	1
+2025-08	1
+2025-12	1
+2026-01	2
+2026-02	1
+2026-03	6
+2026-04	2
+2026-05	2
+2026-06	5
+2026-07	2
+
+===============================================================
+ [2] training 関連パスの全コミット (古い順)
+===============================================================
+f954edda9 2023-05-13 xaedes | ggml : implement backward pass for llama + small training-llama-from-scratch example (#1360)
+e32089b2c 2023-06-13 xaedes | train : improved training-from-scratch example (#1652)
+925492026 2023-06-13 0xspringtime | baby-llama : fix operator!= (#1821)
+9cbf50c04 2023-06-16 Borislav Stanimirov | build : fix and ignore MSVC warnings (#1889)
+92f20d994 2023-06-17 David Yang | train : get raw text instead of page with html (#1905)
+527b6fba1 2023-06-24 Didzis Gosko | llama : make model stateless and context stateful (llama_state) (#1797)
+eaa6ca5a6 2023-06-27 David Yang | ggml : increase max tensor name + clean up compiler warnings in train-text (#1988)
+181e8d975 2023-06-27 Georgi Gerganov | llama : fix rope usage after ChatGLM change
+0be54f75a 2023-06-27 Howard Su | baby-llama : fix build after ggml_rope change (#2016)
+b8c8dda75 2023-06-29 Howard Su | Use unsigned for random seed (#2006)
+04606a159 2023-07-01 Georgi Gerganov | train : fix compile warning
+1d656d636 2023-07-08 Qingyou Meng | ggml : change ggml_graph_compute() API to not require context (#1999)
+5bf2a2771 2023-07-11 Spencer Sutton | ggml : remove src0 and src1 from ggml_tensor and rename opt to src (#2178)
+b1f429095 2023-07-19 wzy | cmake : install targets (#2256)
+513f86195 2023-07-21 Georgi Gerganov | ggml : fix rope args order + assert (#2054)
+41c674161 2023-07-24 slaren | make rms_norm_eps a parameter (#2374)
+eb542d393 2023-07-25 Kawrakow | Add LLAMA_DEFAULT_RMS_EPS so we can change the default (#2384)
+6381d4e11 2023-08-21 Georgi Gerganov | gguf : new file format with flexible meta data (beta) (#2398)
+ef3f333d3 2023-08-22 Georgi Gerganov | ggml : sync latest (SAM + SD operators, CUDA alibi) (#2709)
+edd4c1481 2023-08-27 Georgi Gerganov | llama : more tokenizer fixes (#2810)
+44c117f41 2023-08-28 xaedes | train : mem usage and other improvements  (#2439)
+aeefac4ff 2023-08-31 Kerfuffle | scripts: Use local gguf package when running from repo (#2927)
+ef1564997 2023-09-01 Cebtenzzre | build : fix most gcc and clang warnings (#2861)
+00d62adb7 2023-09-07 Cebtenzzre | fix some warnings from gcc and clang-tidy (#3038)
+3aefaab9e 2023-09-15 Cebtenzzre | check C++ code with -Wmissing-declarations (#3184)
+b08e75bae 2023-09-16 goerch | Fixing the last deviations from sentencepiece indicated by test-tokenizer-1 (#3170)
+ec893798b 2023-09-28 Georgi Gerganov | llama : custom attention mask + parallel decoding + no context swaps (#3228)
+0e76a8992 2023-09-28 xaedes | train : finetune LORA (#2632)
+16bc66d94 2023-09-28 slaren | llama.cpp : split llama_context_params into model and context params (#3301)
+bc39553c9 2023-09-28 Cebtenzzre | build : enable more non-default compiler warnings (#3200)
+bc34dd4f5 2023-09-29 Georgi Gerganov | train : fix KQ_pos allocation (#3392)
+a03ce3845 2023-10-02 xaedes | finetune : fix #3404 (#3437)
+0fe321031 2023-10-02 cebtenzzre | gguf : general usability improvements (#3409)
+f72f8f22c 2023-10-04 Merrick Christensen | finetune : readme fix typo (#3465)
+424b6381c 2023-10-13 slaren | ggml : add context enumeration functions (#3605)
+1a159553f 2023-10-17 staviq | tokenizer : special token handling (#3538)
+a5e8c1d8c 2023-10-17 slaren | train-text-from-scratch : fix assert failure in ggml-alloc (#3618)
+f439e506e 2023-10-20 Herman Semenov | ggml : fix rope + llama minor optimizations (#3560)
+5be6c803f 2023-10-23 Marcus Dunn | llama : remove token functions with `context` args in favor of `model` (#3720)
+73bdcb395 2023-11-01 Andrew Godfrey | finetune : add -ngl parameter (#3762)
+898aeca90 2023-11-01 cebtenzzre | llama : implement YaRN RoPE scaling (#2268)
+e9c1cecb9 2023-11-07 xaedes | ggml : fix backward rope after YaRN (#3974)
+34b0a0820 2023-11-10 Kerfuffle | gguf-py: Refactor and allow reading/modifying existing GGUF files (#3981)
+4760e7cc0 2023-11-13 Georgi Gerganov | sync : ggml (backend v2) (#3912)
+947f64f16 2023-11-17 Andrew Godfrey | finetune : zero the loraB initial vectors (#4082)
+ba4cf5c0b 2023-11-17 Jiří Podivín | train : move number of gpu layers argument parsing to common/train.cpp (#4074)
+f7d5e9754 2023-11-17 Jiří Podivín | py : remove superfluous import statements (#4076)
+05e8301e4 2023-11-19 Clark Saben | finetune : add --n-gpu-layers flag info to --help (#4128)
+dae06c06e 2023-11-19 Georgi Gerganov | Revert "finetune : add --n-gpu-layers flag info to --help (#4128)"
+0b871f1a0 2023-11-20 Galunid | finetune - update readme to mention llama support only (#4148)
+81bc9214a 2023-12-07 Hongyu Ouyang | train : fix #4227 (double free in examples/train-text-from-scratch/train-text-from-scratch.cpp) (#4351)
+cafcd4f89 2023-12-14 slaren | ggml : remove n_dims from ggml_tensor (#4469)
+45668633f 2023-12-17 slaren | finetune : keep allocs alive until all allocations are done (#4486)
+afefa319f 2023-12-21 Georgi Gerganov | ggml : change ggml_scale to take a float instead of tensor (#4573)
+879b690a9 2023-12-27 Daniel Bevenius | finetune : fix output formatting in print_params (#4653)
+775ac8712 2024-01-02 Daniel Bevenius | finetune: fix typo in README.md (#4733)
+cb1e2818e 2024-01-03 Daniel Bevenius | train : fix typo in overlapping-samples help msg (#4758)
+b3a7c20b5 2024-01-04 Daniel Bevenius | finetune : remove unused includes (#4756)
+d75c232e1 2024-01-16 Daniel Bevenius | finetune : use LLAMA_FILE_MAGIC_GGLA (#4961)
+cec8a4847 2024-01-16 Daniel Bevenius | finetune : add training data file to log message (#4979)
+381ee1957 2024-01-19 Uzo Nweke | finetune : fix ggml_allocr lifetimes (tmp workaround) (#5033)
+152d9d05e 2024-01-22 Daniel Bevenius | finetune : print sample-start/include-sample-start (#5072)
+5cb04dbc1 2024-01-31 Georgi Gerganov | llama : remove LLAMA_MAX_DEVICES and LLAMA_SUPPORTS_GPU_OFFLOAD (#5240)
+3b169441d 2024-02-12 Georgi Gerganov | sync : ggml (#5452)
+263978904 2024-02-13 Daniel Bevenius | finetune : rename feed-forward tensors (w1/w2/w3) (#4839)
+5d3de51f9 2024-02-18 Herman Semenov | ggml, common, examples, tests : fixed type arguments in printf (#5528)
+4480542b2 2024-02-19 NawafAlansari | baby-llama : allocate graphs in ggml_context (#5573)
+ab336a9d5 2024-02-25 Georgi Gerganov | code : normalize enum names (#5697)
+6e0438da3 2024-03-14 Steve Grubb | gguf : fix resource leaks (#6061)
+8b1b1f498 2024-04-19 Austin | train : add general name (#6752)
+385541602 2024-05-08 Justine Tunney | ggml : introduce bfloat16 support (#6412)
+201cc11af 2024-05-22 liuwei-git | llama : add phi3 128K model support (#7225)
+6ff13987a 2024-05-22 Georgi Gerganov | common : normalize naming style (#7462)
+d48c88cbd 2024-05-23 Georgi Gerganov | ggml : remove ggml_flash_attn and ggml_flash_ff (#7463)
+9588f196b 2024-05-25 Georgi Gerganov | train : change default FA argument (#7528)
+2b3389677 2024-06-05 Georgi Gerganov | ggml : refactor rope norm/neox (#7634)
+1c641e6aa 2024-06-13 Olivier Chafik | `build`: rename main → llama-cli, server → llama-server, llava-cli → llama-llava-cli, etc... (#7809)
+e235b267a 2024-07-05 Georgi Gerganov | py : switch to snake_case (#8305)
+210eb9ed0 2024-07-07 standby24x7 | finetune: Rename an old command name in finetune.sh (#8344)
+b81ba1f96 2024-07-07 standby24x7 | finetune: Rename command name in README.md (#8343)
+3fd62a6b1 2024-07-07 compilade | py : type-check all Python scripts with Pyright (#8341)
+be6d7c079 2024-07-25 Xuan Son Nguyen | examples : remove `finetune` and `train-text-from-scratch` (#8669)
+01aae2b49 2024-08-03 Daniel Bevenius | baby-llama : remove duplicate vector include
+42c76d135 2024-08-29 Faisal Zaghloul | Threadpool: take 2 (#8672)
+6262d13e0 2024-09-15 Georgi Gerganov | common : reimplement logging (#9418)
+9f4098935 2024-11-03 Diego Devesa | ggml : move CPU backend to a separate file (#10144)
+8a43e940a 2024-11-16 Johannes Gäßler | ggml: new optimization interface (ggml/988)
+24203e9dd 2024-11-16 Georgi Gerganov | ggml : inttypes.h -> cinttypes (#0)
+02e4eaf22 2024-11-20 Johannes Gäßler | ggml-opt: fix data corruption (ggml/1022)
+10d2af0ea 2025-05-12 Johannes Gäßler | llama/ggml: add LLM training support (#10544)
+6c35981a6 2025-05-19 Johannes Gäßler | mnist: fix segmentation fault (ggml/1227)
+88c125f2a 2025-05-26 standby24x7 | examples/training: Fix file name in README (#13803)
+88fc854b4 2025-06-20 Sigbjørn Skjæret | llama : improve sep token handling (#14272)
+5cdb27e09 2025-08-14 Jonathan Graehl | finetune: SGD optimizer, more CLI args (#13873)
+254098a27 2025-12-14 Georgi Gerganov | common : refactor common_sampler + grammar logic changes (#17937)
+73d284a25 2026-01-05 Tarek Dakhran | model : add LFM2-ColBert-350M (#18607)
+d9c6ce46f 2026-01-25 Georgi Gerganov | kv-cache : support V-less cache (#19067)
+c0d043034 2026-02-19 Ryan Mangeno | model : full modern bert support (#18330)
+cb8f4fa3f 2026-03-04 SamareshSingh | Fix locale-dependent float printing in GGUF metadata (#17331)
+92f7da00b 2026-03-05 Marcel Petrick | chore : correct typos [no ci] (#20041)
+a976ff081 2026-03-08 Johannes Gäßler | llama: end-to-end tests (#19802)
+59db9a357 2026-03-09 Xuan-Son Nguyen | llama: dynamic head_dim and n_rot for SWA (#20301)
+36dafba5c 2026-03-25 Johannes Gäßler | llama: fix llama-model-saver (#20503)
+41361c859 2026-03-31 Adrien Gallouët | common : move up common_init() and fix Windows UTF-8 logs (#21176)
+2dcb7f74e 2026-04-08 RealOrko | fix: free ctx_copy in ggml_opt_free to plug per-training-session leak (#21592)
+6990e2f1f 2026-04-17 Georgi Gerganov | libs : rename libcommon -> libllama-common (#21936)
+8e52631d5 2026-05-07 AesSedai | model: Add Mimo v2.5 model support (#22493)
+42928bc14 2026-05-16 ynankani | model : NvFP4 quantized LM head support (#23046)
+4fb16eccc 2026-06-02 Mikhail Podvitskii | model: add Mellum architecture (#23966)
+06938ac12 2026-06-03 Georgi Gerganov | tests : add support for qwen3 SSM archs (#24031)
+7acb4e8cd 2026-06-05 Georgi Gerganov | hparams : refactor `hparams.n_layer` (#24060)
+64086f2b2 2026-06-05 Gabe Goodhart | model, mtmd: Granite4 Vision (#23545)
+4988f6e86 2026-06-13 Michael Wand | Add arch support for cohere2-MoE (#24260)
+1f66c3ce1 2026-07-22 Joe Rowell | Add support for Laguna XS.2 & M.1 (#25165)
+e6dd0e29a 2026-07-23 Aaron Teo | args: refactor mlock/mmap/directio into load-mode (#20834)
+
+===============================================================
+ [3] 主要ファイルの追加 (A) / 削除 (D) コミット
+===============================================================
+--- 追加 ---
+f954edda9 2023-05-13 xaedes | ggml : implement backward pass for llama + small training-llama-from-scratch example (#1360)
+e32089b2c 2023-06-13 xaedes | train : improved training-from-scratch example (#1652)
+44c117f41 2023-08-28 xaedes | train : mem usage and other improvements  (#2439)
+0e76a8992 2023-09-28 xaedes | train : finetune LORA (#2632)
+73bdcb395 2023-11-01 Andrew Godfrey | finetune : add -ngl parameter (#3762)
+8a43e940a 2024-11-16 Johannes Gäßler | ggml: new optimization interface (ggml/988)
+10d2af0ea 2025-05-12 Johannes Gäßler | llama/ggml: add LLM training support (#10544)
+--- 削除 ---
+9f4098935 2024-11-03 Diego Devesa | ggml : move CPU backend to a separate file (#10144)
+be6d7c079 2024-07-25 Xuan Son Nguyen | examples : remove `finetune` and `train-text-from-scratch` (#8669)
+
+===============================================================
+ [4] examples/training/ の全変更履歴 (#10544 以降)
+===============================================================
+e6dd0e29a 2026-07-23 Aaron Teo | args: refactor mlock/mmap/directio into load-mode (#20834)
+6990e2f1f 2026-04-17 Georgi Gerganov | libs : rename libcommon -> libllama-common (#21936)
+41361c859 2026-03-31 Adrien Gallouët | common : move up common_init() and fix Windows UTF-8 logs (#21176)
+cb8f4fa3f 2026-03-04 SamareshSingh | Fix locale-dependent float printing in GGUF metadata (#17331)
+254098a27 2025-12-14 Georgi Gerganov | common : refactor common_sampler + grammar logic changes (#17937)
+5cdb27e09 2025-08-14 Jonathan Graehl | finetune: SGD optimizer, more CLI args (#13873)
+88c125f2a 2025-05-26 standby24x7 | examples/training: Fix file name in README (#13803)
+10d2af0ea 2025-05-12 Johannes Gäßler | llama/ggml: add LLM training support (#10544)
+
+===============================================================
+ [5] ggml/src/ggml-opt.cpp の全変更履歴
+===============================================================
+2dcb7f74e 2026-04-08 RealOrko | fix: free ctx_copy in ggml_opt_free to plug per-training-session leak (#21592)
+5cdb27e09 2025-08-14 Jonathan Graehl | finetune: SGD optimizer, more CLI args (#13873)
+6c35981a6 2025-05-19 Johannes Gäßler | mnist: fix segmentation fault (ggml/1227)
+10d2af0ea 2025-05-12 Johannes Gäßler | llama/ggml: add LLM training support (#10544)
+02e4eaf22 2024-11-20 Johannes Gäßler | ggml-opt: fix data corruption (ggml/1022)
+24203e9dd 2024-11-16 Georgi Gerganov | ggml : inttypes.h -> cinttypes (#0)
+8a43e940a 2024-11-16 Johannes Gäßler | ggml: new optimization interface (ggml/988)
+
+===============================================================
+ [6] xaedes の全コミット
+===============================================================
+8687c1f25 2023-04-21 | llama : remember and restore kv cache data pointers (#1104)
+b6e7f9b09 2023-04-22 | llama : add api for getting/setting the complete state: rng, logits, embedding and kv_cache (#1105)
+0c5692345 2023-04-24 | examples : add save_load_state example (#1150)
+54bb60e26 2023-04-24 | ggml : fix bug in ggml_compute_forward_sum_f32 (#1162)
+f954edda9 2023-05-13 | ggml : implement backward pass for llama + small training-llama-from-scratch example (#1360)
+79b2d5b69 2023-05-14 | ggml : alternative fix for race condition bug in non-inplace ggml_compute_forward_diag_mask_f32 (#1454)
+e32089b2c 2023-06-13 | train : improved training-from-scratch example (#1652)
+44c117f41 2023-08-28 | train : mem usage and other improvements  (#2439)
+0e76a8992 2023-09-28 | train : finetune LORA (#2632)
+a03ce3845 2023-10-02 | finetune : fix #3404 (#3437)
+e9c1cecb9 2023-11-07 | ggml : fix backward rope after YaRN (#3974)
+
+===============================================================
+ [7] KV cache の SET_ROWS 移行 (推論側の破壊イベント)
+===============================================================
+--- GGML_OP_SET_ROWS の導入 (ggml/include/ggml.h) ---
+8d94219a4 2025-06-27 Radoslav Gerganov | ggml : add ggml_set_rows (#14274)
+--- src/ 配下で ggml_set_rows を導入したコミット (古い順・先頭 8 件) ---
+a70c8a0c4 2025-07-03 Georgi Gerganov | kv-cache : use ggml_set_rows (#14285)
+225e7a143 2025-07-16 Georgi Gerganov | llama : add high-throughput mode (#14363)
+8a4280ce4 2025-08-28 Georgi Gerganov | kv-cache : remove LLAMA_SET_ROWS checks (#15505)
+84bf3c677 2025-10-20 Sigbjørn Skjæret | model : add BailingMoeV2 support (#16063)
+d3dce4e0a 2026-01-04 Daniel Bevenius | sampling : add support for backend sampling (#17004)
+1f0aa2a69 2026-05-29 fairydreaming | model : support for DeepseekV32ForCausalLM with generic DeepSeek Sparse Attention (DSA) implementation (#23346)
+88a39274e 2026-06-12 Ruixiang Wang | spec: add EAGLE3 speculative decoding support (#18039)
+8c146a836 2026-06-29 Aman Gupta | DeepSeek V4  (#24162)
+
+===============================================================
+ [8] 主要マイルストーンコミットの diffstat
+===============================================================
+--------------------------------------------------------------
+f954edda935a70a14cf0cc45ecc7fe7d60cf3e4b
+2023-05-13 xaedes
+ggml : implement backward pass for llama + small training-llama-from-scratch example (#1360)
+
+
+ examples/CMakeLists.txt            |    1 +
+ examples/baby-llama/CMakeLists.txt |    4 +
+ examples/baby-llama/baby-llama.cpp | 1687 +++++++++++++++++
+ ggml.c                             | 3488 +++++++++++++++++++++++++++++++-----
+ ggml.h                             |  200 ++-
+ llama.cpp                          |   16 +-
+ tests/CMakeLists.txt               |    2 +
+ tests/test-grad0.c                 | 1131 ++++++++++++
+ tests/test-opt.c                   |  205 +++
+ 9 files changed, 6315 insertions(+), 419 deletions(-)
+
+--------------------------------------------------------------
+0e76a8992c8200237bbc6471a53fb8796b3872f7
+2023-09-28 xaedes
+train : finetune LORA (#2632)
+
+
+ .gitignore                                         |    2 +
+ Makefile                                           |   15 +-
+ common/CMakeLists.txt                              |    2 +
+ common/common.cpp                                  |   43 +-
+ common/common.h                                    |    6 +-
+ common/train.cpp                                   | 1496 +++++++++++++++
+ common/train.h                                     |  230 +++
+ examples/CMakeLists.txt                            |    2 +
+ examples/baby-llama/baby-llama.cpp                 |  176 +-
+ examples/export-lora/CMakeLists.txt                |    5 +
+ examples/export-lora/README.md                     |   26 +
+ examples/export-lora/export-lora.cpp               |  474 +++++
+ examples/finetune/CMakeLists.txt                   |    5 +
+ examples/finetune/README.md                        |   90 +
+ .../convert-finetune-checkpoint-to-gguf.py         |  489 +++++
+ examples/finetune/finetune.cpp                     | 1935 +++++++++++++++++++
+ examples/server/server.cpp                         |   18 +-
+ examples/train-text-from-scratch/README.md         |   11 +-
+ .../convert-train-checkpoint-to-gguf.py            |   12 +-
+ .../train-text-from-scratch.cpp                    | 2006 +++++---------------
+ ggml-alloc.c                                       |   10 +-
+ ggml-alloc.h                                       |    1 +
+ ggml.c                                             | 1996 ++++++++++++-------
+ ggml.h                                             |   47 +-
+ llama.cpp                                          |   21 +-
+ llama.h                                            |   11 +-
+ tests/test-grad0.cpp                               |  165 +-
+ 27 files changed, 6941 insertions(+), 2353 deletions(-)
+
+--------------------------------------------------------------
+be6d7c079173d941b4f784500f9148f46cec2724
+2024-07-25 Xuan Son Nguyen
+examples : remove `finetune` and `train-text-from-scratch` (#8669)
+
+
+ .devops/nix/apps.nix                               |    1 -
+ .devops/tools.sh                                   |    4 -
+ Makefile                                           |   30 +-
+ examples/CMakeLists.txt                            |    2 -
+ examples/deprecation-warning/README.md             |    2 -
+ examples/export-lora/README.md                     |   12 +-
+ examples/finetune/CMakeLists.txt                   |    5 -
+ examples/finetune/README.md                        |   90 -
+ .../convert_finetune_checkpoint_to_gguf.py         |  487 -----
+ examples/finetune/finetune.cpp                     | 1862 --------------------
+ examples/finetune/finetune.sh                      |   34 -
+ examples/train-text-from-scratch/CMakeLists.txt    |    5 -
+ examples/train-text-from-scratch/README.md         |   27 -
+ .../convert_train_checkpoint_to_gguf.py            |  499 ------
+ .../train-text-from-scratch.cpp                    | 1253 -------------
+ 15 files changed, 14 insertions(+), 4299 deletions(-)
+
+--------------------------------------------------------------
+10d2af0eaa0aafd7c6577b279dfa5221ff44a63f
+2025-05-12 Johannes Gäßler
+llama/ggml: add LLM training support (#10544)
+
+
+ build-xcframework.sh             |   1 +
+ common/common.cpp                |  17 ++
+ common/common.h                  |   6 +
+ examples/CMakeLists.txt          |   1 +
+ examples/training/CMakeLists.txt |   5 +
+ examples/training/README.md      |  17 ++
+ examples/training/finetune.cpp   |  96 +++++++
+ ggml/include/ggml-opt.h          |  75 ++++--
+ ggml/include/ggml.h              |  13 +-
+ ggml/src/ggml-backend.cpp        |   2 +-
+ ggml/src/ggml-cuda/acc.cu        |  66 +++--
+ ggml/src/ggml-cuda/sum.cu        |   2 +-
+ ggml/src/ggml-opt.cpp            | 558 ++++++++++++++++++++++++++-------------
+ ggml/src/ggml.c                  |  41 +--
+ include/llama.h                  |  36 +++
+ src/CMakeLists.txt               |   1 +
+ src/llama-context.cpp            | 244 ++++++++++++++++-
+ src/llama-context.h              |  30 +++
+ src/llama-graph.cpp              |   1 +
+ src/llama-graph.h                |   3 +
+ src/llama-model-loader.cpp       |  20 +-
+ src/llama-model-saver.cpp        | 281 ++++++++++++++++++++
+ src/llama-model-saver.h          |  37 +++
+ src/llama-model.cpp              |   8 +-
+ src/llama-model.h                |   2 +
+ src/llama-quant.cpp              |   4 +-
+ src/llama-vocab.cpp              |  35 ++-
+ src/llama-vocab.h                |   6 +
+ src/llama.cpp                    |   9 +
+ tests/test-backend-ops.cpp       |  93 ++++---
+ tests/test-opt.cpp               |  52 ++--
+ 31 files changed, 1409 insertions(+), 353 deletions(-)
+
+
+===============================================================
+ [9] ggml_flash_attn_back の無効化 (FA backward の喪失)
+===============================================================
+--- ABORT 文字列の初出コミット ---
+d48c88cbd 2024-05-23 Georgi Gerganov | ggml : remove ggml_flash_attn and ggml_flash_ff (#7463)
+84274a10c 2024-11-16 Georgi Gerganov | tests : remove test-grad0
+--- HEAD での該当箇所 (ggml/src/ggml.c) ---
+// ggml_flash_attn_back
+
+struct ggml_tensor * ggml_flash_attn_back(
+        struct ggml_context * ctx,
+        struct ggml_tensor  * q,
+        struct ggml_tensor  * k,
+        struct ggml_tensor  * v,
+        struct ggml_tensor  * d,
+        bool                  masked) {
+    GGML_ABORT("TODO: adapt to ggml_flash_attn_ext() changes");
+
+--- HEAD での呼び出し元 (宣言のみで caller ゼロ) ---
+ggml/src/ggml.c:5482:// ggml_flash_attn_back
+ggml/src/ggml.c:5484:struct ggml_tensor * ggml_flash_attn_back(
+ggml/include/ggml.h:2441:    GGML_API struct ggml_tensor * ggml_flash_attn_back(
+
+===============================================================
+ [10] 勾配テストスイートの移行 (test-grad0 -> test-backend-ops --mode grad)
+===============================================================
+--- tests/test-grad0 の追加と削除 ---
+84274a10c 2024-11-16 Georgi Gerganov | tests : remove test-grad0
+f954edda9 2023-05-13 xaedes | ggml : implement backward pass for llama + small training-llama-from-scratch example (#1360)
+--- 削除コミットの diffstat ---
+84274a10c399d843cff39feb2b86dc8224f613d8
+2024-11-16 Georgi Gerganov
+tests : remove test-grad0
+
+
+ Makefile             |    6 -
+ tests/CMakeLists.txt |    3 +-
+ tests/test-grad0.cpp | 1684 --------------------------------------------------
+ 3 files changed, 1 insertion(+), 1692 deletions(-)
+--- 後継: test-backend-ops の MODE_GRAD 導入 ---
+202084d31 2024-09-03 Johannes Gäßler | tests: add gradient tests for all backends (ggml/932)
+128142fe7 2026-03-12 Ruben Ortlam | test-backend-ops: allow loading tests from file and parsing model operators into file (#19896)
+--- 2024-11-16/17 の ggml sync バッチ (同一バッチ内で置換) ---
+8a43e940a 2024-11-16 | ggml: new optimization interface (ggml/988)
+68fcb4759 2024-11-16 | ggml : fix compile warnings (#0)
+84274a10c 2024-11-16 | tests : remove test-grad0
+a4200cafa 2024-11-16 | make : add ggml-opt (#0)
+
+===============================================================
+ [11] training インフラ解体の連鎖 (2024-05 〜 2024-11)
+===============================================================
+d48c88cbd 2024-05-23 Georgi Gerganov | ggml : remove ggml_flash_attn and ggml_flash_ff (#7463)
+be6d7c079 2024-07-25 Xuan Son Nguyen | examples : remove `finetune` and `train-text-from-scratch` (#8669)
+9f4098935 2024-11-03 Diego Devesa | ggml : move CPU backend to a separate file (#10144)
+84274a10c 2024-11-16 Georgi Gerganov | tests : remove test-grad0
+8a43e940a 2024-11-16 Johannes Gäßler | ggml: new optimization interface (ggml/988)
+
+===============================================================
+ [12] Issue #18805 の顛末 (gh CLI 取得)
+===============================================================
+#18805 llama-finetune broken on modern transformers: cascading failures in SET_ROWS, FLASH_ATTN_EXT, and graph allocation
+  author=pestopoppa state=CLOSED stateReason=COMPLETED
+  created=2026-01-13T11:06:39Z closed=2026-01-13T13:23:34Z
+--- コメント一覧 ---
+  2026-01-13T13:03:52Z pestopoppa (1296 chars)
+  2026-01-13T13:23:34Z ggerganov (488 chars)
+  2026-01-13T13:43:27Z pestopoppa (1209 chars)
+  2026-01-13T14:53:37Z JohannesGaessler (892 chars)
+  2026-01-13T15:07:17Z pestopoppa (774 chars)
+
+===============================================================
+ [13] オープンな修正 PR 3 本のメタ情報 (gh CLI 取得)
+===============================================================
+#21924 fix: llama-finetune backward pass crashes
+  author=System64fumo state=OPEN draft=false reviewDecision=REVIEW_REQUIRED
+  created=2026-04-14T21:35:46Z updated=2026-04-15T14:55:45Z
+  +40/-4 in 3 files
+
+#22705 Feat/qlora training
+  author=srossitto79 state=OPEN draft=true reviewDecision=REVIEW_REQUIRED
+  created=2026-05-05T09:12:24Z updated=2026-07-25T04:43:35Z
+  +7067/-196 in 66 files
+
+#25428 qwen2 : use no-cache attention path for training graphs
+  author=daineball state=OPEN draft=true reviewDecision=REVIEW_REQUIRED
+  created=2026-07-08T01:27:50Z updated=2026-07-13T12:19:37Z
+  +57/-7 in 4 files
+
+===============================================================
+ [14] PR #21924 の差分 (sched hash_set の汎用 fix を含む)
+===============================================================
+diff --git a/examples/training/finetune.cpp b/examples/training/finetune.cpp
+index 0a75ac110ca4..4c8633e4bdb0 100644
+--- a/examples/training/finetune.cpp
++++ b/examples/training/finetune.cpp
+@@ -39,6 +39,10 @@ int main(int argc, char ** argv) {
+         LOG_INF("%s: force changing v cache type to f32 due to a lack of f16 support for OUT_PROD\n", __func__);
+         params.cache_type_v = GGML_TYPE_F32;
+     }
++    if (params.flash_attn_type != LLAMA_FLASH_ATTN_TYPE_DISABLED) {
++        LOG_INF("%s: force disabling flash attention (no backward pass implementation)\n", __func__);
++        params.flash_attn_type = LLAMA_FLASH_ATTN_TYPE_DISABLED;
++    }
+ 
+     llama_backend_init();
+     llama_numa_init(params.numa);
+diff --git a/ggml/src/ggml-backend.cpp b/ggml/src/ggml-backend.cpp
+index 1a555bf2a4dc..4d016775cc61 100644
+--- a/ggml/src/ggml-backend.cpp
++++ b/ggml/src/ggml-backend.cpp
+@@ -1786,6 +1786,26 @@ ggml_backend_sched_t ggml_backend_sched_new(
+     return sched;
+ }
+ 
++static void ggml_backend_sched_grow_hash_set(ggml_backend_sched_t sched, size_t new_graph_size) {
++    const size_t new_size = ggml_hash_size(new_graph_size);
++    if (new_size <= sched->hash_set.size) {
++        return;
++    }
++
++    ggml_hash_set_free(&sched->hash_set);
++    free(sched->hv_tensor_backend_ids);
++    free(sched->hv_tensor_copies);
++
++    sched->hash_set = ggml_hash_set_new(new_graph_size);
++    sched->hv_tensor_backend_ids = (int *) malloc(sched->hash_set.size * sizeof(sched->hv_tensor_backend_ids[0]));
++    sched->hv_tensor_copies      = (ggml_tensor **) malloc(sched->hash_set.size * sched->n_backends * sched->n_copies * sizeof(struct ggml_tensor *));
++    GGML_ASSERT(sched->hv_tensor_backend_ids);
++    GGML_ASSERT(sched->hv_tensor_copies);
++
++    memset(sched->hv_tensor_backend_ids, -1, sched->hash_set.size * sizeof(sched->hv_tensor_backend_ids[0]));
++    memset(sched->hv_tensor_copies,       0, sched->hash_set.size * sched->n_backends * sched->n_copies * sizeof(struct ggml_tensor *));
++}
++
+ void ggml_backend_sched_free(ggml_backend_sched_t sched) {
+     if (sched == NULL) {
+         return;
+@@ -1856,9 +1876,10 @@ bool ggml_backend_sched_reserve(ggml_backend_sched_t sched, struct ggml_cgraph *
+ 
+ bool ggml_backend_sched_alloc_graph(ggml_backend_sched_t sched, struct ggml_cgraph * graph) {
+     GGML_ASSERT(sched);
+-    GGML_ASSERT((int)sched->hash_set.size >= graph->n_nodes + graph->n_leafs);
+     GGML_ASSERT(!sched->is_alloc);
+ 
++    ggml_backend_sched_grow_hash_set(sched, graph->n_nodes + graph->n_leafs);
++
+     sched->cur_copy = sched->next_copy;
+     sched->next_copy = (sched->next_copy + 1) % sched->n_copies;
+ 
+diff --git a/ggml/src/ggml.c b/ggml/src/ggml.c
+index 0142498d967a..9459237cc7e8 100644
+--- a/ggml/src/ggml.c
++++ b/ggml/src/ggml.c
+@@ -6817,6 +6817,11 @@ static void ggml_compute_backward(
+         case GGML_OP_NONE: {
+             // noop
+         } break;
++        case GGML_OP_SET_ROWS: {
++            if (src0_needs_grads) {
++                ggml_add_or_set(ctx, cgraph, isrc0, ggml_get_rows_back(ctx, grad, src1, src0));
++            }
++        } break;
+         case GGML_OP_COUNT:
+         default: {
+             GGML_ABORT("%s: unsupported ggml op for backward pass: %s\n", __func__, ggml_op_name(tensor->op));
+@@ -6985,6 +6990,7 @@ void ggml_build_backward_expand(
+             // gradients in node->src[1] for one reason or another have no effect on output gradients
+             case GGML_OP_CPY:           // gradients in CPY target are irrelevant
+             case GGML_OP_GET_ROWS:      // row indices not differentiable
++            case GGML_OP_SET_ROWS:      // row indices not differentiable
+             case GGML_OP_GET_ROWS_BACK: // same as for GET_ROWS
+             case GGML_OP_ROPE:          // positions not differentiable
+                 ignore_src[1] = true;
+@@ -7005,9 +7011,11 @@ void ggml_build_backward_expand(
+             continue;
+         }
+ 
+-        // inplace operations are currently not supported
++        // inplace operations: allow ops that have backward implementations
+         GGML_ASSERT(!node->view_src || node->op == GGML_OP_CPY || node->op == GGML_OP_VIEW ||
+-            node->op == GGML_OP_RESHAPE || node->op == GGML_OP_PERMUTE || node->op == GGML_OP_TRANSPOSE);
++            node->op == GGML_OP_RESHAPE || node->op == GGML_OP_PERMUTE || node->op == GGML_OP_TRANSPOSE ||
++            node->op == GGML_OP_SET_ROWS || node->op == GGML_OP_SCALE || node->op == GGML_OP_SET ||
++            node->op == GGML_OP_ROPE);
+ 
+         const size_t ihash = ggml_hash_find(&cgraph->visited_hash_set, node);
+         GGML_ASSERT(ihash != GGML_HASHSET_FULL);
+@@ -7178,7 +7186,10 @@ void ggml_graph_cpy(struct ggml_cgraph * src, struct ggml_cgraph * dst) {
+ }
+ 
+ struct ggml_cgraph * ggml_graph_dup(struct ggml_context * ctx, struct ggml_cgraph * cgraph, bool force_grads) {
+-    struct ggml_cgraph * result = ggml_new_graph_custom(ctx, cgraph->size, cgraph->grads || force_grads);
++    const size_t size = force_grads && 3 * cgraph->n_nodes > cgraph->size
++        ? 3 * cgraph->n_nodes
++        : cgraph->size;
++    struct ggml_cgraph * result = ggml_new_graph_custom(ctx, size, cgraph->grads || force_grads);
+     ggml_graph_cpy(cgraph, result);
+     return result;
+ }

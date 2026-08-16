@@ -1,0 +1,13 @@
+diff --git a/src/llama-context.cpp b/src/llama-context.cpp
+index 32f30fa06..65c115af9 100644
+--- a/src/llama-context.cpp
++++ b/src/llama-context.cpp
+@@ -452,7 +452,7 @@ void llama_context::sched_reserve() {
+     const uint32_t n_seqs = cparams.n_seq_max;
+     const uint32_t n_tokens = std::min(cparams.n_ctx, cparams.n_ubatch);
+ 
+-    const size_t max_nodes = this->graph_max_nodes(n_tokens);
++    const size_t max_nodes = 8 * this->graph_max_nodes(n_tokens);
+ 
+     LLAMA_LOG_DEBUG("%s: max_nodes = %zu\n", __func__, max_nodes);
+ 
