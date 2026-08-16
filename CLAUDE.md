@@ -80,10 +80,23 @@ mi25 (MI25 4枚) では `rocm-smi -i` が表示する **GUID は KFD ランタ�
 
 詳細経緯は [report/2026-06-29_191721_mi25_gpu_card_id_unique_id.md](report/2026-06-29_191721_mi25_gpu_card_id_unique_id.md) と続編 [report/2026-06-29_213624_mi25_4card_uniqueid_baseline.md](report/2026-06-29_213624_mi25_4card_uniqueid_baseline.md) (4 枚 baseline 取得 + 過去 fault 個体 = `card-c48c4` 確定) を参照。
 
+### ネットワーク構成 (重要)
+
+ワークステーション（現在の作業マシン）と GPU マシン（t120h-p100 / mi25）は**同一 IP セグメントだが物理的には別拠点**に設置されている。そのため:
+
+- **WS ↔ GPU マシン間の通信は遅い**（1 MB/s 程度まで落ちることもある）。大きなファイルの `scp` / `rsync` は時間がかかる前提で計画すること。
+- **GPU マシンから HuggingFace への直接アクセスはさらに遅い**。GPU マシン上で直接 `hf download` / `curl` するのは避ける。
+
 ### モデルダウンロード (HuggingFace)
 
+- **原則: 2 段階で取得する**
+  1. **まずワークステーション（現在のマシン）にダウンロード**する（HF への回線が最も速いのは WS）。
+  2. その後 **GPU マシンへ転送**する（`scp` / `rsync`）。
+  - GPU マシンから HF へ直接ダウンロードしない。WS→GPU 転送も遅い（上記「ネットワーク構成」参照）ので、レジューム可能な手段（`rsync --partial --progress` や `scp` の再実行）を使い、転送に長時間かかることを織り込んでおくこと。
+  - WS のディスク空き容量を事前に確認する（大きな GGUF は数十 GB になる）。転送・検証完了後は WS 側の一時ファイルを削除してよい。
+  - 転送後は `stat -c %s` で WS 側と GPU マシン側のサイズ一致を確認する（期待サイズは HF API `https://huggingface.co/api/models/<repo>/tree/main` からも取得可）。
 - **HF トークン**: `~/.config/gpu-server/.env` の `HF_TOKEN` を利用。匿名ダウンロードは CDN 側で厳しく rate limit されるため、モデル取得時は**必ずトークン付き**で実行する。`llama-server/scripts/start.sh` も同じ `.env` を参照している。
-- **P100 (t120h-p100) の Xet ストレージ問題** (2026-07-19 判明): P100 から HuggingFace の Xet バックエンド (`cas-bridge.xethub.hf.co`) への直接ダウンロードが不安定。
+- **参考: P100 (t120h-p100) の Xet ストレージ問題** (2026-07-19 判明) — 上記の原則どおり WS 経由で取得すれば回避できる。GPU マシンから直接落とさざるを得ない場合の記録として残す。P100 から HuggingFace の Xet バックエンド (`cas-bridge.xethub.hf.co`) への直接ダウンロードは不安定。
   - `hf CLI` (+ `hf_transfer`) は adaptive concurrency が bandwidth を誤判定 (64 KB/s) で張り付き実質停止
   - `huggingface.co/<repo>/resolve/main/<file>` の GET が途中で固まる (HEAD は 200 で通る、TCP:443 も通る)
   - **迂回策**: ワークステーション側で signed URL (Xet CDN の presigned URL) を pre-resolve → P100 で `curl -C -` によるレジューム型ダウンロード。実測 5-9 MB/s。ただし 15-30 分程度で突然切断されることが多いので、**切断時に signed URL を取り直して再開する resilience loop が必須**
@@ -108,4 +121,5 @@ mi25 (MI25 4枚) では `rocm-smi -i` が表示する **GUID は KFD ランタ�
 | レポート作成 | plan mode で計画を立ててまとまった作業を行った場合は、完了時に**必ず**対になるレポートを作成すること（ユーザから明示的に不要と指示された場合を除く）。フォーマット・必須セクション（**概要**必須ほか）は [REPORT.md](REPORT.md) に従う |
 | sudo実行 | **原則 Claudeはsudoを直接実行しない**。sudo権限が必要な操作が発生した場合は、コマンドをユーザに提示して実行を依頼すること（sshリモート先のsudoも同様）。**例外**: mi25 では `sudo dmidecode`（GPU SMBIOS スロット番号確認等の読み出し用途）は Claude が直接実行してよい（NOPASSWD 設定済み・副作用なし） |
 | OSクラッシュ時の証跡保全 | OSハング/クラッシュ（SSH・ping不通）検知時は、**電源リセットの前に必ず** `bmc-screenshot.sh` で KVM スクショを取得すること（コンソールに原因究明の情報が残るため）。詳細は「GPUサーバとLLM」節 |
-| モデルダウンロード | HF トークンは `~/.config/gpu-server/.env` の `HF_TOKEN` を使う。P100 では Xet 直接 DL が不安定なため、WS 側で signed URL を pre-resolve → P100 で `curl -C -` + 切断再開ループで実行すること。詳細は「モデルダウンロード」節 |
+| モデルダウンロード | **必ずワークステーション（現在のマシン）に先にダウンロードし、その後 GPU マシンへ転送する**。GPU マシンから HF への直接ダウンロードはしない。HF トークンは `~/.config/gpu-server/.env` の `HF_TOKEN` を使う。詳細は「モデルダウンロード」節 |
+| 拠点間通信の遅さ | WS と GPU マシン（p100 / mi25）は同一 IP セグメントだが**物理的に別拠点**で、通信が遅い（1 MB/s 程度まで落ちることもある）。GPU マシンから HF への直接アクセスはさらに遅い。大容量転送は長時間かかる前提で計画すること。詳細は「ネットワーク構成」節 |
