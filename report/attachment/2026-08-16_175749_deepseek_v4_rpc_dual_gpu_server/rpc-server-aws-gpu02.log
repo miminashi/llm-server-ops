@@ -1,0 +1,512 @@
+ggml_cuda_init: found 6 CUDA devices (Total VRAM: 89492 MiB):
+  Device 0: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16276 MiB
+  Device 1: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16276 MiB
+  Device 2: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16276 MiB
+  Device 3: Tesla P100-PCIE-12GB, compute capability 6.0, VMM: yes, VRAM: 12193 MiB
+  Device 4: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16276 MiB
+  Device 5: Tesla P100-PCIE-12GB, compute capability 6.0, VMM: yes, VRAM: 12193 MiB
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+WARNING: Host ('192.168.100.2') is != '127.0.0.1'
+         Never expose the RPC server to an open network!
+         This is an experimental feature and is not secure!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Starting RPC server v5.0.0
+  endpoint       : 192.168.100.2:50052
+  local cache    : n/a
+Devices:
+  CUDA0: Tesla P100-PCIE-16GB (16276 MiB, 16020 MiB free)
+  CUDA1: Tesla P100-PCIE-16GB (16276 MiB, 16020 MiB free)
+  CUDA2: Tesla P100-PCIE-16GB (16276 MiB, 16020 MiB free)
+  CUDA3: Tesla P100-PCIE-12GB (12193 MiB, 11937 MiB free)
+  CUDA4: Tesla P100-PCIE-16GB (16276 MiB, 16020 MiB free)
+  CUDA5: Tesla P100-PCIE-12GB (12193 MiB, 11937 MiB free)
+  transport      : TCP (RDMA auto-negotiate enabled)
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=402 inline=316
+RDMA activated: qpn=402->450 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=404 inline=316
+RDMA activated: qpn=404->452 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=405 inline=316
+RDMA activated: qpn=405->453 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=406 inline=316
+RDMA activated: qpn=406->454 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=407 inline=316
+RDMA activated: qpn=407->455 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=408 inline=316
+RDMA activated: qpn=408->456 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=409 inline=316
+RDMA activated: qpn=409->457 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=410 inline=316
+RDMA activated: qpn=410->458 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=411 inline=316
+RDMA activated: qpn=411->459 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=412 inline=316
+RDMA activated: qpn=412->460 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=413 inline=316
+RDMA activated: qpn=413->461 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=414 inline=316
+RDMA activated: qpn=414->462 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=415 inline=316
+RDMA activated: qpn=415->463 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=416 inline=316
+RDMA activated: qpn=416->464 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=417 inline=316
+RDMA activated: qpn=417->465 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=418 inline=316
+RDMA activated: qpn=418->466 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=419 inline=316
+RDMA activated: qpn=419->467 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=420 inline=316
+RDMA activated: qpn=420->468 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=421 inline=316
+RDMA activated: qpn=421->469 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=422 inline=316
+RDMA activated: qpn=422->470 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=423 inline=316
+RDMA activated: qpn=423->471 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=424 inline=316
+RDMA activated: qpn=424->472 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=425 inline=316
+RDMA activated: qpn=425->473 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=426 inline=316
+RDMA activated: qpn=426->474 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=427 inline=316
+RDMA activated: qpn=427->475 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=428 inline=316
+RDMA activated: qpn=428->476 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=429 inline=316
+RDMA activated: qpn=429->477 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=430 inline=316
+RDMA activated: qpn=430->478 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=431 inline=316
+RDMA activated: qpn=431->479 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=432 inline=316
+RDMA activated: qpn=432->480 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=433 inline=316
+RDMA activated: qpn=433->481 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=434 inline=316
+RDMA activated: qpn=434->482 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=435 inline=316
+RDMA activated: qpn=435->483 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=436 inline=316
+RDMA activated: qpn=436->484 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=437 inline=316
+RDMA activated: qpn=437->485 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=438 inline=316
+RDMA activated: qpn=438->486 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=439 inline=316
+RDMA activated: qpn=439->487 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=440 inline=316
+RDMA activated: qpn=440->488 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=441 inline=316
+RDMA activated: qpn=441->489 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=442 inline=316
+RDMA activated: qpn=442->490 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=443 inline=316
+RDMA activated: qpn=443->491 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=444 inline=316
+RDMA activated: qpn=444->492 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=445 inline=316
+RDMA activated: qpn=445->493 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=446 inline=316
+RDMA activated: qpn=446->494 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=447 inline=316
+RDMA activated: qpn=447->495 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=448 inline=316
+RDMA activated: qpn=448->496 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=449 inline=316
+RDMA activated: qpn=449->497 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=450 inline=316
+RDMA activated: qpn=450->498 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=451 inline=316
+RDMA activated: qpn=451->499 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=452 inline=316
+RDMA activated: qpn=452->500 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=453 inline=316
+RDMA activated: qpn=453->501 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=454 inline=316
+RDMA activated: qpn=454->502 mtu=4096 rx_depth=24
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=455 inline=316
+RDMA activated: qpn=455->503 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=456 inline=316
+RDMA activated: qpn=456->504 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=457 inline=316
+RDMA activated: qpn=457->505 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=458 inline=316
+RDMA activated: qpn=458->506 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=459 inline=316
+RDMA activated: qpn=459->507 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=460 inline=316
+RDMA activated: qpn=460->508 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=461 inline=316
+RDMA activated: qpn=461->509 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=462 inline=316
+RDMA activated: qpn=462->510 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=463 inline=316
+RDMA activated: qpn=463->511 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=464 inline=316
+RDMA activated: qpn=464->512 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=465 inline=316
+RDMA activated: qpn=465->513 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=466 inline=316
+RDMA activated: qpn=466->514 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=467 inline=316
+RDMA activated: qpn=467->515 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=468 inline=316
+RDMA activated: qpn=468->516 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=469 inline=316
+RDMA activated: qpn=469->517 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=470 inline=316
+RDMA activated: qpn=470->518 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=471 inline=316
+RDMA activated: qpn=471->519 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=472 inline=316
+RDMA activated: qpn=472->520 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=473 inline=316
+RDMA activated: qpn=473->521 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=474 inline=316
+RDMA activated: qpn=474->522 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=475 inline=316
+RDMA activated: qpn=475->523 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=476 inline=316
+RDMA activated: qpn=476->524 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=477 inline=316
+RDMA activated: qpn=477->525 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=478 inline=316
+RDMA activated: qpn=478->526 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=479 inline=316
+RDMA activated: qpn=479->527 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=480 inline=316
+RDMA activated: qpn=480->528 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=481 inline=316
+RDMA activated: qpn=481->529 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=482 inline=316
+RDMA activated: qpn=482->530 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=483 inline=316
+RDMA activated: qpn=483->531 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=484 inline=316
+RDMA activated: qpn=484->532 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=485 inline=316
+RDMA activated: qpn=485->533 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=486 inline=316
+RDMA activated: qpn=486->534 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=487 inline=316
+RDMA activated: qpn=487->535 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=488 inline=316
+RDMA activated: qpn=488->536 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=489 inline=316
+RDMA activated: qpn=489->537 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=490 inline=316
+RDMA activated: qpn=490->538 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=491 inline=316
+RDMA activated: qpn=491->539 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=492 inline=316
+RDMA activated: qpn=492->540 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=493 inline=316
+RDMA activated: qpn=493->541 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=494 inline=316
+RDMA activated: qpn=494->542 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=495 inline=316
+RDMA activated: qpn=495->543 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=496 inline=316
+RDMA activated: qpn=496->544 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=497 inline=316
+RDMA activated: qpn=497->545 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=498 inline=316
+RDMA activated: qpn=498->546 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=499 inline=316
+RDMA activated: qpn=499->547 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=500 inline=316
+RDMA activated: qpn=500->548 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=501 inline=316
+RDMA activated: qpn=501->549 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=502 inline=316
+RDMA activated: qpn=502->550 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=503 inline=316
+RDMA activated: qpn=503->551 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=504 inline=316
+RDMA activated: qpn=504->552 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=505 inline=316
+RDMA activated: qpn=505->553 mtu=4096 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=mlx5_0 gid=3 RoCEv2 qpn=506 inline=316
+RDMA activated: qpn=506->554 mtu=4096 rx_depth=24
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture
+ggml_cuda_graph_set_enabled: disabling CUDA graphs due to GPU architecture

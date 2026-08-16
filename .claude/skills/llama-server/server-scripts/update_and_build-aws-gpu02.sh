@@ -11,11 +11,14 @@
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [-f|--force] [-h|--help]
+Usage: $(basename "$0") [-f|--force] [-n|--no-pull] [-h|--help]
 
 Options:
-  -f, --force   更新がなくてもビルドを実行
-  -h, --help    このヘルプを表示
+  -f, --force     更新がなくてもビルドを実行
+  -n, --no-pull   git pull を行わず現在の HEAD のままビルドする
+                  (aws-gpu01 との RPC 分散構成ではメインホストとワーカーの
+                   llama.cpp バージョン一致が必須。片方だけ HEAD が進む事故を防ぐ)
+  -h, --help      このヘルプを表示
 EOF
   exit 0
 }
@@ -27,17 +30,23 @@ build_llama_cpp() {
           -DGGML_NATIVE=ON \
           -DGGML_CUDA=ON \
           -DGGML_CUDA_FA_ALL_QUANTS=ON \
+          -DGGML_RPC=ON \
           -DCMAKE_CUDA_COMPILER="/usr/bin/nvcc" \
           -DCMAKE_CUDA_ARCHITECTURES="60" &&
     cmake --build build --config Release -- -j $(nproc)
 }
 
 FORCE=0
+NO_PULL=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
     -f|--force)
       FORCE=1
+      shift
+      ;;
+    -n|--no-pull)
+      NO_PULL=1
       shift
       ;;
     -h|--help)
@@ -51,7 +60,11 @@ while [ $# -gt 0 ]; do
 done
 
 BEFORE=$(git rev-parse HEAD)
-git pull
+if [ "$NO_PULL" -eq 1 ]; then
+  echo "git pull をスキップします (HEAD: $BEFORE)"
+else
+  git pull
+fi
 AFTER=$(git rev-parse HEAD)
 
 if [ "$BEFORE" != "$AFTER" ]; then

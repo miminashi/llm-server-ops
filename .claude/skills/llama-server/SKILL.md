@@ -36,6 +36,7 @@ llama-server の起動・管理と llama.cpp のビルドに関するスキル�
 | `unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_XL` | 131072 | t120h-p100, mi25 | thinking対応MoE、UD最適4bit |
 | `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` | 131072 | t120h-p100 | MTP有効、`--spec-type draft-mtp` 自動適用 |
 | `unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL` | 131072 | t120h-p100 | MoE+MTP、`--spec-type draft-mtp` 自動適用 |
+| `unsloth/DeepSeek-V4-Flash-0731-GGUF:UD-Q4_K_XL` | 131072 | **aws-gpu01 + aws-gpu02（RPC 分散必須）** | **144.4 GiB。1 台では載らない**。native ctx 1M、DSA で長 ctx 劣化が小さい。サンプリングは unsloth 公式値（下記） |
 
 ### モデル別サンプリングパラメータ
 
@@ -47,6 +48,7 @@ llama-server の起動・管理と llama.cpp のビルドに関するスキル�
 | Qwen3.5-122B-A10B | なし（thinking有効） | Qwen3.x 共通プロファイル（下記参照） |
 | Qwen3.6-27B / 27B-MTP | なし（thinking有効） | Qwen3.x 共通プロファイル（下記参照） |
 | Qwen3.6-35B-A3B / 35B-A3B-MTP | なし（thinking有効） | Qwen3.x 共通プロファイル（下記参照） |
+| DeepSeek-V4-Flash | `'{"enable_thinking": false}'` / `'{"reasoning_effort": "high"}'` 等 | **unsloth 公式値**: `--temp 1.0 --top-p 1.0 --min-p 0.01`（エージェント用途は `--top-p 0.95`）。Qwen3.x プロファイルは適用しない。**thinking 有効時、日本語で質問しても `reasoning_content` は中国語で出る**（最終回答は日本語） |
 
 **Qwen3.x 共通サンプリングプロファイル**:
 
@@ -291,13 +293,95 @@ tmux split-window -v -b -d -l 3 \
 | t120h-p100 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | Flash Attention有効、マルチGPUポーリング無効。**`-ub 8192` は CUDA OOM**（下記参照） |
 | t120h-p100 × Qwen3.5-122B-A10B | `--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 --threads 40` + `numactl --cpunodebind=1 --membind=1` | Phase U-6 確定 128k fit プロファイル |
 | t120h-m10 | `CUDA_VISIBLE_DEVICES=0..14 -b 4096 -ub 4096` | GPU 15は使用不可 |
-| aws-gpu01 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **未検証**（2026-08-16 登録時点で起動実績なし）。P100 16GB×7=112GB。同じ P100 の t120h-p100 実績値を踏襲した推定値で、初回起動時に VRAM 実測して調整すること |
-| aws-gpu02 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **未検証**。P100 16GB×4 + **12GB×2** = 88GB。**VRAM 不均等**のため `--tensor-split 11,12,13,14` 系プロファイルは流用不可、12GB 枚（index 3, 5）に合わせた split が要る |
+| aws-gpu01 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**（P100 16GB×7=112GB、t120h-p100 実績値を踏襲した推定値）。RPC 分散では下記の実績値を使う |
+| aws-gpu02 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**。P100 16GB×4 + **12GB×2** = 88GB。VRAM 不均等だが、**RPC 分散での実測では `--tensor-split` 不要**（自動配分が 12GB 枚を適切に扱う） |
+| aws-gpu01 + aws-gpu02（RPC 分散） | `--rpc 192.168.100.2:50052 --flash-attn 1 --poll 0 -b 2048 -ub 512` | **実績あり**（2026-08-16）。13 GPU / 200 GiB。DeepSeek-V4-Flash UD-Q4_K_XL（144.4 GiB）を ctx=131072 で起動、pp 89.7 t/s / tg 13.6 t/s。`-ub` の引き上げは未検証（最小空き 1,058 MiB） |
 
 **aws-gpu01 / aws-gpu02 の電源**: 起動時にファンが爆音になるため、`llama-up.sh` が内部で呼ぶ
 `power-ctl.sh on` は `ALLOW_FAN_NOISE=1` なしでは exit 20 で拒否される。電源 OFF の状態から
 起動する場合は必ずユーザの指示を得ること。詳細は
 [gpu-server/aws-gpu.md](../gpu-server/aws-gpu.md)。
+
+## RPC 分散構成（aws-gpu01 + aws-gpu02）
+
+1 台の VRAM に収まらないモデルを、llama.cpp の **RPC バックエンド**で 2 台の GPU サーバに
+またがって載せる構成。aws-gpu01（112 GiB）+ aws-gpu02（88 GiB）= **合計 200 GiB** を
+1 プロセスから使える。両機は 100GbE（ConnectX-4）で直結されており、**RDMA (RoCEv2) が
+自動で有効になる**（[gpu-server/aws-gpu.md](../gpu-server/aws-gpu.md) の「100GbE 直結リンク」節）。
+
+### 役割
+
+| 役割 | サーバ | 実行するもの | モデルファイル |
+|---|---|---|---|
+| メインホスト | **aws-gpu01** | `llama-server` | **必要**（`~/models/` に置く。disk 707GB） |
+| RPC ワーカー | **aws-gpu02** | `ggml-rpc-server` | **不要**（メインホストが重みを RPC 経由で送る） |
+
+aws-gpu01 をメインホストにするのは VRAM・RAM・ディスクいずれも大きいため。
+API エンドポイントは通常どおり `http://10.8.2.1:8000/v1`。
+
+### 前提: 両機を同一コミットでビルドすること
+
+RPC はメインホストとワーカーの llama.cpp バージョンが一致していないとプロトコル不整合で
+失敗する。`update_and_build-aws-gpu0*.sh` には **`-DGGML_RPC=ON`** と **`-n/--no-pull`**
+オプションを入れてあるので、**両機で `git pull` せず同じ HEAD のままビルドする**。
+
+```bash
+# 両機の HEAD が一致していることを先に確認する
+ssh aws-gpu01 "cd ~/llama.cpp && git rev-parse HEAD"
+ssh aws-gpu02 "cd ~/llama.cpp && git rev-parse HEAD"
+
+scp .claude/skills/llama-server/server-scripts/update_and_build-aws-gpu01.sh aws-gpu01:~/llama.cpp/update_and_build.sh
+scp .claude/skills/llama-server/server-scripts/update_and_build-aws-gpu02.sh aws-gpu02:~/llama.cpp/update_and_build.sh
+ssh -n aws-gpu01 "cd ~/llama.cpp && ./update_and_build.sh --no-pull --force"
+ssh -n aws-gpu02 "cd ~/llama.cpp && ./update_and_build.sh --no-pull --force"
+```
+
+> **注意**: ビルドは 1 台につき **1 本だけ**流すこと。同じ `build/` に対して 2 本走らせると、
+> 後発の `rm -rf build` が先発のビルドツリーを壊し `nvcc fatal : Could not open options file
+> ... includes_CUDA.rsp` で落ちる。
+>
+> **ssh でリモートプロセスをバックグラウンド起動する書き方**:
+> `ssh -n <server> "setsid nohup <cmd> > /tmp/x.log 2>&1 < /dev/null &"`。
+> **末尾に `disown` を付けないこと** — 非対話 bash では起動用シェルが終了せず SSH チャネルが
+> 開いたままになり、呼び出し側がハングする（2026-08-16 実測）。
+
+ビルドログに `RDMA transport enabled (auto-detected)` が出ていれば RDMA が使われる。
+RPC サーバのバイナリ名は現行 llama.cpp では **`ggml-rpc-server`**（古い版は `rpc-server`）。
+
+### RPC ワーカーの起動・停止
+
+```bash
+.claude/skills/llama-server/scripts/rpc-up.sh    # 既定で aws-gpu02 / 192.168.100.2:50052
+.claude/skills/llama-server/scripts/rpc-down.sh  # 停止
+```
+
+- 引数は `rpc-up.sh [server] [bind-ip] [port]`。既定バインド先は 100GbE 側アドレス
+- `RPC_DEVICES=CUDA0,CUDA1` で公開する GPU を絞れる。`GGML_RPC_DEBUG=1` でワーカーのデバッグログ
+- ログは ワーカー側の `/tmp/rpc-server.log`
+- **`0.0.0.0` へのバインドはスクリプトが拒否する**。llama.cpp 公式が「RPC サーバは認証が無く
+  安全でない。オープンなネットワークで動かすな」と明記しているため、100GbE 直結セグメントに限定する
+- 停止順序は **llama-server → rpc-server**。ワーカーを先に落とすとメインホストの推論が壊れる
+
+### llama-server 側
+
+`start.sh` は RPC 未対応なので、現状は手動コマンドで起動する。
+
+```bash
+ssh -n aws-gpu01 'cd ~/llama.cpp && setsid nohup ./build/bin/llama-server \
+  --model ~/models/<model>/<first-shard>.gguf \
+  --rpc 192.168.100.2:50052 \
+  --n-gpu-layers 999 --ctx-size 32768 \
+  --flash-attn 1 --poll 0 -b 2048 -ub 512 \
+  --jinja --host 0.0.0.0 --port 8000 \
+  > /tmp/llama-server.log 2>&1 < /dev/null &'
+```
+
+- 分割 GGUF は**第 1 shard を指定すれば残りは自動で読まれる**
+- **`-ub` は小さめから**。13 デバイスに分散するぶん compute buffer の合計が効いてくるので、
+  単体構成の `-ub 4096` をそのまま持ち込まない
+- `--tensor-split` は原則指定しない（llama.cpp が空きメモリ比で自動配分する）。
+  aws-gpu02 の 12GB 枚（index 3, 5）で偏りが出たときだけ手動指定する
+- 監視 UI は `ttyd-up.sh aws-gpu01` で別途立てる（`start.sh` を経由しないため自動起動しない）
 
 ### mi25 のバックエンド切替（Vulkan 既定 / ROCm fallback）
 

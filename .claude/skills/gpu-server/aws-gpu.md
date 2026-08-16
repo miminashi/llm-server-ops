@@ -120,6 +120,26 @@ mi25 の Unique ID 運用（[CLAUDE.md](../../../CLAUDE.md) 参照）に相当�
 ssh aws-gpu01 "~/.local/bin/hf download <repo> --include '*Q4_K_M*.gguf' --token <HF_TOKEN>"
 ```
 
+### 100GbE 直結リンク（2 台間、RPC 分散推論用）
+
+10.8.2.x の管理系とは別に、**aws-gpu01 ↔ aws-gpu02 が 100GbE で直結**されている。
+片方の VRAM に収まらないモデルを 2 台に分散して載せるための経路（[llama-server
+SKILL.md](../llama-server/SKILL.md) の「RPC 分散構成」節）。
+
+| 項目 | aws-gpu01 | aws-gpu02 |
+|---|---|---|
+| IP アドレス | **192.168.100.1** | **192.168.100.2** |
+| インタフェース | `enp11s0np0` | `enp4s0np0` |
+| NIC | Mellanox ConnectX-4 (MT27700) | 同左 |
+| リンク速度 | 100000 Mb/s (Full) | 同左 |
+| MTU | 9000 | 9000 |
+| RTT | 0.20 ms（相互） | — |
+| RDMA | `mlx5_0/1` が **ACTIVE**、`libibverbs.so.1` 導入済 | 同左 |
+
+llama.cpp は cmake 時に `libibverbs` を検出すると **`RDMA transport enabled
+(auto-detected)`** を出し、RPC が TCP でなく RoCEv2 で通信する（コマンドラインの
+変更は不要）。
+
 ## ソフトウェア導入状況（2026-08-16 時点）
 
 | ツール | aws-gpu01 | aws-gpu02 |
@@ -167,12 +187,25 @@ ssh aws-gpu01 "~/.local/bin/hf download <repo> --include '*Q4_K_M*.gguf' --token
 
 ## 未検証事項
 
-- **llama-server の起動実績なし**。`start.sh` のサーバ別パラメータ
-  (`--flash-attn 1 --poll 0 -b 4096 -ub 4096`) は t120h-p100（同じ P100）の実績値を
-  踏襲した推定値であり、実測での検証が必要。
-- **ビルド未実施**。`update_and_build-aws-gpu01.sh` / `-aws-gpu02.sh` は作成済みだが
-  未実行。nvcc 12.0 と Ubuntu 24.04 の gcc の組み合わせで問題が出る可能性がある。
+- `start.sh` のサーバ別パラメータ (`--flash-attn 1 --poll 0 -b 4096 -ub 4096`) は
+  t120h-p100 の実績値を踏襲した推定値のまま。**単体運用（RPC なし）での検証は未実施**。
+  RPC 分散構成では `-b 2048 -ub 512` で起動実績あり（下記「検証済み」）。
 - `~/.ssh/config` の定義に既存 3 台にある `ServerAliveInterval 3` が無い。
+
+## 検証済み（2026-08-16 RPC 分散実験）
+
+詳細は [2026-08-16 DeepSeek-V4 RPC 分散レポート](../../../report/2026-08-16_175749_deepseek_v4_rpc_dual_gpu_server.md)。
+
+- **ビルド**: 両機とも `update_and_build-aws-gpu0*.sh` でビルド成功
+  （llama.cpp `10bf611e5` / build 10451）。**nvcc 12.0 + gcc 13.3 で問題なし**、
+  `-DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++-12` は不要だった。
+- **llama-server 起動実績あり**: `DeepSeek-V4-Flash-0731 UD-Q4_K_XL`（144.4 GiB）を
+  2 台 13 GPU に RPC 分散し **ctx=131072 で起動**（VRAM 157.1 GiB、pp 89.7 t/s、tg 13.6 t/s）。
+- **100GbE + RDMA (RoCEv2)** が llama.cpp 本体の機能として自動で有効化されることを実測。
+- **aws-gpu01 の HF ダウンロードは実測 117 MB/s**（155GB を 22分12秒）。
+  登録時に測った 27 MB/s より大幅に速い。
+- **aws-gpu02 の VRAM 不均等は `--tensor-split` 不要**。llama.cpp の自動配分が
+  12GB カード（index 3, 5）にも余裕を残す形で収める。
 
 ## 検証済み（2026-08-16 登録時）
 
