@@ -27,6 +27,17 @@ ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu01 reset
 ガード対象サーバの定義は `bmc-power.sh` と `power-ctl.sh` の `FAN_LOUD_SERVERS`
 （両方に同じ値を書く。片方だけ変更しないこと）。
 
+## ⚠️ 他ユーザのホームディレクトリを消さない
+
+aws-gpu01 の `/home` には `myzk` / `sizumita` がある。**この 2 ユーザは現在サーバを使用して
+いない**ため、ロック競合や GPU の取り合いを気にする必要はない（ロック機構への登録は
+他 Claude セッションとの調停のために引き続き有効）。
+
+ただし **ホームディレクトリのデータは削除しないこと**。ディスクを空ける必要が生じても、
+`/home/myzk` / `/home/sizumita` には手を出さず、自分（`ubuntu`）の
+`~/models` や `~/.cache/huggingface` を整理すること。aws-gpu01 は `/` に 707GB 空きがあり
+（2026-08-16 時点）、通常の運用で他ユーザ領域に手を付ける理由はない。
+
 ## ハードウェア
 
 | 項目 | aws-gpu01 | aws-gpu02 |
@@ -46,7 +57,7 @@ ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu01 reset
 | SSH ホスト名 | `chungpu`（エイリアス `aws-gpu01` とは別名） | `gpu02` |
 | SSH ユーザ | **`ubuntu`**（既存 3 台は `llm`） | 同左 |
 | sudo | **NOPASSWD で root 取得可** | 同左 |
-| 他ユーザ | `/home` に myzk, sizumita（**共用機**） | ubuntu のみ |
+| 他ユーザ | `/home` に myzk, sizumita（**現在は未使用**、ただしデータは残す） | ubuntu のみ |
 
 ### GPU 個体 baseline（2026-08-16 取得）
 

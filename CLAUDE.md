@@ -186,6 +186,7 @@ git config core.hooksPath .githooks
 | レポート作成 | plan mode で計画を立ててまとまった作業を行った場合は、完了時に**必ず**対になるレポートを作成すること（ユーザから明示的に不要と指示された場合を除く）。フォーマット・必須セクション（**概要**必須ほか）は [REPORT.md](REPORT.md) に従う |
 | sudo実行 | **原則 Claudeはsudoを直接実行しない**。sudo権限が必要な操作が発生した場合は、コマンドをユーザに提示して実行を依頼すること（sshリモート先のsudoも同様）。**例外**: mi25 では `sudo dmidecode`（GPU SMBIOS スロット番号確認等の読み出し用途）は Claude が直接実行してよい（NOPASSWD 設定済み・副作用なし） |
 | OSクラッシュ時の証跡保全 | OSハング/クラッシュ（SSH・ping不通）検知時は、**電源リセットの前に必ず** `bmc-screenshot.sh` で KVM スクショを取得すること（コンソールに原因究明の情報が残るため）。詳細は「GPUサーバとLLM」節 |
+| aws-gpu01 の他ユーザデータ | `/home/myzk` `/home/sizumita` は**現在未使用だがデータを削除しない**。ディスクを空ける場合も自分（`ubuntu`）の `~/models` / `~/.cache/huggingface` に留めること |
 | aws-gpu01/02 の電源操作 | **ユーザの明確な指示なしにリブート・電源投入・電源断を行わない**（起動時にファンが爆音になるため）。`bmc-power.sh` の `on`/`off`/`soft`/`reset`/`cycle` と `power-ctl.sh` の `on`/`off` は `ALLOW_FAN_NOISE=1` が無いと exit 20 で拒否される。`status` とスクショは常に可。詳細は [gpu-server/aws-gpu.md](.claude/skills/gpu-server/aws-gpu.md) |
 | 添付ファイルと LFS | `report/attachment/` 配下は **Git LFS を使わず通常の git 管理**とする（テキストログは zlib で 1〜7% に縮むが LFS は無圧縮保存のため無料枠に不利）。**LFS の再導入は検討しない**。clone 直後に `git config core.hooksPath .githooks` で巨大ファイル検出 hook を有効化すること。100 MB 超は GitHub が push を拒否するため長時間ログは `gzip` する。詳細は「リポジトリ運用」節 |
 | モデルダウンロード | **必ずワークステーション（現在のマシン）に先にダウンロードし、その後 GPU マシンへ転送する**。GPU マシンから HF への直接ダウンロードはしない。HF トークンは `~/.config/gpu-server/.env` の `HF_TOKEN` を使う。詳細は「モデルダウンロード」節 |

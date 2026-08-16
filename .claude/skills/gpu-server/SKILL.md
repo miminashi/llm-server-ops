@@ -31,7 +31,9 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu0
   （`bmc-power.sh` / `power-ctl.sh` が `ALLOW_FAN_NOISE=1` なしの電源操作を exit 20 で拒否する）
 - ワークステーションと**同一拠点**にあり通信が速い（RTT 0.3ms、約100MB/s）。
   モデルは **HF から直接ダウンロード**するのが原則（WS 経由より速い）
-- SSH ユーザは `ubuntu`（既存3台は `llm`）。aws-gpu01 は他ユーザとの共用機
+- SSH ユーザは `ubuntu`（既存3台は `llm`）
+- aws-gpu01 の `/home` には他ユーザ（myzk, sizumita）がいるが**現在は未使用**なので競合は気にしなくてよい。
+  ただし**それらのホームディレクトリのデータは削除しないこと**（ディスクを空けるときも自分の `~/models` 等に留める）
 - aws-gpu02 は VRAM が不均等（16/16/16/12/16/12 GB）なので tensor-split の流用に注意
 - llama-server の起動実績はまだ無い（2026-08-16 登録時点）
 - 詳細は [aws-gpu.md](./aws-gpu.md) を参照
