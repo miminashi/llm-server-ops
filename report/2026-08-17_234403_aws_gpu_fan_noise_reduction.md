@@ -18,7 +18,11 @@ Supermicro のこの世代のボードは、ファンモードを Full にした
 
 BIOS 変更の過程で aws-gpu01 が起動しなくなる事故が起きた。拡張スロットの Option ROM をすべて無効化したところ、この機体はブートディスクが拡張カード経由で繋がっているため、ディスクを認識できなくなったためである。設定を元に戻して復旧し、正常起動と GPU 7 枚の認識、ネットワークの復帰まで確認した。同じ変更が問題なかった aws-gpu02 との違いは、ブートディスクの接続経路にある。
 
+再起動のために動かしていた大規模モデルのサーバは一度停止し、作業後に元の構成で復旧して推論できることまで確認した。復旧の際には、後述のネットワーク設定の問題を先に直す必要があった。
+
 作業中に本題以外の問題も 2 つ見つかった。ひとつは aws-gpu02 の起動画面に特定のメモリモジュールの不良が報告されていること、もうひとつは 2 台を繋ぐ 100GbE の設定が永続化されておらず、再起動すると失われる状態だったことである。後者はその場で永続化して再起動で検証まで済ませた。前者は現時点で実害が確認できていないため、追跡課題として残す。
+
+なお、デーモンの実装と配布の過程でいくつも自分の誤りを踏んだ（センサ値の読み取り列、回転数を上げ下げする際の判定、ファン制御を奪い返す書き込みの出し方など）。いずれも実機で症状として現れてから直したもので、同じ形の失敗を繰り返さないために本文に記録した。
 
 起動時の爆音は軽減できたが完全には消えていないため、電源操作のガードは現状のまま維持する。残課題として、aws-gpu01 でブートディスクが繋がっているスロットだけを特定できれば、そのスロット以外の Option ROM を無効化して起動時間短縮と両立できる見込みがある。
 
@@ -40,7 +44,7 @@ BIOS 変更の過程で aws-gpu01 が起動しなくなる事故が起きた。�
 
 ![duty↔RPM 特性、POST 中の回転数、定常運転 duty の変更前後比較](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/summary.png)
 
-**結論**: X10DRG-OT+ の BMC は **fan mode = Full(0x01) のときだけ手動 duty を保持する**（Optimal/Standard では BMC が書き戻す）。この性質を使い、in-band IPMI で温度に応じた duty を与える `smc-fanctl` を両機に常設した結果、**アイドル duty 50%/6,500rpm → 16%/2,900rpm**、**実負荷でも 16–28%/2,900–4,200rpm**（CPU max 59℃ / GPU max 63℃、thermal slowdown 0 件）に低下した。BMC の Optimal は同じ負荷で **duty 68–70%（特性換算 約8,000–8,500rpm）** まで上げており、静音化の余地は定常運転側に大きく存在した。cooling zone は **0–3 の 4 つ**（各 2 ファン、zone4 以降は無効）で、`raw 0x30 0x70 0x66 0x01 <zone> <duty>` を 4 zone すべてに書く必要がある。**Full へ切り替えた直後に BMC が全 zone を非同期で 100% に書き戻す**ため 5 秒待ってから duty を書き、以後も毎周期 duty を照合して自己修復する実装が必須（実測で確認）。起動 (POST) 中は BMC がファン制御を手放さず、外部からの duty 投入は**競り負ける**（POST 中 FAN1-8 平均の中央値: 2秒間隔 5,386rpm → 0.5秒間隔 5,243rpm → **0.5秒間隔＋BIOS 変更後 3,700rpm**）。BIOS には fan 設定は存在せず（IPMI タブにも無い）、POST 短縮に使えたのは `Wait For "F1" If Error` と Option ROM の無効化のみ。**aws-gpu01 は全スロットの OPROM を無効化するとブートディスク（SAS HBA 経由）を見失い EFI Shell に落ちる**ため Legacy に戻した（gpu02 はオンボード SATA ブートなので問題なし）。
+**結論**: X10DRG-OT+ の BMC は **fan mode = Full(0x01) のときだけ手動 duty を保持する**（Optimal/Standard では BMC が書き戻す）。この性質を使い、in-band IPMI で温度に応じた duty を与える `smc-fanctl` を両機に常設した結果、**アイドル duty 50%/6,500rpm → 16%/2,900rpm**、**実負荷でも 16–28%/2,900–4,200rpm**（CPU max 59℃ / GPU max 63℃、thermal slowdown 0 件）に低下した。BMC の Optimal は同じ負荷で **duty 68–70%（特性換算 約8,000–8,500rpm）** まで上げており、静音化の余地は定常運転側に大きく存在した。cooling zone は **0–3 の 4 つ**（各 2 ファン、zone4 以降は無効）で、`raw 0x30 0x70 0x66 0x01 <zone> <duty>` を 4 zone すべてに書く必要がある。**Full へ切り替えた直後に BMC が全 zone を非同期で 100% に書き戻す**ため 5 秒待ってから duty を書き、以後も毎周期 duty を照合して自己修復する実装が必須（実測で確認）。起動 (POST) 中は BMC がファン制御を手放さず、外部からの duty 投入は**競り負ける**（POST 中 FAN1-8 平均の中央値: 2秒間隔 5,386rpm → 0.5秒間隔 5,243rpm → **0.5秒間隔＋BIOS 変更後 3,700rpm**）。BIOS には fan 設定は存在せず（IPMI タブにも無い）、POST 短縮に使えたのは `Wait For "F1" If Error` と Option ROM の無効化のみ。**aws-gpu01 は全スロットの OPROM を無効化するとブートディスク（SAS HBA 経由）を見失い EFI Shell に落ちる**ため Legacy に戻した（gpu02 はオンボード SATA ブートなので問題なし）。**追試で `boot-quiet.sh` の設計上の誤りが判明**: fan mode を毎周期書き直していたため、そのたびに BMC の 100% リセットを自分で誘発していた（稼働中機体で 2,200–9,200rpm に振動 → mode 確認のみに修正して 2,900rpm で安定）。**上記の POST 中の数値はすべて修正前の実装で採ったもの**なので、修正後はさらに下がる可能性がある（未測定）。抑制は `bmc-power.sh` の `on`/`reset`/`cycle` から自動併走するようにした。
 
 ## 前提・目的
 
@@ -63,6 +67,16 @@ BIOS 変更の過程で aws-gpu01 が起動しなくなる事故が起きた。�
 
 - FAN 閾値: LNR 300 / LCR 500 / **LNC 700 rpm**（下回ると BMC が override）
 - 使用した IPMI raw: fan mode `0x30 0x45 0x00`/`0x01 <mode>`（00=Standard 01=Full 02=Optimal 04=HeavyIO）、duty `0x30 0x70 0x66 0x00 <zone>`/`0x01 <zone> <duty>`
+
+作業中に行った環境変更:
+
+- **`ipmitool` を両機に導入**（`apt-get install -y ipmitool`）。in-band IPMI（`/dev/ipmi0`）を
+  デーモンから叩くために必要。`ipmi_si` / `ipmi_devintf` はもともとロード済みだった
+- **ロックは前セッション（`aws-mmns-generic-abl-20260816_220958`）が保持したまま作業した**。
+  同一ユーザの作業継続として引き継ぎ、`unlock.sh` は実行していない。稼働中だった
+  DeepSeek-V4 はそのまま負荷試験に流用した
+- **WS 側の測定スクリプトはリポジトリに入れていない**（一時的な計測用途のため添付のみ）。
+  恒久運用するものは `fan-control/` と `scripts/` に入れた（下記「リポジトリ変更」）
 
 ## 再現方法
 
@@ -89,6 +103,19 @@ ipmitool ... chassis bootdev bios && ALLOW_FAN_NOISE=1 .../bmc-power.sh aws-gpu0
 # 緊急時: BMC の自動制御へ戻す
 ssh aws-gpu01 "sudo systemctl stop smc-fanctl; sudo ipmitool -I open raw 0x30 0x45 0x01 0x02"
 ```
+
+**負荷の作り方**（熱負荷として意味のある負荷を作るのに一手間かかった）:
+
+最初は通常の生成（`max_tokens` 1024 の対話）を並列 2 で投げたが、DeepSeek-V4 は MoE で
+tg フェーズが memory-bound なため **GPU 使用率 7–9% / 消費電力 35–65W** にとどまり熱負荷に
+ならなかった。そこで **prompt processing 主体（compute-bound）に切り替えた**:
+
+- 60,000 文字の長大プロンプトを `max_tokens` 32 で投げる（生成ではなく prefill を回す）
+- `"cache_prompt": false` と**リクエストごとに異なる冒頭文字列**を付けて
+  llama-server のプレフィックスキャッシュを外す（同じプロンプトの再投入では pp が走らない）
+- 並列 2 で 20 分連続。これで消費電力は瞬間 140W まで上がった
+
+スクリプトは [load-pp.sh](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/load-pp.sh)。
 
 ## 結果詳細
 
@@ -224,6 +251,93 @@ PXE 無効化の根拠は実測にある: gpu01 の POST 画面に `Initializing
 
 **定量化できていない**。reset 起点の測定は gpu02 の BIOS 変更前（reset → OS 起動 67 秒）のみで、変更後は BIOS 保存経由の再起動（BIOS 終了処理を含む）しか測れておらず、直接比較にならない。次に通常の再起動を行う機会に reset 起点で測り直す。
 
+### 12. DeepSeek-V4 の停止と復旧
+
+再起動のため llama-server を止め、作業後に復旧した。
+
+- 復旧手順は前セッションで作った `rpc-up.sh` → `rpc-llama-up.sh` がそのまま使えた
+  （`EXTRA_LLAMA_OPTS` で `--jinja --temp 1.0 --top-p 1.0 --min-p 0.01` を渡す）
+- **cold ロード 12 分 49 秒**で `listening on` に到達（前セッションの実測は cold 約 15 分。
+  今回は再起動直後で page cache が空の状態から）
+- ctx=131072 のまま起動でき、推論も正常（`3の5乗` に 243 と回答）
+- **100GbE の復旧が先に必要**だった（下記「副次発見」2）。これを直すまで RPC ワーカーに
+  接続できない
+
+## 実装で踏んだ落とし穴・作業上の失敗
+
+デーモンは WS から lanplus 経由で動かして検証し、固まってからサーバに in-band で配布した
+（`smc-fanctl.py` は `--transport lan|open` の両対応にしてある）。この過程で以下を踏んだ。
+
+### デーモン実装のバグ 4 件（いずれも修正済み）
+
+1. **`ipmitool sdr` のパース列を間違えた** — 1 行は `CPU1 Temp | 41 degrees C | ok` の形式で
+   **値は 2 列目**。最終列（`ok`）を読んでいたため全センサが取れず「SDR から値が取れません」で
+   起動即失敗した
+2. **ヒステリシスの判定が逆向きだった** — 「今の duty を維持すべき下限温度」を*上段*の閾値から
+   計算していたため、GPU 61℃ で 28% に上げた直後 60℃ で 16% に戻る、を繰り返した
+   （負荷試験のログに 16↔28% のバタつきとして残っている）。正しくは
+   **その duty に上がる根拠となった一段下の閾値 − 3℃** を下回るまで維持する
+3. **fan mode 切替後に 100% を書く経路があった** — 起動直後の duty は不明なので安全側の 100% で
+   初期化しているが、`ensure_full_mode()` が mode 変更時に「現在値（=100%）」を強制適用して
+   いたため、Full 切替のたびに 100% を書きかねなかった。mode 変更は真偽値で返し、
+   **温度から計算した duty を適用する側で force する**形に直した
+4. **PCH を System/Peripheral と同じカーブに入れていた** — PCH は 6,500rpm でも 50℃ 前後で、
+   同じカーブだとアイドルでも常時 duty 40% になってしまった。独立カーブに分離した
+
+さらに `boot-quiet.sh` の **fan mode 毎周期書き直し**という設計上の誤りが後から判明した
+（「7. 起動 (POST) 中の抑制」の追試を参照）。
+
+### 配布・運用まわりの失敗 4 件
+
+1. **`pkill -f '<script>.sh'` で自分のシェルを殺した（3 回）** — Bash 実行のコマンド全文に
+   そのスクリプト名が含まれるため、`pkill -f` が呼び出し元シェル自身にマッチして SIGTERM で
+   死ぬ（exit 144）。`[s]cript` のブラケット・トリックは pgrep のパターン側を守るだけで、
+   **コマンドラインに素の文字列が残っていれば無効**。1 回目は BIOS 保存が実行されず、
+   一時的に BIOS 画面で爆音が続いた。以後は **pidfile 方式**に統一し、
+   `bmc-power.sh` / `boot-quiet.sh` の二重起動判定も pidfile にした
+2. **ログファイル名の食い違いでデーモンが動いていないと誤診した** — 検証用ラッパが
+   `fanctl_aws-gpu01.log` に書いていたのに `fanctl_gpu01.log` を見ていたため、
+   「プロセスは生きているのにログが更新されない」という誤った症状に見えた。
+   `/proc/<pid>/fd/1` を辿って初めて気づいた
+3. **`systemctl enable --now` では既に active なサービスに新しい unit が反映されない** —
+   unit を修正して再配布しても古いプロセスが動き続けた。`enable` + **`restart`** に変更した
+4. **`StartLimitIntervalSec` / `StartLimitBurst` は `[Service]` ではなく `[Unit]` セクション** —
+   `[Service]` に書いたため `Unknown key name ... ignoring` で無視されていた
+
+### KVM 経由の BIOS 操作の実務的な注意
+
+- **カーソル位置は画面スクロールでずれる**。両機ともスロット OPROM を一括変更した直後に
+  「4 つ下の項目」を狙ったら **VGA Priority のポップアップが開いた**（意図しない変更を
+  避けるため Escape で閉じて数え直した）。**1 段階ごとにスクリーンショットで現在位置を
+  確認する**のが安全
+- 選択肢の並びは項目によって違う（スロット OPROM は `Disabled/Legacy/EFI` で Legacy から
+  ArrowUp 1 回、Onboard LAN 1 OPROM は `PXE/iSCSI/FCoE/Disabled` で ArrowDown 3 回）
+- **Delete 連打で BIOS に入るのは当てにならない**。gpu02 では reset の 55 秒後に始めた
+  第 2 波で入れたが、gpu01 では第 1 波・第 2 波とも外して OS が起動してしまった。
+  `ipmitool chassis bootdev bios` が確実（「10. 事故と復旧」参照）
+- `bmc-kvm.py` の `type` コマンドによる EFI Shell への `exit` 入力は効かなかった
+
+### netplan の適用は `generate` までに留めた
+
+100GbE の永続化で `netplan apply` を実行すると全インタフェースが再適用され、
+**管理系（`enp129s0f1` = 10.8.2.x）が一時的に落ちて SSH が切れる恐れ**があった。そのため
+ファイル配置と `netplan generate`（構文検証）までに留め、**実際の適用は gpu01 の再起動で
+検証**した（再起動後に 192.168.100.1/24・MTU 9000・100000Mb/s で自動復帰）。
+
+## リポジトリ変更
+
+| ファイル | 変更 |
+|---|---|
+| `.claude/skills/gpu-server/fan-control/smc-fanctl.py` | **新規**: 温度連動ファン制御デーモン（lan/open 両対応、依存なし） |
+| `.claude/skills/gpu-server/fan-control/smc-fanctl.service` | **新規**: systemd unit（早期起動、停止時 Optimal 復帰） |
+| `.claude/skills/gpu-server/scripts/install-fan-control.sh` | **新規**: 両機への配布・有効化・削除 |
+| `.claude/skills/gpu-server/scripts/boot-quiet.sh` | **新規**: POST 中の duty 投入と RPM 記録 |
+| `.claude/skills/gpu-server/scripts/bmc-power.sh` | `on`/`reset`/`cycle` で boot-quiet を自動併走（`NO_BOOT_QUIET=1` で無効化） |
+| `.claude/skills/gpu-server/aws-gpu.md` | 「ファン制御」「BIOS 設定」節を新設、100GbE の永続化・DIMM・SAS HBA の注意を追記 |
+| `.claude/skills/gpu-server/SKILL.md` | デーモン常設・gpu01 の OPROM 禁止を注意事項に追記 |
+| `CLAUDE.md` | ファン静音化の要約とガード維持の方針を追記 |
+| サーバ側（git 外） | `/opt/smc-fanctl/`、`/etc/systemd/system/smc-fanctl.service`、`/etc/netplan/60-rpc-100gbe.yaml` |
+
 ## 副次発見
 
 1. **aws-gpu02 の POST に DIMM 不良の報告**: `Failing DIMM:DIMM location(Uncorrectable memory component found) / P2-DIMME1`。ただし BIOS の Total Memory は 98304MB で、OS も 94GiB を認識して稼働しており、EDAC は正常に初期化、カーネルログにメモリエラーの記録はない。**実害は現時点で観測されていないが追跡が必要**（[スクリーンショット](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/gpu02_post_failing_dimm.png)）
@@ -240,6 +354,15 @@ PXE 無効化の根拠は実測にある: gpu01 の POST 画面に `Initializing
 - **爆音ガードは現状維持**: 起動時の爆音は軽減したが消えていないため、`ALLOW_FAN_NOISE` の要求は CLAUDE.md / `bmc-power.sh` / `power-ctl.sh` でそのまま維持する
 - **より重い負荷での検証**: 今回の負荷は MoE の実運用推論（GPU 使用率 7–9%）。dense モデルや gpu-burn 相当で GPU 全数を長時間 100% にした場合の平衡温度は未確認
 - **カーブのチューニング余地**: 現在の下限 16% はユーザの体感で決めた値。夏季の室温上昇時に負荷試験を再実施して妥当性を再確認する
+- **プランに含めていたが未実施の検証**:
+  - **`mc reset cold` 後に fan mode が保持されるかの確認**（BMC の不揮発領域に残るか）。
+    BMC リセット自体が一時的にファンを全開にする可能性があり、実機前のユーザに追加の爆音を
+    負わせる判断ができなかったため見送った。デーモンは 60 秒ごとに mode を確認して Full を
+    再設定するので、消えていても実害はない見込み
+  - **AC 断後の挙動**（プランでも「行わない」としていた）
+- **`aws-gpu02` の BIOS 設定は変更後の再確認をしていない**: 保存して起動した時点で正常動作は
+  確認したが、BIOS 画面に戻って設定値が保持されているかは見ていない（gpu01 は復旧作業で
+  再度 BIOS に入ったため確認済み）
 
 ## 参照レポート
 
