@@ -1,0 +1,38 @@
+The function has a logical bug in how it counts repeated characters.
+
+**Bug:**  
+The code increments `count` every time a character is seen again, regardless of whether that character has already been counted as repeated. This counts the **total number of extra occurrences** beyond the first for each character, not the **number of distinct characters** that appear more than once.
+
+**Example:**  
+For `s = "aaabbb"`, the function returns `4` (because 'a' is counted twice and 'b' is counted twice), but the correct answer is `2` (only 'a' and 'b' are distinct characters that repeat).
+
+**Why it's a bug:**  
+The requirement is to count each character only once if its frequency is at least 2. The current logic counts every occurrence after the first, so characters with frequency > 2 are overcounted.
+
+**Corrected version:**  
+We can fix it by tracking which characters have already been counted as repeated, or by counting frequencies and then counting those with frequency > 1.
+
+```python
+def count_repeated(s):
+    seen = set()          # characters seen at least once
+    repeated = set()      # characters already counted as repeated
+    for c in s:
+        if c in seen:
+            if c not in repeated:
+                repeated.add(c)
+        else:
+            seen.add(c)
+    return len(repeated)
+```
+
+Alternatively, a more concise version using a frequency dictionary:
+
+```python
+def count_repeated(s):
+    freq = {}
+    for c in s:
+        freq[c] = freq.get(c, 0) + 1
+    return sum(1 for v in freq.values() if v > 1)
+```
+
+Both versions correctly return the number of distinct characters that appear more than once.

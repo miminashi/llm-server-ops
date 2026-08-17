@@ -24,11 +24,15 @@ Environment:
   RPC_DEVICES   公開する GPU を絞る場合に指定 (例: CUDA0,CUDA1)。
                 省略時はサーバ上の全 GPU を公開する。
   GGML_RPC_DEBUG=1  ワーカー側のデバッグログを有効化する。
+  RPC_CACHE=1   ローカルファイルキャッシュ (-c) を有効化する。ワーカー側
+                ~/.cache/llama.cpp/rpc/ に転送済みテンソルを保存し、同じモデルの
+                再ロードを速くする。ディスクを食う (aws-gpu02 は空き約 140GB)。
 
 Examples:
   rpc-up.sh                              # aws-gpu02 の全 GPU を 192.168.100.2:50052 で公開
   rpc-up.sh aws-gpu02 192.168.100.2 50052
   RPC_DEVICES=CUDA0,CUDA1 rpc-up.sh      # 2 枚だけ公開
+  RPC_CACHE=1 rpc-up.sh                  # 再ロードを速くする (未検証)
 EOF
   exit 1
 }
@@ -93,10 +97,20 @@ if [ "${GGML_RPC_DEBUG:-}" = "1" ]; then
   DEBUG_ENV="GGML_RPC_DEBUG=1 "
 fi
 
+# ローカルファイルキャッシュ (-c/--cache)。ワーカー側 ~/.cache/llama.cpp/rpc/ に
+# 転送済みテンソルを保存し、次回ロード時の RPC 転送を省く。
+# 大きなモデルの再ロードが速くなる代わりにワーカーのディスクを食う
+# (aws-gpu02 の空きは約 140GB = 1 モデル分しか入らない)。既定は無効。
+CACHE_OPT=""
+if [ "${RPC_CACHE:-}" = "1" ]; then
+  CACHE_OPT="-c"
+  echo "==> ローカルファイルキャッシュを有効化します (RPC_CACHE=1)"
+fi
+
 echo "==> $SERVER で $BIN を起動中... ($BIND_IP:$PORT)"
 # NOTE: 末尾に `disown` を付けてはいけない。非対話 bash では起動用シェルが終了せず
 #       SSH チャネルが開いたままになり、このスクリプトがハングする（実測）。
-ssh -n "$SERVER" "cd ~/llama.cpp && setsid nohup env ${DEBUG_ENV}./$BIN -H $BIND_IP -p $PORT $DEVICE_OPT > /tmp/rpc-server.log 2>&1 < /dev/null &" || true
+ssh -n "$SERVER" "cd ~/llama.cpp && setsid nohup env ${DEBUG_ENV}./$BIN -H $BIND_IP -p $PORT $DEVICE_OPT $CACHE_OPT > /tmp/rpc-server.log 2>&1 < /dev/null &" || true
 
 # --- LISTEN 検証 (最大 30 秒) ---
 for _ in $(seq 1 30); do

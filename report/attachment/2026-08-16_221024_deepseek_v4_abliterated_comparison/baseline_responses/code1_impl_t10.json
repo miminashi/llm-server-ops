@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nfrom typing import List, Tuple\n\ndef merge_intervals(intervals: List[Tuple[int, int]]) -> List[Tuple[int, int]]:\n    \"\"\"\n    Merges a list of intervals that overlap or touch at endpoints.\n    Returns a sorted list of non-overlapping merged intervals.\n    \"\"\"\n    if not intervals:\n        return []\n\n    # Sort intervals by start value\n    sorted_intervals = sorted(intervals, key=lambda x: x[0])\n\n    merged = [sorted_intervals[0]]\n\n    for start, end in sorted_intervals[1:]:\n        last_start, last_end = merged[-1]\n        if start <= last_end:\n            # Overlap or touch: merge\n            merged[-1] = (last_start, max(last_end, end))\n        else:\n            # Disjoint: add new interval\n            merged.append((start, end))\n\n    return merged\n\n# --- Tests ---\nassert merge_intervals([]) == []\n\nassert merge_intervals([(1, 2), (4, 5)]) == [(1, 2), (4, 5)]\n\nassert merge_intervals([(1, 10), (2, 3), (4, 5)]) == [(1, 10)]\n```",
+        "reasoning_content": "We need to write a Python function `merge_intervals(intervals)` that takes a list of tuples (start, end) and merges overlapping intervals, including those that touch at endpoints. Must return sorted list of merged intervals. Include type hints. Handle empty input. Add three assert-based tests covering empty list, already-disjoint intervals, and fully nested intervals. Output only the code.\n\nThe code should be self-contained, with function definition and test cases using assert. We'll include type hints for parameters and return type.\n\nLet's outline:\n\n- Define function with signature: def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:\n- If intervals is empty, return [].\n- Sort intervals by start.\n- Initialize merged list with first interval.\n- For each subsequent interval (start, end), compare with last merged interval:\n  - If start <= last_end: merge by setting last_end = max(last_end, end)\n  - else: append new interval.\n- Return merged list.\n\nBut careful: we need to ensure that intervals are tuples, but we'll treat them as immutable; we'll create new tuples.\n\nWe should also handle nested intervals like (1,9) and (2,5) which would merge to (1,9).\n\nAdd tests:\n\n1. empty list: assert merge_intervals([]) == []\n2. already-disjoint: assert merge_intervals([(1,2),(4,5)]) == [(1,2),(4,5)]\n3. fully nested: assert merge_intervals([(1,10),(2,3),(4,5)]) == [(1,10)]\n\nAlso test touching case: (1,3),(3,5) should merge to (1,5) - we can include that in one of the tests, but the instruction says three assert-based tests covering empty list, already-disjoint intervals, and fully nested intervals. So we'll stick to those three.\n\nWe'll add a main check? Not necessary, just write the function and tests.\n\nWrite only code, no extra text."
+      }
+    }
+  ],
+  "created": 1786887275,
+  "model": "DeepSeek-V4-Flash-0731-UD-Q4_K_XL",
+  "system_fingerprint": "b10451-10bf611e5",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 696,
+    "prompt_tokens": 106,
+    "total_tokens": 802,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "id": "chatcmpl-45uclfm9AKI0xDH41hqu5v5JBYYyWo1P",
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 106,
+    "prompt_ms": 1907.422,
+    "prompt_per_token_ms": 17.99454716981132,
+    "prompt_per_second": 55.5723903782173,
+    "predicted_n": 696,
+    "predicted_ms": 54405.027,
+    "predicted_per_token_ms": 78.28061438848921,
+    "predicted_per_second": 12.774554821928497
+  }
+}

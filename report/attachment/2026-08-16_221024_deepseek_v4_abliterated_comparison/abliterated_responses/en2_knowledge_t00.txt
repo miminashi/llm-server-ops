@@ -1,0 +1,23 @@
+The difference between write-back and write-through caches fundamentally comes down to **when** main memory is updated relative to the CPU's write operation. This single design choice has cascading effects on performance, data integrity, and system complexity.
+
+Here is a detailed breakdown covering the write path, eviction, power failure behavior, and multi-core coherence.
+
+---
+
+### 1. The Write Path
+
+**Write-Through Cache:**
+- **Operation:** When the CPU executes a write, the data is written to the cache line **and** simultaneously written to main memory. The write is not considered "complete" until the main memory controller acknowledges the write.
+- **Stall/Buffer:** Because main memory is much slower than the cache, the CPU often stalls waiting for the memory write to finish. To mitigate this, modern write-through caches use a **write buffer**. The CPU writes to the cache and the buffer, then continues; the buffer asynchronously drains the data to main memory. However, the CPU must still wait if the buffer is full.
+- **State:** The cache line is always **clean** (identical to memory) immediately after the write.
+
+**Write-Back Cache:**
+- **Operation:** When the CPU executes a write, the data is written **only** to the cache line. The line is marked as **dirty** (or "modified"). Main memory is not updated at this point.
+- **Stall:** The write completes as soon as the cache accepts the data. The CPU does not wait for memory, making writes significantly faster.
+- **State:** The cache line is **dirty** (contains data newer than main memory). Main memory now holds a stale copy.
+
+---
+
+### 2. What Happens on Eviction
+
+Eviction occurs when

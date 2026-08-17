@@ -1,0 +1,34 @@
+```python
+from typing import List, Tuple
+
+def merge_intervals(intervals: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
+    """
+    Merges a list of intervals that overlap or touch at endpoints.
+    Returns a sorted list of non-overlapping merged intervals.
+    """
+    if not intervals:
+        return []
+
+    # Sort intervals by start value
+    sorted_intervals = sorted(intervals, key=lambda x: x[0])
+
+    merged = [sorted_intervals[0]]
+
+    for start, end in sorted_intervals[1:]:
+        last_start, last_end = merged[-1]
+        if start <= last_end:
+            # Overlap or touch: merge
+            merged[-1] = (last_start, max(last_end, end))
+        else:
+            # Disjoint: add new interval
+            merged.append((start, end))
+
+    return merged
+
+# --- Tests ---
+assert merge_intervals([]) == []
+
+assert merge_intervals([(1, 2), (4, 5)]) == [(1, 2), (4, 5)]
+
+assert merge_intervals([(1, 10), (2, 3), (4, 5)]) == [(1, 10)]
+```

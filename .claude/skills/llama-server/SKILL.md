@@ -348,6 +348,20 @@ ssh -n aws-gpu02 "cd ~/llama.cpp && ./update_and_build.sh --no-pull --force"
 ビルドログに `RDMA transport enabled (auto-detected)` が出ていれば RDMA が使われる。
 RPC サーバのバイナリ名は現行 llama.cpp では **`ggml-rpc-server`**（古い版は `rpc-server`）。
 
+### モデルのダウンロード監視
+
+`monitor-download.sh` は llama.cpp の `-hf` 方式（`/home/llm/.cache/llama.cpp/*.downloadInProgress`）
+専用で、**aws-gpu01/02 では動かない**（ユーザが `ubuntu`、`hf download --local-dir ~/models/...` を
+使うため）。aws-gpu では代わりに `monitor-hf-download.sh` を使う。
+
+```bash
+.claude/skills/llama-server/scripts/monitor-hf-download.sh aws-gpu01 \
+  '~/models/<dir>' 164633502592     # 第3引数の期待バイト数は省略可
+```
+
+進捗・転送レート・ETA を出し、`hf download` プロセスの終了で自動的に止まる。ロック不要。
+期待サイズは HF API（`https://huggingface.co/api/models/<repo>/tree/main`）から取れる。
+
 ### RPC ワーカーの起動・停止
 
 ```bash
@@ -364,7 +378,17 @@ RPC サーバのバイナリ名は現行 llama.cpp では **`ggml-rpc-server`**�
 
 ### llama-server 側
 
-`start.sh` は RPC 未対応なので、現状は手動コマンドで起動する。
+`start.sh` は RPC 未対応。代わりに **`rpc-llama-up.sh`** を使う（起動完了の待機まで面倒を見る）。
+
+```bash
+.claude/skills/llama-server/scripts/rpc-llama-up.sh '~/models/<model>/<first-shard>.gguf' 131072
+```
+
+- 引数は `rpc-llama-up.sh <model-path> [ctx-size]`（ctx 既定 131072）
+- 環境変数: `SERVER` / `RPC` / `ALIAS` / `EXTRA_LLAMA_OPTS` / `WAIT_SECS` / `NO_WAIT=1`
+- 二重起動を検知して中止する。既定で `listening on` が出るまで待つ（最大 2400 秒）
+
+手で叩く場合は以下と等価:
 
 ```bash
 ssh -n aws-gpu01 'cd ~/llama.cpp && setsid nohup ./build/bin/llama-server \
@@ -382,6 +406,62 @@ ssh -n aws-gpu01 'cd ~/llama.cpp && setsid nohup ./build/bin/llama-server \
 - `--tensor-split` は原則指定しない（llama.cpp が空きメモリ比で自動配分する）。
   aws-gpu02 の 12GB 枚（index 3, 5）で偏りが出たときだけ手動指定する
 - 監視 UI は `ttyd-up.sh aws-gpu01` で別途立てる（`start.sh` を経由しないため自動起動しない）
+
+### RPC 構成でハマる 3 点（2026-08-17 実測）
+
+**1. `pgrep -f 'bin/llama-server'` は ssh 越しだと必ず真になる**
+
+`ssh <server> "pgrep -f 'bin/llama-server'"` はリモートで起動される bash 自身のコマンドラインに
+パターン文字列が含まれるため、**プロセスが 1 つも無くても自分自身にマッチして真を返す**。
+稼働判定が壊れるので、パターンは必ず `[b]in/llama-server` のように書く。
+
+**2. `abort` を失敗検出のパターンに入れない**
+
+`-ngl` を明示した正常起動でも
+`W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by
+user to 999, abort` が必ず出る。完了検出は `listening on`（成功）/
+`error|out of memory|terminate`（失敗）に限定すること。
+
+**3. モデルのロードは cold で 15 分かかる。page cache が命**
+
+144〜153 GiB を 13 GPU に配る初回ロードは **約 15 分**（2026-08-17 実測、ディスクから全量読み）。
+aws-gpu01 の RAM は 157 GiB なので **モデル 1 本だけがちょうど page cache に載る**。
+
+- 同じモデルを続けてロードすれば大幅に短縮される
+- **2 モデルを交互にロードする使い方（A/B 比較など）は毎回 cold** になる
+- 巨大モデルを **ダウンロードすると page cache が丸ごと流れる**。DL 直後のロードは必ず cold
+- `rpc-up.sh` に `RPC_CACHE=1` を付けるとワーカー側にテンソルキャッシュが残り、
+  RPC 転送分を省ける可能性がある（未検証。aws-gpu02 の空きは約 140GB で 1 モデル分のみ）
+
+### perplexity 計測との排他（重要）
+
+`llama-perplexity` は llama-server とは**別プロセス・別バイナリ**で、モデルを自前でロードする。
+同じ GPU の VRAM を食い合うため**同時に動かせない**。したがって ppl を測るたびに
+「llama-server 停止 → ppl 実行 → llama-server 再起動」となり、**15 分級のロードが 2 回**発生する。
+
+- llama-server 側に ppl を計算する API は**無い**。`/completion` の `n_probs` は
+  **生成トークン**の確率しか返さず、ppl に必要なプロンプト側 logprob は返らない
+- したがって **1 回のロードで測り切る**のが唯一の正攻法。`--chunks` を増やしてもロードは 1 回
+- `--rpc` は llama-perplexity でも使える（common オプションのため全 example で有効）
+
+```bash
+# llama-server を止めてから
+ssh -n aws-gpu01 "cd ~/llama.cpp && setsid nohup ./build/bin/llama-perplexity \
+  -m ~/models/<model>.gguf --rpc 192.168.100.2:50052 \
+  -ngl 999 -c 512 --chunks 40 -fa 1 \
+  -f ~/data/wikitext-2-raw/wiki.test.raw > /tmp/ppl.log 2>&1 < /dev/null &"
+```
+
+wikitext-2 は aws-gpu01 から直接取得できる（外部回線が速い）:
+
+```bash
+ssh aws-gpu01 "mkdir -p ~/data && cd ~/data && \
+  curl -sL https://huggingface.co/datasets/ggml-org/ci/resolve/main/wikitext-2-raw-v1.zip \
+  -o w.zip && unzip -o -q w.zip && rm -f w.zip"
+```
+
+**実測 (DeepSeek-V4-Flash, 13 GPU RPC, `-c 512 --chunks 40`)**: ロード 15 分 + 計算 4.5 分
+（26〜27 秒/pass）。ログは計算開始まで何も出ないので、進捗は `nvidia-smi` の VRAM で見る。
 
 ### mi25 のバックエンド切替（Vulkan 既定 / ROCm fallback）
 

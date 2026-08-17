@@ -1,0 +1,23 @@
+Here is a detailed breakdown of the differences between write-back and write-through CPU caches, covering the specific points you requested.
+
+### 1. The Write Path
+- **Write-Through**: When the CPU writes to a cache line, the cache is updated *and* the write is immediately forwarded to main memory (or the next level of cache). The CPU typically stalls until the memory write is acknowledged, though modern implementations use a small **write buffer** to decouple the CPU from the slow memory write, allowing the CPU to continue while the buffer drains.
+- **Write-Back**: When the CPU writes to a cache line, **only the cache is updated**. The line is marked as **dirty** (modified) in the cache metadata. Main memory is *not* updated at this point. The write completes as soon as the cache is updated, making it much faster for the CPU.
+
+### 2. What Happens on Eviction
+- **Write-Through**: Because main memory already holds the latest data, the cache line is always **clean**. When the line is evicted (replaced by another line), it is simply discarded. No memory traffic is generated during eviction.
+- **Write-Back**: If the evicted line is **dirty**, the cache must write the entire line back to main memory before discarding it. This adds latency to the eviction process (though this is often hidden by write buffers or prefetching). If the line is **clean** (not modified), it is discarded just like in write-through.
+
+### 3. Behaviour Under a Power Failure
+- **Write-Through**: Main memory is always up-to-date with the latest writes (assuming the write buffer has drained). If power is lost, the data in main memory is consistent with the last completed write. The cache contents are lost, but they were just copies of memory anyway. **Data is safe** (relative to the cache).
+- **Write-Back**: Dirty lines in the cache contain the *only* copy of the latest data. If power is lost, these dirty lines are lost, and main memory is left with stale data. This is a critical drawback. Systems using write-back caches often require battery-backed RAM, uninterruptible power supplies (UPS), or explicit cache-flushing instructions before shutdown to prevent data loss.
+
+### 4. Multi-Core Systems and Coherence Protocols (Which is Preferred and Why)
+**Write-back is overwhelmingly preferred** for multi-core systems with a coherence protocol (e.g., MESI, MOESI, MSI). Here is why:
+
+- **Reduced Bus Traffic**: In a multi-core system, the interconnect (bus or mesh) is a shared, scarce resource. Write-through forces *every* write to go to main memory, flooding the interconnect with traffic. Write-back keeps writes local to the cache, only sending data to memory on eviction. This drastically reduces memory bandwidth consumption and allows the system to scale to more cores.
+- **Coherence Protocol Efficiency**: Coherence protocols rely on tracking the state of each cache line (e.g., Modified, Exclusive, Shared, Invalid). The **Modified** state in protocols like MESI is specifically designed for write-back caches. When a core writes to a line, it transitions to Modified. If another core requests that line, the protocol handles a **cache-to-cache transfer** (snooping or directory-based) directly from the Modified cache, bypassing main memory entirely. This is much faster than forcing a write-through to memory first.
+- **Write-Through Complicates Coherence**: With write-through, every write goes to memory, which means the coherence protocol must snoop *every* write on the bus to invalidate other copies. This creates a massive bottleneck and makes the protocol slower and more complex. Write-back allows the protocol to be lazy—it only needs to invalidate other copies when a line is actually shared, and it can defer memory updates until eviction.
+- **Performance**: Write-back provides lower write latency (no waiting for memory) and higher throughput, which is essential for multi-core workloads that frequently share data.
+
+**When is Write-Through used?** It is sometimes used for specific memory regions (e.g., memory

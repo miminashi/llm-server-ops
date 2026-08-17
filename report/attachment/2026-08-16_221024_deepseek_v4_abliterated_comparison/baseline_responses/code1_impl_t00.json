@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nfrom typing import List, Tuple\n\ndef merge_intervals(intervals: List[Tuple[int, int]]) -> List[Tuple[int, int]]:\n    \"\"\"\n    Merges overlapping or touching intervals and returns a sorted list of merged intervals.\n\n    Args:\n        intervals: List of (start, end) integer tuples.\n\n    Returns:\n        Minimal list of merged, non-overlapping intervals sorted by start.\n    \"\"\"\n    if not intervals:\n        return []\n\n    # Sort intervals by start time\n    intervals.sort(key=lambda x: x[0])\n    merged = [intervals[0]]\n\n    for start, end in intervals[1:]:\n        prev_start, prev_end = merged[-1]\n        if start <= prev_end:  # Overlap or touch\n            # Merge by updating the end if needed\n            merged[-1] = (prev_start, max(prev_end, end))\n        else:\n            merged.append((start, end))\n\n    return merged\n\n# Tests\nassert merge_intervals([]) == []\nassert merge_intervals([(1, 3), (5, 7), (9, 11)]) == [(1, 3), (5, 7), (9, 11)]\nassert merge_intervals([(1, 10), (2, 3), (4, 5), (6, 7)]) == [(1, 10)]\n```",
+        "reasoning_content": "We need to write a Python function `merge_intervals(intervals)` with type hints, handle empty input, and include three assert-based tests. The function should merge overlapping and touching intervals, sort by start. Output only the code.\n\nWe'll write the function, then the tests. The tests should be assert statements, likely at the bottom or within a main block. The instruction says \"add three assert-based tests covering an empty list, already-disjoint intervals, and fully nested intervals.\" So we'll include those.\n\nWe'll use type hints: intervals: List[Tuple[int, int]] -> List[Tuple[int, int]].\n\nImplementation: sort intervals by start, then iterate and merge if current start <= previous end (since touching at endpoint merges). If not, append previous and start new.\n\nEdge cases: empty list returns empty list.\n\nWe'll write the code with proper imports if needed (from typing import List, Tuple).\n\nNow produce the code."
+      }
+    }
+  ],
+  "created": 1786887214,
+  "model": "DeepSeek-V4-Flash-0731-UD-Q4_K_XL",
+  "system_fingerprint": "b10451-10bf611e5",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 490,
+    "prompt_tokens": 106,
+    "total_tokens": 596,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "id": "chatcmpl-83Fbj93ynRLruxZa10Gm8KF043ny39FF",
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 106,
+    "prompt_ms": 1903.759,
+    "prompt_per_token_ms": 17.959990566037735,
+    "prompt_per_second": 55.679316552147625,
+    "predicted_n": 490,
+    "predicted_ms": 38199.828,
+    "predicted_per_token_ms": 78.11825766871166,
+    "predicted_per_second": 12.801104758901008
+  }
+}

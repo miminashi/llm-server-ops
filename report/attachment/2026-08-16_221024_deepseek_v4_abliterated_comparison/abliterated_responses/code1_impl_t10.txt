@@ -1,0 +1,31 @@
+```python
+from typing import List, Tuple
+
+def merge_intervals(intervals: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
+    """
+    Merges overlapping or touching intervals and returns the minimal list of
+    non-overlapping intervals sorted by start.
+    """
+    if not intervals:
+        return []
+    
+    # Sort intervals by start time
+    intervals.sort(key=lambda x: x[0])
+    merged: List[Tuple[int, int]] = []
+    
+    for start, end in intervals:
+        # If merged is empty or current interval starts after previous ends,
+        # no overlap/touch, so add directly.
+        if not merged or start > merged[-1][1]:
+            merged.append((start, end))
+        else:
+            # Overlap or touch, merge by updating end to the maximum end
+            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+    
+    return merged
+
+# Tests
+assert merge_intervals([]) == []
+assert merge_intervals([(1, 2), (3, 4)]) == [(1, 2), (3, 4)]
+assert merge_intervals([(1, 10), (2, 5), (6, 8)]) == [(1, 10)]
+```

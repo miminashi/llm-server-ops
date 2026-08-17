@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```python\nfrom typing import List, Tuple\n\ndef merge_intervals(intervals: List[Tuple[int, int]]) -> List[Tuple[int, int]]:\n    \"\"\"\n    Merges overlapping or touching intervals and returns the minimal list of\n    non-overlapping intervals sorted by start.\n    \"\"\"\n    if not intervals:\n        return []\n    \n    # Sort intervals by start time\n    intervals.sort(key=lambda x: x[0])\n    merged: List[Tuple[int, int]] = []\n    \n    for start, end in intervals:\n        # If merged is empty or current interval starts after previous ends,\n        # no overlap/touch, so add directly.\n        if not merged or start > merged[-1][1]:\n            merged.append((start, end))\n        else:\n            # Overlap or touch, merge by updating end to the maximum end\n            merged[-1] = (merged[-1][0], max(merged[-1][1], end))\n    \n    return merged\n\n# Tests\nassert merge_intervals([]) == []\nassert merge_intervals([(1, 2), (3, 4)]) == [(1, 2), (3, 4)]\nassert merge_intervals([(1, 10), (2, 5), (6, 8)]) == [(1, 10)]\n```",
+        "reasoning_content": "We need to write a Python function merge_intervals(intervals) that takes a list of (start, end) integer tuples and returns the minimal list of merged, non-overlapping intervals sorted by start. Intervals touching at an endpoint must be merged. Include type hints, handle empty input, add three assert-based tests covering empty list, already-disjoint intervals, fully nested intervals. Output only the code.\n\nWe need to output only the code. We'll write the function with type hints, implement merging logic, and include the tests in the code? The instruction says \"add three assert-based tests covering...\" So we should include those tests in the code, probably at the end or as part of the module. However, output only the code, so we can include the function and then the tests under if __name__ == \"__main__\": or just as assert statements. Since they want assert-based tests, we can directly write assert calls, but better to put them in a test function or simply assert at the end.\n\nGiven the instruction \"Output only the code\", we'll write a complete script with the function and then the assert tests. We'll make sure to include type hints (from typing import List, Tuple). The merge logic: sort intervals by start, then iterate, merging if current start <= previous end (since touching at endpoint merges, we use <=). If overlapping, we update end to max. Also, need to handle empty input: return [].\n\nWe'll write:\n\ndef merge_intervals(intervals: List[Tuple[int, int]]) -> List[Tuple[int, int]]:\n    if not intervals:\n        return []\n    # Sort by start\n    intervals.sort(key=lambda x: x[0])\n    merged = []\n    for start, end in intervals:\n        if not merged or start > merged[-1][1]:\n            merged.append((start, end))\n        else:\n            merged[-1] = (merged[-1][0], max(merged[-1][1], end))\n    return merged\n\nBut careful: we need to modify the list in-place? Not necessary, but sorting may alter input. That's fine.\n\nNow tests: assert merge_intervals([]) == [], assert merge_intervals([(1,2),(3,4)]) == [(1,2),(3,4)] (already disjoint), assert merge_intervals([(1,10),(2,5),(6,8)]) == [(1,10)] (fully nested).\n\nWe'll add these assertions.\n\nWe'll also include import for typing.\n\nLet's write the code."
+      }
+    }
+  ],
+  "created": 1786894285,
+  "model": "DeepSeek-V4-Flash-0731-abliterated-Q4_K",
+  "system_fingerprint": "b10451-10bf611e5",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 807,
+    "prompt_tokens": 106,
+    "total_tokens": 913,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "id": "chatcmpl-LNLYXJySwvGMsjfoHBwuLlPqb3UrqEBB",
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 106,
+    "prompt_ms": 2124.088,
+    "prompt_per_token_ms": 20.03856603773585,
+    "prompt_per_second": 49.90377046525379,
+    "predicted_n": 807,
+    "predicted_ms": 64560.821,
+    "predicted_per_token_ms": 80.10027419354839,
+    "predicted_per_second": 12.484351771177135
+  }
+}
