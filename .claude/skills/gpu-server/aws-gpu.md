@@ -97,11 +97,16 @@ mi25 の Unique ID 運用（[CLAUDE.md](../../../CLAUDE.md) 参照）に相当�
   Deasserted）。登録時点では 4 台とも `ok`。再発時はこの履歴と突き合わせること。
 - **aws-gpu02: FAN7 が `No Reading` (ns)**。他 7 個は 4700-5200 RPM で正常。ファン未実装か
   センサー故障かは未確認。BMC の温度は全系統正常値。ファン fail 検知による全開化は起きていない。
-- **aws-gpu02: POST に DIMM 不良の報告**（2026-08-17 に KVM で確認）。
-  `Failing DIMM:DIMM location(Uncorrectable memory component found) / P2-DIMME1`。
-  ただし BIOS の Total Memory は 98304MB、OS も 94GiB を認識して稼働しており、EDAC は正常に
-  初期化、カーネルログにメモリエラーの記録もない。**実害は未観測だが追跡対象**
-  （BIOS の Event Logs / `edac-util` / MCE を折を見て確認する）。
+- **aws-gpu02: POST に DIMM 不良の報告が出るが、該当スロットは空**（2026-08-18 に確認）。
+  POST 画面に `Failing DIMM:DIMM location(Uncorrectable memory component found) / P2-DIMME1`
+  が出るものの、**実装されている DIMM は `P1_DIMMA1/A2/A3` の 32GB × 3（96GB）だけで、
+  `P2_DIMME1` を含む他 11 スロットは "No Module Installed"**。EDAC の CE/UE も 0、SEL にも
+  メモリ関連イベントなし。**BIOS が過去の故障情報を表示し続けているだけで実害はない**
+  （比較: aws-gpu01 は `P1_DIMMA1/A2/A3` + `P2_DIMME1/E2` の 32GB × 5＝160GB）。
+- **aws-gpu02 は CPU2 側にメモリが無く NUMA が片寄っている**: 上記の帰結で
+  `numactl --hardware` の **node1 size = 0 MB**（gpu01 は node0 96,540MB / node1 64,500MB）。
+  GPU のうち `84/88/89:00.0` の 3 枚は CPU2 側にぶら下がるため、ホスト↔デバイス転送が
+  QPI 経由になる。既存の性能実測はすべてこの構成での値（増設の効果は未検証）。
 - **aws-gpu01 のブートディスクは SAS HBA（拡張カード）経由**。BIOS でスロット OPROM を
   無効化すると起動しなくなる（下記「BIOS 設定」参照）。aws-gpu02 はオンボード SATA ブート。
 - **aws-gpu02 の VRAM は不均等**（16/16/16/12/16/12 GB）。t120h-p100 の
@@ -346,14 +351,28 @@ POST を短くして爆音区間を縮めるための変更。**BIOS に fan 関
 **触ってはいけない項目**: `Above 4G Decoding` (Enabled)、`MMIO High Size` (512G)、
 `Onboard Video OPROM` (Legacy)、`VGA Priority` (Onboard)。
 
-#### ⚠️ aws-gpu01 でスロット OPROM を無効化してはいけない
+#### ⚠️ aws-gpu01 でスロット OPROM を全部無効化してはいけない
 
-**aws-gpu01 のブートディスクは SAS HBA（拡張カード）経由**なので、スロット OPROM を Disabled に
-すると BIOS がブートデバイスを見失い **EFI Shell に落ちて起動しない**（2026-08-17 に実際に発生）。
+**aws-gpu01 のブートディスクは SAS HBA（拡張カード、`82:00.0` LSI MegaRAID SAS-3 3108）経由**
+なので、スロット OPROM を全部 Disabled にすると BIOS がブートデバイスを見失い
+**EFI Shell に落ちて起動しない**（2026-08-17 に実際に発生）。
 aws-gpu02 はオンボード SATA (`/dev/sda2`) ブートなので同じ変更でも問題ない。
 
-将来 gpu01 でも POST を短縮したい場合は、**SAS HBA が挿さっているスロットだけ Legacy に残し、
-他を Disabled にする**こと（スロット特定は OS 上で `lspci -tv` から辿る）。
+**aws-gpu01 のスロット ↔ デバイス対応**（`dmidecode -t 9` と `lspci` の突合、2026-08-18）:
+
+| BIOS のスロット項目 | BDF | デバイス |
+|---|---|---|
+| CPU1 SLOT3 / 4 / 5 | 08 / 07 / 05:00.0 | Tesla P100 |
+| CPU1 SLOT9 / 10 / 11 / 12 | 0d / 0f / 0e / 0c:00.0 | Tesla P100 |
+| CPU1 SLOT8 | 0b:00.0 | Mellanox ConnectX-4（100GbE） |
+| CPU1 SLOT1 | 09:00.0 | PLX PCIe スイッチ |
+| CPU1 SLOT2 / 7、CPU2 SLOT6 | — | 空き |
+| **（SMBIOS のスロット一覧に無い）** | **82:00.0** | **LSI MegaRAID SAS-3 ＝ ブートディスク** |
+
+SAS HBA は SMBIOS のスロット一覧に現れない（内部 AOC 扱い）ため、BIOS のどの項目に対応するかは
+特定できない。したがって gpu01 で POST を短縮したい場合は
+**GPU が載る 7 スロット (SLOT3,4,5,9,10,11,12) だけを Disabled にし、残りは Legacy のまま**
+にすること。
 
 #### BIOS に確実に入る方法
 
