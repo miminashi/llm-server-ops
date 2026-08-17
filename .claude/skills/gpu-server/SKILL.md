@@ -28,7 +28,15 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu0
 
 **aws-gpu01 / aws-gpu02 の注意事項**:
 - **起動時にファンが爆音になるため、ユーザの明確な指示なしにリブート・電源投入・電源断を行わない**
-  （`bmc-power.sh` / `power-ctl.sh` が `ALLOW_FAN_NOISE=1` なしの電源操作を exit 20 で拒否する）
+  （`bmc-power.sh` / `power-ctl.sh` が `ALLOW_FAN_NOISE=1` なしの電源操作を exit 20 で拒否する）。
+  2026-08-17 に静音化を実施し**定常運転は 6,500→2,900rpm** になったが、
+  **POST 中の爆音は BMC が制御を手放さないため消せていない**のでガードは維持する
+- **温度連動ファン制御 `smc-fanctl` が両機に常設されている**（fan mode = Full 固定 + duty 制御）。
+  fan mode を手で Optimal に戻すとデーモンが Full に戻す。停止したいときは
+  `sudo systemctl stop smc-fanctl`（停止時に自動で Optimal に復帰する）。
+  詳細は [aws-gpu.md の「ファン制御」節](./aws-gpu.md)
+- **aws-gpu01 で BIOS のスロット OPROM を無効化してはいけない**（ブートディスクが SAS HBA
+  経由のため起動不能になる。2026-08-17 に発生・復旧済み）
 - ワークステーションと**同一拠点**にあり通信が速い（RTT 0.3ms、約100MB/s）。
   モデルは **HF から直接ダウンロード**するのが原則（WS 経由より速い）
 - SSH ユーザは `ubuntu`（既存3台は `llm`）

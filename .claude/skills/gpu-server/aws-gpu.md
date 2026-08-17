@@ -96,7 +96,14 @@ mi25 の Unique ID 運用（[CLAUDE.md](../../../CLAUDE.md) 参照）に相当�
 - **aws-gpu01: SEL に PSU 故障履歴**（2026-02-23 に PS #0xc4-0xc7 が Asserted → 数分で
   Deasserted）。登録時点では 4 台とも `ok`。再発時はこの履歴と突き合わせること。
 - **aws-gpu02: FAN7 が `No Reading` (ns)**。他 7 個は 4700-5200 RPM で正常。ファン未実装か
-  センサー故障かは未確認。BMC の温度は全系統正常値。
+  センサー故障かは未確認。BMC の温度は全系統正常値。ファン fail 検知による全開化は起きていない。
+- **aws-gpu02: POST に DIMM 不良の報告**（2026-08-17 に KVM で確認）。
+  `Failing DIMM:DIMM location(Uncorrectable memory component found) / P2-DIMME1`。
+  ただし BIOS の Total Memory は 98304MB、OS も 94GiB を認識して稼働しており、EDAC は正常に
+  初期化、カーネルログにメモリエラーの記録もない。**実害は未観測だが追跡対象**
+  （BIOS の Event Logs / `edac-util` / MCE を折を見て確認する）。
+- **aws-gpu01 のブートディスクは SAS HBA（拡張カード）経由**。BIOS でスロット OPROM を
+  無効化すると起動しなくなる（下記「BIOS 設定」参照）。aws-gpu02 はオンボード SATA ブート。
 - **aws-gpu02 の VRAM は不均等**（16/16/16/12/16/12 GB）。t120h-p100 の
   `--tensor-split 11,12,13,14` 系プロファイルはそのまま流用できない。
 
@@ -139,6 +146,19 @@ SKILL.md](../llama-server/SKILL.md) の「RPC 分散構成」節）。
 llama.cpp は cmake 時に `libibverbs` を検出すると **`RDMA transport enabled
 (auto-detected)`** を出し、RPC が TCP でなく RoCEv2 で通信する（コマンドラインの
 変更は不要）。
+
+**永続化について（2026-08-17）**: この 100GbE は当初 netplan に登録されておらず手動設定
+（`ip addr add` + `ip link set up`）だったため、**再起動すると IP とリンクが消えていた**
+（gpu02 の再起動で実際に失われ、gpu01 側も `No partner detected` になった）。
+`/etc/netplan/60-rpc-100gbe.yaml` を両機に置いて永続化済み（既存の `50-cloud-init.yaml`
+＝管理系 10.8.2.x は触っていない）。gpu01 の再起動で自動復帰を検証した。
+
+```bash
+# 永続化の確認
+ssh aws-gpu01 "sudo cat /etc/netplan/60-rpc-100gbe.yaml; ip -br addr show enp11s0np0"
+# 万一消えていた場合の手動復旧
+ssh aws-gpu02 "sudo ip link set enp4s0np0 mtu 9000; sudo ip addr add 192.168.100.2/24 dev enp4s0np0; sudo ip link set enp4s0np0 up"
+```
 
 ## ソフトウェア導入状況（2026-08-16 時点）
 
@@ -183,6 +203,145 @@ llama.cpp は cmake 時に `libibverbs` を検出すると **`RDMA transport ena
 
 # 認証情報の再登録が必要になった場合（既定 IP は bmc-setup.sh に登録済み）
 .claude/skills/gpu-server/scripts/bmc-setup.sh aws-gpu01 10.11.12.1 claude <pass>
+```
+
+## ファン制御（静音化）
+
+2026-08-17 に静音化を実施した。**アイドル 6500rpm → 2900rpm**（duty 50% → 16%）。
+恒久化のため両機に温度連動デーモン `smc-fanctl` を常設している。
+
+### BMC のファン制御と 4 つの zone
+
+| 項目 | 値 |
+|---|---|
+| fan mode 取得 / 設定 | `raw 0x30 0x45 0x00` / `raw 0x30 0x45 0x01 <mode>` |
+| mode 値 | `00`=Standard `01`=Full `02`=Optimal `04`=HeavyIO |
+| duty 取得 / 設定 | `raw 0x30 0x70 0x66 0x00 <zone>` / `raw 0x30 0x70 0x66 0x01 <zone> <duty>` |
+| cooling zone | **0,1,2,3 の 4 つ**（zone4 以降は `01` を返し無効）。全 zone に同じ値を入れる運用 |
+| FAN ↔ zone | zone0=FAN1,2 / zone1=FAN3,4 / zone2,3=FAN5,6,7,8（1 zone あたり 2 個） |
+| FAN 下限閾値 | LNR 300 / LCR 500 / **LNC 700 rpm**（これを割ると BMC が override する） |
+
+**duty ↔ RPM の実測**（両機ほぼ共通）:
+
+| duty | 8% | 12% | 16% | 24% | 32% | 50%（BMC 既定） | 100% |
+|---|---|---|---|---|---|---|---|
+| RPM | 2100 | 2500 | **2900** | 3800 | 4600 | 6300–6800 | 11900 |
+
+### 最重要: duty 指定には Full mode が必要
+
+X10 系 BMC は **fan mode が Full(0x01) のときだけ手動 duty を保持する**。Optimal/Standard
+では BMC が数十秒〜数分で自分の目標値に書き戻す。一方 **Full mode 中は BMC の自動制御が
+止まる**ので、温度が上がってもファンは上がらない。そのため:
+
+- **Full mode に固定するなら、温度を見て duty を決めるソフトウェアが必須**
+- 制御プロセスを止めるときは必ず **Optimal(0x02) に戻す**（BMC に制御を返す）
+
+また **Full へ切り替えた直後、BMC は非同期に全 zone を 100% へ書き戻す**。切替の直後に
+duty を書くと上書きされるので **5 秒ほど待ってから書き、以後も duty を照合して修復する**
+必要がある（`smc-fanctl` はこれを実装している）。
+
+**BMC の Optimal 制御は負荷時に duty 68–70%（8000–9000rpm）まで上げる。**
+これが「起動後もうるさい」の主因だった。
+
+### smc-fanctl（温度連動デーモン）
+
+実装は [fan-control/smc-fanctl.py](./fan-control/smc-fanctl.py)、unit は
+[fan-control/smc-fanctl.service](./fan-control/smc-fanctl.service)。導入・削除:
+
+```bash
+# 導入（ipmitool 導入 → /opt/smc-fanctl 配置 → systemd enable --now）
+.claude/skills/gpu-server/scripts/install-fan-control.sh all
+
+# 削除（サービス停止時に fan mode は Optimal に戻る）
+.claude/skills/gpu-server/scripts/install-fan-control.sh aws-gpu01 --uninstall
+
+# 状態確認
+ssh aws-gpu01 "systemctl status smc-fanctl --no-pager; sudo journalctl -u smc-fanctl -n 20 --no-pager"
+```
+
+- in-band IPMI（`/dev/ipmi0`）を使うのでネットワーク不要。10 秒周期
+- `CPU1/2 Temp` / `GPU1-10 Temp` / `System`・`Peripheral` / `PCH` をそれぞれのカーブに通し、
+  **最も高い duty を採用**。下げるときは 3℃ のヒステリシスを取る
+- 下限は **16%**（8% はアイドルでも CPU が 61℃ まで上がり続けたため採用しない）
+- 毎周期 duty を読み戻し、BMC に書き戻されていたら**自己修復**する
+- フェイルセーフ: 停止時・IPMI 連続失敗時・critical 温度（CPU/GPU 85℃）で **Optimal に復帰**
+
+### 緊急時: BMC の自動制御に戻す
+
+デーモンが暴走した、あるいは冷却が不安なときは、これで BMC に制御を返せる（即時・OS 不要）:
+
+```bash
+# WS から（lanplus）
+source ~/.config/gpu-server/.env
+ipmitool -I lanplus -H "$BMC_AWS_GPU01_HOST" -U "$BMC_AWS_GPU01_USER" -P "$BMC_AWS_GPU01_PASS" \
+  raw 0x30 0x45 0x01 0x02
+
+# サーバ上から（in-band）
+ssh aws-gpu01 "sudo systemctl stop smc-fanctl; sudo ipmitool -I open raw 0x30 0x45 0x01 0x02"
+```
+
+### 起動（POST）中の爆音 — 完全には消せない
+
+電源投入から OS 起動までは BMC が全ファンを 100%（11900rpm）で回す。BMC は POST 中も IPMI を
+受け付けるが、**ファン制御を手放さず duty を 100% に書き戻し続けるため、外部からの投入は
+競り負ける**（2026-08-17 実測）。抑制と記録を行うのが
+[scripts/boot-quiet.sh](./scripts/boot-quiet.sh)。
+
+| 条件 | POST 中 FAN1-8 平均の中央値 |
+|---|---|
+| 2 秒間隔投入・BIOS 変更前 | 5,386 rpm |
+| 0.5 秒間隔投入・BIOS 変更前 | 5,243 rpm |
+| **0.5 秒間隔投入・BIOS 変更後** | **3,700 rpm** |
+
+```bash
+# 抑制しながら RPM を記録（電源操作の直前にバックグラウンドで開始する）
+BOOT_QUIET_WRITE_INTERVAL=0.5 .claude/skills/gpu-server/scripts/boot-quiet.sh aws-gpu02 0x10 420 &
+ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu02 reset
+
+# 抑制せず記録のみ（比較用）
+.claude/skills/gpu-server/scripts/boot-quiet.sh aws-gpu02 --observe 420
+```
+
+**起動後は速い**: `smc-fanctl` は OS 起動から **10〜26 秒でサービス開始、14〜44 秒で duty 適用**
+（`After=sysinit.target` の早期起動）。爆音区間は「電源投入〜OS 起動＋十数秒」に限られる。
+
+**爆音が消えたわけではないので、`bmc-power.sh` / `power-ctl.sh` の `ALLOW_FAN_NOISE` ガードは
+維持する。**
+
+### BIOS 設定（2026-08-17 に変更した項目）
+
+POST を短くして爆音区間を縮めるための変更。**BIOS に fan 関連の設定項目は存在しない**
+（Advanced 配下と IPMI タブを全確認。X10 のファン制御は BMC 専管で、`Fast Boot` 相当も無い）。
+
+| 項目 | 変更 | aws-gpu01 | aws-gpu02 |
+|---|---|---|---|
+| `Advanced → Boot Feature → Wait For "F1" If Error` | Enabled → **Disabled** | ✓ | ✓ |
+| `Advanced → PCIe/PCI/PnP → Onboard LAN 1 OPROM` | PXE → **Disabled** | ✓ | ✓ |
+| 同 → `CPU* Slot* PCI-E OPROM` | Legacy → Disabled | **✗ 起動不能。Legacy のまま** | ✓（11 スロット） |
+
+**触ってはいけない項目**: `Above 4G Decoding` (Enabled)、`MMIO High Size` (512G)、
+`Onboard Video OPROM` (Legacy)、`VGA Priority` (Onboard)。
+
+#### ⚠️ aws-gpu01 でスロット OPROM を無効化してはいけない
+
+**aws-gpu01 のブートディスクは SAS HBA（拡張カード）経由**なので、スロット OPROM を Disabled に
+すると BIOS がブートデバイスを見失い **EFI Shell に落ちて起動しない**（2026-08-17 に実際に発生）。
+aws-gpu02 はオンボード SATA (`/dev/sda2`) ブートなので同じ変更でも問題ない。
+
+将来 gpu01 でも POST を短縮したい場合は、**SAS HBA が挿さっているスロットだけ Legacy に残し、
+他を Disabled にする**こと（スロット特定は OS 上で `lspci -tv` から辿る）。
+
+#### BIOS に確実に入る方法
+
+**Delete 連打は POST のタイミング次第で外れる**（両機で何度も失敗した）。KVM 経由の
+EFI Shell からの `exit` も効かない。次回起動を BIOS Setup に固定するのが確実:
+
+```bash
+source ~/.config/gpu-server/.env
+ipmitool -I lanplus -H "$BMC_AWS_GPU01_HOST" -U "$BMC_AWS_GPU01_USER" -P "$BMC_AWS_GPU01_PASS" \
+  chassis bootdev bios
+ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu01 reset
+# 約 2 分後に bmc-screenshot.sh / bmc-kvm.py で Setup 画面が見える
 ```
 
 ## 未検証事項

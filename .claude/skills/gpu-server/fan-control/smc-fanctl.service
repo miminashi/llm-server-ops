@@ -1,0 +1,35 @@
+[Unit]
+Description=Supermicro X10 temperature-aware fan control (aws-gpu01/02)
+Documentation=file:///opt/smc-fanctl/README.md
+# in-band IPMI (/dev/ipmi0) しか使わないのでネットワークを待つ必要がない。
+# 起動時の爆音を早く終わらせるため、可能な限り早い段階で走らせる。
+After=sysinit.target local-fs.target
+Before=multi-user.target
+DefaultDependencies=no
+Conflicts=shutdown.target
+Before=shutdown.target
+# 復帰不能なほど再起動を繰り返す場合は諦める（ExecStopPost で Optimal に戻り BMC に任せる）
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/smc-fanctl/smc-fanctl.py --transport open --interval 10
+# 停止時は必ず BMC の自動制御 (Optimal) に戻す。Full mode のまま放置すると
+# duty が固定されたまま誰も冷却を制御しない状態になるため。
+ExecStopPost=-/usr/bin/ipmitool -I open raw 0x30 0x45 0x01 0x02
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+Nice=-5
+# 保護（IPMI デバイスと ipmitool 実行だけできれば十分）
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+NoNewPrivileges=yes
+DeviceAllow=/dev/ipmi0 rw
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
