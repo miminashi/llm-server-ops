@@ -293,14 +293,38 @@ ssh aws-gpu01 "sudo systemctl stop smc-fanctl; sudo ipmitool -I open raw 0x30 0x
 | 0.5 秒間隔投入・BIOS 変更前 | 5,243 rpm |
 | **0.5 秒間隔投入・BIOS 変更後** | **3,700 rpm** |
 
+**`bmc-power.sh` が自動で併走させる**（2026-08-17 追加）。`on` / `reset` / `cycle` を
+aws-gpu01/02 に対して実行すると `boot-quiet.sh` がバックグラウンドで起動し、
+**サーバ側の `smc-fanctl.service` の稼働を検知したら自分で終了して制御を引き渡す**
+（実測 68〜73 秒で引き渡し）。手動で起動する必要はない。
+
 ```bash
-# 抑制しながら RPM を記録（電源操作の直前にバックグラウンドで開始する）
-BOOT_QUIET_WRITE_INTERVAL=0.5 .claude/skills/gpu-server/scripts/boot-quiet.sh aws-gpu02 0x10 420 &
+# これだけで起動中の抑制がかかる（ログは /tmp/boot-quiet-<server>.log）
 ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu02 reset
 
-# 抑制せず記録のみ（比較用）
+# 抑制を止めたい / duty や秒数を変えたい
+NO_BOOT_QUIET=1 ALLOW_FAN_NOISE=1 .../bmc-power.sh aws-gpu02 reset
+BOOT_QUIET_DUTY=0x18 BOOT_QUIET_SECS=600 ALLOW_FAN_NOISE=1 .../bmc-power.sh aws-gpu02 reset
+
+# 単体で使う（抑制せず記録のみ = 比較用）
 .claude/skills/gpu-server/scripts/boot-quiet.sh aws-gpu02 --observe 420
 ```
+
+#### fan mode は書き直さない設計（重要）
+
+`boot-quiet.sh` は **duty のみ毎周期投げ直し、fan mode は「Full でなければ設定する」に留める**
+（既定 10 秒ごとに確認）。**毎周期 `fan mode = Full` を書き直すと、そのたびに BMC が全 zone を
+100% にリセットするため、抑制するどころか自分で回転を上げてしまう**。
+
+稼働中の aws-gpu01 で実測した比較（duty はどちらも 16% 指定）:
+
+| 実装 | 併走中の RPM | smc-fanctl 側の duty 書き戻し警告 |
+|---|---|---|
+| 毎周期 mode を書き直す（修正前） | **2,200〜9,200 rpm に振動** | 2 回 |
+| mode は確認のみ（修正後） | **2,900 rpm で安定** | 0 回 |
+
+上の POST 中の測定値（中央値 3,700rpm など）は**修正前の実装**で採ったものなので、
+修正後はさらに下がる可能性がある（次回の再起動時に測り直す）。
 
 **起動後は速い**: `smc-fanctl` は OS 起動から **10〜26 秒でサービス開始、14〜44 秒で duty 適用**
 （`After=sysinit.target` の早期起動）。爆音区間は「電源投入〜OS 起動＋十数秒」に限られる。

@@ -31,6 +31,13 @@
 #   on/off/soft/reset/cycle は ALLOW_FAN_NOISE=1 が無い限り exit 20 で拒否する。
 #   status は読み取りのみなので常に許可。
 #
+# 起動時のファン抑制 (boot-quiet の自動併走):
+#   FAN_LOUD_SERVERS に対して on/reset/cycle を実行するとき、boot-quiet.sh を
+#   バックグラウンドで自動起動して POST 中の回転数を抑える。POST 中の BMC は
+#   ファン制御を手放さず duty を 100% に書き戻すため完全には抑えられないが、
+#   平均回転数は下がる (2026-08-17 実測: 中央値 5,386 → 3,700rpm)。
+#   NO_BOOT_QUIET=1 で無効化。duty/秒数は BOOT_QUIET_DUTY / BOOT_QUIET_SECS で変更可。
+#
 # 例:
 #   .claude/skills/gpu-server/scripts/bmc-power.sh mi25 status
 #   .claude/skills/gpu-server/scripts/bmc-power.sh mi25 reset
@@ -74,6 +81,33 @@ guard_fan_noise() {
 }
 
 guard_fan_noise "$SERVER" "$ACTION"
+
+# 爆音サーバの電源投入時に boot-quiet.sh を併走させ、POST 中の回転数を抑える。
+# 電源が入る直前に呼ぶこと（boot-quiet は BMC に Full + 低 duty を投げ続ける）。
+start_boot_quiet() {
+    local server="$1" script log pidfile
+    echo "$FAN_LOUD_SERVERS" | grep -qw "$server" || return 0
+    [[ "${NO_BOOT_QUIET:-}" == "1" ]] && return 0
+    script="$(dirname "$0")/boot-quiet.sh"
+    if [[ ! -x "$script" ]]; then
+        echo "警告: ${script} が見つからないので起動時のファン抑制をスキップします" >&2
+        return 0
+    fi
+    # 二重起動の判定は boot-quiet.sh が書く pidfile で行う（pgrep -f のパターン照合は
+    # 呼び出し元のコマンドラインに誤マッチしうるため使わない）
+    pidfile="/tmp/boot-quiet-${server}.pid"
+    if [[ -f "$pidfile" ]] && kill -0 "$(cat "$pidfile" 2>/dev/null)" 2>/dev/null; then
+        echo "${server}: boot-quiet は既に稼働中なので新たに起動しません (pid $(cat "$pidfile"))"
+        return 0
+    fi
+    log="/tmp/boot-quiet-${server}.log"
+    BOOT_QUIET_WRITE_INTERVAL="${BOOT_QUIET_WRITE_INTERVAL:-0.5}" \
+    BOOT_QUIET_SAMPLE_EVERY="${BOOT_QUIET_SAMPLE_EVERY:-20}" \
+        setsid nohup "$script" "$server" "${BOOT_QUIET_DUTY:-0x10}" "${BOOT_QUIET_SECS:-420}" \
+        > "$log" 2>&1 < /dev/null &
+    echo "${server}: 起動中のファン抑制 (boot-quiet) を開始しました → ${log}"
+    sleep 1  # 電源が入る前に最初の duty 投入を済ませる
+}
 
 # サーバ名 → env変数名（ハイフン→アンダースコア、大文字化）
 VAR_PREFIX="BMC_$(echo "$SERVER" | tr '[:lower:]-' '[:upper:]_')"
@@ -124,6 +158,7 @@ case "$ACTION" in
         echo "${SERVER}: System Power: ${POWER:-unknown}"
         ;;
     on)
+        start_boot_quiet "$SERVER"
         run_ipmi chassis power on >/dev/null
         echo "${SERVER}: 電源ON を要求しました"
         ;;
@@ -136,6 +171,7 @@ case "$ACTION" in
         echo "${SERVER}: ACPI ソフトシャットダウンを要求しました"
         ;;
     reset)
+        start_boot_quiet "$SERVER"
         run_ipmi chassis power reset >/dev/null
         echo "${SERVER}: ハードリセットを要求しました"
         ;;
@@ -145,6 +181,7 @@ case "$ACTION" in
         run_ipmi chassis power off >/dev/null
         echo "${SERVER}: ${WAIT_SECS}秒待機..."
         sleep "$WAIT_SECS"
+        start_boot_quiet "$SERVER"
         echo "${SERVER}: 電源ON..."
         run_ipmi chassis power on >/dev/null
         echo "${SERVER}: 電源サイクル完了"

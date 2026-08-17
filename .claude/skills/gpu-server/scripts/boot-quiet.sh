@@ -49,9 +49,16 @@ IPMI=(ipmitool -I lanplus -H "$HOST" -U "$USER_" -P "$PASS")
 # 計測（SDR 読み）は数回に 1 回に間引く。
 WRITE_INTERVAL="${BOOT_QUIET_WRITE_INTERVAL:-0.5}"
 SAMPLE_EVERY="${BOOT_QUIET_SAMPLE_EVERY:-6}"
+MODE_CHECK_EVERY="${BOOT_QUIET_MODE_CHECK_EVERY:-20}"  # fan mode の確認間隔（周回数）
 
 CSV="${BOOT_QUIET_CSV:-/tmp/boot-quiet-${SERVER}.csv}"
 echo "elapsed_s,mode,duty0,fan1,fan2,fan3,fan4,fan5,fan6,fan7,fan8,cpu1,gpu_max,power" > "$CSV"
+
+# 二重起動の検出用 pidfile（bmc-power.sh がこれを見て併走の有無を判断する）。
+# pgrep -f でのパターン照合は呼び出し元のコマンドラインに誤マッチしうるため使わない。
+PIDFILE="${BOOT_QUIET_PIDFILE:-/tmp/boot-quiet-${SERVER}.pid}"
+echo $$ > "$PIDFILE"
+trap 'rm -f "$PIDFILE"' EXIT
 
 echo "=== boot-quiet: ${SERVER} (${MODE}, duty=${DUTY}, ${DURATION}s) → ${CSV} ==="
 
@@ -63,9 +70,17 @@ while (( SECONDS - START < DURATION )); do
     iter=$((iter + 1))
 
     if [[ "$MODE" == "suppress" ]]; then
-        # Full mode にして全 zone(0-3) に duty を書く。POST 中は BMC が 100% に
-        # 書き戻してくるので毎周期投げ直す。エラーは無視（BMC が応答しない瞬間がある）
-        "${IPMI[@]}" raw 0x30 0x45 0x01 0x01 >/dev/null 2>&1
+        # fan mode は「Full でなければ設定する」に留める。毎周期 Full を書き直すと
+        # そのたびに BMC が全 zone を 100% にリセットするため（2026-08-17 実測）、
+        # 稼働中の機体や smc-fanctl と擾乱し合ってかえって回転が上がる。
+        if (( iter % MODE_CHECK_EVERY == 1 )); then
+            CUR_MODE=$("${IPMI[@]}" raw 0x30 0x45 0x00 2>/dev/null | tr -d ' \r\n')
+            if [[ "$CUR_MODE" != "01" ]]; then
+                "${IPMI[@]}" raw 0x30 0x45 0x01 0x01 >/dev/null 2>&1
+            fi
+        fi
+        # duty は毎周期投げ直す（POST 中は BMC が 100% に書き戻してくる）。
+        # エラーは無視（BMC が応答しない瞬間がある）
         for z in 0x00 0x01 0x02 0x03; do
             "${IPMI[@]}" raw 0x30 0x70 0x66 0x01 "$z" "$DUTY" >/dev/null 2>&1
         done
