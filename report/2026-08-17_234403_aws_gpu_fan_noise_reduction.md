@@ -1,7 +1,7 @@
 # aws-gpu01/02 のファン静音化 — 常時 6,500→2,900rpm
 
-- **実施日時**: 2026年8月17日 21:45 〜 23:45 JST (BMC ファン制御の実測、温度連動デーモンの実装と両機常設、負荷試験、BIOS 設定変更、gpu01 の起動不能からの復旧)
-- **報告日時**: 2026年8月17日 23:44 JST
+- **実施日時**: 2026年8月17日 21:45 〜 8月18日 02:10 JST (BMC ファン制御の実測、温度連動デーモンの実装と両機常設、負荷試験、BIOS 設定変更、gpu01 の起動不能からの復旧、および 8月18日 02:00〜02:10 の追試＝boot-quiet の自動併走化と fan mode 書き直しの修正)
+- **報告日時**: 2026年8月18日 02:29 JST (初版 8月17日 23:44、その後 追試と未記載事項を追記)
 - **作成者**: Claude Opus 5
 
 ## 概要
@@ -14,7 +14,7 @@ Supermicro のこの世代のボードは、ファンモードを Full にした
 
 この結果、アイドル時の回転数は 6,500rpm から 2,900rpm に下がった。実運用の推論負荷をかけた状態でも 2,900〜4,200rpm で収まり、温度は CPU が 60℃ 未満、GPU が 63℃ 以下で、GPU のサーマルスロットリングは一度も発生しなかった。実機の前にいたユーザにも音を確認してもらい、この水準で十分という判断を得ている。
 
-次に本題の「起動時の爆音」に取り組んだ。BMC は電源投入直後から外部の指令を受け付けるものの、起動処理中はファン制御を手放さず、こちらが低い回転数を書き込んでも上書きし返してくる。書き込み間隔を詰めると部分的に競り勝てるが、完全には抑えられなかった。一方で BIOS 側の起動処理を軽くする設定変更を加えると、起動中の平均回転数は明確に下がった。起動が完了してからは、デーモンが十数秒で静音状態に持っていく。
+次に本題の「起動時の爆音」に取り組んだ。BMC は電源投入直後から外部の指令を受け付けるものの、起動処理中はファン制御を手放さず、こちらが低い回転数を書き込んでも上書きし返してくる。書き込み間隔を詰めると部分的に競り勝てるが、完全には抑えられなかった。BIOS 側の起動処理を軽くする設定変更を加えたあとの測定では起動中の平均回転数が下がっているが、書き込み間隔の変更と同時に評価しており、どちらがどれだけ効いたかは分離できていない。起動が完了してからは、デーモンが十数秒で静音状態に持っていく。
 
 BIOS 変更の過程で aws-gpu01 が起動しなくなる事故が起きた。拡張スロットの Option ROM をすべて無効化したところ、この機体はブートディスクが拡張カード経由で繋がっているため、ディスクを認識できなくなったためである。設定を元に戻して復旧し、正常起動と GPU 7 枚の認識、ネットワークの復帰まで確認した。同じ変更が問題なかった aws-gpu02 との違いは、ブートディスクの接続経路にある。
 
@@ -35,7 +35,8 @@ BIOS 変更の過程で aws-gpu01 が起動しなくなる事故が起きた。�
   - duty スイープ: [gpu02 zone0](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/sweep_aws-gpu02_zone0.csv)
   - 静音化後アイドル: [gpu01](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/idle_quiet_gpu01.csv) / [gpu02](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/idle_quiet_gpu02.csv)
   - 負荷試験: [gpu01](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/load_gpu01.csv) / [gpu02](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/load_gpu02.csv)
-  - 起動 (POST) 中: [gpu02 2秒間隔](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu02_suppress.csv) / [gpu02 0.5秒間隔](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu02_fast.csv) / [gpu02 BIOS変更後](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu02_after_bios.csv) / [gpu01 BIOS変更前](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu01_before_bios.csv) / [gpu01 復旧時](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu01_recover.csv)
+  - 起動 (POST) 中: [gpu02 2秒間隔](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu02_suppress.csv) / [gpu02 0.5秒間隔](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu02_fast.csv) / [gpu02 BIOS変更後](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu02_after_bios.csv) / [gpu01 BIOS変更前](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu01_before_bios.csv) / [gpu01 BIOS変更後（EFI Shell に落ちた回）](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu01_after_bios.csv) / [gpu01 復旧時](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_gpu01_recover.csv)
+  - 追試（稼働中の gpu01 に boot-quiet を併走させた比較）: [mode 毎周期書き直し（当初）](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_quiet_selftest_mode_rewrite.csv) / [mode 確認のみ（修正後）](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/boot_quiet_selftest_mode_fixed.csv)
 - 測定スクリプト: [fan-sample.sh](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/fan-sample.sh) / [fan-log.sh](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/fan-log.sh) / [fan-set.sh](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/fan-set.sh) / [fan-sweep.sh](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/fan-sweep.sh) / [load-pp.sh](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/load-pp.sh)
 - BIOS スクリーンショット: [Boot Feature](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/bios_bootfeature.png) / [Option ROM 一覧（変更前）](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/bios_pcie2.png) / [スロット OPROM 無効化後](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/bios_slots_done.png) / [PXE 無効化後](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/bios_lan_done.png)
 - トラブル時の画面: [gpu02 の Failing DIMM 表示](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/gpu02_post_failing_dimm.png) / [gpu01 が EFI Shell に落ちた画面](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/gpu01_efi_shell_boot_failure.png)
@@ -44,7 +45,7 @@ BIOS 変更の過程で aws-gpu01 が起動しなくなる事故が起きた。�
 
 ![duty↔RPM 特性、POST 中の回転数、定常運転 duty の変更前後比較](attachment/2026-08-17_234403_aws_gpu_fan_noise_reduction/summary.png)
 
-**結論**: X10DRG-OT+ の BMC は **fan mode = Full(0x01) のときだけ手動 duty を保持する**（Optimal/Standard では BMC が書き戻す）。この性質を使い、in-band IPMI で温度に応じた duty を与える `smc-fanctl` を両機に常設した結果、**アイドル duty 50%/6,500rpm → 16%/2,900rpm**、**実負荷でも 16–28%/2,900–4,200rpm**（CPU max 59℃ / GPU max 63℃、thermal slowdown 0 件）に低下した。BMC の Optimal は同じ負荷で **duty 68–70%（特性換算 約8,000–8,500rpm）** まで上げており、静音化の余地は定常運転側に大きく存在した。cooling zone は **0–3 の 4 つ**（各 2 ファン、zone4 以降は無効）で、`raw 0x30 0x70 0x66 0x01 <zone> <duty>` を 4 zone すべてに書く必要がある。**Full へ切り替えた直後に BMC が全 zone を非同期で 100% に書き戻す**ため 5 秒待ってから duty を書き、以後も毎周期 duty を照合して自己修復する実装が必須（実測で確認）。起動 (POST) 中は BMC がファン制御を手放さず、外部からの duty 投入は**競り負ける**（POST 中 FAN1-8 平均の中央値: 2秒間隔 5,386rpm → 0.5秒間隔 5,243rpm → **0.5秒間隔＋BIOS 変更後 3,700rpm**）。BIOS には fan 設定は存在せず（IPMI タブにも無い）、POST 短縮に使えたのは `Wait For "F1" If Error` と Option ROM の無効化のみ。**aws-gpu01 は全スロットの OPROM を無効化するとブートディスク（SAS HBA 経由）を見失い EFI Shell に落ちる**ため Legacy に戻した（gpu02 はオンボード SATA ブートなので問題なし）。**追試で `boot-quiet.sh` の設計上の誤りが判明**: fan mode を毎周期書き直していたため、そのたびに BMC の 100% リセットを自分で誘発していた（稼働中機体で 2,200–9,200rpm に振動 → mode 確認のみに修正して 2,900rpm で安定）。**上記の POST 中の数値はすべて修正前の実装で採ったもの**なので、修正後はさらに下がる可能性がある（未測定）。抑制は `bmc-power.sh` の `on`/`reset`/`cycle` から自動併走するようにした。
+**結論**: X10DRG-OT+ の BMC は **fan mode = Full(0x01) のときだけ手動 duty を保持する**（Optimal/Standard では BMC が書き戻す）。この性質を使い、in-band IPMI で温度に応じた duty を与える `smc-fanctl` を両機に常設した結果、**アイドル duty 50–54%/6,300–6,800rpm → 16%/2,900rpm**、**実負荷でも 16–28%/2,900–4,200rpm**（CPU max 59℃ / GPU max 63℃、thermal slowdown 0 件）に低下した。BMC の Optimal は同じ負荷で **duty 68–70%（特性換算 約8,000–8,500rpm）** まで上げており、静音化の余地は定常運転側に大きく存在した。cooling zone は **0–3 の 4 つ**（各 2 ファン、zone4 以降は無効）で、`raw 0x30 0x70 0x66 0x01 <zone> <duty>` を 4 zone すべてに書く必要がある。**Full へ切り替えた直後に BMC が全 zone を非同期で 100% に書き戻す**ため 5 秒待ってから duty を書き、以後も毎周期 duty を照合して自己修復する実装が必須（実測で確認）。起動 (POST) 中は BMC がファン制御を手放さず、外部からの duty 投入は**競り負ける**（POST 中 FAN1-8 平均の中央値: 2秒間隔 5,186rpm → 0.5秒間隔 5,021rpm → **0.5秒間隔＋BIOS 変更後 3,636rpm**）。BIOS には fan 設定は存在せず（IPMI タブにも無い）、POST 短縮に使えたのは `Wait For "F1" If Error` と Option ROM の無効化のみ。**aws-gpu01 は全スロットの OPROM を無効化するとブートディスク（SAS HBA 経由）を見失い EFI Shell に落ちる**ため Legacy に戻した（gpu02 はオンボード SATA ブートなので問題なし）。**追試で `boot-quiet.sh` の設計上の誤りが判明**: fan mode を毎周期書き直していたため、そのたびに BMC の 100% リセットを自分で誘発していた（稼働中機体で FAN1-8 平均 3,088–4,788rpm に振れた → mode 確認のみに修正して 2,900rpm で安定）。**上記の POST 中の数値はすべて修正前の実装で採ったもの**なので、修正後はさらに下がる可能性がある（未測定）。抑制は `bmc-power.sh` の `on`/`reset`/`cycle` から自動併走するようにした。
 
 ## 前提・目的
 
@@ -93,9 +94,12 @@ ipmitool -I lanplus -H "$BMC_AWS_GPU01_HOST" -U "$BMC_AWS_GPU01_USER" -P "$BMC_A
 python3 .claude/skills/gpu-server/fan-control/smc-fanctl.py \
   --transport lan --host 10.11.12.1 --user claude --oneshot --dry-run   # IPMI_PASSWORD 環境変数
 
-# 起動中の抑制＋記録（電源操作の直前にバックグラウンドで開始する）
-BOOT_QUIET_WRITE_INTERVAL=0.5 .claude/skills/gpu-server/scripts/boot-quiet.sh aws-gpu02 0x10 420 &
+# 起動中の抑制（bmc-power.sh が boot-quiet.sh を自動併走させる。手動起動は不要）
 ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu02 reset
+#   抑制を止める: NO_BOOT_QUIET=1 / duty・秒数: BOOT_QUIET_DUTY, BOOT_QUIET_SECS
+#   ログ: /tmp/boot-quiet-<server>.log、記録: /tmp/boot-quiet-<server>.csv
+# 単体で使う場合（抑制せず記録のみ = 比較用）
+.claude/skills/gpu-server/scripts/boot-quiet.sh aws-gpu02 --observe 420
 
 # BIOS に確実に入る（Delete 連打より信頼できる）
 ipmitool ... chassis bootdev bios && ALLOW_FAN_NOISE=1 .../bmc-power.sh aws-gpu01 reset
@@ -149,7 +153,7 @@ tg フェーズが memory-bound なため **GPU 使用率 7–9% / 消費電力 
 ### 4. Full mode の 3 つの落とし穴
 
 1. **Optimal/Standard では duty 指定が保持されない** — BMC が自分の目標値に書き戻す
-2. **Full へ切り替えた直後、BMC が非同期で全 zone を 100% に書き戻す** — 切替の直後に duty を書くと上書きされる（実測で gpu01 の zone0 だけ 100% のまま残り FAN1,2 が 11,100rpm で回った）。`MODE_SETTLE_SEC = 5` 秒待ってから書く
+2. **Full へ切り替えた直後、BMC が非同期で全 zone を 100% に書き戻す** — 切替の直後に duty を書くと上書きされる（実測で gpu01 の zone0 だけ 100% のまま残り FAN1,2 が 11,100rpm で回った）。`MODE_SETTLE_SEC = 5` 秒待ってから書く。**これは「Full を書くたび」に起きるので、mode を繰り返し書き直してはいけない**（この点を見落として `boot-quiet.sh` が自分で回転を上げていた。「7. の追試」参照）
 3. **その後も duty が戻されることがある** — 毎周期 4 zone の duty を読み戻して差異を修復する実装が必要。Optimal に戻した状態から復帰させる試験で、BMC が設定した 68–70% と Full 切替時の 100% の両方を検知して 16% に修復できることを確認した
 
 ### 5. 温度連動デーモン `smc-fanctl`
@@ -178,26 +182,38 @@ tg フェーズが memory-bound なため **GPU 使用率 7–9% / 消費電力 
 | アイドル | 16% | 2,900 | 42–58℃ | 46–58℃ | — |
 | 実負荷（DeepSeek-V4 推論 20 分, pp 主体） | 16–28% | 2,900–4,200 | **56℃ (gpu01) / 59℃ (gpu02)** | **63℃ / 61℃** | **0 件** |
 
+表の duty「16–28%」は **smc-fanctl が制御していた区間**の値。添付の負荷試験 CSV には、
+デーモンを修正して入れ替えた前後の**制御が BMC に戻っていた区間**（duty 0x4a=74% / 0x64=100%）も
+含まれるので注意（＝ Optimal に戻すと負荷時にそこまで上がる、という「変更前」側の実測でもある）。
+
 負荷は稼働中の DeepSeek-V4-Flash（RPC 2 台 13 GPU）に長大プロンプトを連続投入して pp を回した。GPU 消費電力は瞬間 140W まで上がったが、MoE の tg 主体では GPU 使用率 7–9% と低く、**これは実運用の最大負荷であって GPU 全数 100% の最悪ケースではない**。ただしカーブは 65℃ 以上で積極的に duty を上げ、最終的に 100%（BMC の最大と同値）まで到達するため、より重い負荷でも冷却能力の上限は BMC 制御と同等である。
 
 ### 7. 起動 (POST) 中の抑制（層 B）
 
 BMC は POST 中も IPMI を受け付けるが、**ファン制御は手放さず duty を 100% に書き戻し続ける**。
 
-| 条件 | POST 中 FAN1-8 平均の中央値 | 観測レンジ |
-|---|---|---|
-| 0.5 秒間隔投入・BIOS 変更前 | 5,243 rpm | 2,500–10,100 |
-| 2 秒間隔投入・BIOS 変更前 | 5,386 rpm | 2,100–11,000 |
-| **0.5 秒間隔投入・BIOS 変更後** | **3,700 rpm** | 2,000–8,000 |
+FAN1-8 の平均値を「リセットから 160 秒以内」に絞って集計したもの（aws-gpu02）。
+レンジは同じ「FAN1-8 平均」の最小〜最大で、個別のファン 1 個の値ではない。
 
-- 投入間隔を 2 秒→0.5 秒に詰めた効果は中央値では小さかった（5,386 → 5,243rpm）。明確に下がったのは BIOS 変更後だが、**投入間隔と BIOS 変更の寄与を分離した測定はしていない**
-- 電源投入直後の数秒と OS 起動直前は依然 BMC 支配で 9,000rpm 台に跳ねる
-- 純粋な「対策ゼロ」のベースラインは測っていない（初回から抑制を並走させたため）。ただし BIOS 変更前の観測レンジ上限（11,000rpm 前後）が実質それに相当する
+| 条件（実施順） | 中央値 | レンジ | サンプル数 |
+|---|---|---|---|
+| 2 秒間隔投入・BIOS 変更前 | 5,186 rpm | 2,443–11,086 | 14 |
+| 0.5 秒間隔投入・BIOS 変更前 | 5,021 rpm | 3,614–6,986 | 8 |
+| **0.5 秒間隔投入・BIOS 変更後** | **3,636 rpm** | 2,800–8,014 | 8 |
+
+**3 条件とも fan mode を毎周期書き直す当初実装**で採っている（下記追試）。POST 初期は BMC が
+センサに応答しない区間があり、サンプルは疎（2 秒間隔条件は計測を間引いていないため点数が多い）。
+
+- 投入間隔を 2 秒→0.5 秒に詰めた効果は中央値では小さかった（5,186 → 5,021rpm、サンプル数も
+  8〜14 点と少ない）。明確に下がったのは BIOS 変更後だが、**投入間隔と BIOS 変更の寄与を
+  分離した測定はしていない**
+- 電源投入直後の数秒と OS 起動直前は依然 BMC 支配で、個別のファンは 10,000rpm 台に跳ねる
+- 純粋な「対策ゼロ」のベースラインは測っていない（初回から抑制を並走させたため）。ただし BIOS 変更前のレンジ上限（平均 11,086rpm ＝ ほぼ全開）が実質それに相当する
 
 **ユーザの体感（実機前で確認）**: 「音が大きくなったり小さくなったりしていたが、以前の爆音よりマシ」。
 BMC と外部投入の取り合いがそのまま音の大小として聞こえていた（上表の観測レンジと整合）。
 
-#### 追試: 自動併走化と fan mode 書き直しの害（同日 02:00 JST）
+#### 追試: 自動併走化と fan mode 書き直しの害（2026年8月18日 02:00〜02:10 JST）
 
 体感で緩和が確認できたため `boot-quiet.sh` を **`bmc-power.sh` の `on`/`reset`/`cycle` から
 自動併走させる**ようにした（`NO_BOOT_QUIET=1` で無効化、二重起動は pidfile で抑止）。
@@ -206,15 +222,19 @@ BMC と外部投入の取り合いがそのまま音の大小として聞こえ�
 この検証中に**当初実装の欠陥が判明した**。`boot-quiet.sh` は毎周期 `fan mode = Full` を
 書き直していたが、**Full を書くたびに BMC が全 zone を 100% にリセットする**（本レポート
 「4. Full mode の 3 つの落とし穴」の 2 番）ため、**抑制するどころか自分で回転を上げていた**。
-稼働中の aws-gpu01 に併走させて実測した比較（duty はどちらも 16% 指定）:
+稼働中の aws-gpu01（smc-fanctl が 16% で制御中）に併走させて実測した比較。
+duty はどちらも 16% 指定なので、**本来はどちらも 2,900rpm のまま動かないはず**である:
 
-| 実装 | 併走中の RPM | smc-fanctl 側の duty 書き戻し警告 |
-|---|---|---|
-| 毎周期 mode を書き直す（当初） | **2,200〜9,200 rpm に振動** | 2 回 |
-| mode は確認のみ（修正後） | **2,900 rpm で安定** | 0 回 |
+| 実装 | FAN1-8 平均のレンジ | 個別 FAN の最小〜最大 | サンプル数 | smc-fanctl 側の duty 書き戻し警告 |
+|---|---|---|---|---|
+| 毎周期 mode を書き直す（当初） | **3,088–4,788 rpm** | 2,200–9,200 rpm | 3 | 2 回 |
+| mode は確認のみ（修正後） | **2,900–2,912 rpm** | 2,800–3,000 rpm | 6 | 0 回 |
+
+サンプル数は少ない（当初実装は 3 点）が、**smc-fanctl 側が「zone の duty が 100% にずれていた」
+という書き戻し警告を出した / 出さなかった**という定性的な差が裏付けになっている。
 
 修正後は duty のみを毎周期投げ、fan mode は既定 10 秒ごとに確認して Full でないときだけ設定する。
-**上表の POST 中の測定値（中央値 3,700rpm 等）はいずれも当初実装で採ったもの**なので、
+**上表の POST 中の測定値（中央値 3,636rpm 等）はいずれも当初実装で採ったもの**なので、
 修正後は POST 中の回転もさらに下がる可能性がある（次回の再起動時に測り直す）。
 
 ### 8. 起動完了後の引き継ぎ

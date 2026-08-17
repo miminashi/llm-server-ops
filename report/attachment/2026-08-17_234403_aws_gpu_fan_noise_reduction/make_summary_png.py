@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ファン静音化レポート用のサマリ PNG を生成する。"""
 import csv
+import statistics
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -81,7 +82,7 @@ for path, label, color in series:
     xs, ys = load_boot(path)
     pts = [(x, y) for x, y in zip(xs, ys) if x <= XMAX]
     xs, ys = [p[0] for p in pts], [p[1] for p in pts]
-    med = sorted(ys)[len(ys) // 2]
+    med = statistics.median(ys)  # サンプル数が偶数のときは中央 2 値の平均
     ax.plot(xs, ys, color=color, linewidth=2, marker="o", markersize=4.5,
             markerfacecolor=color, markeredgecolor=SURFACE, markeredgewidth=1.2,
             label=f"{label} — 中央値 {med:,.0f}rpm")
