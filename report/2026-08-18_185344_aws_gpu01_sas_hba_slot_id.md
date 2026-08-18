@@ -1,7 +1,7 @@
 # aws-gpu01 の SAS HBA は BIOS の「CPU2 Slot6」
 
-- **実施日時**: 2026年8月18日 18:20 〜 19:00 JST (非破壊調査 → BIOS 変更と再起動 3 回による実機検証)
-- **報告日時**: 2026年8月18日 19:00 JST
+- **実施日時**: 2026年8月18日 17:54 〜 19:20 JST (非破壊調査 → BIOS 変更と再起動 4 回による実機検証・記録)
+- **報告日時**: 2026年8月18日 19:20 JST
 - **作成者**: Claude Opus 5
 
 ## 概要
@@ -35,13 +35,13 @@ SMBIOS のスロット一覧を精査したところ、12 項目のうち 1 つ�
 
 ![aws-gpu01 の BIOS スロット項目と実デバイスの対応、および OPROM 無効化前後の起動時間比較](attachment/2026-08-18_185344_aws_gpu01_sas_hba_slot_id/summary.png)
 
-**結論**: aws-gpu01 の SAS HBA (`82:00.0` LSI MegaRAID SAS-3 3108) は BIOS の **`CPU2 Slot6 PCI-E x16 OPROM`** が制御している。この 1 項目だけを `Legacy` に残し他の 11 項目を `Disabled` にした状態で正常起動し、POST 画面に `AVAGO MegaRAID SAS-MFI BIOS` の実行が確認できた。SMBIOS Type 9 は当該スロットの Bus Address を `0000:01:00.0` と報告するが、そこは実際には空 (`00:01.0` の `LnkSta Width x0`) で、**BIOS の誤報告**である。一方 POST 短縮効果は **146 秒 → 144 秒 (−2 秒)** にとどまり、GPU の VGA OpROM は起動時間の主因ではないことが判明した。
+**結論**: aws-gpu01 の SAS HBA (`82:00.0` LSI MegaRAID SAS-3 3108) は BIOS の **`CPU2 Slot6 PCI-E x16 OPROM`** が制御している。この 1 項目だけを `Legacy` に残し他の 11 項目を `Disabled` にした状態で正常起動し、POST 画面に `AVAGO MegaRAID SAS-MFI BIOS` の実行が確認できた。SMBIOS Type 9 は当該スロットの Bus Address を `0000:01:00.0` と報告するが、**そこにデバイスは存在せず**（上流のルートポート `00:01.0` が `LnkSta Width x0` でリンク未確立）、**BIOS の誤報告**である。一方 POST 短縮効果は **146 秒 → 144 秒 (−2 秒)** にとどまり、GPU の VGA OpROM は起動時間の主因ではないことが判明した。
 
 ## 前提・目的
 
 - **背景**: 2026-08-17 に 12 スロットの OPROM をすべて `Disabled` にしたところ EFI Shell に落ちて起動不能になった（[前回レポート](./2026-08-17_234403_aws_gpu_fan_noise_reduction.md) の「10. aws-gpu01 が起動しなくなった事故と復旧」）
 - **目的**: (1) どの BIOS スロット項目が SAS HBA なのかを特定する、(2) GPU の OPROM を無効化して POST 時間を短縮する
-- **前提**: DeepSeek-V4 稼働中のため停止が必要。ユーザ指示により**復旧はしない**。再起動は  必須
+- **前提**: DeepSeek-V4 稼働中のため停止が必要。ユーザ指示により**復旧はしない**。再起動は `ALLOW_FAN_NOISE=1` 必須
 
 ## 環境情報
 
@@ -49,12 +49,12 @@ SMBIOS のスロット一覧を精査したところ、12 項目のうち 1 つ�
 |---|---|
 | 機体 | aws-gpu01 (Supermicro SYS-4028GR-TRT2) |
 | マザーボード | Supermicro X10DRG-O(T)+ |
-| BIOS | Version 3.1 / Build 2018-07-13 11:39:11、CPLD 02.a1.02 |
+| BIOS | Version 3.1 / 2018-07-13（Build 11:39:11）、CPLD 02.a1.02 |
 | メモリ | 163840 MB / 1600 MT/s |
 | GPU | Tesla P100 PCIe 16GB × 7 |
 | ブートディスク | `sda` 1.1TB → `0000:82:00.0` LSI MegaRAID SAS-3 3108 [Invader] |
 | **ブート方式** | **Legacy BIOS (CSM)** — `/sys/firmware/efi` が存在せず `efibootmgr` も空 |
-| 比較機 aws-gpu02 | SYS-4028GR-TRT、BIOS 2019 版、**UEFI ブート**（`/boot/efi` あり）、オンボード SATA |
+| 比較機 aws-gpu02 | SYS-4028GR-TRT、BIOS Version 3.2 / 2019-12-13、**UEFI ブート**（`/boot/efi` あり）、オンボード SATA |
 
 ## 再現方法
 
@@ -118,8 +118,14 @@ gpu02 では SMBIOS が 11 エントリ、gpu01 では 12 エントリで、そ�
 | CPU1 Slot8 | 0b:00.0 | In Use | Mellanox ConnectX-4 |
 | CPU1 Slot9 / 10 / 11 / 12 | 0d / 0f / 0e / 0c:00.0 | In Use | Tesla P100 |
 
-`CPU2 Slot6` は 12 項目で唯一 "CPU2" とラベルされ、かつ **In Use なのに参照先 (`00:01.0`) が空**という
-矛盾を持つ。CPU2 側の拡張カードは HBA 1 枚だけなので、この項目が HBA を指していると推定した。
+`CPU2 Slot6` は 12 項目で唯一 "CPU2" とラベルされ、かつ **In Use なのに参照先 `01:00.0` にデバイスが
+居ない**（上流のルートポート `00:01.0` は `LnkSta Width x0` でリンク未確立）という矛盾を持つ。
+CPU2 側の拡張カードは HBA 1 枚だけなので、この項目が HBA を指していると推定した。
+
+**ただし SMBIOS の `Current Usage` / `Bus Address` は全体として信頼できない**。`CPU1 Slot1` も
+`Available` と報告されるが Bus Address 先の `09:00.0` には PLX が実在する。したがって上表は
+「BIOS 項目名の一覧」としては正確だが、**HBA の特定を SMBIOS だけで確定することはできず、
+決め手は次節の実機検証である**。
 
 ### 4. 実機検証 — `CPU2 Slot6` だけ Legacy に残して起動
 
@@ -131,7 +137,9 @@ gpu02 では SMBIOS が 11 エントリ、gpu01 では 12 エントリで、そ�
 - 起動後: GPU 7 枚認識、`82:00.0` 認識、`smc-fanctl` active、100GbE (192.168.100.x) 復帰
 
 他の 11 項目はすべて `Disabled` なので、この OpROM を実行させているのは `CPU2 Slot6` 以外にありえない。
-**`CPU2 Slot6` = SAS HBA と確定する。**
+「HBA の OpROM はどのスロット項目にも紐づかず常に実行される」という可能性も考えられるが、それなら
+**2026-08-17 に 12 項目すべてを `Disabled` にしたときも起動できたはず**で、実際に起動不能になった事実と
+矛盾する。よって **`CPU2 Slot6` = SAS HBA と確定する。**
 
 ### 5. POST 時間 — 短縮効果はほぼ無し
 
@@ -156,7 +164,8 @@ gpu02 では SMBIOS が 11 エントリ、gpu01 では 12 エントリで、そ�
 - **BMC の Redfish は使えない**（`/redfish/v1/Chassis/1/PCIeSlots` などが 404）。mi25 と同様ライセンス無し
 - `sudo dmidecode -t 41`（オンボードデバイス）は `Onboard IGD` / `Onboard LAN` / `Onboard 1394` の
   3 件を返すが、**Bus Address が実在しない値**（`00:19.0` / `03:1c.2`）でテンプレートのまま。HBA は含まれない
-- gpu01 と gpu02 は **BIOS リビジョンが異なる**（2018 版 / 2019 版）。スロット数の差 (12 / 11) はドーターボード構成の差による
+- gpu01 と gpu02 は **BIOS リビジョンが異なる**（gpu01 = 3.1 / 2018-07-13、gpu02 = 3.2 / 2019-12-13）。
+  SMBIOS のスロット数も 12 / 11 と異なる（GPU ドーターボード構成の差によるものと推測されるが、未確認）
 - BIOS の `PCIe/PCI/PnP Configuration` には `Exclude Slot 7` という項目があり `No` のまま。今回は触っていない
 
 ## 結論・対応

@@ -304,7 +304,9 @@ ssh aws-gpu01 "sudo systemctl stop smc-fanctl; sudo ipmitool -I open raw 0x30 0x
 受け付ける。
 
 **コールドブートの所要時間**（`on` 発行から、2026-08-18 実測）: aws-gpu01 は OS 起動まで 150 秒 /
-smc-fanctl 稼働まで 160 秒、aws-gpu02 は **85 秒 / 108 秒**（gpu02 はスロット OPROM が Disabled）。
+smc-fanctl 稼働まで 160 秒、aws-gpu02 は **85 秒 / 108 秒**。この差は GPU 枚数（7 / 6）と
+RAM 量（160GB / 96GB）、および gpu01 だけが SAS HBA の OpROM を実行することによるもので、
+**GPU のスロット OPROM の寄与はほぼ無い**（2026-08-18 に gpu01 で reset 起点の前後比較を実測、146 → 144 秒）。
 
 **`bmc-power.sh` が自動で併走させる**（2026-08-17 追加）。`on` / `reset` / `cycle` を
 aws-gpu01/02 に対して実行すると `boot-quiet.sh` がバックグラウンドで起動し、
@@ -346,7 +348,7 @@ BOOT_QUIET_DUTY=0x18 BOOT_QUIET_SECS=600 ALLOW_FAN_NOISE=1 .../bmc-power.sh aws-
 WS からの到達不能、BMC 側の想定外の挙動）では従来どおり爆音になりうるため、
 `bmc-power.sh` / `power-ctl.sh` の `ALLOW_FAN_NOISE` ガードはそのまま残す。
 
-### BIOS 設定（2026-08-17 に変更した項目）
+### BIOS 設定（2026-08-17〜18 に変更した項目）
 
 POST を短くして爆音区間を縮めるための変更。**BIOS に fan 関連の設定項目は存在しない**
 （Advanced 配下と IPMI タブを全確認。X10 のファン制御は BMC 専管で、`Fast Boot` 相当も無い）。
