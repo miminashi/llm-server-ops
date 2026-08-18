@@ -285,18 +285,25 @@ ipmitool -I lanplus -H "$BMC_AWS_GPU01_HOST" -U "$BMC_AWS_GPU01_USER" -P "$BMC_A
 ssh aws-gpu01 "sudo systemctl stop smc-fanctl; sudo ipmitool -I open raw 0x30 0x45 0x01 0x02"
 ```
 
-### 起動（POST）中の爆音 — 完全には消せない
+### 起動（POST）中の爆音 — ほぼ解消済み
 
-電源投入から OS 起動までは BMC が全ファンを 100%（11900rpm）で回す。BMC は POST 中も IPMI を
-受け付けるが、**ファン制御を手放さず duty を 100% に書き戻し続けるため、外部からの投入は
-競り負ける**（2026-08-17 実測）。抑制と記録を行うのが
-[scripts/boot-quiet.sh](./scripts/boot-quiet.sh)。
+対策なしでは電源投入から OS 起動まで BMC が全ファンを 100%（11900rpm）で回す。
+[scripts/boot-quiet.sh](./scripts/boot-quiet.sh) が電源投入と同時に低 duty を投げ続けることで、
+**起動中も定常運転と同じ 2,900rpm 台で通せる**（2026-08-18 のコールドブートで実測）。
 
 | 条件 | POST 中 FAN1-8 平均の中央値 |
 |---|---|
-| 2 秒間隔投入・BIOS 変更前 | 5,186 rpm |
-| 0.5 秒間隔投入・BIOS 変更前 | 5,021 rpm |
-| **0.5 秒間隔投入・BIOS 変更後** | **3,636 rpm** |
+| 2 秒間隔投入・BIOS 変更前（初期実装） | 5,186 rpm |
+| 0.5 秒間隔投入・BIOS 変更前（初期実装） | 5,021 rpm |
+| 0.5 秒間隔投入・BIOS 変更後（初期実装） | 3,636 rpm |
+| **現行実装（fan mode を書き直さない）** | **gpu01 2,925 / gpu02 2,914 rpm** |
+
+初期実装が遅かったのは BMC のせいではなく、**毎周期 fan mode を書き直して 100% リセットを
+自ら誘発していた**ため（下記「fan mode は書き直さない設計」）。BMC は POST 中も duty 指定を
+受け付ける。
+
+**コールドブートの所要時間**（`on` 発行から、2026-08-18 実測）: aws-gpu01 は OS 起動まで 150 秒 /
+smc-fanctl 稼働まで 160 秒、aws-gpu02 は **85 秒 / 108 秒**（gpu02 はスロット OPROM が Disabled）。
 
 **`bmc-power.sh` が自動で併走させる**（2026-08-17 追加）。`on` / `reset` / `cycle` を
 aws-gpu01/02 に対して実行すると `boot-quiet.sh` がバックグラウンドで起動し、
@@ -334,8 +341,9 @@ BOOT_QUIET_DUTY=0x18 BOOT_QUIET_SECS=600 ALLOW_FAN_NOISE=1 .../bmc-power.sh aws-
 **起動後は速い**: `smc-fanctl` は OS 起動から **10〜26 秒でサービス開始、14〜44 秒で duty 適用**
 （`After=sysinit.target` の早期起動）。爆音区間は「電源投入〜OS 起動＋十数秒」に限られる。
 
-**爆音が消えたわけではないので、`bmc-power.sh` / `power-ctl.sh` の `ALLOW_FAN_NOISE` ガードは
-維持する。**
+**ガードは維持する**: 起動中の回転は抑えられたが、抑制が効かない状況（`NO_BOOT_QUIET=1`、
+WS からの到達不能、BMC 側の想定外の挙動）では従来どおり爆音になりうるため、
+`bmc-power.sh` / `power-ctl.sh` の `ALLOW_FAN_NOISE` ガードはそのまま残す。
 
 ### BIOS 設定（2026-08-17 に変更した項目）
 

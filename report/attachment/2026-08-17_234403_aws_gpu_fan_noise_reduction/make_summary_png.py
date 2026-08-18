@@ -74,9 +74,9 @@ ax.set_ylim(0, 13000)
 ax = axes[1]
 XMAX = 160  # OS 起動後（smc-fanctl が引き継いだ後）は比較対象外なので切る
 series = [
-    ("boot_gpu02_suppress.csv", "2秒間隔投入 (BIOS変更前)", ORANGE),
-    ("boot_gpu02_fast.csv", "0.5秒間隔投入 (BIOS変更前)", BLUE),
-    ("boot_gpu02_after_bios.csv", "0.5秒間隔投入 (BIOS変更後)", AQUA),
+    ("boot_gpu02_suppress.csv", "初期実装 2秒間隔 (BIOS変更前)", ORANGE),
+    ("boot_gpu02_after_bios.csv", "初期実装 0.5秒間隔 (BIOS変更後)", BLUE),
+    ("boot_gpu02_final.csv", "現行実装 (fan mode を書き直さない)", AQUA),
 ]
 for path, label, color in series:
     xs, ys = load_boot(path)
@@ -88,9 +88,9 @@ for path, label, color in series:
             label=f"{label} — 中央値 {med:,.0f}rpm")
 ax.axhline(2900, color=MUTED, linewidth=1.2, linestyle="--")
 ax.annotate("定常運転 2,900rpm", (XMAX - 2, 2400), fontsize=9, color=INK2, ha="right")
-ax.set_title("② 起動 (POST) 中の平均回転数", color=INK, fontsize=12,
+ax.set_title("② 起動 (POST) 中の平均回転数 — 実装の修正で解消", color=INK, fontsize=12,
              fontweight="bold", loc="left", pad=12)
-ax.set_xlabel("リセットからの経過秒（値が飛んでいる区間は BMC がセンサを応答しない POST 初期）",
+ax.set_xlabel("電源投入・リセットからの経過秒（値が飛ぶ区間は BMC がセンサ未応答）",
               color=INK2, fontsize=9)
 ax.set_ylabel("FAN1-8 平均 (rpm)", color=INK2, fontsize=10)
 ax.set_xlim(-4, XMAX)
@@ -126,7 +126,7 @@ leg = ax.legend(frameon=False, fontsize=9, loc="upper left")
 for t in leg.get_texts():
     t.set_color(INK2)
 
-fig.suptitle("aws-gpu01 / aws-gpu02 ファン静音化の実測サマリ (2026-08-17)",
+fig.suptitle("aws-gpu01 / aws-gpu02 ファン静音化の実測サマリ (2026-08-17〜18)",
              color=INK, fontsize=14, fontweight="bold", x=0.012, ha="left", y=0.985)
 fig.tight_layout(rect=(0, 0, 1, 0.94))
 out = f"{SCR}/summary.png"

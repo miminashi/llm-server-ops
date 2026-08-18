@@ -52,8 +52,9 @@ Tesla P100 を 7 枚（112GB）/ 6 枚（88GB）搭載。**起動時にファン
 
 **ファン静音化（2026-08-17）**: 両機に温度連動デーモン `smc-fanctl` を常設し、
 BMC の fan mode を **Full 固定 + duty 制御**に切り替えた（**アイドル 6,500→2,900rpm**）。
-デーモンを止めると自動で BMC の Optimal 制御に戻る。**POST 中の爆音は BMC が制御を手放さないため
-消えていないので、電源操作のガードは維持する**。また **aws-gpu01 は BIOS のスロット OPROM を
+デーモンを止めると自動で BMC の Optimal 制御に戻る。**起動 (POST) 中も `bmc-power.sh` が
+`boot-quiet.sh` を自動併走させることで 2,900rpm 台に収まる**（2026-08-18 のコールドブートで実測）。
+ただし抑制が効かない状況では従来どおり爆音になるため、**電源操作のガードは維持する**。また **aws-gpu01 は BIOS のスロット OPROM を
 無効化するとブートディスク（SAS HBA 経由）を見失い起動不能になる**。詳細は
 [gpu-server/aws-gpu.md](.claude/skills/gpu-server/aws-gpu.md) の「ファン制御」「BIOS 設定」節と
 [2026-08-17 静音化レポート](report/2026-08-17_234403_aws_gpu_fan_noise_reduction.md)。
