@@ -295,7 +295,7 @@ RAM 160GB vs 96GB）が混在**しており、OPROM 単独の寄与は分離で�
 | `Onboard LAN 1 OPROM` | PXE → **Disabled** | ✓ | ✓ |
 | スロット OPROM（`CPU* Slot* OPROM`） | Legacy → Disabled | **✗ 起動不能のため Legacy に戻した** | ✓ (11 スロット) |
 
-触っていない項目: `Above 4G Decoding` (Enabled)、`MMIO High Size` (512G)、`Onboard Video OPROM` (Legacy)、`VGA Priority` (Onboard)、`CSM Support` (Enabled)。
+触っていない項目: `Above 4G Decoding` (Enabled)、`MMIO High Size` (512G)、`Onboard Video OPROM` (Legacy)、`VGA Priority` (Onboard)、`CSM Support` (Enabled)、`AddOn ROM Display Mode` (Force BIOS)、`Quiet Boot` (Enabled)。
 
 PXE 無効化の根拠は実測にある: gpu01 の POST 画面に `Initializing Intel(R) Boot Agent XE v2.3.11 / PXE 2.1` が数十秒表示されており、未使用の PXE ROM が POST 時間を消費していた。
 
