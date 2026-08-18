@@ -35,8 +35,10 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu0
   fan mode を手で Optimal に戻すとデーモンが Full に戻す。停止したいときは
   `sudo systemctl stop smc-fanctl`（停止時に自動で Optimal に復帰する）。
   詳細は [aws-gpu.md の「ファン制御」節](./aws-gpu.md)
-- **aws-gpu01 で BIOS のスロット OPROM を無効化してはいけない**（ブートディスクが SAS HBA
-  経由のため起動不能になる。2026-08-17 に発生・復旧済み）
+- **aws-gpu01 で BIOS の `CPU2 Slot6 PCI-E x16 OPROM` を無効化してはいけない**（ここが SAS HBA
+  ＝ブートディスクで、Legacy BIOS ブートのため OpROM が無いと起動不能になる。2026-08-17 に
+  全項目 Disabled で発生・復旧済み、2026-08-18 に該当スロットを特定）。他の 11 項目は
+  Disabled にしても起動するが、**POST 短縮効果は −2 秒しか無い**
 - ワークステーションと**同一拠点**にあり通信が速い（RTT 0.3ms、約100MB/s）。
   モデルは **HF から直接ダウンロード**するのが原則（WS 経由より速い）
 - SSH ユーザは `ubuntu`（既存3台は `llm`）

@@ -107,8 +107,9 @@ mi25 の Unique ID 運用（[CLAUDE.md](../../../CLAUDE.md) 参照）に相当�
   `numactl --hardware` の **node1 size = 0 MB**（gpu01 は node0 96,540MB / node1 64,500MB）。
   GPU のうち `84/88/89:00.0` の 3 枚は CPU2 側にぶら下がるため、ホスト↔デバイス転送が
   QPI 経由になる。既存の性能実測はすべてこの構成での値（増設の効果は未検証）。
-- **aws-gpu01 のブートディスクは SAS HBA（拡張カード）経由**。BIOS でスロット OPROM を
-  無効化すると起動しなくなる（下記「BIOS 設定」参照）。aws-gpu02 はオンボード SATA ブート。
+- **aws-gpu01 は Legacy BIOS ブートで、ブートディスクは SAS HBA（拡張カード）経由**。BIOS で
+  **`CPU2 Slot6` の OPROM** を無効化すると起動しなくなる（下記「BIOS 設定」参照）。
+  aws-gpu02 は UEFI ブート + オンボード SATA。
 - **aws-gpu02 の VRAM は不均等**（16/16/16/12/16/12 GB）。t120h-p100 の
   `--tensor-split 11,12,13,14` 系プロファイルはそのまま流用できない。
 
@@ -354,33 +355,41 @@ POST を短くして爆音区間を縮めるための変更。**BIOS に fan 関
 |---|---|---|---|
 | `Advanced → Boot Feature → Wait For "F1" If Error` | Enabled → **Disabled** | ✓ | ✓ |
 | `Advanced → PCIe/PCI/PnP → Onboard LAN 1 OPROM` | PXE → **Disabled** | ✓ | ✓ |
-| 同 → `CPU* Slot* PCI-E OPROM` | Legacy → Disabled | **✗ 起動不能。Legacy のまま** | ✓（11 スロット） |
+| 同 → `CPU* Slot* PCI-E OPROM` | Legacy → Disabled | ✓（11 項目。**`CPU2 Slot6` だけ Legacy 必須**） | ✓（11 スロット） |
 
 **触ってはいけない項目**: `Above 4G Decoding` (Enabled)、`MMIO High Size` (512G)、
 `Onboard Video OPROM` (Legacy)、`VGA Priority` (Onboard)。
 
-#### ⚠️ aws-gpu01 でスロット OPROM を全部無効化してはいけない
+#### ⚠️ aws-gpu01 で `CPU2 Slot6` の OPROM を無効化してはいけない
 
-**aws-gpu01 のブートディスクは SAS HBA（拡張カード、`82:00.0` LSI MegaRAID SAS-3 3108）経由**
-なので、スロット OPROM を全部 Disabled にすると BIOS がブートデバイスを見失い
-**EFI Shell に落ちて起動しない**（2026-08-17 に実際に発生）。
-aws-gpu02 はオンボード SATA (`/dev/sda2`) ブートなので同じ変更でも問題ない。
+**aws-gpu01 は Legacy BIOS (CSM) ブート**（`/sys/firmware/efi` が無く `efibootmgr` も空）で、
+**ブートディスクは SAS HBA（`82:00.0` LSI MegaRAID SAS-3 3108）経由**。よって
+**HBA の Legacy Option ROM が実行されないとブートデバイスを見失い EFI Shell に落ちる**
+（2026-08-17 に全項目 Disabled で実際に発生）。aws-gpu02 は **UEFI ブート + オンボード SATA**
+なので同じ変更でも問題ない。
 
-**aws-gpu01 のスロット ↔ デバイス対応**（`dmidecode -t 9` と `lspci` の突合、2026-08-18）:
+**その HBA を制御しているのが `CPU2 Slot6 PCI-E x16 OPROM`**（2026-08-18 に実機で特定。
+この 1 項目だけ Legacy に残し他 11 項目を Disabled にして正常起動、POST 画面に
+`AVAGO MegaRAID SAS-MFI BIOS` の実行を確認）。
 
-| BIOS のスロット項目 | BDF | デバイス |
+**aws-gpu01 のスロット ↔ デバイス対応**（BIOS 項目 = SMBIOS `Designation`、2026-08-18 確定）:
+
+| BIOS のスロット項目 | SMBIOS Bus Address | デバイス |
 |---|---|---|
-| CPU1 SLOT3 / 4 / 5 | 08 / 07 / 05:00.0 | Tesla P100 |
-| CPU1 SLOT9 / 10 / 11 / 12 | 0d / 0f / 0e / 0c:00.0 | Tesla P100 |
-| CPU1 SLOT8 | 0b:00.0 | Mellanox ConnectX-4（100GbE） |
-| CPU1 SLOT1 | 09:00.0 | PLX PCIe スイッチ |
-| CPU1 SLOT2 / 7、CPU2 SLOT6 | — | 空き |
-| **（SMBIOS のスロット一覧に無い）** | **82:00.0** | **LSI MegaRAID SAS-3 ＝ ブートディスク** |
+| CPU1 Slot1 | 09:00.0 | PLX PCIe スイッチ (upstream) |
+| CPU1 Slot2 | ff:00.0 | 空き |
+| CPU1 Slot3 / 4 / 5 | 08 / 07 / 05:00.0 | Tesla P100 |
+| **CPU2 Slot6** | 01:00.0（**BIOS の誤報告。実際は空**） | **LSI MegaRAID SAS-3 = ブートディスク (`82:00.0`)** |
+| CPU1 Slot7 | ff:00.0 | 空き |
+| CPU1 Slot8 | 0b:00.0 | Mellanox ConnectX-4（100GbE） |
+| CPU1 Slot9 / 10 / 11 / 12 | 0d / 0f / 0e / 0c:00.0 | Tesla P100 |
 
-SAS HBA は SMBIOS のスロット一覧に現れない（内部 AOC 扱い）ため、BIOS のどの項目に対応するかは
-特定できない。したがって gpu01 で POST を短縮したい場合は
-**GPU が載る 7 スロット (SLOT3,4,5,9,10,11,12) だけを Disabled にし、残りは Legacy のまま**
-にすること。
+**POST 短縮目的でこれを触る価値は薄い**: reset 起点の実測で 11 項目を Disabled にしても
+**146 秒 → 144 秒（−2 秒）**にしかならなかった。GPU の VGA OpROM は POST 時間の主因ではなく、
+残さざるを得ない MegaRAID の `F/W Initializing Devices` と 160GB のメモリトレーニングが支配的。
+詳細は [2026-08-18 HBA スロット特定レポート](../../../report/2026-08-18_185344_aws_gpu01_sas_hba_slot_id.md)。
+
+**現在の設定**: gpu01 は `CPU2 Slot6` のみ Legacy、他 11 項目 Disabled（2026-08-18 時点）。
 
 #### BIOS に確実に入る方法
 

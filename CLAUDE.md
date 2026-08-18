@@ -54,10 +54,12 @@ Tesla P100 を 7 枚（112GB）/ 6 枚（88GB）搭載。**起動時にファン
 BMC の fan mode を **Full 固定 + duty 制御**に切り替えた（**アイドル 6,500→2,900rpm**）。
 デーモンを止めると自動で BMC の Optimal 制御に戻る。**起動 (POST) 中も `bmc-power.sh` が
 `boot-quiet.sh` を自動併走させることで 2,900rpm 台に収まる**（2026-08-18 のコールドブートで実測）。
-ただし抑制が効かない状況では従来どおり爆音になるため、**電源操作のガードは維持する**。また **aws-gpu01 は BIOS のスロット OPROM を
-無効化するとブートディスク（SAS HBA 経由）を見失い起動不能になる**。詳細は
+ただし抑制が効かない状況では従来どおり爆音になるため、**電源操作のガードは維持する**。また **aws-gpu01 は Legacy BIOS (CSM) ブートで、
+ブートディスクは SAS HBA 経由**のため、**BIOS の `CPU2 Slot6 PCI-E x16 OPROM` を Disabled にすると起動不能になる**（2026-08-18 に特定。
+他の 11 スロット項目は Disabled にしても起動するが、**POST 短縮効果は 146→144 秒とほぼ無い**ので触る価値は薄い）。詳細は
 [gpu-server/aws-gpu.md](.claude/skills/gpu-server/aws-gpu.md) の「ファン制御」「BIOS 設定」節と
-[2026-08-17 静音化レポート](report/2026-08-17_234403_aws_gpu_fan_noise_reduction.md)。
+[2026-08-17 静音化レポート](report/2026-08-17_234403_aws_gpu_fan_noise_reduction.md)、
+[2026-08-18 HBA スロット特定レポート](report/2026-08-18_185344_aws_gpu01_sas_hba_slot_id.md)。
 
 **mi25 デフォルトバックエンド**: Vulkan (RADV, 4 枚 x16GB)。
 `MI25_BACKEND=hip` を明示すると ROCm fallback。詳細は
