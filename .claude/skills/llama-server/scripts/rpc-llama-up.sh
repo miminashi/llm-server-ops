@@ -6,9 +6,10 @@
 # rpc-server (ggml-rpc-server) は事前に rpc-up.sh で起動しておくこと。
 #
 # 使い方:
-#   rpc-llama-up.sh <model-path> [ctx-size]
+#   rpc-llama-up.sh [model-path] [ctx-size]
 #
-#   model-path : メインホスト上のパス。~ 展開されるようクォートせずに渡される。
+#   model-path : メインホスト上のパス。省略時は下記のデフォルト構成のモデル。
+#                ~ 展開されるようクォートせずに渡される。
 #                分割 GGUF は第 1 shard を指定すれば残りは自動で読まれる。
 #   ctx-size   : 省略時 131072
 #
@@ -16,9 +17,17 @@
 #   SERVER            メインホスト (既定 aws-gpu01)
 #   RPC               ワーカーの host:port (既定 192.168.100.2:50052)
 #   ALIAS             --alias に渡す名前 (既定はモデルファイルの basename から生成)
+#   SAMPLING_OPTS     サンプリング指定 (既定は下記。空文字を渡せば llama.cpp 既定に戻る)
 #   EXTRA_LLAMA_OPTS  追加フラグ (既定オプションの後ろに置かれるので上書きできる)
 #   WAIT_SECS         起動完了を待つ秒数 (既定 2400。144 GiB 級は cold で 15 分超かかる)
 #   NO_WAIT=1         起動だけして待たない
+#
+# デフォルト構成 (aws-gpu01 + aws-gpu02 の標準構成、2026-08-18 制定):
+#   モデル       : Huihui-DeepSeek-V4-Flash-0731-abliterated (Q4_K, 153.3 GiB)
+#   ctx          : 131072
+#   サンプリング : unsloth 公式値 --temp 1.0 --top-p 1.0 --min-p 0.01
+#   ctx=131072 で起動できることを 2026-08-16 に実測済み (最小空き 460 MiB)。
+#   これより大きいモデルを同じ設定で載せる余地は無い。
 #
 # 実績パラメータ (2026-08-16 / 2026-08-17):
 #   --flash-attn 1 --poll 0 -b 2048 -ub 512 --n-gpu-layers 999
@@ -26,17 +35,29 @@
 
 set -euo pipefail
 
-MODEL="${1:?usage: rpc-llama-up.sh <model-path> [ctx-size]}"
+# --- デフォルト構成 (aws-gpu01 + aws-gpu02) ---
+DEFAULT_MODEL='~/models/Huihui-DeepSeek-V4-Flash-0731-abliterated-GGUF/DeepSeek-V4-Flash-Q4_K-0731.gguf'
+DEFAULT_ALIAS='DeepSeek-V4-Flash-0731-abliterated-Q4_K'
+# DeepSeek-V4-Flash は unsloth 公式値を使う (Qwen3.x 共通プロファイルは適用しない)
+DEFAULT_SAMPLING='--temp 1.0 --top-p 1.0 --min-p 0.01'
+
+MODEL="${1:-$DEFAULT_MODEL}"
 CTX="${2:-131072}"
 SERVER="${SERVER:-aws-gpu01}"
 RPC="${RPC:-192.168.100.2:50052}"
 WAIT_SECS="${WAIT_SECS:-2400}"
+SAMPLING_OPTS="${SAMPLING_OPTS-$DEFAULT_SAMPLING}"
 
 if [ -z "${ALIAS:-}" ]; then
-  ALIAS="$(basename "$MODEL" .gguf)"
+  if [ "$MODEL" = "$DEFAULT_MODEL" ]; then
+    ALIAS="$DEFAULT_ALIAS"
+  else
+    ALIAS="$(basename "$MODEL" .gguf)"
+  fi
 fi
 
-LOG="/tmp/llama-server-rpc-ctx${CTX}.log"
+# ttyd の 7682 (ログ閲覧) が tail する先と同じパスにする。
+LOG="/tmp/llama-server.log"
 
 # NOTE: pgrep のパターンを [b]in/... と書くのは自己マッチ回避のため。
 #       ssh 越しに起動される bash 自身のコマンドラインにパターン文字列が含まれるので、
@@ -60,15 +81,17 @@ echo "[rpc-llama-up] alias=$ALIAS log=$SERVER:$LOG"
 # NOTE: $MODEL をクォートしないのは先頭の ~ をリモート側で展開させるため。
 # NOTE: 末尾に `disown` を付けてはいけない。非対話 bash では起動用シェルが終了せず
 #       SSH チャネルが開いたままになり、このスクリプトがハングする（実測）。
-ssh -n "$SERVER" "cd ~/llama.cpp && setsid nohup ./build/bin/llama-server \
+# NOTE: `disown` を外しても ssh が戻ってこないケースがある（2026-08-18 実測）。起動できたかは
+#       後段の待機ループが判定するので、起動コマンド自体は timeout で打ち切る。
+timeout 60 ssh -n "$SERVER" "cd ~/llama.cpp && setsid nohup ./build/bin/llama-server \
   --model $MODEL \
   --alias '$ALIAS' \
   --rpc $RPC \
   --n-gpu-layers 999 --ctx-size $CTX \
   --flash-attn 1 --poll 0 -b 2048 -ub 512 \
-  --jinja ${EXTRA_LLAMA_OPTS:-} \
+  --jinja $SAMPLING_OPTS ${EXTRA_LLAMA_OPTS:-} \
   --host 0.0.0.0 --port 8000 \
-  > $LOG 2>&1 < /dev/null &"
+  > $LOG 2>&1 < /dev/null &" || true
 
 if [ "${NO_WAIT:-0}" = "1" ]; then
   echo "[rpc-llama-up] started (NO_WAIT=1)。ログ: ssh $SERVER tail -f $LOG"

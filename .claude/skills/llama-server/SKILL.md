@@ -11,6 +11,10 @@ llama-server の起動・管理と llama.cpp のビルドに関するスキル�
 
 **モデルが指定されていない場合は、`AskUserQuestion` でモデル選択ダイアログを表示してください。**
 
+**例外: aws-gpu01 / aws-gpu02** — この 2 台には確定したデフォルト構成（RPC 分散 +
+Huihui-DeepSeek-V4-Flash-0731-abliterated / ctx=131072）があるので、モデル未指定なら
+**問い合わせずにデフォルト構成で起動してよい**。下記「RPC 分散構成」節を参照。
+
 ```
 以下のモデルから選択してください:
 
@@ -37,6 +41,7 @@ llama-server の起動・管理と llama.cpp のビルドに関するスキル�
 | `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` | 131072 | t120h-p100 | MTP有効、`--spec-type draft-mtp` 自動適用 |
 | `unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL` | 131072 | t120h-p100 | MoE+MTP、`--spec-type draft-mtp` 自動適用 |
 | `unsloth/DeepSeek-V4-Flash-0731-GGUF:UD-Q4_K_XL` | 131072 | **aws-gpu01 + aws-gpu02（RPC 分散必須）** | **144.4 GiB。1 台では載らない**。native ctx 1M、DSA で長 ctx 劣化が小さい。サンプリングは unsloth 公式値（下記） |
+| `huihui-ai/Huihui-DeepSeek-V4-Flash-0731-abliterated-GGUF:Q4_K` | 131072 | **aws-gpu01 + aws-gpu02（RPC 分散必須）** | **aws-gpu01/02 のデフォルトモデル**（2026-08-18 制定）。**153.3 GiB**。上記の abliterated 版。サンプリングは同じ unsloth 公式値。ctx=131072 で最小空き 460 MiB |
 
 ### モデル別サンプリングパラメータ
 
@@ -295,19 +300,58 @@ tmux split-window -v -b -d -l 3 \
 | t120h-m10 | `CUDA_VISIBLE_DEVICES=0..14 -b 4096 -ub 4096` | GPU 15は使用不可 |
 | aws-gpu01 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**（P100 16GB×7=112GB、t120h-p100 実績値を踏襲した推定値）。RPC 分散では下記の実績値を使う |
 | aws-gpu02 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**。P100 16GB×4 + **12GB×2** = 88GB。VRAM 不均等だが、**RPC 分散での実測では `--tensor-split` 不要**（自動配分が 12GB 枚を適切に扱う） |
-| aws-gpu01 + aws-gpu02（RPC 分散） | `--rpc 192.168.100.2:50052 --flash-attn 1 --poll 0 -b 2048 -ub 512` | **実績あり**（2026-08-16）。13 GPU / 200 GiB。DeepSeek-V4-Flash UD-Q4_K_XL（144.4 GiB）を ctx=131072 で起動、pp 89.7 t/s / tg 13.6 t/s。`-ub` の引き上げは未検証（最小空き 1,058 MiB） |
+| **aws-gpu01 + aws-gpu02（RPC 分散）= 両機のデフォルト構成** | `--rpc 192.168.100.2:50052 --flash-attn 1 --poll 0 -b 2048 -ub 512` | **実績あり**（2026-08-16）。13 GPU / 200 GiB。DeepSeek-V4-Flash UD-Q4_K_XL（144.4 GiB）を ctx=131072 で起動、pp 89.7 t/s / tg 13.6 t/s。`-ub` の引き上げは未検証（最小空き 1,058 MiB、abliterated 版では 460 MiB）。起動は `llama-up.sh aws-gpu01`（→ `rpc-stack-up.sh`） |
 
 **aws-gpu01 / aws-gpu02 の電源**: 起動時にファンが爆音になるため、`llama-up.sh` が内部で呼ぶ
 `power-ctl.sh on` は `ALLOW_FAN_NOISE=1` なしでは exit 20 で拒否される。電源 OFF の状態から
 起動する場合は必ずユーザの指示を得ること。詳細は
 [gpu-server/aws-gpu.md](../gpu-server/aws-gpu.md)。
 
-## RPC 分散構成（aws-gpu01 + aws-gpu02）
+## RPC 分散構成（aws-gpu01 + aws-gpu02）— 両機のデフォルト構成
 
 1 台の VRAM に収まらないモデルを、llama.cpp の **RPC バックエンド**で 2 台の GPU サーバに
 またがって載せる構成。aws-gpu01（112 GiB）+ aws-gpu02（88 GiB）= **合計 200 GiB** を
 1 プロセスから使える。両機は 100GbE（ConnectX-4）で直結されており、**RDMA (RoCEv2) が
 自動で有効になる**（[gpu-server/aws-gpu.md](../gpu-server/aws-gpu.md) の「100GbE 直結リンク」節）。
+
+### デフォルト構成（2026-08-18 制定）
+
+**aws-gpu01 / aws-gpu02 は「2 台で 1 つの llama-server」がデフォルト**。単体運用は未検証で、
+既定モデルが 1 台には載らないため、どちらのサーバ名を指定しても同じスタックが立つ。
+
+| 項目 | 既定値 |
+|---|---|
+| 構成 | aws-gpu01（メイン）+ aws-gpu02（RPC ワーカー）、13 GPU / 200 GiB |
+| モデル | `~/models/Huihui-DeepSeek-V4-Flash-0731-abliterated-GGUF/DeepSeek-V4-Flash-Q4_K-0731.gguf`（Q4_K、153.3 GiB） |
+| alias | `DeepSeek-V4-Flash-0731-abliterated-Q4_K` |
+| ctx-size | 131072 |
+| 起動パラメータ | `--n-gpu-layers 999 --flash-attn 1 --poll 0 -b 2048 -ub 512 --jinja` |
+| サンプリング | `--temp 1.0 --top-p 1.0 --min-p 0.01`（unsloth 公式値。Qwen3.x プロファイルは使わない） |
+| エンドポイント | `http://10.8.2.1:8000/v1`（aws-gpu02 は 8000 で待ち受けない） |
+| ログ | `/tmp/llama-server.log`（ttyd 7682 が tail する先と同じ） |
+| 監視 UI | **両機に立てる**（13 GPU のうち 6 枚はワーカー側）。GPU 監視 `10.8.2.1:7681` / `10.8.2.2:7681`、ログ閲覧 `10.8.2.1:7682`（llama-server）/ `10.8.2.2:7682`（rpc-server） |
+
+```bash
+# 起動（電源確認 → RPC ワーカー → llama-server → ttyd → Discord 通知）
+.claude/skills/llama-server/scripts/llama-up.sh aws-gpu01
+# 上は rpc-stack-up.sh へのディスパッチ。直接呼んでもよい:
+.claude/skills/llama-server/scripts/rpc-stack-up.sh [model-path] [ctx-size]
+
+# 停止（llama-server → rpc-server の順。電源は落とさない）
+.claude/skills/llama-server/scripts/llama-down.sh aws-gpu01
+.claude/skills/llama-server/scripts/rpc-stack-down.sh [--power-off]
+```
+
+- `rpc-stack-up.sh` は `/health` が 200 なら ttyd だけ立て直して終わる（**冪等**）
+- **電源が Off のときは起動を拒否する**（POST 中の爆音のため）。ユーザの指示を得た場合のみ
+  `ALLOW_FAN_NOISE=1` を付けて再実行する
+- ロックは取らない。事前に `lock.sh aws-gpu01` と `lock.sh aws-gpu02` を両方取ること
+- 既定モデルは **ctx=131072 で最小空き 460 MiB** しか残らない（2026-08-16 実測）。
+  これより大きいモデルを同一設定で載せる余地は無い
+- **7681 の常駐 ttyd は無効化済み**（2026-08-18）。両機には Ubuntu の ttyd パッケージが
+  入れる `ttyd.service`（`/usr/bin/ttyd -i lo -p 7681 -O login`）が enabled で常駐しており、
+  7681 を占有して nvtop 用 ttyd の起動を妨げていた。`sudo systemctl disable --now ttyd` で
+  両機とも停止・無効化した。**再導入・再有効化しないこと**
 
 ### 役割
 
@@ -379,13 +423,19 @@ RPC サーバのバイナリ名は現行 llama.cpp では **`ggml-rpc-server`**�
 ### llama-server 側
 
 `start.sh` は RPC 未対応。代わりに **`rpc-llama-up.sh`** を使う（起動完了の待機まで面倒を見る）。
+通常は上位の `rpc-stack-up.sh`（= `llama-up.sh aws-gpu01`）から呼ばれるので、単体で叩くのは
+モデルや ctx を変えて試すときだけでよい。
 
 ```bash
+.claude/skills/llama-server/scripts/rpc-llama-up.sh                                     # デフォルト構成モデル
 .claude/skills/llama-server/scripts/rpc-llama-up.sh '~/models/<model>/<first-shard>.gguf' 131072
 ```
 
-- 引数は `rpc-llama-up.sh <model-path> [ctx-size]`（ctx 既定 131072）
-- 環境変数: `SERVER` / `RPC` / `ALIAS` / `EXTRA_LLAMA_OPTS` / `WAIT_SECS` / `NO_WAIT=1`
+- 引数は `rpc-llama-up.sh [model-path] [ctx-size]`（model 省略時はデフォルト構成モデル、ctx 既定 131072）
+- 環境変数: `SERVER` / `RPC` / `ALIAS` / `SAMPLING_OPTS` / `EXTRA_LLAMA_OPTS` / `WAIT_SECS` / `NO_WAIT=1`
+- サンプリングは既定で `--temp 1.0 --top-p 1.0 --min-p 0.01`（DeepSeek-V4-Flash の unsloth 公式値）。
+  他モデルを載せるときは `SAMPLING_OPTS` で上書きする
+- ログは `/tmp/llama-server.log`（ttyd の 7682 が tail する先と同じ）
 - 二重起動を検知して中止する。既定で `listening on` が出るまで待つ（最大 2400 秒）
 
 手で叩く場合は以下と等価:
@@ -407,7 +457,7 @@ ssh -n aws-gpu01 'cd ~/llama.cpp && setsid nohup ./build/bin/llama-server \
   aws-gpu02 の 12GB 枚（index 3, 5）で偏りが出たときだけ手動指定する
 - 監視 UI は `ttyd-up.sh aws-gpu01` で別途立てる（`start.sh` を経由しないため自動起動しない）
 
-### RPC 構成でハマる 3 点（2026-08-17 実測）
+### RPC 構成でハマる 4 点（2026-08-17 / 2026-08-18 実測）
 
 **1. `pgrep -f 'bin/llama-server'` は ssh 越しだと必ず真になる**
 
@@ -432,6 +482,14 @@ aws-gpu01 の RAM は 157 GiB なので **モデル 1 本だけがちょうど p
 - 巨大モデルを **ダウンロードすると page cache が丸ごと流れる**。DL 直後のロードは必ず cold
 - `rpc-up.sh` に `RPC_CACHE=1` を付けるとワーカー側にテンソルキャッシュが残り、
   RPC 転送分を省ける可能性がある（未検証。aws-gpu02 の空きは約 140GB で 1 モデル分のみ）
+
+**4. バックグラウンド起動の ssh が戻ってこないことがある**
+
+`ssh -n <server> "setsid nohup <cmd> > log 2>&1 < /dev/null &"` は、**`disown` を付けていなくても
+ssh が exit しない**ことがある（2026-08-18 実測。`rpc-up.sh` / `rpc-llama-up.sh` の両方で発生）。
+プロセス自体は正しく起動し LISTEN もするので、**起動できたかどうかは後段の検証（LISTEN チェック /
+ログの `listening on`）で判定できる**。そこで起動コマンド側は `timeout 30 ssh ... || true` の形で
+打ち切る方針にした。同じ書き方でリモート起動する箇所を足すときは同様にすること。
 
 ### perplexity 計測との排他（重要）
 

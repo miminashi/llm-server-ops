@@ -41,7 +41,16 @@
 | mi25 | 10.1.4.13 | `http://10.1.4.13:8000/v1` | 10.1.4.7（IPMI） |
 | t120h-p100 | 10.1.4.14 | `http://10.1.4.14:8000/v1` | 10.1.4.8（iLO5） |
 | aws-gpu01 | 10.8.2.1 | `http://10.8.2.1:8000/v1` | 10.11.12.1（IPMI） |
-| aws-gpu02 | 10.8.2.2 | `http://10.8.2.2:8000/v1` | 10.11.12.2（IPMI） |
+| aws-gpu02 | 10.8.2.2 | （RPC ワーカー。8000 番では待ち受けない） | 10.11.12.2（IPMI） |
+
+**aws-gpu01 / aws-gpu02 のデフォルト構成（2026-08-18 制定）**: この 2 台は
+**RPC 分散で 1 つの llama-server を動かす**のが既定。aws-gpu01 がメインホスト、
+aws-gpu02 が RPC ワーカーで、13 GPU / 200 GiB を 1 プロセスから使う。既定モデルは
+**Huihui-DeepSeek-V4-Flash-0731-abliterated（Q4_K、153.3 GiB）/ ctx=131072**、
+API は `http://10.8.2.1:8000/v1` のみ。**単体運用は未検証**なので、どちらを使う場合も
+**両機のロックを取る**こと。起動 `llama-up.sh aws-gpu01` / 停止 `llama-down.sh aws-gpu01`
+（内部で `rpc-stack-up.sh` / `rpc-stack-down.sh` にディスパッチ。cold ロードに約 15 分かかる）。
+詳細は [llama-server SKILL.md](.claude/skills/llama-server/SKILL.md) の「RPC 分散構成」節。
 
 **aws-gpu01 / aws-gpu02（2026-08-16 追加）**: Supermicro SYS-4028GR-TRT2 / TRT。
 Tesla P100 を 7 枚（112GB）/ 6 枚（88GB）搭載。**起動時にファンが爆音になるため、
@@ -199,6 +208,7 @@ git config core.hooksPath .githooks
 | OSクラッシュ時の証跡保全 | OSハング/クラッシュ（SSH・ping不通）検知時は、**電源リセットの前に必ず** `bmc-screenshot.sh` で KVM スクショを取得すること（コンソールに原因究明の情報が残るため）。詳細は「GPUサーバとLLM」節 |
 | aws-gpu01 の他ユーザデータ | `/home/myzk` `/home/sizumita` は**現在未使用だがデータを削除しない**。ディスクを空ける場合も自分（`ubuntu`）の `~/models` / `~/.cache/huggingface` に留めること |
 | aws-gpu01/02 の電源操作 | **ユーザの明確な指示なしにリブート・電源投入・電源断を行わない**（起動時にファンが爆音になるため）。`bmc-power.sh` の `on`/`off`/`soft`/`reset`/`cycle` と `power-ctl.sh` の `on`/`off` は `ALLOW_FAN_NOISE=1` が無いと exit 20 で拒否される。`status` とスクショは常に可。詳細は [gpu-server/aws-gpu.md](.claude/skills/gpu-server/aws-gpu.md) |
+| aws-gpu01/02 の構成 | この 2 台は **RPC 分散（aws-gpu01 メイン + aws-gpu02 ワーカー）が既定**で、単体運用は未検証。起動 `llama-up.sh aws-gpu01` / 停止 `llama-down.sh aws-gpu01`。既定モデルは Huihui-DeepSeek-V4-Flash-0731-abliterated（Q4_K、153.3 GiB）/ ctx=131072。**ロックは両機に対して取る**。詳細は「GPUサーバとLLM」節 |
 | 添付ファイルと LFS | `report/attachment/` 配下は **Git LFS を使わず通常の git 管理**とする（テキストログは zlib で 1〜7% に縮むが LFS は無圧縮保存のため無料枠に不利）。**LFS の再導入は検討しない**。clone 直後に `git config core.hooksPath .githooks` で巨大ファイル検出 hook を有効化すること。100 MB 超は GitHub が push を拒否するため長時間ログは `gzip` する。詳細は「リポジトリ運用」節 |
 | モデルダウンロード | **必ずワークステーション（現在のマシン）に先にダウンロードし、その後 GPU マシンへ転送する**。GPU マシンから HF への直接ダウンロードはしない。HF トークンは `~/.config/gpu-server/.env` の `HF_TOKEN` を使う。詳細は「モデルダウンロード」節 |
 | 拠点間通信の遅さ | WS と GPU マシン（p100 / mi25）は同一 IP セグメントだが**物理的に別拠点**で、通信が遅い（1 MB/s 程度まで落ちることもある）。GPU マシンから HF への直接アクセスはさらに遅い。大容量転送は長時間かかる前提で計画すること。詳細は「ネットワーク構成」節 |

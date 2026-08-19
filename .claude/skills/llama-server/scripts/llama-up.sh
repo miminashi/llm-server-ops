@@ -18,6 +18,11 @@
 #   .claude/skills/llama-server/scripts/llama-up.sh t120h-p100 "unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M" 8192
 #   旧 122B を fit 起動: .claude/skills/llama-server/scripts/llama-up.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit
 #
+# aws-gpu01 / aws-gpu02 を指定した場合は RPC 分散構成（2 台を合算した 13 GPU / 200 GiB を
+# 1 プロセスで使う）がデフォルトなので、rpc-stack-up.sh へディスパッチする。この場合の
+# 引数は [server] [model-path] [ctx-size]（第 2 引数は HF 名ではなくメインホスト上のパス）。
+#   .claude/skills/llama-server/scripts/llama-up.sh aws-gpu01
+#
 # ロック取得は行わない（必要なら事前に gpu-server/scripts/lock.sh を実行）。
 # 終了コード: 0=成功 / 1=エラー。
 #
@@ -29,6 +34,17 @@ SKILL_DIR="$(dirname "$SCRIPT_DIR")"
 GPU_SCRIPTS_DIR="$(cd "$SKILL_DIR/../gpu-server/scripts" && pwd)"
 
 SERVER="${1:-t120h-p100}"
+
+# --- aws-gpu01 / aws-gpu02 は RPC 分散がデフォルト構成 ---
+# 単体運用は未検証で、モデル（DeepSeek-V4-Flash 153 GiB）が 1 台に載らない。
+# どちらのサーバ名を渡されても同じスタック（aws-gpu01 メイン + aws-gpu02 ワーカー）を立てる。
+case "$SERVER" in
+  aws-gpu01|aws-gpu02)
+    echo "==> $SERVER は RPC 分散構成（aws-gpu01 + aws-gpu02）で起動します"
+    exec "$SCRIPT_DIR/rpc-stack-up.sh" "${@:2}"
+    ;;
+esac
+
 HF_MODEL="${2:-unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_XL}"
 MODE="${3:-131072}"
 FIT_CTX="${4:-}"

@@ -40,17 +40,29 @@ case "$SERVER" in
   *)    GPU_CMD="nvtop" ;;
 esac
 
-LOG_FILE="/tmp/llama-server.log"
+# 7682 で tail するログ。RPC ワーカー側など llama-server が動かないホストでは
+# TTYD_LOG_FILE=/tmp/rpc-server.log のように差し替える。
+LOG_FILE="${TTYD_LOG_FILE:-/tmp/llama-server.log}"
 
-# 指定ポートが LISTEN しているか（最大 ~10 秒リトライ）を確認する
+# 指定ポートで「このスクリプトが起動した ttyd」が待ち受けているかを確認する
+# （最大 ~10 秒リトライ）。
+#
+# ポートの LISTEN だけを見てはいけない。aws-gpu01/02 には Ubuntu の ttyd パッケージが
+# 入れる ttyd.service が `/usr/bin/ttyd -i lo -p 7681 -O login` で常駐しており、
+# 7681 を掴んだままになる。この状態では自前の nvtop 用 ttyd はポート衝突で即死するのに、
+# LISTEN 検証は常駐プロセスのほうを見て [OK] を返していた（2026-08-18 実測。
+# 「nvtop が見えないのに起動成功と表示される」状態が続いていた）。
+# そこで pgrep でコマンドラインを照合し、自分が起動したプロセスであることまで確認する。
 wait_listen() {
   local port="$1"
   for _ in $(seq 1 10); do
-    if ssh "$SERVER" "ss -tln | grep -q ':$port '"; then
+    if ssh "$SERVER" "pgrep -f '^ttyd --port $port' > /dev/null && ss -tln | grep -q ':$port '"; then
       return 0
     fi
     sleep 1
   done
+  # 失敗時は、そのポートを掴んでいる別プロセスがいれば晒しておく（原因究明用）
+  ssh "$SERVER" "ss -ltnp 2>/dev/null | grep ':$port ' || true" >&2
   return 1
 }
 

@@ -9,6 +9,24 @@ GPUサーバ上のLLM推論サーバ（llama-server）と関連リソースを�
 | mi25 | AMD MI25 | 4 | 64GB | ROCm | 10.1.4.13 |
 | t120h-p100 | NVIDIA Tesla P100 | 4 | 64GB | CUDA | 10.1.4.14 |
 | t120h-m10 | NVIDIA Tesla M10 | 15 | 128GB | CUDA | 10.1.4.15 |
+| aws-gpu01 | NVIDIA Tesla P100 16GB | 7 | 112GB | CUDA | 10.8.2.1 |
+| aws-gpu02 | NVIDIA Tesla P100 16GB×4 + 12GB×2 | 6 | 88GB | CUDA | 10.8.2.2 |
+
+aws-gpu01 / aws-gpu02 は **2 台セットで 1 つの llama-server を動かす RPC 分散がデフォルト構成**です（13 GPU / 200GB）。詳細は [llama-server SKILL.md](.claude/skills/llama-server/SKILL.md) の「RPC 分散構成」節。
+
+## エンドポイント
+
+| サーバ | OpenAI互換API | GPU監視 (ttyd) | ログ閲覧 (ttyd) | ブラウザ CDP | ブラウザ再起動API |
+|--------|---------------|----------------|-----------------|--------------|-------------------|
+| mi25 | [http://10.1.4.13:8000/v1](http://10.1.4.13:8000/v1) | [http://10.1.4.13:7681](http://10.1.4.13:7681) | [http://10.1.4.13:7682](http://10.1.4.13:7682) | [http://10.1.4.13:9222](http://10.1.4.13:9222) | [http://10.1.4.13:9221](http://10.1.4.13:9221) |
+| t120h-p100 | [http://10.1.4.14:8000/v1](http://10.1.4.14:8000/v1) | [http://10.1.4.14:7681](http://10.1.4.14:7681) | [http://10.1.4.14:7682](http://10.1.4.14:7682) | [http://10.1.4.14:9222](http://10.1.4.14:9222) | [http://10.1.4.14:9221](http://10.1.4.14:9221) |
+| t120h-m10 | [http://10.1.4.15:8000/v1](http://10.1.4.15:8000/v1) | [http://10.1.4.15:7681](http://10.1.4.15:7681) | [http://10.1.4.15:7682](http://10.1.4.15:7682) | [http://10.1.4.15:9222](http://10.1.4.15:9222) | [http://10.1.4.15:9221](http://10.1.4.15:9221) |
+| aws-gpu01 | [http://10.8.2.1:8000/v1](http://10.8.2.1:8000/v1) | [http://10.8.2.1:7681](http://10.8.2.1:7681) | [http://10.8.2.1:7682](http://10.8.2.1:7682) | （未整備） | （未整備） |
+| aws-gpu02 | （RPC ワーカーのため無し） | [http://10.8.2.2:7681](http://10.8.2.2:7681) | [http://10.8.2.2:7682](http://10.8.2.2:7682) | （未整備） | （未整備） |
+
+- **ttyd（7681 GPU監視 / 7682 ログ閲覧）は llama-server の起動時に一緒に立ち上がります**。単独で立て直したい場合は `.claude/skills/llama-server/scripts/ttyd-up.sh <server>` を実行してください（llama-server 稼働中でも安全・ロック不要）。
+- aws-gpu01 / aws-gpu02 は RPC 分散構成のため、**API は aws-gpu01 側の 1 つだけ**です。GPU 監視は 13 枚のうち 6 枚がワーカー側にあるので**両機に立ちます**。ログ閲覧はメインが llama-server、ワーカーが rpc-server のログを表示します。
+- aws-gpu01 / aws-gpu02 は docker 未導入のためリモートブラウザは未整備です。
 
 ## Skills一覧
 
@@ -121,8 +139,10 @@ llm-server-ops/
     │   │   ├── install-global.sh                # llama-server を単独でグローバル登録
     │   │   ├── llama-up.sh / llama-down.sh      # 統合スクリプト（電源+起動/停止、推奨）
     │   │   ├── start.sh / stop.sh / wait-ready.sh
-    │   │   ├── ttyd-gpu.sh
-    │   │   └── monitor-download.sh
+    │   │   ├── rpc-stack-up.sh / rpc-stack-down.sh  # aws-gpu01+02 の RPC 分散（既定構成）
+    │   │   ├── rpc-up.sh / rpc-down.sh / rpc-llama-up.sh
+    │   │   ├── ttyd-up.sh / ttyd-gpu.sh         # 監視UI（7681 GPU監視 / 7682 ログ閲覧）
+    │   │   └── monitor-download.sh / monitor-hf-download.sh
     │   └── server-scripts/
     │       └── update_and_build-{server}.sh
     └── discord-notify/

@@ -422,6 +422,10 @@ ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu01 reset
   `-DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++-12` は不要だった。
 - **llama-server 起動実績あり**: `DeepSeek-V4-Flash-0731 UD-Q4_K_XL`（144.4 GiB）を
   2 台 13 GPU に RPC 分散し **ctx=131072 で起動**（VRAM 157.1 GiB、pp 89.7 t/s、tg 13.6 t/s）。
+- **この RPC 分散が両機のデフォルト構成**（2026-08-18 制定）。既定モデルは
+  `Huihui-DeepSeek-V4-Flash-0731-abliterated`（Q4_K、153.3 GiB）、ctx=131072。
+  起動は `.claude/skills/llama-server/scripts/llama-up.sh aws-gpu01`（→ `rpc-stack-up.sh`）、
+  停止は `llama-down.sh aws-gpu01`（→ `rpc-stack-down.sh`）。**単体運用は未検証**。
 - **100GbE + RDMA (RoCEv2)** が llama.cpp 本体の機能として自動で有効化されることを実測。
 - **aws-gpu01 の HF ダウンロードは実測 117 MB/s**（155GB を 22分12秒）。
   登録時に測った 27 MB/s より大幅に速い。

@@ -36,6 +36,33 @@ if [ "${2:-}" = "--force" ]; then
   FORCE=true
 fi
 
+# --- aws-gpu01 / aws-gpu02 は RPC 分散がデフォルト構成 ---
+# 停止順序（llama-server → rpc-server）と電源 OFF の扱いが通常サーバと異なるため、
+# 専用スクリプトへディスパッチする。ロック解放だけはこちらで面倒を見る。
+case "$SERVER" in
+  aws-gpu01|aws-gpu02)
+    echo "==> $SERVER は RPC 分散構成（aws-gpu01 + aws-gpu02）として停止します"
+    "$SCRIPT_DIR/rpc-stack-down.sh"
+    for S in aws-gpu01 aws-gpu02; do
+      LOCK_OUT=$("$GPU_SCRIPTS_DIR/lock-status.sh" "$S" || true)
+      HOLDER=$(echo "$LOCK_OUT" | awk '/Holder:/ {print $2}')
+      if [ -z "$HOLDER" ]; then
+        continue
+      fi
+      STRIPPED="${HOLDER%-*}"
+      HOLDER_HOST="${STRIPPED%-*}"
+      if [ "$HOLDER_HOST" = "$(hostname)" ]; then
+        echo "==> $S のロックを解放します (holder=$HOLDER)"
+        "$GPU_SCRIPTS_DIR/unlock.sh" "$S" "$HOLDER"
+      else
+        echo "WARNING: $S は他者ロック ($HOLDER) のため解放しません" >&2
+      fi
+    done
+    echo "==> 停止完了（電源は落としていません。落とす場合は rpc-stack-down.sh --power-off）"
+    exit 0
+    ;;
+esac
+
 # --- Step 1: ロック検証 ---
 echo "==> [1/4] $SERVER のロック状態を確認中..."
 LOCK_OUT=$("$GPU_SCRIPTS_DIR/lock-status.sh" "$SERVER")

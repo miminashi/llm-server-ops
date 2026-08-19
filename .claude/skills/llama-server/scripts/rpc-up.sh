@@ -110,7 +110,10 @@ fi
 echo "==> $SERVER で $BIN を起動中... ($BIND_IP:$PORT)"
 # NOTE: 末尾に `disown` を付けてはいけない。非対話 bash では起動用シェルが終了せず
 #       SSH チャネルが開いたままになり、このスクリプトがハングする（実測）。
-ssh -n "$SERVER" "cd ~/llama.cpp && setsid nohup env ${DEBUG_ENV}./$BIN -H $BIND_IP -p $PORT $DEVICE_OPT $CACHE_OPT > /tmp/rpc-server.log 2>&1 < /dev/null &" || true
+# NOTE: `disown` を外しても ssh が戻ってこないケースがある（2026-08-18 実測。プロセス自体は
+#       正しく起動し LISTEN もするが、リモート側の起動用シェルが残り ssh が exit しない）。
+#       起動可否は後段の LISTEN 検証で判定できるので、起動コマンドは timeout で打ち切る。
+timeout 30 ssh -n "$SERVER" "cd ~/llama.cpp && setsid nohup env ${DEBUG_ENV}./$BIN -H $BIND_IP -p $PORT $DEVICE_OPT $CACHE_OPT > /tmp/rpc-server.log 2>&1 < /dev/null &" || true
 
 # --- LISTEN 検証 (最大 30 秒) ---
 for _ in $(seq 1 30); do
