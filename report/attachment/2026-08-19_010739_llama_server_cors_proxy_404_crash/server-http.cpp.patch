@@ -1,0 +1,20 @@
+diff --git a/tools/server/server-http.cpp b/tools/server/server-http.cpp
+index b11dc09d0..ed3a46d8b 100644
+--- a/tools/server/server-http.cpp
++++ b/tools/server/server-http.cpp
+@@ -143,6 +143,15 @@ bool server_http_context::init(const common_params & params) {
+     });
+ 
+     srv->set_error_handler([](const httplib::Request &, httplib::Response & res) {
++        // Never inject a body into a streaming response (e.g. the MCP CORS proxy relaying
++        // an upstream 404). set_content() leaves content_provider_ in place, apply_ranges()
++        // then sets content_length_ > 0, and httplib switches to the Content-Length write
++        // path, whose DataSink leaves done() unset. The provider installed by
++        // process_handler_response() calls sink.done() at EOF, which would throw
++        // std::bad_function_call and abort the whole server.
++        if (res.content_provider_) {
++            return;
++        }
+         if (res.status == 404) {
+             res.set_content(
+                 safe_json_to_str(json {

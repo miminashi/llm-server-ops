@@ -1,0 +1,97 @@
+0.00.264.331 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.01.801.392 W srv  llama_server: -----------------
+0.01.801.400 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.01.801.401 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.01.801.402 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.01.801.403 W srv  llama_server: -----------------
+0.01.801.427 W srv  llama_server: -----------------
+0.01.801.429 W srv  llama_server: the following feature(s) are enabled:
+0.01.801.429 W srv  llama_server:     MCP proxy (experimental)
+0.01.801.430 W srv  llama_server: do not expose the server to untrusted environments
+0.01.801.434 W srv  llama_server: -----------------
+0.01.802.992 I srv    load_model: loading model '/home/ubuntu/models/Huihui-DeepSeek-V4-Flash-0731-abliterated-GGUF/DeepSeek-V4-Flash-Q4_K-0731.gguf'
+0.03.009.978 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort
+5.27.677.043 I cmn          init: llama threadpool init, n_threads = 24
+5.28.476.688 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 131072, kv_unified = 'true'
+5.28.498.939 I srv          init: chat template supports preserving reasoning, consider enabling it via --reasoning-preserve
+5.28.503.368 I srv  llama_server: model loaded
+5.28.503.382 I srv  llama_server: listening on http://0.0.0.0:8000
+13.16.499.553 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = -1
+13.16.499.749 I slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
+13.17.466.950 I slot print_timing: id  3 | task 0 | prompt eval time =     349.17 ms /     6 tokens (   58.20 ms per token,    17.18 tokens per second)
+13.17.466.955 I slot print_timing: id  3 | task 0 |        eval time =     599.26 ms /     8 tokens (   85.61 ms per token,    11.68 tokens per second)
+13.17.466.956 I slot print_timing: id  3 | task 0 |       total time =     948.43 ms /    14 tokens
+13.17.466.960 I slot print_timing: id  3 | task 0 |    graphs reused =          7
+13.17.466.998 I slot      release: id  3 | task 0 | stop processing: n_tokens = 13, truncated = 0
+17.12.228.976 I srv  proxy_reques: proxying POST request to http://10.77.0.19:80/mcp
+17.12.428.744 I srv  proxy_reques: proxying POST request to http://10.77.0.19:80/mcp
+17.12.562.726 I srv  proxy_reques: proxying GET request to http://10.77.0.19:80/mcp
+17.12.562.812 I srv  proxy_reques: proxying POST request to http://10.77.0.19:80/mcp
+17.17.766.865 I srv  proxy_reques: proxying POST request to http://10.77.0.19:80/mcp
+17.17.951.759 I srv  proxy_reques: proxying POST request to http://10.77.0.19:80/mcp
+17.18.143.613 I srv  proxy_reques: proxying POST request to http://10.77.0.19:80/mcp
+17.18.144.580 I srv  proxy_reques: proxying GET request to http://10.77.0.19:80/mcp
+17.18.658.243 I slot get_availabl: id  2 | task -1 | selected slot by LRU, t_last = -1
+17.18.662.749 I slot launch_slot_: id  2 | task 10 | processing task, is_child = 0
+17.27.903.716 E srv    operator(): http client error: Connection handling canceled
+17.46.725.564 I slot print_timing: id  2 | task 10 | prompt processing, n_tokens =   2048, progress = 0.51, t =  28.00 s / 73.15 tokens per second
+18.05.895.968 I slot print_timing: id  2 | task 10 | prompt processing, n_tokens =   3475, progress = 0.87, t =  47.17 s / 73.67 tokens per second
+18.12.789.474 I slot print_timing: id  2 | task 10 | prompt processing, n_tokens =   3987, progress = 1.00, t =  54.06 s / 73.75 tokens per second
+18.21.085.953 I slot print_timing: id  2 | task 10 | n_gen =    100, tg =  12.23 t/s, tg_3s =  12.35 t/s
+18.24.130.738 I slot print_timing: id  2 | task 10 | n_gen =    136, tg =  12.12 t/s, tg_3s =  11.82 t/s
+18.27.210.921 I slot print_timing: id  2 | task 10 | n_gen =    173, tg =  12.10 t/s, tg_3s =  12.01 t/s
+18.30.260.936 I slot print_timing: id  2 | task 10 | n_gen =    210, tg =  12.10 t/s, tg_3s =  12.13 t/s
+18.33.288.146 I slot print_timing: id  2 | task 10 | n_gen =    246, tg =  12.07 t/s, tg_3s =  11.89 t/s
+18.36.343.126 I slot print_timing: id  2 | task 10 | n_gen =    283, tg =  12.08 t/s, tg_3s =  12.11 t/s
+18.39.399.146 I slot print_timing: id  2 | task 10 | n_gen =    320, tg =  12.08 t/s, tg_3s =  12.11 t/s
+18.42.449.967 I slot print_timing: id  2 | task 10 | n_gen =    357, tg =  12.09 t/s, tg_3s =  12.13 t/s
+18.45.467.845 I slot print_timing: id  2 | task 10 | n_gen =    393, tg =  12.07 t/s, tg_3s =  11.93 t/s
+18.48.519.564 I slot print_timing: id  2 | task 10 | n_gen =    430, tg =  12.08 t/s, tg_3s =  12.12 t/s
+18.51.578.314 I slot print_timing: id  2 | task 10 | n_gen =    467, tg =  12.08 t/s, tg_3s =  12.10 t/s
+18.53.146.377 I slot print_timing: id  2 | task 10 | prompt eval time =   54263.00 ms /  3991 tokens (   13.60 ms per token,    73.55 tokens per second)
+18.53.146.380 I slot print_timing: id  2 | task 10 |        eval time =   40154.38 ms /   486 tokens (   82.79 ms per token,    12.08 tokens per second)
+18.53.146.381 I slot print_timing: id  2 | task 10 |       total time =   94417.38 ms /  4477 tokens
+18.53.146.383 I slot print_timing: id  2 | task 10 |    graphs reused =        486
+18.53.147.524 I slot      release: id  2 | task 10 | stop processing: n_tokens = 4476, truncated = 0
+21.07.599.620 I slot get_availabl: id  2 | task -1 | selected slot by LCP similarity, f_sim_best = 0.980 (> 0.100 thold), f_keep = 0.997
+21.07.604.402 I slot launch_slot_: id  2 | task 500 | processing task, is_child = 0
+21.15.981.264 I slot print_timing: id  2 | task 500 | prompt processing, n_tokens =    565, progress = 1.00, t =   8.36 s / 67.59 tokens per second
+21.24.104.478 I slot print_timing: id  2 | task 500 | n_gen =    100, tg =  12.51 t/s, tg_3s =  12.64 t/s
+21.27.122.943 I slot print_timing: id  2 | task 500 | n_gen =    138, tg =  12.53 t/s, tg_3s =  12.59 t/s
+21.30.190.192 I slot print_timing: id  2 | task 500 | n_gen =    176, tg =  12.50 t/s, tg_3s =  12.39 t/s
+21.33.191.700 I slot print_timing: id  2 | task 500 | n_gen =    213, tg =  12.47 t/s, tg_3s =  12.33 t/s
+21.36.204.691 I slot print_timing: id  2 | task 500 | n_gen =    251, tg =  12.49 t/s, tg_3s =  12.61 t/s
+21.39.235.167 I slot print_timing: id  2 | task 500 | n_gen =    289, tg =  12.50 t/s, tg_3s =  12.54 t/s
+21.42.265.497 I slot print_timing: id  2 | task 500 | n_gen =    325, tg =  12.43 t/s, tg_3s =  11.88 t/s
+21.45.300.619 I slot print_timing: id  2 | task 500 | n_gen =    363, tg =  12.44 t/s, tg_3s =  12.52 t/s
+21.48.312.594 I slot print_timing: id  2 | task 500 | n_gen =    401, tg =  12.45 t/s, tg_3s =  12.62 t/s
+21.51.384.280 I slot print_timing: id  2 | task 500 | n_gen =    439, tg =  12.45 t/s, tg_3s =  12.37 t/s
+21.54.440.419 I slot print_timing: id  2 | task 500 | n_gen =    477, tg =  12.44 t/s, tg_3s =  12.43 t/s
+21.57.476.952 I slot print_timing: id  2 | task 500 | n_gen =    515, tg =  12.45 t/s, tg_3s =  12.51 t/s
+22.00.548.916 I slot print_timing: id  2 | task 500 | n_gen =    552, tg =  12.42 t/s, tg_3s =  12.04 t/s
+22.03.617.890 I slot print_timing: id  2 | task 500 | n_gen =    588, tg =  12.38 t/s, tg_3s =  11.73 t/s
+22.06.672.713 I slot print_timing: id  2 | task 500 | n_gen =    624, tg =  12.34 t/s, tg_3s =  11.78 t/s
+22.09.740.838 I slot print_timing: id  2 | task 500 | n_gen =    661, tg =  12.33 t/s, tg_3s =  12.06 t/s
+22.12.810.789 I slot print_timing: id  2 | task 500 | n_gen =    697, tg =  12.29 t/s, tg_3s =  11.73 t/s
+22.15.827.907 I slot print_timing: id  2 | task 500 | n_gen =    733, tg =  12.27 t/s, tg_3s =  11.93 t/s
+22.18.828.484 I slot print_timing: id  2 | task 500 | n_gen =    769, tg =  12.26 t/s, tg_3s =  12.00 t/s
+22.21.888.880 I slot print_timing: id  2 | task 500 | n_gen =    806, tg =  12.25 t/s, tg_3s =  12.09 t/s
+22.24.932.395 I slot print_timing: id  2 | task 500 | n_gen =    842, tg =  12.23 t/s, tg_3s =  11.83 t/s
+22.27.993.378 I slot print_timing: id  2 | task 500 | n_gen =    879, tg =  12.23 t/s, tg_3s =  12.09 t/s
+22.31.075.309 I slot print_timing: id  2 | task 500 | n_gen =    916, tg =  12.22 t/s, tg_3s =  12.01 t/s
+22.34.099.601 I slot print_timing: id  2 | task 500 | n_gen =    952, tg =  12.21 t/s, tg_3s =  11.90 t/s
+22.37.158.427 I slot print_timing: id  2 | task 500 | n_gen =    989, tg =  12.20 t/s, tg_3s =  12.10 t/s
+22.40.237.637 I slot print_timing: id  2 | task 500 | n_gen =   1026, tg =  12.20 t/s, tg_3s =  12.02 t/s
+22.43.309.308 I slot print_timing: id  2 | task 500 | n_gen =   1063, tg =  12.19 t/s, tg_3s =  12.05 t/s
+22.46.341.690 I slot print_timing: id  2 | task 500 | n_gen =   1099, tg =  12.18 t/s, tg_3s =  11.87 t/s
+22.49.422.563 I slot print_timing: id  2 | task 500 | n_gen =   1136, tg =  12.17 t/s, tg_3s =  12.01 t/s
+22.52.353.354 W srv    operator(): got exception: {"error":{"code":500,"message":"Failed to parse tool call arguments as JSON: [json.exception.parse_error.101] parse error at line 1, column 231: syntax error while parsing value - invalid string: missing closing quote; last read: '\"# デブのみこちと鼻毛のすいせい\\n\\n## 一、まどろっこしい朝\\n\\n高原のふもとの小さな村に、みこちという男の子が住んでいました。\\n\\nみこちは、まるで小さなだ'","type":"server_error"}}
+22.52.483.933 I slot print_timing: id  2 | task 500 | n_gen =   1173, tg =  12.17 t/s, tg_3s =  12.09 t/s
+22.55.346.979 I slot print_timing: id  2 | task 500 | prompt eval time =    8569.37 ms /   569 tokens (   15.06 ms per token,    66.40 tokens per second)
+22.55.346.984 I slot print_timing: id  2 | task 500 |        eval time =   99155.20 ms /  1207 tokens (   82.22 ms per token,    12.16 tokens per second)
+22.55.346.986 I slot print_timing: id  2 | task 500 |       total time =  107724.57 ms /  1776 tokens
+22.55.346.987 I slot print_timing: id  2 | task 500 |    graphs reused =       1670
+22.55.348.028 I slot      release: id  2 | task 500 | stop processing: n_tokens = 5762, truncated = 0
+23.30.505.937 I srv  proxy_reques: proxying GET request to http://10.77.0.19:80/mcp
+terminate called after throwing an instance of 'std::bad_function_call'
+  what():  bad_function_call

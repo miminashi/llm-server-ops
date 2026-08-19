@@ -1,0 +1,773 @@
+[New LWP 35689]
+[New LWP 33784]
+[New LWP 33783]
+[New LWP 33782]
+[New LWP 33781]
+[New LWP 33780]
+[New LWP 33779]
+[New LWP 33778]
+[New LWP 33777]
+[New LWP 33776]
+[New LWP 33775]
+[New LWP 33774]
+[New LWP 33773]
+[New LWP 33772]
+[New LWP 33771]
+[New LWP 33770]
+[New LWP 33769]
+[New LWP 33768]
+[New LWP 33767]
+[New LWP 33766]
+[New LWP 33765]
+[New LWP 33764]
+[New LWP 33763]
+[New LWP 33762]
+[New LWP 33761]
+[New LWP 33760]
+[New LWP 33759]
+[New LWP 33758]
+[New LWP 33757]
+[New LWP 33756]
+[New LWP 33755]
+[New LWP 33754]
+[New LWP 33753]
+[New LWP 33752]
+[New LWP 33751]
+[New LWP 33750]
+[New LWP 33749]
+[New LWP 33748]
+[New LWP 33747]
+[New LWP 33746]
+[New LWP 33745]
+[New LWP 33744]
+[New LWP 33743]
+[New LWP 33742]
+[New LWP 33741]
+[New LWP 33740]
+[New LWP 33739]
+[New LWP 33738]
+[New LWP 33737]
+[New LWP 33736]
+[New LWP 33735]
+[New LWP 33734]
+[New LWP 33733]
+[New LWP 33732]
+[New LWP 33731]
+[New LWP 33730]
+[New LWP 33728]
+[New LWP 33713]
+[New LWP 33712]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=2, cancel=true, abstime=0x7fff03517a70, op=137, expected=0, futex_word=0x5be82a682ec8) at ./nptl/futex-internal.c:57
+
+warning: 57	./nptl/futex-internal.c: No such file or directory
+
+Thread 22 "llama-server" received signal SIGABRT, Aborted.
+[Switching to Thread 0x74e24aff5000 (LWP 33765)]
+__pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
+warning: 44	./nptl/pthread_kill.c: No such file or directory
+
+===== CRASH: thread apply all bt =====
+
+Thread 68 (Thread 0x74e079fff000 (LWP 36915) "llama-server"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e079fe6348, nfds=1, timeout=600000) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e36e898552 in httplib::detail::select_impl(int, short, long, long) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#2  0x000074e36e8a5efe in httplib::detail::SocketStream::wait_readable() const () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#3  0x000074e36e8a6298 in httplib::detail::SocketStream::read(char*, unsigned long) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#4  0x000074e36e897fb8 in httplib::detail::stream_line_reader::getline() () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#5  0x000074e36e8a9d2c in httplib::detail::ChunkedDecoder::read_payload(char*, unsigned long, unsigned long&, unsigned long&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e8fc59b in httplib::detail::ReadContentResult httplib::detail::read_content_chunked<httplib::Response>(httplib::Stream&, httplib::Response&, unsigned long, std::function<bool (char const*, unsigned long, unsigned long, unsigned long)>) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#7  0x000074e36e8fc6b3 in httplib::detail::read_content<httplib::Response>(httplib::Stream&, httplib::Response&, unsigned long, int&, std::function<bool (unsigned long, unsigned long)>, std::function<bool (char const*, unsigned long, unsigned long, unsigned long)>, bool)::{lambda(std::function<bool (char const*, unsigned long, unsigned long, unsigned long)> const&)#1}::operator()(std::function<bool (char const*, unsigned long, unsigned long, unsigned long)> const&) const () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#8  0x000074e36e8fcac2 in bool httplib::detail::prepare_content_receiver<httplib::Response, httplib::detail::read_content<httplib::Response>(httplib::Stream&, httplib::Response&, unsigned long, int&, std::function<bool (unsigned long, unsigned long)>, std::function<bool (char const*, unsigned long, unsigned long, unsigned long)>, bool)::{lambda(std::function<bool (char const*, unsigned long, unsigned long, unsigned long)> const&)#1}>(httplib::Response&, int&, std::function<bool (char const*, unsigned long, unsigned long, unsigned long)>, bool, unsigned long, bool&, httplib::detail::read_content<httplib::Response>(httplib::Stream&, httplib::Response&, unsigned long, int&, std::function<bool (unsigned long, unsigned long)>, std::function<bool (char const*, unsigned long, unsigned long, unsigned long)>, bool)::{lambda(std::function<bool (char const*, unsigned long, unsigned long, unsigned long)> const&)#1}) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#9  0x000074e36e8e8812 in httplib::ClientImpl::process_request(httplib::Stream&, httplib::Request&, httplib::Response&, bool, httplib::Error&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#10 0x000074e36e8eaafa in httplib::ClientImpl::handle_request(httplib::Stream&, httplib::Request&, httplib::Response&, bool, httplib::Error&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#11 0x000074e36e8a60bc in httplib::detail::process_client_socket(int, long, long, long, long, long, std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long, std::ratio<1l, 1000000000l> > >, std::function<bool (httplib::Stream&)>) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#12 0x000074e36e8a619d in httplib::ClientImpl::process_socket(httplib::ClientImpl::Socket const&, std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long, std::ratio<1l, 1000000000l> > >, std::function<bool (httplib::Stream&)>) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#13 0x000074e36e8c2fe7 in httplib::ClientImpl::send_(httplib::Request&, httplib::Response&, httplib::Error&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#14 0x000074e36e8c31af in httplib::ClientImpl::send(httplib::Request&, httplib::Response&, httplib::Error&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#15 0x000074e36e8c32df in httplib::ClientImpl::send_(httplib::Request&&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#16 0x000074e36e8da194 in httplib::ClientImpl::send(httplib::Request const&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#17 0x000074e36e7391db in server_http_proxy::server_http_proxy(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, uploaded_file, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, uploaded_file> > > const&, std::function<bool ()>, int, int)::{lambda()#2}::operator()() const () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#18 0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#19 0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#20 0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 60 (Thread 0x74e31dfff000 (LWP 33712) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x5be826a34fb8) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x5be826a34fb8) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5be826a34fb8, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x5be826a34f60, cond=0x5be826a34f90) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x5be826a34f90, mutex=0x5be826a34f60) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36daa4f6c in std::thread::_State_impl<std::thread::_Invoker<std::tuple<common_log::resume()::{lambda()#1}> > >::_M_run() () from /home/ubuntu/llama.cpp/build/bin/libllama-common.so.0
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 59 (Thread 0x74e31d7fe000 (LWP 33713) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=2, cancel=true, abstime=0x74e31d7ea810, op=137, expected=0, futex_word=0x74e36ec79a10 <g_stream_sessions+208>) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=2, abstime=0x74e31d7ea810, clockid=0, expected=0, futex_word=0x74e36ec79a10 <g_stream_sessions+208>) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e36ec79a10 <g_stream_sessions+208>, expected=expected@entry=0, clockid=clockid@entry=1, abstime=abstime@entry=0x74e31d7ea810, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9c116 in __pthread_cond_wait_common (abstime=<optimized out>, clockid=<optimized out>, mutex=0x74e36ec799c0 <g_stream_sessions+128>, cond=0x74e36ec799e8 <g_stream_sessions+168>) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_clockwait64 (abstime=<optimized out>, clockid=<optimized out>, mutex=0x74e36ec799c0 <g_stream_sessions+128>, cond=0x74e36ec799e8 <g_stream_sessions+168>) at ./nptl/pthread_cond_wait.c:691
+#5  ___pthread_cond_clockwait64 (cond=0x74e36ec799e8 <g_stream_sessions+168>, mutex=0x74e36ec799c0 <g_stream_sessions+128>, clockid=<optimized out>, abstime=<optimized out>) at ./nptl/pthread_cond_wait.c:679
+#6  0x000074e36e7d28ff in stream_session_manager::gc_loop() () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#7  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#8  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#9  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 58 (Thread 0x74e311d5e000 (LWP 33728) "cuda-EvtHandlr"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x5be826d8b170, nfds=2, timeout=-1) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e358cbaa5f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#2  0x000074e358d7d85f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#3  0x000074e358cb598f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#4  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#5  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 57 (Thread 0x74e31155d000 (LWP 33730) "cuda-EvtHandlr"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e2f8000c20, nfds=10, timeout=100) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e358cbaa5f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#2  0x000074e358d7d85f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#3  0x000074e358cb598f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#4  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#5  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 56 (Thread 0x74e3108bb000 (LWP 33731) "cuda-EvtHandlr"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e2e0000c20, nfds=10, timeout=100) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e358cbaa5f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#2  0x000074e358d7d85f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#3  0x000074e358cb598f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#4  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#5  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 55 (Thread 0x74e2fdb5e000 (LWP 33732) "cuda-EvtHandlr"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e2c8000c20, nfds=10, timeout=100) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e358cbaa5f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#2  0x000074e358d7d85f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#3  0x000074e358cb598f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#4  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#5  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 54 (Thread 0x74e2fcebc000 (LWP 33733) "cuda-EvtHandlr"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e2b0000c20, nfds=10, timeout=100) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e358cbaa5f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#2  0x000074e358d7d85f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#3  0x000074e358cb598f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#4  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#5  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 53 (Thread 0x74e2e5fff000 (LWP 33734) "cuda-EvtHandlr"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e298000c20, nfds=10, timeout=100) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e358cbaa5f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#2  0x000074e358d7d85f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#3  0x000074e358cb598f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#4  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#5  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 52 (Thread 0x74e2e555d000 (LWP 33735) "cuda-EvtHandlr"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e280000c20, nfds=10, timeout=100) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e358cbaa5f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#2  0x000074e358d7d85f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#3  0x000074e358cb598f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#4  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#5  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 51 (Thread 0x74e2e48bb000 (LWP 33736) "cuda-EvtHandlr"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e268000c20, nfds=10, timeout=100) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e358cbaa5f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#2  0x000074e358d7d85f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#3  0x000074e358cb598f in ?? () from /lib/x86_64-linux-gnu/libcuda.so.1
+#4  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#5  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 50 (Thread 0x74e2cdb5e000 (LWP 33737) "llama-server"):
+#0  0x000074e36df2b914 in accept4 (fd=142, addr=..., addr_len=0x0, flags=524288) at ../sysdeps/unix/sysv/linux/accept4.c:31
+#1  0x000074e36e8a8612 in httplib::Server::listen_internal() () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#2  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#3  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#4  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 49 (Thread 0x74e2cd35d000 (LWP 33738) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 48 (Thread 0x74e2ccb5c000 (LWP 33739) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 47 (Thread 0x74e2b5fff000 (LWP 33740) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 46 (Thread 0x74e2b57fe000 (LWP 33741) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 45 (Thread 0x74e2b4ffd000 (LWP 33742) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 44 (Thread 0x74e29dfff000 (LWP 33743) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 43 (Thread 0x74e29d7fe000 (LWP 33744) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 42 (Thread 0x74e29cffd000 (LWP 33745) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 41 (Thread 0x74e285fff000 (LWP 33746) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 40 (Thread 0x74e2857fe000 (LWP 33747) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 39 (Thread 0x74e284ffd000 (LWP 33748) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 38 (Thread 0x74e26dfff000 (LWP 33749) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 37 (Thread 0x74e26d7fe000 (LWP 33750) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 36 (Thread 0x74e26cffd000 (LWP 33751) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 35 (Thread 0x74e255fff000 (LWP 33752) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 34 (Thread 0x74e2557fe000 (LWP 33753) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 33 (Thread 0x74e254ffd000 (LWP 33754) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 32 (Thread 0x74e24ffff000 (LWP 33755) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 31 (Thread 0x74e24f7fe000 (LWP 33756) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 30 (Thread 0x74e24effd000 (LWP 33757) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 29 (Thread 0x74e24e7fc000 (LWP 33758) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 28 (Thread 0x74e24dffb000 (LWP 33759) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 27 (Thread 0x74e24d7fa000 (LWP 33760) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 26 (Thread 0x74e24cff9000 (LWP 33761) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 25 (Thread 0x74e24c7f8000 (LWP 33762) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 24 (Thread 0x74e24bff7000 (LWP 33763) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c30) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c30, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 23 (Thread 0x74e24b7f6000 (LWP 33764) "llama-server"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e24b7e2588, nfds=1, timeout=10) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e36e898552 in httplib::detail::select_impl(int, short, long, long) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#2  0x000074e36e8988c6 in httplib::detail::keep_alive(std::atomic<int> const&, int, long) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#3  0x000074e36e8e3915 in httplib::Server::process_and_close_socket(int) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#4  0x000074e36e8bf7e2 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#5  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#6  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#7  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 22 (Thread 0x74e24aff5000 (LWP 33765) "llama-server"):
+#0  __pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
+#1  __pthread_kill_internal (signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:78
+#2  __GI___pthread_kill (threadid=<optimized out>, signo=signo@entry=6) at ./nptl/pthread_kill.c:89
+#3  0x000074e36de4527e in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+#4  0x000074e36de288ff in __GI_abort () at ./stdlib/abort.c:79
+#5  0x000074e36e2a5ff5 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#6  0x000074e36e51aa71 in ggml_uncaught_exception() () from /home/ubuntu/llama.cpp/build/bin/libggml-base.so.0
+#7  0x000074e36e2bb0da in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#8  0x000074e36e2a5a55 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#9  0x000074e36e2bb391 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#10 0x000074e36e2a9670 in std::__throw_bad_function_call() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#11 0x000074e36e7187a8 in std::_Function_handler<bool (unsigned long, httplib::DataSink&), process_handler_response(std::unique_ptr<server_http_req, std::default_delete<server_http_req> >&&, std::unique_ptr<server_http_res, std::default_delete<server_http_res> >&, httplib::Response&)::{lambda(unsigned long, httplib::DataSink&)#1}>::_M_invoke(std::_Any_data const&, unsigned long&&, httplib::DataSink&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#12 0x000074e36e8eb473 in std::_Function_handler<bool (unsigned long, unsigned long, httplib::DataSink&), httplib::detail::ContentProviderAdapter>::_M_invoke(std::_Any_data const&, unsigned long&&, unsigned long&&, httplib::DataSink&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#13 0x000074e36e8aafdc in bool httplib::detail::write_content_with_progress<httplib::Server::write_content_with_provider(httplib::Stream&, httplib::Request const&, httplib::Response&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)::{lambda()#1}>(httplib::Stream&, std::function<bool (unsigned long, unsigned long, httplib::DataSink&)> const&, unsigned long, unsigned long, httplib::Server::write_content_with_provider(httplib::Stream&, httplib::Request const&, httplib::Response&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)::{lambda()#1}, std::function<bool (unsigned long, unsigned long)> const&, httplib::Error&) [clone .constprop.0] () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#14 0x000074e36e8ab15a in httplib::Server::write_content_with_provider(httplib::Stream&, httplib::Request const&, httplib::Response&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#15 0x000074e36e8c69b1 in httplib::Server::write_response_core(httplib::Stream&, bool, httplib::Request const&, httplib::Response&, bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#16 0x000074e36e8e2e1c in httplib::Server::process_request(httplib::Stream&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, bool, bool&, std::function<void (httplib::Request&)> const&, bool*) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#17 0x000074e36e8e38be in httplib::Server::process_and_close_socket(int) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#18 0x000074e36e8bf7e2 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#19 0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#20 0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#21 0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 21 (Thread 0x74e24a7f4000 (LWP 33766) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 20 (Thread 0x74e249ff3000 (LWP 33767) "llama-server"):
+#0  0x000074e36df1b4fd in __GI___poll (fds=0x74e249fdf588, nfds=1, timeout=10) at ../sysdeps/unix/sysv/linux/poll.c:29
+#1  0x000074e36e898552 in httplib::detail::select_impl(int, short, long, long) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#2  0x000074e36e8988c6 in httplib::detail::keep_alive(std::atomic<int> const&, int, long) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#3  0x000074e36e8e3915 in httplib::Server::process_and_close_socket(int) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#4  0x000074e36e8bf7e2 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#5  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#6  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#7  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 19 (Thread 0x74e2497f2000 (LWP 33768) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 18 (Thread 0x74e248ff1000 (LWP 33769) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 17 (Thread 0x74e2487f0000 (LWP 33770) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 16 (Thread 0x74e247fef000 (LWP 33771) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 15 (Thread 0x74e2477ee000 (LWP 33772) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 14 (Thread 0x74e246fed000 (LWP 33773) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 13 (Thread 0x74e2467ec000 (LWP 33774) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=-803681506, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=-803681506, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 12 (Thread 0x74e245feb000 (LWP 33775) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 11 (Thread 0x74e2457ea000 (LWP 33776) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 10 (Thread 0x74e244fe9000 (LWP 33777) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 9 (Thread 0x74e2447e8000 (LWP 33778) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 8 (Thread 0x74e243fe7000 (LWP 33779) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 7 (Thread 0x74e2437e6000 (LWP 33780) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 6 (Thread 0x74e242fe5000 (LWP 33781) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 5 (Thread 0x74e2427e4000 (LWP 33782) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 4 (Thread 0x74e241fe3000 (LWP 33783) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 3 (Thread 0x74e2417e2000 (LWP 33784) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x74e250000c34) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x74e250000c34, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x74e250000c38, cond=0x74e250000c08) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x74e250000c08, mutex=0x74e250000c38) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e8bf839 in httplib::ThreadPool::worker(bool) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 2 (Thread 0x74e240ebd000 (LWP 35689) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x5be82a682f04) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x5be82a682f04) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5be82a682f04, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9b7ed in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x5be82a682e78, cond=0x5be82a682ed8) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x5be82a682ed8, mutex=0x5be82a682e78) at ./nptl/pthread_cond_wait.c:627
+#5  0x000074e36e760ef4 in server_queue::worker_loop() () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#6  0x000074e36e2ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x000074e36de9caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x000074e36df29c6c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 1 (Thread 0x74e36e035000 (LWP 33710) "llama-server"):
+#0  0x000074e36de98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x7fff03517a70, op=137, expected=0, futex_word=0x5be82a682ecc) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x7fff03517a70, clockid=0, expected=0, futex_word=0x5be82a682ecc) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5be82a682ecc, expected=expected@entry=0, clockid=clockid@entry=1, abstime=abstime@entry=0x7fff03517a70, private=private@entry=0) at ./nptl/futex-internal.c:139
+#3  0x000074e36de9c116 in __pthread_cond_wait_common (abstime=<optimized out>, clockid=<optimized out>, mutex=0x5be82a682e78, cond=0x5be82a682ea0) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_clockwait64 (abstime=<optimized out>, clockid=<optimized out>, mutex=0x5be82a682e78, cond=0x5be82a682ea0) at ./nptl/pthread_cond_wait.c:691
+#5  ___pthread_cond_clockwait64 (cond=0x5be82a682ea0, mutex=0x5be82a682e78, clockid=<optimized out>, abstime=<optimized out>) at ./nptl/pthread_cond_wait.c:679
+#6  0x000074e36e76130d in server_queue::start_loop(long) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#7  0x000074e36e6fec53 in llama_server(common_params&, int, char**) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#8  0x000074e36e6ffc76 in llama_server(int, char**) () from /home/ubuntu/llama.cpp/build/bin/libllama-server-impl.so
+#9  0x000074e36de2a1ca in __libc_start_call_main (main=main@entry=0x5be802cf4270 <main>, argc=argc@entry=31, argv=argv@entry=0x7fff0351f638) at ../sysdeps/nptl/libc_start_call_main.h:58
+#10 0x000074e36de2a28b in __libc_start_main_impl (main=0x5be802cf4270 <main>, argc=31, argv=0x7fff0351f638, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fff0351f628) at ../csu/libc-start.c:360
+#11 0x00005be802cf42a5 in _start ()
+
+===== current frame locals =====
+tid = <optimized out>
+ret = 0
+pd = <optimized out>
+old_mask = {__val = {0}}
+ret = <optimized out>
+pd = <optimized out>
+old_mask = <optimized out>
+ret = <optimized out>
+tid = <optimized out>
+ret = <optimized out>
+resultvar = <optimized out>
+resultvar = <optimized out>
+__arg3 = <optimized out>
+__arg2 = <optimized out>
+__arg1 = <optimized out>
+_a3 = <optimized out>
+_a2 = <optimized out>
+_a1 = <optimized out>
+__futex = <optimized out>
+resultvar = <optimized out>
+__arg3 = <optimized out>
+__arg2 = <optimized out>
+__arg1 = <optimized out>
+_a3 = <optimized out>
+_a2 = <optimized out>
+_a1 = <optimized out>
+__futex = <optimized out>
+__private = <optimized out>
+__oldval = <optimized out>
+[Inferior 1 (process 33710) detached]
