@@ -52,43 +52,94 @@
 
 ## 再現方法
 
+以下は**このセッションで実際に通した手順**である。2 点だけ注意がある。`$HF_TOKEN` は
+**ローカルで展開**させること（`\$` にすると空トークンでリモートに渡り rate limit に当たる）。
+また `ssh -n <server> "... &"` は**プロセスが正しく起動しても ssh が exit しないことがある**
+ため、バックグラウンド起動は `timeout N ssh ... || true` で打ち切り、成否は後段の検証で判定する。
+
 ```bash
 # 1) 電源投入（ユーザの明示的指示がある場合のみ）
 ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu01 on
 ALLOW_FAN_NOISE=1 .claude/skills/gpu-server/scripts/bmc-power.sh aws-gpu02 on
+# SSH 疎通まで待つ（POST + OS 起動で約 5 分）
+until timeout 8 ssh -o ConnectTimeout=5 -o BatchMode=yes aws-gpu01 true 2>/dev/null; do sleep 15; done
+until timeout 8 ssh -o ConnectTimeout=5 -o BatchMode=yes aws-gpu02 true 2>/dev/null; do sleep 15; done
 
 # 2) ロック（両機）
 .claude/skills/gpu-server/scripts/lock.sh aws-gpu01
 .claude/skills/gpu-server/scripts/lock.sh aws-gpu02
 
-# 3) モデル取得（aws-gpu は HF 直が速い）
+# 3) モデル取得（aws-gpu は HF 直が速い。約 24 分）
+#    NOTE: $HF_TOKEN はローカルで展開させる。取得済みならスキップされる。
 source ~/.config/gpu-server/.env
-ssh aws-gpu01 "~/.local/bin/hf download unsloth/GLM-5.3-Flash-GGUF \
-  --include 'UD-IQ4_XS/*' --local-dir ~/models/GLM-5.3-Flash-GGUF --token \$HF_TOKEN"
+timeout 60 ssh -n aws-gpu01 "cd ~ && setsid nohup ~/.local/bin/hf download unsloth/GLM-5.3-Flash-GGUF \
+  --include 'UD-IQ4_XS/*' --local-dir ~/models/GLM-5.3-Flash-GGUF --token $HF_TOKEN \
+  > /tmp/glm-dl.log 2>&1 < /dev/null &" || true
+# 完了待ち。進捗は du -s --block-size=1 で見る（du -sb はスパースファイルで嘘をつく）
+while ssh -n aws-gpu01 "pgrep -f '[h]f download' >/dev/null"; do sleep 30; done
+# 検証: 156822111075 と一致すること
+ssh -n aws-gpu01 "du -sb ~/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS | cut -f1"
 
-# 4) 両機を PR #27754 でビルド（コミット一致が必須）
+# 4) 両機を PR #27754 でビルド（コミット一致が必須。各 20 分前後）
+#    NOTE: aws-gpu01 の ~/llama.cpp には未 push のローカル修正が置かれていることがある。
+#          checkout 前に必ず退避する。
+ssh -n aws-gpu01 "cd ~/llama.cpp && git status --porcelain"   # 空でなければ↓
+ssh -n aws-gpu01 "cd ~/llama.cpp && mkdir -p ~/patches && git diff > ~/patches/\$(date +%F)-local.patch && git stash push -m pre-glm5next"
+
 ssh -n aws-gpu01 "cd ~/llama.cpp && git fetch origin pull/27754/head:glm5next && git checkout glm5next"
 ssh -n aws-gpu02 "cd ~/llama.cpp && git fetch origin pull/27754/head:glm5next && git checkout glm5next"
+# 両機の HEAD 一致を確認（cadbe97b7ed5601fcfecb02c4d46b43ca83c93b0）
+ssh -n aws-gpu01 "cd ~/llama.cpp && git rev-parse HEAD"
+ssh -n aws-gpu02 "cd ~/llama.cpp && git rev-parse HEAD"
+
+# scp は実行ビットを保つので chmod は不要
 scp .claude/skills/llama-server/server-scripts/update_and_build-aws-gpu01.sh aws-gpu01:~/llama.cpp/update_and_build.sh
 scp .claude/skills/llama-server/server-scripts/update_and_build-aws-gpu02.sh aws-gpu02:~/llama.cpp/update_and_build.sh
-ssh -n aws-gpu01 "cd ~/llama.cpp && ./update_and_build.sh --no-pull --force"
-ssh -n aws-gpu02 "cd ~/llama.cpp && ./update_and_build.sh --no-pull --force"
+# 1 台につき 1 本だけ流す（同じ build/ に 2 本流すと壊れる）。2 台は並行でよい
+timeout 40 ssh -n aws-gpu01 "cd ~/llama.cpp && setsid nohup ./update_and_build.sh --no-pull --force > /tmp/build.log 2>&1 < /dev/null &" || true
+timeout 40 ssh -n aws-gpu02 "cd ~/llama.cpp && setsid nohup ./update_and_build.sh --no-pull --force > /tmp/build.log 2>&1 < /dev/null &" || true
+while ssh -n aws-gpu01 "pgrep -f '[u]pdate_and_build' >/dev/null"; do sleep 60; done
+while ssh -n aws-gpu02 "pgrep -f '[u]pdate_and_build' >/dev/null"; do sleep 60; done
+ssh -n aws-gpu01 "ls -la ~/llama.cpp/build/bin/llama-server ~/llama.cpp/build/bin/ggml-rpc-server"
+ssh -n aws-gpu02 "ls -la ~/llama.cpp/build/bin/ggml-rpc-server"
 
-# 5) RPC ワーカー起動
+# 5) RPC ワーカー起動（ビルド後であること）
 .claude/skills/llama-server/scripts/rpc-up.sh
 
 # 6) llama-server 起動（rpc-llama-up.sh は --flash-attn 1 固定のため使えない）
-ssh -n aws-gpu01 "cd ~/llama.cpp && setsid nohup env NVIDIA_TF32_OVERRIDE=0 ./build/bin/llama-server \
+timeout 60 ssh -n aws-gpu01 "cd ~/llama.cpp && setsid nohup env NVIDIA_TF32_OVERRIDE=0 ./build/bin/llama-server \
   --model ~/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf \
   --alias 'GLM-5.3-Flash-UD-IQ4_XS' \
   --rpc 192.168.100.2:50052 \
   --n-gpu-layers 999 --ctx-size 32768 --parallel 1 \
   -fa off --poll 0 -b 512 -ub 64 \
   --jinja --temp 1.0 --top-p 0.95 \
-  --host 0.0.0.0 --port 8000 > /tmp/llama-server.log 2>&1 < /dev/null &"
+  --host 0.0.0.0 --port 8000 > /tmp/llama-server.log 2>&1 < /dev/null &" || true
+
+# 7) 起動完了待ち（約 4 分。cold なら 15 分級）
+#    NOTE: 'failed to initialize the context' は正常起動でも出るので判定に使わない
+until ssh -n aws-gpu01 "grep -q 'listening on' /tmp/llama-server.log" \
+   || ssh -n aws-gpu01 "grep -qiE 'exiting due to model loading error|terminate called|CUDA error' /tmp/llama-server.log"; do
+  sleep 20
+done
+ssh -n aws-gpu01 "grep -iE 'listening on|exiting due to' /tmp/llama-server.log | tail -3"
+curl -s http://10.8.2.1:8000/health          # {"status":"ok"} なら完了
 ```
 
-起動完了は `/tmp/llama-server.log` に `listening on` が出るかで判定する（所要 約 4 分・page cache が温かい場合）。
+### 停止と既定構成への復帰
+
+```bash
+# 停止（llama-server → rpc-server の順。逆にするとメインホストの推論が壊れる）
+.claude/skills/llama-server/scripts/stop.sh aws-gpu01
+.claude/skills/llama-server/scripts/rpc-down.sh
+
+# 既定構成（DeepSeek-V4-Flash）に戻すには master 復帰 + 再ビルドが必要
+ssh -n aws-gpu01 "cd ~/llama.cpp && git checkout master && git stash pop"   # 退避したパッチを戻す
+ssh -n aws-gpu02 "cd ~/llama.cpp && git checkout master"
+# 以降は update_and_build.sh --no-pull --force を両機で（手順 4 と同じ形）
+```
+
+ロック解放は `.claude/skills/gpu-server/scripts/unlock.sh aws-gpu01` / `... aws-gpu02`。
 
 ## 結果詳細
 
