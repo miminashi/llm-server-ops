@@ -1,0 +1,45 @@
+0.00.275.190 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.275.922 W srv  llama_server: -----------------
+0.00.275.926 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.275.927 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.275.927 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.275.928 W srv  llama_server: -----------------
+0.00.277.237 I srv    load_model: loading model '/home/ubuntu/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf'
+0.03.144.199 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort
+0.03.639.102 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.03.639.108 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.03.987.043 W model has unused tensor blk.45.attn_norm.weight (size = 16384 bytes) -- ignoring
+0.03.987.064 W model has unused tensor blk.45.ffn_norm.weight (size = 16384 bytes) -- ignoring
+0.03.987.077 W model has unused tensor blk.45.attn_q_a.weight (size = 6684672 bytes) -- ignoring
+0.03.987.090 W model has unused tensor blk.45.attn_q_a_norm.weight (size = 6144 bytes) -- ignoring
+0.03.987.103 W model has unused tensor blk.45.attn_q_b.weight (size = 26738688 bytes) -- ignoring
+0.03.987.116 W model has unused tensor blk.45.attn_kv_a_mqa.weight (size = 2228224 bytes) -- ignoring
+0.03.987.129 W model has unused tensor blk.45.attn_kv_a_norm.weight (size = 2048 bytes) -- ignoring
+0.03.987.141 W model has unused tensor blk.45.attn_k_b.weight (size = 8912896 bytes) -- ignoring
+0.03.987.153 W model has unused tensor blk.45.attn_v_b.weight (size = 8912896 bytes) -- ignoring
+0.03.987.165 W model has unused tensor blk.45.attn_output.weight (size = 71303168 bytes) -- ignoring
+0.03.987.179 W model has unused tensor blk.45.indexer.attn_q_b.weight (size = 6684672 bytes) -- ignoring
+0.03.987.192 W model has unused tensor blk.45.indexer.attn_k.weight (size = 557056 bytes) -- ignoring
+0.03.987.206 W model has unused tensor blk.45.indexer.k_norm.weight (size = 512 bytes) -- ignoring
+0.03.987.219 W model has unused tensor blk.45.indexer.k_norm.bias (size = 512 bytes) -- ignoring
+0.03.987.232 W model has unused tensor blk.45.indexer.proj.weight (size = 524288 bytes) -- ignoring
+0.03.987.250 W model has unused tensor blk.45.indexer_compressor_ape.weight (size = 2048 bytes) -- ignoring
+0.03.987.264 W model has unused tensor blk.45.indexer_compressor_gate.weight (size = 557056 bytes) -- ignoring
+0.03.987.278 W model has unused tensor blk.45.ffn_gate_inp.weight (size = 4718592 bytes) -- ignoring
+0.03.987.291 W model has unused tensor blk.45.exp_probs_b.bias (size = 1152 bytes) -- ignoring
+0.03.987.305 W model has unused tensor blk.45.ffn_gate_exps.weight (size = 1038090240 bytes) -- ignoring
+0.03.987.318 W model has unused tensor blk.45.ffn_down_exps.weight (size = 1358954496 bytes) -- ignoring
+0.03.987.343 W model has unused tensor blk.45.ffn_up_exps.weight (size = 1038090240 bytes) -- ignoring
+0.03.987.356 W model has unused tensor blk.45.ffn_gate_shexp.weight (size = 8912896 bytes) -- ignoring
+0.03.987.369 W model has unused tensor blk.45.ffn_down_shexp.weight (size = 8912896 bytes) -- ignoring
+0.03.987.385 W model has unused tensor blk.45.ffn_up_shexp.weight (size = 8912896 bytes) -- ignoring
+0.03.987.400 W model has unused tensor blk.45.nextn.eh_proj.weight (size = 35651584 bytes) -- ignoring
+0.03.987.414 W model has unused tensor blk.45.nextn.enorm.weight (size = 16384 bytes) -- ignoring
+0.03.987.428 W model has unused tensor blk.45.nextn.hnorm.weight (size = 16384 bytes) -- ignoring
+0.03.987.474 W model has unused tensor blk.45.nextn.shared_head_norm.weight (size = 16384 bytes) -- ignoring
+4.35.777.529 W llama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 512
+4.35.895.684 I cmn          init: llama threadpool init, n_threads = 24
+4.36.910.967 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 32768, kv_unified = 'true'
+4.36.947.475 I srv          init: chat template supports preserving reasoning, consider enabling it via --reasoning-preserve
+4.36.947.536 I srv  llama_server: model loaded
+4.36.947.544 I srv  llama_server: listening on http://0.0.0.0:8000

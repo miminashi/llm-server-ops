@@ -1,0 +1,96 @@
+# unsloth/GLM-5.3-Flash-GGUF: UD-IQ4_XS shard1 と Shard_Rewrite/ shard1 の差分
+# ORIG    : 75 keys
+# REWRITE : 76 keys
+
+## ORIG のみに存在するキー
+  glm5next.attention.head_count
+  glm5next.attention.head_count_kv
+  glm5next.attention.indexer.head_count
+  glm5next.attention.indexer.key_length
+  glm5next.attention.indexer.kpool
+  glm5next.attention.indexer.top_k
+  glm5next.attention.key_length
+  glm5next.attention.key_length_mla
+  glm5next.attention.kv_lora_rank
+  glm5next.attention.layer_norm_epsilon
+  glm5next.attention.layer_norm_rms_epsilon
+  glm5next.attention.q_lora_rank
+  glm5next.attention.value_length
+  glm5next.attention.value_length_mla
+  glm5next.block_count
+  glm5next.context_length
+  glm5next.embedding_length
+  glm5next.expert_count
+  glm5next.expert_feed_forward_length
+  glm5next.expert_gating_func
+  glm5next.expert_group_count
+  glm5next.expert_group_used_count
+  glm5next.expert_shared_count
+  glm5next.expert_shared_feed_forward_length
+  glm5next.expert_used_count
+  glm5next.expert_weights_norm
+  glm5next.expert_weights_scale
+  glm5next.feed_forward_length
+  glm5next.hyper_connection.count
+  glm5next.hyper_connection.epsilon
+  glm5next.hyper_connection.sinkhorn_iterations
+  glm5next.kda.gate_lower_bound
+  glm5next.kda.head_dim
+  glm5next.leading_dense_block_count
+  glm5next.nextn_predict_layers
+  glm5next.rope.dimension_count
+  glm5next.ssm.conv_kernel
+  glm5next.swiglu_clamp_exp
+  glm5next.swiglu_clamp_shexp
+  glm5next.vocab_size
+
+## REWRITE のみに存在するキー
+  glm5-next.attention.head_count
+  glm5-next.attention.head_count_kv
+  glm5-next.attention.indexer.head_count
+  glm5-next.attention.indexer.index_share_mtp
+  glm5-next.attention.indexer.key_length
+  glm5-next.attention.indexer.kpool
+  glm5-next.attention.indexer.top_k
+  glm5-next.attention.key_length
+  glm5-next.attention.key_length_mla
+  glm5-next.attention.kv_lora_rank
+  glm5-next.attention.layer_norm_epsilon
+  glm5-next.attention.layer_norm_rms_epsilon
+  glm5-next.attention.q_lora_rank
+  glm5-next.attention.value_length
+  glm5-next.attention.value_length_mla
+  glm5-next.block_count
+  glm5-next.context_length
+  glm5-next.embedding_length
+  glm5-next.expert_count
+  glm5-next.expert_feed_forward_length
+  glm5-next.expert_gating_func
+  glm5-next.expert_group_count
+  glm5-next.expert_group_used_count
+  glm5-next.expert_shared_count
+  glm5-next.expert_shared_feed_forward_length
+  glm5-next.expert_used_count
+  glm5-next.expert_weights_norm
+  glm5-next.expert_weights_scale
+  glm5-next.feed_forward_length
+  glm5-next.hyper_connection.count
+  glm5-next.hyper_connection.epsilon
+  glm5-next.hyper_connection.sinkhorn_iterations
+  glm5-next.kda.gate_lower_bound
+  glm5-next.kda.head_dim
+  glm5-next.leading_dense_block_count
+  glm5-next.nextn_predict_layers
+  glm5-next.rope.dimension_count
+  glm5-next.ssm.conv_kernel
+  glm5-next.swiglu_clamp_exp
+  glm5-next.swiglu_clamp_shexp
+  glm5-next.vocab_size
+
+## 共通キーで値が異なるもの
+  GGUF.kv_count
+      ORIG   : 72
+      REWRITE: 73
+  general.architecture
+      ORIG   : glm5next
+      REWRITE: glm5-next

@@ -219,6 +219,7 @@ model->devices.insert(model->devices.begin(), rpc_servers.begin(), rpc_servers.e
 - **`-fa on` との比較**: PR は精度上の理由で `-fa off` を指定しているが、`-fa on` なら計算バッファが激減し ctx=131072 も狙える。品質差の実測は未実施
 - **llama.cpp が PR ブランチのまま**: 両機とも `glm5next` ブランチ（`cadbe97b7`）。既定構成（DeepSeek-V4-Flash）に戻すには `git checkout master` と再ビルドが必要。aws-gpu01 に未 push で存在した `--ui-mcp-proxy` 404 修正は `~/patches/server-http-404-mcpproxy.patch` と `git stash@{0}` に退避済み
 - **本家マージ待ち**: PR #27752 / #27754 / #27773 の 3 本はいずれも draft。マージ後に本家ビルドで再確認する
+  - **追記 (2026-08-29)**: 2 日後に実機で追検証した結果、`--parallel 1` と `-fa off` の 2 制約は解消し、`-ub` も 64 → 1024 まで上げられて prompt 処理が 34.6 → 67.9 t/s になった。ただし本家は依然未対応で 3 本とも未マージ。詳細は [PR 最新版の実機検証レポート](./2026-08-29_220506_glm53flash_upstream_pr_verification.md)
 - **サーバ稼働中・ロック保持中**: aws-gpu01 の llama-server と aws-gpu02 の RPC ワーカーは起動したまま。両機のロックも保持したままにしてある
 
 ## 参照レポート

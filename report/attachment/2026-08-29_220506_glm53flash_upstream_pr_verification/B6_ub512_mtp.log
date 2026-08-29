@@ -1,0 +1,21 @@
+0.00.145.266 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.145.888 W srv  llama_server: -----------------
+0.00.145.891 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.145.891 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.145.892 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.145.892 W srv  llama_server: -----------------
+0.00.147.168 I srv    load_model: loading model '/home/ubuntu/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf'
+0.04.406.813 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort
+0.04.924.631 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.04.924.638 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+3.46.538.709 E ggml_gallocr_reserve_n_impl: failed to allocate RPC2[192.168.100.2:50052] buffer of size 1716632576
+3.46.538.713 E graph_reserve: failed to allocate compute buffers
+3.46.538.735 W sched_reserve: compute buffer allocation failed, retrying without pipeline parallelism
+3.46.606.630 E ggml_gallocr_reserve_n_impl: failed to allocate RPC2[192.168.100.2:50052] buffer of size 1297502464
+3.46.606.633 E graph_reserve: failed to allocate compute buffers
+3.46.631.058 E llama_init_from_model: failed to initialize the context: failed to allocate compute pp buffers
+3.46.631.065 E cmn  common_init_: failed to create context with model '/home/ubuntu/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf'
+3.46.631.086 E cmn  common_init_: failed to create context with model '/home/ubuntu/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf'
+3.46.631.095 E srv    load_model: failed to create_context with model '/home/ubuntu/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf'
+3.46.631.100 I srv    operator(): operator(): cleaning up before exit...
+3.46.634.376 E srv  llama_server: exiting due to model loading error
