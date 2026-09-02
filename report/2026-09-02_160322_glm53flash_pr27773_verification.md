@@ -263,6 +263,9 @@ ssh -n aws-gpu01 "cd ~/llama.cpp && mkdir -p ~/patches && git diff > ~/patches/\
   && git stash push -m pre-glm5next -- tools/server/server-http.cpp"
 
 # 4) #27773 用 GGUF を用意（非破壊。実体は shard 1 の 9.4 MB のみ）
+#    !! 注意: このパッチが要るのは `7de5a8e39` 前後まで。`fe3187de7` 以降は上流が 46 を
+#       受け入れる側に倒したので、patch_shard1.py は当てず Shard_Rewrite の shard 1 を
+#       そのまま置く（当てると今度は expected 46, got 45 で落ちるはず。実機未確認）
 source ~/.config/gpu-server/.env
 curl -sL -H "Authorization: Bearer $HF_TOKEN" -o /tmp/shard1_rewrite.gguf \
   "https://huggingface.co/unsloth/GLM-5.3-Flash-GGUF/resolve/main/Shard_Rewrite/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf_file"
