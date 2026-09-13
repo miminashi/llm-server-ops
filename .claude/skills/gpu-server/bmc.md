@@ -10,6 +10,39 @@ GPU サーバを操作・観測するための手順。BMC（Baseboard Managemen
 - BIOS 設定（MMIO High Size など）を確認・変更したい
 - POST で停止していないか画面で確認したい
 
+## ハング調査では最初に SEL を読む（必須）
+
+**OS がハングしたら、KVM スクショと同じくらい重要なのが BMC の SEL（System Event Log）である。**
+`journalctl` に何も残らない停止でも、SEL には残っていることがある。**電源が OFF でも読める。**
+
+> 2026-09-05 の aws-gpu02 は、5 回のハングを「MCE / Hardware Error / Xid / panic の記録が
+> 一切ない痕跡なしのハードロックアップ」と結論していたが、これは `journalctl` しか見て
+> いなかったためだった。SEL には `Memory | Uncorrectable ECC` が 11 件あり、ハング時刻と
+> 秒単位で一致していた。詳細は
+> [2026-09-05 のレポート](../../../report/2026-09-05_221831_aws_gpu02_uncorrectable_ecc.md)。
+
+```bash
+source ~/.config/gpu-server/.env
+S=AWS_GPU02   # MI25 / AWS_GPU01 / AWS_GPU02 など（bmc-power.sh と同じ命名）
+IPMI="ipmitool -I lanplus -H $(eval echo \$BMC_${S}_HOST) -U $(eval echo \$BMC_${S}_USER) -P $(eval echo \$BMC_${S}_PASS)"
+
+$IPMI sel info                       # 件数と最終追記時刻
+$IPMI sel time get                   # BMC 時計のずれを必ず確認（時刻突き合わせの前提）
+$IPMI sel elist                      # 全件
+$IPMI sel elist | grep -iE 'memory|ecc|processor|power supply|temperature|critical'
+$IPMI sel get 0x82                   # 個別エントリの raw（Event Data / Sensor Type）
+```
+
+読み方の注意:
+
+- **`Unknown #0xff` の連番は POST を示す OEM レコード**。これに挟まれていないイベントは
+  OS 稼働中に起きたものと判断できる
+- **DIMM やスロットの位置デコードは信用しすぎない**。aws-gpu02 では `DIMMS-(CPU4)` のような
+  存在しない位置が混ざった。位置は **BIOS Setup の `Event Logs` → `View Smbios Event Log`**
+  と **POST 画面**のほうを正とする（ただし**BIOS 側の表示は UTC**、SEL は JST）
+- Redfish が使える機体（aws-gpu01/02）では `/redfish/v1/Systems/1/Memory/N` で
+  BMC 側のメモリ一覧も取れる。**BIOS の見え方と食い違うことがあり、その食い違いが手がかりになる**
+
 ## トランスポートの使い分け（重要）
 
 | 機種 | BMC | 電源制御 | スクリーンショット | スクリプト |

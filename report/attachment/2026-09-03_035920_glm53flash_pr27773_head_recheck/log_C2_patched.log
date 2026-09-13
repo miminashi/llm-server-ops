@@ -1,0 +1,16 @@
+0.00.130.738 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.131.341 W srv  llama_server: -----------------
+0.00.131.344 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.131.344 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.131.345 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.131.345 W srv  llama_server: -----------------
+0.00.132.609 I srv    load_model: loading model '/home/ubuntu/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS-rewrite/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf'
+0.01.748.565 E llama_model_load: error loading model: error loading model hyperparameters: key glm5-next.attention.head_count_kv has wrong array length; expected 46, got 45
+0.01.749.576 E llama_model_load_from_file_impl: failed to load model
+0.01.749.682 E common_fit_params: encountered an error while trying to fit params to free device memory: failed to load model
+0.02.060.436 E llama_model_load: error loading model: error loading model hyperparameters: key glm5-next.attention.head_count_kv has wrong array length; expected 46, got 45
+0.02.060.446 E llama_model_load_from_file_impl: failed to load model
+0.02.060.458 E cmn  common_init_: failed to load model '/home/ubuntu/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS-rewrite/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf'
+0.02.060.475 E srv    load_model: failed to load model, '/home/ubuntu/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS-rewrite/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf'
+0.02.060.482 I srv    operator(): operator(): cleaning up before exit...
+0.02.063.102 E srv  llama_server: exiting due to model loading error

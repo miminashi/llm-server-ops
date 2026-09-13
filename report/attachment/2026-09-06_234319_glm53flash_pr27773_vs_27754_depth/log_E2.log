@@ -1,0 +1,47 @@
+0.00.155.634 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.156.194 W srv  llama_server: -----------------
+0.00.156.197 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.156.197 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.156.198 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.156.198 W srv  llama_server: -----------------
+0.00.157.440 I srv    load_model: loading model '/home/ubuntu/models/GLM-5.3-Flash-GGUF/UD-IQ4_XS-nopatch/GLM-5.3-Flash-UD-IQ4_XS-00001-of-00005.gguf'
+0.03.228.083 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort
+0.03.788.522 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.03.788.530 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.04.156.579 W model has unused tensor blk.45.attn_norm.weight (size = 16384 bytes) -- ignoring
+0.04.156.601 W model has unused tensor blk.45.ffn_norm.weight (size = 16384 bytes) -- ignoring
+0.04.156.614 W model has unused tensor blk.45.attn_q_a_norm.weight (size = 6144 bytes) -- ignoring
+0.04.156.627 W model has unused tensor blk.45.attn_kv_a_norm.weight (size = 2048 bytes) -- ignoring
+0.04.156.642 W model has unused tensor blk.45.attn_q_a.weight (size = 6684672 bytes) -- ignoring
+0.04.156.657 W model has unused tensor blk.45.attn_q_b.weight (size = 26738688 bytes) -- ignoring
+0.04.156.669 W model has unused tensor blk.45.attn_kv_a_mqa.weight (size = 2228224 bytes) -- ignoring
+0.04.156.681 W model has unused tensor blk.45.attn_k_b.weight (size = 8912896 bytes) -- ignoring
+0.04.156.693 W model has unused tensor blk.45.attn_v_b.weight (size = 8912896 bytes) -- ignoring
+0.04.156.705 W model has unused tensor blk.45.attn_output.weight (size = 71303168 bytes) -- ignoring
+0.04.156.719 W model has unused tensor blk.45.indexer.k_norm.weight (size = 512 bytes) -- ignoring
+0.04.156.732 W model has unused tensor blk.45.indexer.k_norm.bias (size = 512 bytes) -- ignoring
+0.04.156.746 W model has unused tensor blk.45.indexer.proj.weight (size = 524288 bytes) -- ignoring
+0.04.156.769 W model has unused tensor blk.45.indexer.attn_k.weight (size = 557056 bytes) -- ignoring
+0.04.156.782 W model has unused tensor blk.45.indexer.attn_q_b.weight (size = 6684672 bytes) -- ignoring
+0.04.156.797 W model has unused tensor blk.45.indexer_compressor_gate.weight (size = 557056 bytes) -- ignoring
+0.04.156.811 W model has unused tensor blk.45.indexer_compressor_ape.weight (size = 2048 bytes) -- ignoring
+0.04.156.824 W model has unused tensor blk.45.ffn_gate_inp.weight (size = 4718592 bytes) -- ignoring
+0.04.156.837 W model has unused tensor blk.45.exp_probs_b.bias (size = 1152 bytes) -- ignoring
+0.04.156.851 W model has unused tensor blk.45.ffn_gate_exps.weight (size = 1038090240 bytes) -- ignoring
+0.04.156.863 W model has unused tensor blk.45.ffn_down_exps.weight (size = 1358954496 bytes) -- ignoring
+0.04.156.876 W model has unused tensor blk.45.ffn_up_exps.weight (size = 1038090240 bytes) -- ignoring
+0.04.156.888 W model has unused tensor blk.45.ffn_gate_shexp.weight (size = 8912896 bytes) -- ignoring
+0.04.156.901 W model has unused tensor blk.45.ffn_down_shexp.weight (size = 8912896 bytes) -- ignoring
+0.04.156.914 W model has unused tensor blk.45.ffn_up_shexp.weight (size = 8912896 bytes) -- ignoring
+0.04.156.927 W model has unused tensor blk.45.nextn.eh_proj.weight (size = 35651584 bytes) -- ignoring
+0.04.156.941 W model has unused tensor blk.45.nextn.enorm.weight (size = 16384 bytes) -- ignoring
+0.04.156.954 W model has unused tensor blk.45.nextn.hnorm.weight (size = 16384 bytes) -- ignoring
+0.04.156.996 W model has unused tensor blk.45.nextn.shared_head_norm.weight (size = 16384 bytes) -- ignoring
+4.28.911.748 E ggml_gallocr_reserve_n_impl: failed to allocate RPC2[192.168.100.2:50052] buffer of size 1233754624
+4.28.911.752 E graph_reserve: failed to allocate compute buffers
+4.28.911.774 W sched_reserve: compute buffer allocation failed, retrying without pipeline parallelism
+4.28.972.403 I cmn          init: llama threadpool init, n_threads = 24
+4.29.715.287 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 131072, kv_unified = 'true'
+4.29.750.779 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+4.29.750.858 I srv  llama_server: model loaded
+4.29.750.865 I srv  llama_server: listening on http://0.0.0.0:8000

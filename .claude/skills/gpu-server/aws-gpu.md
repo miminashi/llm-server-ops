@@ -97,16 +97,33 @@ mi25 の Unique ID 運用（[CLAUDE.md](../../../CLAUDE.md) 参照）に相当�
   Deasserted）。登録時点では 4 台とも `ok`。再発時はこの履歴と突き合わせること。
 - **aws-gpu02: FAN7 が `No Reading` (ns)**。他 7 個は 4700-5200 RPM で正常。ファン未実装か
   センサー故障かは未確認。BMC の温度は全系統正常値。ファン fail 検知による全開化は起きていない。
-- **aws-gpu02: POST に DIMM 不良の報告が出るが、該当スロットは空**（2026-08-18 に確認）。
-  POST 画面に `Failing DIMM:DIMM location(Uncorrectable memory component found) / P2-DIMME1`
-  が出るものの、**実装されている DIMM は `P1_DIMMA1/A2/A3` の 32GB × 3（96GB）だけで、
-  `P2_DIMME1` を含む他 11 スロットは "No Module Installed"**。EDAC の CE/UE も 0、SEL にも
-  メモリ関連イベントなし。**BIOS が過去の故障情報を表示し続けているだけで実害はない**
-  （比較: aws-gpu01 は `P1_DIMMA1/A2/A3` + `P2_DIMME1/E2` の 32GB × 5＝160GB）。
-- **aws-gpu02 は CPU2 側にメモリが無く NUMA が片寄っている**: 上記の帰結で
+- **aws-gpu02: `P2_DIMME1` が実際に故障している（連続ハングの原因、2026-09-05 に特定）**。
+  POST 画面の `Failing DIMM:DIMM location(Uncorrectable memory component found) / P2-DIMME1`
+  は**現に起きている故障の表示**であって、過去の残骸ではない。BMC SEL と BIOS の
+  SMBIOS Event Log の両方が `Uncorrectable ECC @ P2_DIMME1` を記録しており、**発生時刻は
+  ハング時刻と秒単位で一致する**。
+  > **2026-08-18 の「該当スロットは空／実害なし」という記述は誤りだったので撤回した。**
+  > 根拠にしていた `dmidecode -t 17` は **BIOS が使っているメモリしか見せない**。
+  > `P2_DIMME1`/`E2` は**装着済みで iMC が訓練までしているが、BIOS がアドレスマップから
+  > 外している**ため `No Module Installed` に見えていた。物理的な実装状況は
+  > **EDAC（`/sys/devices/system/edac/mc/mc0/size_mb` = 65536）**、
+  > **Redfish（`/redfish/v1/Systems/1/Memory/4,5`）**、
+  > **BMC の `VDIMMEF` 電圧（1.20V）** の 3 つで確認できる。
+- **aws-gpu02 の Patrol Scrub は Disable にしてある（2026-09-05）**。壊れた `P2_DIMME1` は
+  OS のアドレス空間の外にあるので OS は触らないが、**iMC のハードウェア定期走査
+  （`Patrol Scrub`、既定 Enable / 24 時間周期）だけが読みに行って fatal MCE を起こしていた**。
+  BIOS の `Advanced → Chipset Configuration → North Bridge → Memory Configuration →
+  Memory RAS Configuration` で `Patrol Scrub` を `Disable` にした（`Demand Scrub` は Enable のまま）。
+  **`Restore Optimized Defaults` を実行するとこの設定が既定の Enable に戻り、さらに故障 DIMM が
+  アドレスマップに復帰しうるので実行しないこと。**
+  **恒久対策は `P2_DIMME1` の物理的な抜去**（現在 1 バイトも使われていないので容量の損失はゼロ）。
+- **aws-gpu02 は CPU2 側のメモリが使えず NUMA が片寄っている**: 上記の帰結で
   `numactl --hardware` の **node1 size = 0 MB**（gpu01 は node0 96,540MB / node1 64,500MB）。
+  OS から見える RAM は 94 GiB（`P1_DIMMA1/A2/A3` の 32GB × 3）。
   GPU のうち `84/88/89:00.0` の 3 枚は CPU2 側にぶら下がるため、ホスト↔デバイス転送が
-  QPI 経由になる。既存の性能実測はすべてこの構成での値（増設の効果は未検証）。
+  QPI 経由になる。既存の性能実測はすべてこの構成での値。
+  なお **`P1_DIMMA1` だけ Kingston 製**で A2/A3 の Micron `36ASF4G72PZ-2G3A1` と混在しており、
+  `dmidecode` の Manufacturer / Serial / Part Number が `<BAD INDEX>` になる（実害は未確認）。
 - **aws-gpu01 は Legacy BIOS ブートで、ブートディスクは SAS HBA（拡張カード）経由**。BIOS で
   **`CPU2 Slot6` の OPROM** を無効化すると起動しなくなる（下記「BIOS 設定」参照）。
   aws-gpu02 は UEFI ブート + オンボード SATA。
