@@ -70,17 +70,38 @@ BMC の fan mode を **Full 固定 + duty 制御**に切り替えた（**アイ�
 [2026-08-17 静音化レポート](report/2026-08-17_234403_aws_gpu_fan_noise_reduction.md)、
 [2026-08-18 HBA スロット特定レポート](report/2026-08-18_185344_aws_gpu01_sas_hba_slot_id.md)。
 
+**aws-gpu02 の `P2_DIMME1` は故障している（2026-09-05 特定）**: 2026-09-02 以降に 5 回続いた
+痕跡なしのハングは、**`P2_DIMME1` の uncorrectable memory ECC** が原因だった。この DIMM は
+BIOS がアドレスマップから外しているので OS は触らないが、**iMC の `Patrol Scrub`（既定 Enable /
+24 時間周期）だけが読みに行って fatal MCE を起こしていた**。BIOS で `Patrol Scrub` を
+**Disable** にして回避済み。**`Restore Optimized Defaults` は実行しないこと**。
+恒久対策は `P2_DIMME1` の物理的な抜去。詳細は
+[2026-09-05 uncorrectable ECC レポート](report/2026-09-05_221831_aws_gpu02_uncorrectable_ecc.md)。
+
+**【重要】aws-gpu02 は現在起動しない（2026-09-10 発生）**: **別の DIMM `P1_DIMMA2` が新たに故障**し、
+POST 画面に **`No memory DIMM detected` / `P1-DIMMA2` `P2-DIMME1` / POST コード `BB`** を出したまま
+**System Initializing... から先へ進まない**。`P1_DIMMA2` は **OS が実際に使っていた 3 枚（94 GiB）の 1 枚**で、
+アドレスマップ外の `P2_DIMME1` とは別個体である。**SEL の `Uncorrectable ECC` は 11 件のまま増えておらず、
+`Patrol Scrub` 無効化の回避策は破れていない** — 今回は ECC 経路ではなく **DIMM の検出・訓練段階**の障害。
+**ハード電源 OFF → 30 秒 → ON の電源サイクルでは復旧せず、BIOS setup にも到達できない**ため設定で逃げられない。
+**復旧には `P1_DIMMA2` の物理抜去が必要**（`P2_DIMME1` も同時に抜いてよい。抜去後は 2 枚 約 62 GiB）。
+**それまで aws-gpu02 は使えず、RPC 分散が既定の aws-gpu01 も実質使えない**（146 GiB のモデルが 7 GPU / 112 GiB に載らない）。
+詳細は [2026-09-11 レポート](report/2026-09-11_055337_aws_gpu02_dimma2_failure_glm53flash_upstream.md)。
+
 **mi25 デフォルトバックエンド**: Vulkan (RADV, 4 枚 x16GB)。
 `MI25_BACKEND=hip` を明示すると ROCm fallback。詳細は
 [llama-server SKILL.md](.claude/skills/llama-server/SKILL.md) の「mi25 のバックエンド切替」節、
 および [2026-07-20 pp 退行レポート](report/2026-07-20_013500_mi25_prompt_eval_regression.md)。
 
 **OSハング/クラッシュ（SSH・ping 不通）を検知したら、電源リセットの前に必ず**
-`bmc-screenshot.sh`（KVM スクショ）でコンソール画面を保全すること。カーネルパニックの
-スタックトレース・FS 破損・OOM などの原因究明に決定的な情報が表示されている可能性が高く、
-リセットすると失われるため。保全後に `bmc-power.sh`（電源リセット）で復旧する。いずれも
+`bmc-screenshot.sh`（KVM スクショ）でコンソール画面を保全し、**あわせて `ipmitool sel elist` で
+BMC の SEL を読むこと**。KVM 画面はリセットで失われるため保全が要る。SEL は消えないが、
+**`journalctl` に何も残らない停止でも SEL には残っていることがある**ので必ず見る
+（2026-09-05 の aws-gpu02 は、5 回のハングを「痕跡なし」と誤結論していた。SEL には
+`Memory | Uncorrectable ECC` が 11 件あり、ハング時刻と秒単位で一致していた）。
+保全後に `bmc-power.sh`（電源リセット）で復旧する。いずれも
 `gpu-server` スキルのスクリプトで、SSH 不通でも操作可。詳細は
-`.claude/skills/gpu-server/bmc.md`。
+`.claude/skills/gpu-server/bmc.md` の「ハング調査では最初に SEL を読む」節。
 
 ```bash
 # llama-server確認
@@ -204,10 +225,12 @@ git config core.hooksPath .githooks
 | GPUサーバ使用 | **必ず Skill `gpu-server` を使用**（ロック管理のため） |
 | スクリプト実行 | **プロジェクトルートからの相対パス**（`.claude/skills/...`）で実行すること。フルパス（`/home/ubuntu/projects/...`）は使用しない |
 | レポート作成 | plan mode で計画を立ててまとまった作業を行った場合は、完了時に**必ず**対になるレポートを作成すること（ユーザから明示的に不要と指示された場合を除く）。フォーマット・必須セクション（**概要**必須ほか）は [REPORT.md](REPORT.md) に従う |
-| sudo実行 | **原則 Claudeはsudoを直接実行しない**。sudo権限が必要な操作が発生した場合は、コマンドをユーザに提示して実行を依頼すること（sshリモート先のsudoも同様）。**例外**: mi25 では `sudo dmidecode`（GPU SMBIOS スロット番号確認等の読み出し用途）は Claude が直接実行してよい（NOPASSWD 設定済み・副作用なし） |
-| OSクラッシュ時の証跡保全 | OSハング/クラッシュ（SSH・ping不通）検知時は、**電源リセットの前に必ず** `bmc-screenshot.sh` で KVM スクショを取得すること（コンソールに原因究明の情報が残るため）。詳細は「GPUサーバとLLM」節 |
+| sudo実行 | **原則 Claudeはsudoを直接実行しない**。sudo権限が必要な操作が発生した場合は、コマンドをユーザに提示して実行を依頼すること（sshリモート先のsudoも同様）。**例外1**: mi25 では `sudo dmidecode`（GPU SMBIOS スロット番号確認等の読み出し用途）は Claude が直接実行してよい（NOPASSWD 設定済み・副作用なし）。**例外2**: **aws-gpu02 ではすべての sudo を Claude が直接実行してよい**（2026-09-05 にユーザが許可） |
+| OSクラッシュ時の証跡保全 | OSハング/クラッシュ（SSH・ping不通）検知時は、**電源リセットの前に必ず** `bmc-screenshot.sh` で KVM スクショを取得し、**あわせて `ipmitool sel elist` で BMC の SEL を読む**こと。`journalctl` が空でも SEL には残っていることがある（2026-09-05 の aws-gpu02 の実例）。詳細は「GPUサーバとLLM」節 |
 | aws-gpu01 の他ユーザデータ | `/home/myzk` `/home/sizumita` は**現在未使用だがデータを削除しない**。ディスクを空ける場合も自分（`ubuntu`）の `~/models` / `~/.cache/huggingface` に留めること |
 | aws-gpu01/02 の電源操作 | **ユーザの明確な指示なしにリブート・電源投入・電源断を行わない**（起動時にファンが爆音になるため）。`bmc-power.sh` の `on`/`off`/`soft`/`reset`/`cycle` と `power-ctl.sh` の `on`/`off` は `ALLOW_FAN_NOISE=1` が無いと exit 20 で拒否される。`status` とスクショは常に可。詳細は [gpu-server/aws-gpu.md](.claude/skills/gpu-server/aws-gpu.md) |
+| aws-gpu02 が起動しない | **`P1_DIMMA2` が 2026-09-10 に新規故障**し、POST の `No memory DIMM detected` / コード `BB` で停止して**起動しない**。電源サイクルでは復旧せず BIOS setup にも入れない。**復旧には物理抜去が必要**で、それまで **aws-gpu02 も（RPC 分散が既定の）aws-gpu01 も実質使えない**。SEL の ECC は 11 件のまま＝`Patrol Scrub` 回避策とは別事象。詳細は [2026-09-11 レポート](report/2026-09-11_055337_aws_gpu02_dimma2_failure_glm53flash_upstream.md) |
+| aws-gpu02 の故障 DIMM | **`P2_DIMME1` が uncorrectable ECC で故障中**（2026-09-05 特定。通算 5 回のハングの原因）。BIOS の `Patrol Scrub` を **Disable** にして回避しているので、**`Restore Optimized Defaults` を実行しないこと**（既定の Enable に戻り再発する。故障 DIMM がアドレスマップに復帰する危険もある）。恒久対策は `P2_DIMME1` の物理的な抜去（現在未使用なので容量の損失はゼロ）。詳細は [2026-09-05 レポート](report/2026-09-05_221831_aws_gpu02_uncorrectable_ecc.md) |
 | aws-gpu01/02 の構成 | この 2 台は **RPC 分散（aws-gpu01 メイン + aws-gpu02 ワーカー）が既定**で、単体運用は未検証。起動 `llama-up.sh aws-gpu01` / 停止 `llama-down.sh aws-gpu01`。既定モデルは Huihui-DeepSeek-V4-Flash-0731-abliterated（Q4_K、153.3 GiB）/ ctx=131072。**ロックは両機に対して取る**。詳細は「GPUサーバとLLM」節 |
 | 添付ファイルと LFS | `report/attachment/` 配下は **Git LFS を使わず通常の git 管理**とする（テキストログは zlib で 1〜7% に縮むが LFS は無圧縮保存のため無料枠に不利）。**LFS の再導入は検討しない**。clone 直後に `git config core.hooksPath .githooks` で巨大ファイル検出 hook を有効化すること。100 MB 超は GitHub が push を拒否するため長時間ログは `gzip` する。詳細は「リポジトリ運用」節 |
 | モデルダウンロード | **必ずワークステーション（現在のマシン）に先にダウンロードし、その後 GPU マシンへ転送する**。GPU マシンから HF への直接ダウンロードはしない。HF トークンは `~/.config/gpu-server/.env` の `HF_TOKEN` を使う。詳細は「モデルダウンロード」節 |
