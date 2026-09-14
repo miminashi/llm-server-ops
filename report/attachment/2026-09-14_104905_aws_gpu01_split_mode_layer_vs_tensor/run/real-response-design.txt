@@ -1,0 +1,80 @@
+
+
+<think>
+The user is asking me to organize design decisions for running 262k context inference on a single V100 32GB GPU. They want me to analyze how three factors interact: KV cache type, weight quantization, and speculative decoding. They want a tradeoff table, priority ordering, and justification.
+
+Let me think through this carefully:
+
+**V100 32GB constraints:**
+- 32GB HBM2 (not HBM2e), ~900 GB/s bandwidth
+- No FP8 support (that's A100+)
+- Tensor cores support FP16, INT8
+- No native INT4 tensor core support (unlike A100/H100)
+- Memory is the bottleneck for long context
+
+**262k context implications:**
+- For a typical 7B model (e.g., Llama-2-7B: 32 layers, 32 KV heads, 128 head_dim)
+- KV cache size per token: 2 (K+V) × num_layers × num_kv_heads × head_dim × bytes_per_element
+- For 7B: 2 × 32 × 32 × 128 × bytes = 262,144 × bytes per token
+- In FP16: 262,144 × 2 = 524,288 bytes ≈ 512 KB per token
+- For 262k tokens: 262,144 × 512 KB = ~128 GB → WAY over 32GB
+- Even for a 7B model, this is impossible in FP16
+
+Wait, let me recalculate. For Llama-2-7B:
+- num_layers = 32
+- num_kv_heads = 32 (GQA not used, MHA)
+- head_dim = 128
+
+KV per token = 2 × 32 × 32 × 128 × 2 bytes (FP16) = 2 × 32 × 32 × 128 × 2 = 524,288 bytes = 512 KB
+
+262k tokens × 512 KB = 262,144 × 512 KB = 134,217,728 KB = 128 GB
+
+That's way over 32GB. So we MUST quantize KV cache.
+
+With INT8 KV: 256 KB per token → 262k × 256 KB = 64 GB. Still over.
+With INT4 KV: 128 KB per token → 262k × 128 KB = 32 GB. Just barely, and that's just KV cache.
+
+Hmm, this is extremely tight. Let me reconsider.
+
+Actually wait - for a 7B model:
+- Weights in FP16: ~14 GB
+- Weights in INT8: ~7 GB
+- Weights in INT4: ~3.5 GB
+
+If weights are INT4: ~3.5 GB
+KV cache INT4: 32 GB (for 262k)
+Total: ~35.5 GB → still over 32GB
+
+This is extremely challenging. Let me think about what's realistic.
+
+Actually, maybe the user is thinking about a smaller model, or perhaps they're asking about the design space in general. Or maybe they're using GQA/MQA models where KV heads are fewer.
+
+For a model with GQA (e.g., 8 KV heads instead of 32):
+KV per token (FP16): 2 × 32 × 8 × 128 × 2 = 131,072 bytes = 128 KB
+262k × 128 KB = 32 GB → still just KV cache fills the GPU
+
+With INT8 KV and GQA: 64 KB per token → 262k × 64 KB = 16 GB
+Weights INT8: ~7 GB
+Total: ~23 GB → feasible with room for activations
+
+With INT4 KV and GQA: 32 KB per token → 262k × 32 KB = 8 GB
+Weights INT4: ~3.5 GB
+Total: ~11.5 GB → comfortable
+
+OK so the design space is:
+
+**KV Cache Type:**
+- FP16: 2 bytes/element - highest quality, most memory
+- INT8: 1 byte/element - 2x compression, minor quality loss
+- INT4: 0.5 bytes/element - 4x compression, more quality loss
+- FP8: 1 byte/element - but V100 doesn't support FP8 natively (software emulation possible but slow)
+
+**Weight Quantization:**
+- FP16: full precision, ~14 GB for 7B
+- INT8: ~7 GB for 7B, minor quality loss
+- INT4 (GPTQ/AWQ): ~3.5 GB for 7B, some quality loss
+- INT4 on V100: No native INT4 tensor cores, so dequant to FP16/INT8 for compute → bandwidth bound
+
+**Speculative Decoding:**
+- Requires a draft model in memory (or self-speculation)
+- Draft model
