@@ -1,0 +1,29 @@
+{
+  "tag": "gpu01-7way-mtp",
+  "date": "2026-09-14T12:44:24+09:00",
+  "ctx": 131072,
+  "stages": "0,16000,32000,64000,128000",
+  "n_predict": 1000,
+  "modes": [
+    {
+      "name": "layer",
+      "device": "CUDA0,CUDA1,CUDA2,CUDA3,CUDA4,CUDA5,CUDA6",
+      "split": "layer",
+      "argv_file": "argv-layer.txt"
+    },
+    {
+      "name": "layer2",
+      "device": "CUDA0,CUDA1",
+      "split": "layer",
+      "argv_file": "argv-layer2.txt"
+    }
+  ],
+  "machine": "aws-gpu01 - Tesla P100-PCIE-16GB x7 (sm_60, PCIe, no NVLink)",
+  "bin": "/home/ubuntu/llama.cpp/build/bin/llama-server",
+  "bin_version": "version: 0.4.0-dev (build 10830, commit 465e49b9c) built with GNU 13.3.0 for Linux x86_64",
+  "bin_sha256": "ca54f4dd8a4750198b85ebf4bd195c580c77bc98bf1b772388581c1cd8593886",
+  "cache_k": "q8_0",
+  "cache_v": "q8_0",
+  "launch_prefix": "",
+  "tensor_split": ""
+}
