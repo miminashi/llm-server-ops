@@ -1,0 +1,31 @@
+0.00.038.410 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.038.945 W srv  llama_server: -----------------
+0.00.038.948 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.038.949 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.038.949 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.038.949 W srv  llama_server: -----------------
+0.00.040.296 I srv    load_model: loading model '/home/ubuntu/models/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf'
+0.00.040.455 W common_fit_params: failed to fit params to free device memory: llama_params_fit is not implemented for SPLIT_MODE_TENSOR, abort
+0.07.816.042 W unknown GGML_CUDA_ALLREDUCE value: butterfly
+0.07.876.263 I cmn          init: llama threadpool init, n_threads = 16
+0.08.097.590 I common_speculative_init_result: creating MTP draft context against the target model '/home/ubuntu/models/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf'
+0.08.097.674 W unknown GGML_CUDA_ALLREDUCE value: butterfly
+0.08.202.252 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+0.08.202.410 W set_sampler: backend sampling not supported with SPLIT_MODE_TENSOR; using CPU
+0.08.202.413 W spec common_specu: backend offload failed for seq_id=0; using CPU sampler
+0.08.221.711 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.08.221.779 I srv  llama_server: model loaded
+0.08.221.787 I srv  llama_server: listening on http://127.0.0.1:18099
+0.09.999.688 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.09.999.789 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.14.574.039 I slot print_timing: id  0 | task 0 | n_gen =    101, tg =  26.66 t/s, tg_3s =  26.92 t/s
+0.17.638.695 I slot print_timing: id  0 | task 0 | n_gen =    185, tg =  27.00 t/s, tg_3s =  27.41 t/s
+0.20.661.045 I slot print_timing: id  0 | task 0 | n_gen =    264, tg =  26.73 t/s, tg_3s =  26.14 t/s
+0.21.918.357 I slot print_timing: id  0 | task 0 | prompt eval time =     823.03 ms /    14 tokens (   58.79 ms per token,    17.01 tokens per second)
+0.21.918.362 I slot print_timing: id  0 | task 0 |        eval time =   11095.46 ms /   300 tokens (   37.11 ms per token,    26.95 tokens per second)
+0.21.918.363 I slot print_timing: id  0 | task 0 |       total time =   11918.49 ms /   314 tokens
+0.21.918.375 I slot print_timing: id  0 | task 0 |    graphs reused =        123
+0.21.918.379 I slot print_timing: id  0 | task 0 | draft acceptance = 0.69880 (  174 accepted /   249 generated), mean len =  2.39
+0.21.918.460 I slot      release: id  0 | task 0 | stop processing: n_tokens = 313, truncated = 0
+0.22.000.775 I srv    operator(): operator(): cleaning up before exit...
+Received second interrupt, terminating immediately.
