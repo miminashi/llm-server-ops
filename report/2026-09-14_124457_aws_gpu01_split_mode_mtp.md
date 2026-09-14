@@ -50,7 +50,7 @@
 | GPU | Tesla P100-PCIE-16GB × 7（sm_60）、PCIe 接続・**NVLink なし** |
 | llama.cpp | master `465e49b9c`、build 10830（**前回と同一バイナリ**） |
 | バイナリ sha256 | `ca54f4dd8a4750198b85ebf4bd195c580c77bc98bf1b772388581c1cd8593886` |
-| モデル | `Qwen3.8-27B-UD-Q4_K_XL.gguf`（arch `qwen35`、17,559,178,144 B = 16.35 GiB、MTP ヘッド `blk.64` 同梱） |
+| モデル | `Qwen3.8-27B-UD-Q4_K_XL.gguf`（arch `qwen35`、17,559,178,144 B = 16.35 GiB、MTP ヘッド `blk.64` 同梱）。**hybrid アーキテクチャ**（GGUF に `qwen35.ssm.conv_kernel` / `ssm.state_size` / `ssm.group_count` / `ssm.inner_size` / `full_attention_interval` を持つ = SSM 層と全 attention 層の混成） |
 | KV キャッシュ | `--cache-type-k q8_0 --cache-type-v q8_0` |
 | 共通起動引数 | `-ngl all -fa on -c 131072 --parallel 1 -t 16 --jinja --cache-ram 8192 --cache-idle-slots --cache-reuse 256` |
 | **投機デコード** | **`--spec-type draft-mtp --spec-draft-n-max 2`（今回の唯一の変更点）** |
@@ -129,8 +129,13 @@ ssh -n aws-gpu01 "cd ~/llama-split-bench && ~/.venvs/bench-plot/bin/python plot_
 
 - サーバログは `llama threadpool init, n_threads = 16` で止まり、**`creating MTP draft context` にすら到達しない**（layer 腕ではこの直後に出る）
 - プロセスは `R` 状態で **CPU 約 100%**、**使用中の GPU が全て利用率 100%**、VRAM は重みぶん（7 枚で各 2.9 GiB、計 20.4 GiB）確保済みのまま増えない
-- 枚数に依存しない（2 枚でも 7 枚でも同じ）ので、**7-way 固有ではなく tensor 分割と MTP の組み合わせ固有**
+- 枚数に依存しない（2 枚でも 7 枚でも同じ）ので、**7-way 固有ではなく tensor 分割と MTP の組み合わせ固有**。2 枚の場合は使用中の CUDA0/CUDA1 だけが 100% で、残り 5 枚は 0% のまま
+- **スレッド状態はメインスレッドのみ `R`（実行中）で、他のワーカーは `futex_wait_queue` の `S`**（プロセス全体で 74 スレッド。8 スレッドを抽出して確認）。複数スレッドが互いを待つデッドロックではなく、**メインスレッドが単独でスピンしている**形
 - `ptrace_scope` によりバックトレースは取得できず（aws-gpu01 は sudo をユーザに依頼する運用のため深追いせず）
+
+**手がかり: このモデルは hybrid（SSM + attention 混成）であり、llama.cpp には MTP × hybrid Qwen3.5/3.6 専用の分岐がある。** `llama-model.cpp` に
+`// The MTP head is dense-attention only on hybrid Qwen3.5/3.6, so use a plain attention KV cache for the MTP context instead of the hybrid wrapper`
+というコメント付きで `mtp_on_hybrid_qwen35`（`params.ctx_type == LLAMA_CONTEXT_TYPE_MTP && (arch == LLM_ARCH_QWEN35 || arch == LLM_ARCH_QWEN35MOE)`）が定義され、メモリ確保（`llm_arch_is_hybrid(arch) && !mtp_on_hybrid_qwen35`）とグラフ構築の両方で分岐している。**「hybrid モデル × MTP コンテキスト × tensor 分割」は三つが重なる稀な経路**であり、ハングがこの特殊分岐に起因する可能性は高い。ただし**確認はローカル参照ツリー（`src/llama.cpp`、b10121）のソース読みのみで、実機のビルド（build 10830）で同一とは検証していない**。
 
 なお `--split-mode tensor` は MTP の有無にかかわらず起動時に
 `common_fit_params: failed to fit params to free device memory: llama_params_fit is not implemented for SPLIT_MODE_TENSOR, abort`
@@ -173,6 +178,8 @@ ssh -n aws-gpu01 "cd ~/llama-split-bench && ~/.venvs/bench-plot/bin/python plot_
 | 平均 | **14.91** | 47.1 | — | — | **0.612** | 1.113 |
 
 **実運用補正係数 = 14.91 / 19.59 = 0.761**。前回（MTP 無効）の同係数は 0.993 で、投機デコードが無い以上ほぼ 1.0 になるのが当然だった。**今回初めてこの係数が意味を持つ。**
+
+**低採択率は日本語固有ではない。** 本計測に先立つ決定ゲートのアドホックなプローブ（英語の短文指示 `Write three sentences about the sea.`、temp 0.7、ctx 8192、layer 2 枚、`/completion` 1 発）でも **`draft_n` 48 / `draft_n_accepted` 29 = 採択率 0.604** で、上表の日本語実務風プロンプトの平均 0.612 とほぼ一致した。**楽観側に張り付くのは合成フィラーの反復性が原因であって、言語や `results-real.json` のプロンプト選定の問題ではない。**
 
 `tokens_per_cycle` が 1.08〜1.17 しかないのが本質で、`--spec-draft-n-max 2` に対して実際には 1 サイクルあたり 1.1 トークンしか進んでいない。合成テキストでは同じ指標が 2 に近づく。
 
@@ -248,7 +255,7 @@ depth-0 prefill（新規プロンプト、`cache_prompt=false`）:
 
 ## 残課題
 
-- **tensor + MTP ハングの上流報告**。再現条件は明快（`--split-mode tensor` かつ `--spec-type draft-mtp`、GPU 枚数非依存、`qwen35` + nextn ヘッド同梱 GGUF、build 10830 / `465e49b9c`）で、**分割モードの推奨と投機デコードの推奨が両立しないという実害がある**。報告するならバックトレースが欲しいので、`ptrace_scope` の緩和（sudo）をユーザに依頼したうえで gdb を取るのが先。投稿文は AI に書かせない運用（[llama.cpp #27773 の事例](./2026-09-06_234319_glm53flash_pr27773_vs_27754_depth.md)）に従い、素材の提示に留める。
+- **tensor + MTP ハングの上流報告**。再現条件は明快（`--split-mode tensor` かつ `--spec-type draft-mtp`、GPU 枚数非依存、**hybrid** な `qwen35` + nextn ヘッド同梱 GGUF、build 10830 / `465e49b9c`）で、**第 1 節の `mtp_on_hybrid_qwen35` 分岐という具体的な当たりもある**ため、**分割モードの推奨と投機デコードの推奨が両立しないという実害がある**。報告するならバックトレースが欲しいので、`ptrace_scope` の緩和（sudo）をユーザに依頼したうえで gdb を取るのが先。投稿文は AI に書かせない運用（[llama.cpp #27773 の事例](./2026-09-06_234319_glm53flash_pr27773_vs_27754_depth.md)）に従い、素材の提示に留める。
 - **`--spec-draft-n-max` のスイープ**。今回はツール既定の 2 のみ。`tokens_per_cycle` が実プロンプトで 1.1 しかないため、n_max を上げても伸びない可能性が高いが未確認。逆に 1 に下げれば prefill 劣化が減るかもしれない。
 - **prefill 劣化の原因特定**。7 枚で -31〜-37%、2 枚で -10〜-11% と枚数依存が大きい。MTP コンテキストのプロンプト投入がどの経路を通るかを追う必要がある。
 - **`start.sh` の `--split-mode layer` 固定の見直し**（前回からの継続課題）。**本計測は前回の推奨（tensor）を覆さない**。MTP は tensor の代替にならない。
