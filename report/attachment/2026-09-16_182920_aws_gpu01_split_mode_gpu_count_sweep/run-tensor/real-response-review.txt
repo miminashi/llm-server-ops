@@ -1,0 +1,49 @@
+
+
+<think>
+The user is asking me to review a technical document from the perspective of someone reviewing long technical documents. They want me to examine three specific angles in order: 1) whether claims are based on measurement, 2) checking for overlooked confounding factors, 3) identifying additional validation needed before drawing conclusions. For each, they want me to give specific counterexamples.
+
+Wait - let me re-read this. The user says "長文の技術文書" (a long technical document) and asks me to review it from the perspective of reviewing, checking for: whether claims are based on measurement, checking for confounding factors that might be overlooked, and identifying what additional validation is needed before reaching conclusions. They want specific examples for each.
+
+Actually, re-reading more carefully: "主張の根拠が測定に基づいているか、見落とされそうな交絡因子はないか、結論に至る前に必要な追加検証を特定する。それぞれ、具体的な「反例」を挙げて説明する。"
+
+So the structure they want:
+- For each of the three perspectives, provide a concrete "counter-example" (反例) showing what would be a problem in that area.
+- Explain each with concrete examples.
+
+They want me to role-play as a reviewer looking at a technical long-form document, and for each of the three review dimensions, give a concrete example where something goes wrong (i.e., provide a "red herring" or a concrete failure case).
+
+Let me structure this as a thorough, practical guide for reviewing long technical documents, giving for each of the three angles: what to look for, common failure patterns, and a concrete mini-scenario showing how it typically manifests.
+
+Let me write this in Japanese since the request is in Japanese, and make it very practical and structured. Use headers, tables maybe for the three dimensions, with concrete failure patterns and mini-cases.
+
+I should make this genuinely useful for someone actually reviewing long technical documents. Let me think of good concrete examples:
+
+1. 主張が測定に基づいていないケース: Example - "本手法は従手法Xより23%高速" but no dataset, no hyperparameters, no baseline code version, no seed, nvidia gtx vs v100 vs H100, batch size, etc. Or "internal benchmark shows 40% improvement" without sharing the benchmark. Or using "as shown in Fig. 3" but figure is in appendix with different axis scaling. Or "state-of-the-art" without specifying which paper's Table 3 row 7.
+
+2. 見落とされない交絡: Example: A/B test showing new button color increased conversions 12% but didn't control for seasonality (tested during a sales event when overall traffic is down 20%), or didn't account for new users vs returning, or didn't control for A/B test running simultaneously on same page, or didn't account for dark mode rollout happening same week.
+
+3. 結論前の追加検証: Example: correlational - "we observe X increased, and Y failed to converge" but no ablation, no sensitivity analysis, no alternative hypothesis test, no power analysis, no multiple comparisons correction.
+
+Let me write this out to be very practical, with a clear structure. Use headers, maybe a table for the three dimensions summarizing "what to look for / red flags / mini case". Then expand each.
+
+Let me make it genuinely useful, not just theoretical. Use concrete, realistic examples that sound like things that actually happen in industry/academia.
+
+I'll write in Japanese, matching the tone of a senior engineer or research reviewer who has seen too many documents fail. Keep it practical, slightly blunt, with concrete "this is how it happens in the wild" examples.
+
+Let me structure:
+
+# ロングテック文書のレビュー：3つの観点と、よくある「落とし穴」
+
+## 1. 主張が「測定」に本当に基づいているか
+- まず見るべき：「~した」ときに、それは「測定した」のか、「誰かがそう言った」だけ
+- レッドフラグ：数字がでるが、reproducibility がゼロ
+  - 具体例：「Fig. 3を参照すれば、本モジュールがXより17%高速」だが、Fig. 3のキャプションが「100サンプル」、main textでは「500サンプル」、appendixでは「5000サンプル」が実際には使っている。
+  また、baselane codeが「v0.2.1」で動かしたのに、本文では「latest」。
+- もう一つ：A/Bテストで「p=0.003, *p<0.01」なのに、multiple comparisonでFDR-Hairraiser使っていない。
+  さらに、power analysisが完全に抜けている。（検力0.72で、post-hoc powerが0.53）
+
+## 2. 見落としがちな「本当は交絡している因子」
+- これは「別の力で引っ張ってきているのに、自分の力と思って報告する」ケース
+  具体：新しいレイアウトをA/Bで、当時は「モバイル最適化」をrollout中、ちょうどその週に、push notificationバークが切りた（push通知が、そのまま新しいレイヤーにのみ込まない）。でも、reportでは「push通知バリアンチンを切り込んでいない」。
+- まだ：「同じセラーに露出している他のモジュール」（dark modeが同時に切りかわる、A/Bテストが3つ同時に走っている、それぞれのtrafficが交互に効互いに入る）、地理的クラニング（あるDCが別のDCとlatencyが0
