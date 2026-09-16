@@ -1,0 +1,35 @@
+
+
+<think>
+The user is asking me to review a long technical document from the perspective of a reviewer, examining three specific criteria in order: 1) whether claims are based on measurement, 2) checking for overlooked confounding factors, 3) identifying additional verification needed before drawing conclusions. They want concrete counterexamples for each.
+
+Wait - re-reading the prompt: "長文の技術文書" (long technical document) but... there ISN'T actually a document attached. The user says "長文の技術文書をレビューする立場で" (from the position of reviewing a long technical document) and then lists three angles to examine in order. But there's no actual document content provided. 
+
+Actually, re-reading more carefully: "長文の技術文書をレビューする立場で" - I think they're role-playing that WE are in the position of reviewing a technical long document. And they want us to examine the three perspectives. But there's no actual claims in the prompt to review. 
+
+Hmm, the prompt structure: "長文の技術文書をレビューする立場で、それぞれの観点で順に検討して：主張の根拠が測定に基づいているか、見落とされ得た共変数は、結論を出す前に必要な追加検証は何か。それぞれ具体的反例を挙げて説明。"
+
+I think the user wants me to demonstrate how to apply these three review criteria - perhaps with hypothetical examples since no actual document is provided. Or maybe they want a general framework for how to review technical long-forms documents along these three axes, with concrete counterexamples.
+
+Given there's no actual document to review, I should probably provide a framework: for each of the three criteria, explain what to look for, and give a concrete (hypothetical but realistic) example showing how claims fail each test, with specific counterexamples.
+
+Let me structure this as a review methodology: For reviewing long-forms/technical documents, apply these three tests in sequence. For each, give what red flags appear in real documents, and illustrate with a constructed example that shows the failure mode.
+
+Let me build three mini-scenarios that are realistic:
+
+Scenario A (measurement basis): A paper claims "new algorithm reduces latency by 32% on average across benchmark workloads." Red flag: no raw data shared, no error bars, sample size of test set undisclosed, no confidence intervals. Counter: if they sampled only 3 test cases instead of 100s, the "average" is unstable. Concrete: Suppose true: 1000 workloads, but they ran on 50, and shared only top 30 by latency. The 32% could be cherry-picked ordering. Ask for appendix with all 1000, raw timings, seed counts.
+
+Scenario B (confounds): Energy/CO2e study on datacenter cooling. They attribute 18% reduction in PUE to a new direct-econom filter deployment, but confounds: same quarter, citywide HVAC retrofit completed, plus data-center raised server density from microa out-trueting (server failures down 40%) which masks cooling-load reduction, and season al-o-th: winter vs summer work-load profile shifts 12% between-id, and macroa: new DC opened next to river with different water-conductance. The filter is real but its contribution is confounded by at least two other changes happening simultaneously. Ask for decomposition: run a synthetic control / difference-in-out method, or at least present the three regression terms separately with interaction terms.
+
+Scenario C (additional verification pre-conclusion): Before accepting "X outperforms Y, therefore adopt X," check: statistical significance (power analysis, p-hacking check), external validity (lab-to-prod transfer: distribution shift, latency budget, failure-rate tolerance), and reversi-bility / migration cost. Concrete: A vector-throughput DB claims 3.2x throughput vs baseline, but baseline is at 10k connections while prod is 500k, and the index-size assumption breaks (data no longer in RAM); need to re-tune or use a larger working set. Also check total-elebration cost (TCO) including failure recovery, not just throughput.
+
+Let me write a clean, structured response in Japanese (matching the user's language), with clear headers, concrete constructed examples for each of the three tests, and a practical "ask-the-reviewer questions" checklist. Keep it focused and usable as a review methodology. Avoid being overly long but thorough enough. Use tables maybe for the checklist. Let me produce a well-formatted answer.
+
+I should make the counterexamples vivid and clearly labeled as constructed/hypothetical since no real document was given. I'll note "仮想的にこういうケースが起き得起える" type phrasing.
+
+Let me draft:
+
+Introduction: 長文レビューは「一度もぐら見ずに、三つの順で通す」と決める。 (1) 主張が測定に遣回帰するか、 (2) 交差で潰れていないか、 (3) 結論を出す前にまだ通らぬ検証がないか。今回は各段階で「実際に文書で何を見るか、よくある失敗パターン」と、それを突破する具体的「追撃質問」を、典型的な「でかれた」反例で示す。
+
+Section 1: 主張、測定の土台があるか？
+- よくでた失敗: ベンチマークの「代表値」で、実際にはサブセット。例：「100ケース構成のワークロードで平均18%向上」と書いているが、付録に50/1000だけ載せて、本体図は「上位15」

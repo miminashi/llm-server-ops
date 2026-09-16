@@ -1,0 +1,79 @@
+
+
+<think>
+The user is asking me to organize design decisions for running inference with 262k context length on a single V100 32GB GPU. They want me to analyze how three factors interact:
+1. KV cache dtype (type)
+2. Weight quantization
+3. Speculative decoding
+
+They want:
+- How these three factors interact with each other
+- A tradeoff table
+- Priority ordering with justification
+
+Let me think carefully about this.
+
+**V100 32GB specifications:**
+- 32GB HBM2 memory (900 GB/s bandwidth)
+- 16GB or 32GB variants (user specifies 32GB)
+- No FP16 tensor cores for some operations (actually V100 does have FP16 tensor cores)
+- No native INT8 tensor cores (unlike A100)
+- 15.3 TFLOPS FP16, 6.2 TFLOPS FP32
+- Memory bandwidth: 900 GB/s (HBM2)
+- No support for FP8
+
+**262k context length implications:**
+
+Let's calculate KV cache size. For a typical transformer model:
+- KV cache per token = 2 (K and V) × num_layers × num_kv_heads × head_dim × dtype_size
+- For a model like LLaMA-2 70B: 80 layers, 8 KV heads (GQA), 128 head_dim
+  - Per token: 2 × 80 × 8 × 128 × 2 bytes (FP16) = 327,680 bytes ≈ 320 KB per token
+  - For 262k tokens: 262,144 × 320 KB ≈ 80 GB → WAY too much for 32GB
+
+Wait, let me recalculate. 262k = 262,144 tokens.
+
+For a 70B model (LLaMA-2 70B):
+- 80 layers, 8 KV heads, 128 head_dim
+- KV per token: 2 × 80 × 8 × 128 × 2 (FP16) = 327,680 bytes = 320 KB
+- 262,144 tokens × 320 KB = 83,886,080 KB ≈ 80 GB
+
+That's way over 32GB. So even with FP16 KV cache, 262k context on a 70B model won't fit.
+
+What about a smaller model? Let's say 13B (LLaMA-2 13B):
+- 40 layers, 40 KV heads (MHA), 128 head_dim
+- KV per token: 2 × 40 × 40 × 128 × 2 = 819,200 bytes ≈ 800 KB per token
+- 262,144 × 800 KB ≈ 200 GB → even worse
+
+Wait, LLaMA-2 13B has 40 layers, 40 attention heads, 128 head_dim.
+KV per token: 2 × 40 × 40 × 128 × 2 = 819,200 bytes = 800 KB
+262,144 × 800 KB = 204,800 MB ≈ 200 GB
+
+Hmm, that's even worse. Let me reconsider.
+
+Actually wait - for GQA (Grouped Query Attention) models like LLaMA-2 70B:
+- 80 layers, 64 Q heads, 8 KV heads, 128 head_dim
+- KV per token: 2 × 80 × 8 × 128 × 2 = 327,680 bytes = 320 KB
+- 262,144 × 320 KB = 80 GB
+
+For a model with GQA and fewer KV heads, like some newer models:
+- If we have 32 layers, 8 KV heads, 128 head_dim:
+- KV per token: 2 × 32 × 8 × 128 × 2 = 131,072 bytes = 128 KB
+- 262,144 × 128 KB = 32 GB → just barely fits (but no room for weights)
+
+Let me think about what model could actually run with 262k context on 32GB.
+
+Actually, let's think about this differently. The user is asking about design decisions, not necessarily a specific model. Let me frame it in terms of the constraints.
+
+**Memory budget: 32 GB total**
+
+What needs to fit:
+1. Model weights
+2. KV cache
+3. Activations (relatively small for inference)
+4. Speculative decoding: draft model + verification
+
+**KV Cache dtype options:**
+- FP16: 2 bytes per element
+- INT8: 1 byte per element (halves KV cache)
+- INT4: 0.5 bytes per element (quarters KV cache)
+- FP8: 1 byte (but
