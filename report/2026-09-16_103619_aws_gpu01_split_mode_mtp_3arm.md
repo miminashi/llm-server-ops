@@ -336,3 +336,4 @@ GPU 利用率も一致して落ちている（サンプラ平均、使用中の�
 - [P100 7 枚では tensor 分割が layer 分割を全面的に上回る](./2026-09-14_104905_aws_gpu01_split_mode_layer_vs_tensor.md) — MTP 無効側の比較対象全数値の出所。その tensor 腕は NCCL 経路であり、同一セッションでの再取得は 0/10 で叶わなかった
 - [aws-gpu02 が別の DIMM 故障で起動しなくなり実機検証が中断](./2026-09-11_055337_aws_gpu02_dimma2_failure_glm53flash_upstream.md) — aws-gpu01 単体運用に至った背景
 - [GLM-5.3-Flash の 2 つの PR を深さで比較](./2026-09-06_234319_glm53flash_pr27773_vs_27754_depth.md) — 深度ラダー方式の先行例と、OSS 投稿文を AI に書かせない運用の根拠
+- [P100 4 枚では tensor 分割と MTP が素直に両立する](./2026-09-18_155438_t120h_p100_split_mode_qwen38_27b_mtp.md) — t120h-p100 ×4 の NCCL 経路で tensor + MTP を測り、tensor でも採択率が下がらないことを示した（本レポートの採択率低下は `none` 経路か 7 枚側の要因）

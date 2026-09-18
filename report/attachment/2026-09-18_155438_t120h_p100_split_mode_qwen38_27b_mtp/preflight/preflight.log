@@ -1,0 +1,42 @@
+WARNING: '/usr/bin/python3' cannot import matplotlib - figures will fail at the end.
+         one-time setup: python3 -m venv ~/.venvs/bench-plot && ~/.venvs/bench-plot/bin/pip install matplotlib
+BENCH-START preflight-q38-mtp-1 14:31:17  ctx=131072 stages=0,8000 np=32
+=== mode layer4 (device=CUDA0,CUDA1,CUDA2,CUDA3 split=layer) 14:31:17 ===
+health: {"status":"ok"}
+0, 6213 MiB 1, 6279 MiB 2, 6521 MiB 3, 8807 MiB 
+guarding GPU indices ['0', '1', '2', '3']; server pid 20513; other compute at start: []
+{"stage": 0, "target_tokens": 0, "shrunk": false, "prompt_chars": 54, "tokens_evaluated": 11, "cache_n": 0, "prompt_n": 11, "effective_depth": 11, "prompt_ms": 587.786, "prompt_per_second": 18.7142939777402, "predicted_n": 32, "predicted_ms": 1938.365, "predicted_per_second": 15.992859961875087, "draft_n": 22, "draft_n_accepted": 19, "draft_accept_rate": 0.864, "wall_s": 2.5, "gpu_before": "0, 6213 MiB, 0 %, 79, 1189 MHz, 48.56 W\n1, 6279 MiB, 0 %, 72, 1189 MHz, 48.08 W\n2, 6521 MiB, 0 %, 65, 1189 MHz, 47.16 W\n3, 8807 MiB, 0 %, 59, 1189 MHz, 38.37 W", "gpu_after": "0, 6213 MiB, 59 %, 79, 405 MHz, 40.26 W\n1, 6279 MiB, 12 %, 73, 1189 MHz, 48.78 W\n2, 6521 MiB, 7 %, 66, 1227 MHz, 49.57 W\n3, 8807 MiB, 22 %, 61, 1328 MHz, 45.44 W"}
+{"stage": 1, "target_tokens": 8000, "shrunk": false, "prompt_chars": 34518, "tokens_evaluated": 7887, "cache_n": 0, "prompt_n": 7887, "effective_depth": 7887, "prompt_ms": 73162.572, "prompt_per_second": 107.80102153871792, "predicted_n": 32, "predicted_ms": 2890.788, "predicted_per_second": 10.723719622469721, "draft_n": 22, "draft_n_accepted": 20, "draft_accept_rate": 0.909, "wall_s": 76.3, "gpu_before": "0, 6213 MiB, 0 %, 79, 405 MHz, 40.05 W\n1, 6279 MiB, 0 %, 73, 1189 MHz, 48.54 W\n2, 6521 MiB, 6 %, 66, 1227 MHz, 49.60 W\n3, 8807 MiB, 0 %, 60, 1328 MHz, 44.96 W", "gpu_after": "0, 6417 MiB, 68 %, 80, 405 MHz, 40.99 W\n1, 6483 MiB, 19 %, 78, 1189 MHz, 52.89 W\n2, 6725 MiB, 19 %, 72, 1328 MHz, 62.44 W\n3, 9209 MiB, 22 %, 64, 1328 MHz, 48.07 W"}
+DONE
+layer4 pp8192: prompt_n=8077 cache_n=0 prefill=107.6 t/s
+wrote /home/llm/llama-split-bench/runs/preflight-q38-mtp-1/results-layer4-pp0.json
+=== mode tensor4 (device=CUDA0,CUDA1,CUDA2,CUDA3 split=tensor) 14:34:14 ===
+health: {"status":"ok"}
+0, 6665 MiB 1, 6665 MiB 2, 6665 MiB 3, 6665 MiB 
+guarding GPU indices ['0', '1', '2', '3']; server pid 21176; other compute at start: []
+{"stage": 0, "target_tokens": 0, "shrunk": false, "prompt_chars": 54, "tokens_evaluated": 11, "cache_n": 0, "prompt_n": 11, "effective_depth": 11, "prompt_ms": 988.468, "prompt_per_second": 11.128331923744623, "predicted_n": 32, "predicted_ms": 2804.993, "predicted_per_second": 11.05172098468695, "draft_n": 22, "draft_n_accepted": 19, "draft_accept_rate": 0.864, "wall_s": 3.8, "gpu_before": "0, 6665 MiB, 0 %, 79, 405 MHz, 40.02 W\n1, 6665 MiB, 0 %, 77, 1328 MHz, 60.17 W\n2, 6665 MiB, 0 %, 72, 1328 MHz, 62.19 W\n3, 6665 MiB, 0 %, 63, 1328 MHz, 47.10 W", "gpu_after": "0, 6665 MiB, 49 %, 79, 405 MHz, 40.24 W\n1, 6665 MiB, 68 %, 78, 1328 MHz, 61.15 W\n2, 6665 MiB, 85 %, 73, 1328 MHz, 64.15 W\n3, 6665 MiB, 81 %, 63, 1328 MHz, 48.32 W"}
+{"stage": 1, "target_tokens": 8000, "shrunk": false, "prompt_chars": 34518, "tokens_evaluated": 7887, "cache_n": 0, "prompt_n": 7887, "effective_depth": 7887, "prompt_ms": 66355.1, "prompt_per_second": 118.86049452114456, "predicted_n": 32, "predicted_ms": 2628.994, "predicted_per_second": 11.791582635791485, "draft_n": 22, "draft_n_accepted": 20, "draft_accept_rate": 0.909, "wall_s": 69.3, "gpu_before": "0, 6665 MiB, 0 %, 79, 405 MHz, 39.99 W\n1, 6665 MiB, 0 %, 78, 1328 MHz, 60.90 W\n2, 6665 MiB, 2 %, 73, 1328 MHz, 63.89 W\n3, 6665 MiB, 5 %, 63, 1328 MHz, 48.07 W", "gpu_after": "0, 6893 MiB, 98 %, 79, 405 MHz, 40.72 W\n1, 6893 MiB, 96 %, 79, 1189 MHz, 52.86 W\n2, 6893 MiB, 94 %, 74, 1328 MHz, 65.84 W\n3, 6893 MiB, 40 %, 64, 1328 MHz, 48.80 W"}
+DONE
+tensor4 pp8192: prompt_n=8077 cache_n=0 prefill=119.1 t/s
+wrote /home/llm/llama-split-bench/runs/preflight-q38-mtp-1/results-tensor4-pp0.json
+=== mode layer2 (device=CUDA0,CUDA1 split=layer) 14:36:58 ===
+health: {"status":"ok"}
+0, 11059 MiB 1, 13895 MiB 2, 3 MiB 3, 3 MiB 
+guarding GPU indices ['0', '1']; server pid 21842; other compute at start: []
+{"stage": 0, "target_tokens": 0, "shrunk": false, "prompt_chars": 54, "tokens_evaluated": 11, "cache_n": 0, "prompt_n": 11, "effective_depth": 11, "prompt_ms": 558.597, "prompt_per_second": 19.692193119547724, "predicted_n": 32, "predicted_ms": 2758.766, "predicted_per_second": 11.23690809586605, "draft_n": 22, "draft_n_accepted": 19, "draft_accept_rate": 0.864, "wall_s": 3.3, "gpu_before": "0, 11059 MiB, 0 %, 78, 1189 MHz, 48.04 W\n1, 13895 MiB, 0 %, 77, 1328 MHz, 59.69 W\n2, 3 MiB, 0 %, 71, 405 MHz, 42.98 W\n3, 3 MiB, 0 %, 61, 405 MHz, 32.25 W", "gpu_after": "0, 11059 MiB, 26 %, 79, 1189 MHz, 48.56 W\n1, 13895 MiB, 52 %, 78, 1189 MHz, 52.69 W\n2, 3 MiB, 0 %, 71, 405 MHz, 42.76 W\n3, 3 MiB, 0 %, 61, 405 MHz, 32.01 W"}
+{"stage": 1, "target_tokens": 8000, "shrunk": false, "prompt_chars": 34518, "tokens_evaluated": 7887, "cache_n": 0, "prompt_n": 7887, "effective_depth": 7887, "prompt_ms": 87697.88, "prompt_per_second": 89.93375894605434, "predicted_n": 32, "predicted_ms": 1963.259, "predicted_per_second": 15.790071508649646, "draft_n": 22, "draft_n_accepted": 20, "draft_accept_rate": 0.909, "wall_s": 89.9, "gpu_before": "0, 11059 MiB, 0 %, 78, 1189 MHz, 48.80 W\n1, 13895 MiB, 0 %, 78, 1189 MHz, 52.68 W\n2, 3 MiB, 0 %, 71, 405 MHz, 43.00 W\n3, 3 MiB, 0 %, 61, 405 MHz, 32.01 W", "gpu_after": "0, 11263 MiB, 67 %, 78, 1189 MHz, 48.07 W\n1, 14297 MiB, 42 %, 78, 1240 MHz, 55.33 W\n2, 3 MiB, 0 %, 70, 405 MHz, 42.27 W\n3, 3 MiB, 0 %, 61, 405 MHz, 32.25 W"}
+DONE
+layer2 pp8192: prompt_n=8077 cache_n=0 prefill=111.0 t/s
+wrote /home/llm/llama-split-bench/runs/preflight-q38-mtp-1/results-layer2-pp0.json
+run-info.json written
+Traceback (most recent call last):
+  File "/home/llm/llama-split-bench/plot_bench.py", line 23, in <module>
+    import matplotlib
+ModuleNotFoundError: No module named 'matplotlib'
+plot(ja) failed - check VENV_PY/matplotlib (see README)
+Traceback (most recent call last):
+  File "/home/llm/llama-split-bench/plot_bench.py", line 23, in <module>
+    import matplotlib
+ModuleNotFoundError: No module named 'matplotlib'
+plot(en) failed - check VENV_PY/matplotlib (see README)
+BENCH-FIGFAIL preflight-q38-mtp-1 14:40:04 (measurements complete; figure rendering failed - see messages above)

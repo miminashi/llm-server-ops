@@ -1,0 +1,98 @@
+
+
+<think>
+The user is asking me to take on the role of a reviewer of a long technical document. They want me to examine three perspectives in order:
+1. Whether the claims are based on measurements (主張の根拠が測定に基づいているか)
+2. Whether there are overlooked confounding factors (見落とされている交絡因子はないか)
+3. What additional verification is needed before drawing conclusions (結論を出す前に必要な追加検証は何か)
+
+For each, they want me to provide specific counterexamples (反例) and explanations.
+
+This is a meta-prompt - they're not giving me an actual technical document to review. They're asking me to explain HOW to review a technical document from these three angles, with concrete counterexamples for each. Let me structure this as a comprehensive review framework with specific, illustrative counterexamples.
+
+Let me think about good counterexamples for each:
+
+1. Claims not based on measurements:
+- A paper claiming "our algorithm is 3x faster" but the timing includes data loading, not just computation
+- A medical paper claiming "this drug reduces symptoms by 40%" but the measurement is self-reported questionnaire, not objective biomarker
+- A hardware paper claiming "latency is 5ms" but measuring from application start to first byte, not actual network RTT
+- A software paper claiming "throughput increased" but the test dataset was smaller in the new version
+
+2. Overlooked confounding factors:
+- A/B test where the new feature was also deployed on a different server cluster
+- A study showing "users who used feature X had higher retention" but feature X users were also more recent signups (novelty effect)
+- A performance benchmark where the new code was compiled with -O3 but the baseline was -O2
+- A study showing "temperature increase caused yield drop" but the humidity also changed simultaneously
+
+3. Additional verification needed before conclusions:
+- Statistical significance vs practical significance
+- Reproducibility across different environments
+- Edge cases not covered in the test suite
+- External validity - does it generalize beyond the test conditions?
+
+Let me write this in Japanese since the request is in Japanese, with a well-structured response.
+</think>
+
+# 技術文書レビューの三層チェックフレームワーク
+
+以下、各観点について「何が問題か → 具体的な反例 → レビュー時に投じる質問」の順で整理する。
+
+---
+
+## 1. 主張の根拠が測定に基づいているか
+
+### 問題の構造
+
+技術文書で最も多い致命的欠陥は、**「測定した値」ではなく「測定されたはずの値」を主張の根拠にしている**こと。具体的には：
+
+- 計測対象と主張対象のズレ
+- 計測条件の非明示（環境・入力・反復回数）
+- 代理指標（proxy）を本物とすり替えている
+
+### 反例 A：アルゴリズム比較論文
+
+> 主張：「提案アルゴリズムは既存手法比 3.2× 高速である」
+
+**測定の実態：**
+- 既存手法：データセットをディスクから読み込み → 前処理 → 計算 → 出力書き込み（全パイプライン計測）
+- 提案手法：メモリに事前ロード済みのデータに対して計算部分のみ計測
+
+**何がズレているか：**
+I/O 時間が既存手法側にのみ含まれている。計算部分単体では 1.4× しか高速化されていない。
+
+**レビュー時の質問：**
+「Table 2 の計測区間を明示してください。I/O 除外時の比較値はいくらか？ 反復回数と標準偏差は？」
+
+### 反例 B：医療・生体計測
+
+> 主張：「本デバイスは血圧測定精度 ±2 mmHg を達成」
+
+**測定の実態：**
+- 比較基準（ゴールドスタンダード）が同一の観測者によって 10 秒間隔で連続測定
+- 被験者 8 名、すべて 20〜30 代の健康男性
+- 「±2 mmHg」は 1 回計測の絶対誤差ではなく、**同一被験者の 5 回平均の誤差**
+
+**何がズレているか：**
+- 連続測定は心拍変動を無視している（本来は 1〜2 分間隔）
+- 高齢者・高血圧患者での精度が未検証
+- 1 回計測のばらつき（SD）が報告されていないため、臨床現場での実用性が判断できない
+
+### 反例 C：ソフトウェアスループット
+
+> 主張：「新アーキテクチャにより TPS（transactions per second）が 45% 向上」
+
+**測定の実態：**
+- 旧アーキテクチャ：1,000 件のトランザクションを 10 秒で処理
+- 新アーキテクチャ：500 件のトランザクションを 5 秒で処理
+- 両方とも「1 秒あたりの処理件数」を TPS と定義
+
+**何がズレているか：**
+バッチサイズが異なる。トランザクション 1 件あたりの処理時間は旧 10 ms / 新 10 ms で**全く改善されていない**。バッチ境界のオーバーヘッドが隠蔽されている。
+
+---
+
+## 2. 見落とされている交絡因子
+
+### 問題の構造
+
+「A が変化した → B が変化した」の因果主張において、**A と B の間に第三変数 C

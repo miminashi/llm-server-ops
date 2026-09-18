@@ -1,0 +1,88 @@
+
+
+<think>
+The user is asking me to review a technical document from the perspective of a reviewer, examining three aspects in order:
+1. Whether the claims are based on measurements
+2. Whether there are overlooked confounding factors
+3. What additional verification is needed before drawing conclusions
+
+They want specific counterexamples for each point.
+
+However, the user hasn't actually provided a specific technical document to review. They've asked me to approach the review "from the perspective of someone reviewing a long technical document" and to examine these viewpoints "in order" with specific counterexamples.
+
+Since no specific document is provided, I should provide a general framework for how to review technical documents along these three axes, with concrete counterexamples for each. I'll structure this clearly and provide specific, illustrative counterexamples that demonstrate the failure modes in each category.
+
+Let me structure this as:
+1. 主張の根拠が測定に基づいているか (Are claims based on measurements?)
+   - Counterexample: A document claiming "our algorithm is 3x faster" but only showing a single benchmark run, or using theoretical complexity instead of actual measurements.
+
+2. 見落とされている交絡因子はないか (Are there overlooked confounding factors?)
+   - Counterexample: A document claiming "X causes Y improvement" but not controlling for system load, background processes, or sample size bias.
+
+3. 結論を出す前に必要な追加検証は何か (What additional verification is needed before drawing conclusions?)
+   - Counterexample: A document concluding "this method is superior" without cross-validation, without testing edge cases, without reproducibility checks.
+
+Let me write this in Japanese since the request is in Japanese, with a thorough, professional tone appropriate for a technical document review.
+</think>
+
+# 技術文書レビュー：三軸の検討フレームワーク
+
+具体的な文書が提示されていないため、各観点について「典型的な失敗パターン」を反例として提示し、レビュー時にどこを突くべきかを示します。
+
+---
+
+## 1. 主張の根拠が測定に基づいているか
+
+### 検討ポイント
+
+- 数値が「実測値」か「理論値・推定値」か区別されているか
+- 測定条件（ハードウェア、OS、負荷、繰り返し回数）が明記されているか
+- 誤差範囲・信頼区間が示されているか
+- 比較対象が同等の条件下で測定されているか
+
+### 反例
+
+> **文書の主張：** 「提案手法は既存手法Aに比べ推論速度が3.2倍向上した。」
+
+**問題点：**
+
+| 疑義 | 具体的内容 |
+|---|---|
+| 測定環境の非対称 | 既存手法AはCPU-only、提案手法はGPU（A100）で計測。"3.2倍"の多くはハードウェア差 |
+| 単一実行 | 1回だけ計測し、平均・標準偏差が未記載。キャッシュヒット/ミスで±40%揺れる |
+| 理論値の混入 | 3.2倍のうち1.5倍はFLOPs計算（理論）で、実測は2.1倍しかないが脚注に埋もれている |
+| ワークロード偏り | 計測に用いた入力長が全て128 token以下で、実運用では2048 tokenが中心 |
+
+**レビューコメント例：**
+「Table 2の"Speedup"列は、(a) 同一GPU上のA vs 提案、(b) 入力長512/1024/2048の各条件でのp50/p95、(c) 3回以上の繰り返し平均±σを併記してください。現状の3.2倍は再現不能です。」
+
+---
+
+## 2. 見落とされている交絡因子はないか
+
+### 検討ポイント
+
+- 比較群間に「見たい変数以外」の差がないか
+- 時間的・空間的なバイアス（batch順序、メモリ圧力）
+- 選択バイアス（成功したrunだけ報告）
+- 外部要因（共有クラスタのノイズ、ネットワーク帯域）
+
+### 反例
+
+> **文書の主張：** 「LoRA rank 64はrank 32より下游タスク精度が+2.1%高い。」
+
+**見落とされた交絡因子：**
+
+1. **学習スケジュールの非対称**
+   rank 64は3 epoch、rank 32は2 epochで学習（計算予算の差が"精度差"に混入）。
+   → *反例：* 同一epoch数で再計測すると差は+0.4%に縮小。
+
+2. **バッチサイズとLRの連動**
+   rank 64ではbatch 32 + LR 2e-4、rank 32ではbatch 16 + LR 1e-4。
+   → *反例：* 学習曲線の収束点を揃えると、rank 32が逆に+0.2%上回る。
+
+3. **評価セットのデータリーク**
+   評価に用いた500サンプルのうち120件が、rank 64の事前フィルタリングで「難しい」と判断され除外された後、別ルートで評価セットに混入。
+   → *反例：* 完全なランダム分割で再評価すると差は統計的に有意でない（p=0.31）。
+
+4. **共有GPUの同時実行ノイズ**
