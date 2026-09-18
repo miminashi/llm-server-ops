@@ -211,6 +211,7 @@ MACHINE="aws-gpu01 - Tesla P100-PCIE-16GB x7 (sm_60, PCIe, no NVLink)"
 
 ## 参照レポート
 
+- [P100 4 枚の MoE では tensor 分割が深さでだけ勝つ](./2026-09-16_225707_t120h_p100_split_mode_layer_vs_tensor.md) — 本レポートの残課題「他サーバ・MoE モデルでの再測定」に応えた続編。t120h-p100 (P100×4) × Qwen3.6-35B-A3B (MoE) では **本レポートの結論が条件依存であることが判明した**（decode は深さ約 3 万 tok で交差し浅部は layer が +22%、prefill は全深度で layer が勝つ）。一方「layer 分割は枚数を増やしても decode が伸びない」は再現し、NCCL 起動ハングは 4 枚では 3/3 で起きなかった
 - [tensor 分割と MTP は両立するが回避策が prefill を 7 割奪う](./2026-09-16_103619_aws_gpu01_split_mode_mtp_3arm.md) — 本レポートの tensor 腕が使った NCCL 経路と、その回避策のコストを切り分けた 3 腕再測定
 - [aws-gpu02 が別の DIMM 故障で起動しなくなり実機検証が中断](./2026-09-11_055337_aws_gpu02_dimma2_failure_glm53flash_upstream.md) — 単体運用に至った背景（`P1_DIMMA2` の新規故障）
 - [aws-gpu02 の uncorrectable ECC](./2026-09-05_221831_aws_gpu02_uncorrectable_ecc.md) — 先行する `P2_DIMME1` 故障と `Patrol Scrub` 回避策

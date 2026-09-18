@@ -1,0 +1,14 @@
+0.00.086.043 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.086.581 W srv  llama_server: -----------------
+0.00.086.584 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.086.584 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.086.585 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.086.586 W srv  llama_server: -----------------
+0.00.087.968 I srv    load_model: loading model '/home/llm/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf'
+0.00.088.148 W common_fit_params: failed to fit params to free device memory: llama_params_fit is not implemented for SPLIT_MODE_TENSOR, abort
+0.08.637.426 I cmn          init: llama threadpool init, n_threads = 16
+0.08.972.740 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+0.08.978.442 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.08.978.510 I srv  llama_server: model loaded
+0.08.978.519 I srv  llama_server: listening on http://127.0.0.1:18099
+0.09.981.613 I srv    operator(): operator(): cleaning up before exit...
