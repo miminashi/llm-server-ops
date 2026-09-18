@@ -246,6 +246,7 @@ for L in ja en; do python3 src/llama-split-bench/plot_bench.py --dir report/atta
 
 ## 参照レポート
 
+- [P100 4 枚でも dense 27B なら tensor 分割が全面的に勝つ](./2026-09-18_131856_t120h_p100_split_mode_qwen38_27b.md) — 本レポートの残課題「同じ t120h-p100 で Qwen3.8-27B を測り機種要因とモデル要因を分離する」を実施した続編。同一機・同一バイナリで dense に戻すと tensor が全面勝ちに戻り、**本レポートの優劣反転の主因はモデル型（MoE）と判明した**
 - [P100 7 枚では tensor 分割が layer 分割を全面的に上回る](./2026-09-14_104905_aws_gpu01_split_mode_layer_vs_tensor.md) — 本レポートが再現を試みた手本。その残課題「他サーバ・MoE での再測定」に本レポートが答え、**結論が条件依存であることを示した**
 - [tensor 分割と MTP は両立するが回避策が prefill を 7 割奪う](./2026-09-16_103619_aws_gpu01_split_mode_mtp_3arm.md) — NCCL 経路と butterfly 経路のコスト差（decode -25% / prefill -78%）の出所。本レポートが NCCL を導入した理由
 - [tensor 分割の起動ハングは MTP ではなく NCCL が原因](./2026-09-14_142115_aws_gpu01_tensor_split_nccl_hang.md) — 7 枚で 0/13 のハング。本レポートの 4 枚 3/3 と対照的

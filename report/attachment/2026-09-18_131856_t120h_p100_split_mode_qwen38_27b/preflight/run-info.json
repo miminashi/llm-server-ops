@@ -1,0 +1,35 @@
+{
+  "tag": "preflight-q38-1",
+  "date": "2026-09-18T12:09:22+09:00",
+  "ctx": 131072,
+  "stages": "0,8000",
+  "n_predict": 32,
+  "modes": [
+    {
+      "name": "layer4",
+      "device": "CUDA0,CUDA1,CUDA2,CUDA3",
+      "split": "layer",
+      "argv_file": "argv-layer4.txt"
+    },
+    {
+      "name": "tensor4",
+      "device": "CUDA0,CUDA1,CUDA2,CUDA3",
+      "split": "tensor",
+      "argv_file": "argv-tensor4.txt"
+    },
+    {
+      "name": "layer2",
+      "device": "CUDA0,CUDA1",
+      "split": "layer",
+      "argv_file": "argv-layer2.txt"
+    }
+  ],
+  "machine": "t120h-p100 - Tesla P100-PCIE-16GB x4 (sm_60, PCIe, no NVLink)",
+  "bin": "/home/llm/llama.cpp/build/bin/llama-server",
+  "bin_version": "version: 0.4.0-dev (build 10830, commit 465e49b9c) built with GNU 11.4.0 for Linux x86_64",
+  "bin_sha256": "21df743c9ba392e2869d614d02dce94a25c942801091d0ac48ce59a6d0376170",
+  "cache_k": "q8_0",
+  "cache_v": "q8_0",
+  "launch_prefix": "",
+  "tensor_split": ""
+}
