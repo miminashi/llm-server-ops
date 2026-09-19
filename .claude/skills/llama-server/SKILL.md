@@ -75,6 +75,13 @@ Huihui-DeepSeek-V4-Flash-0731-abliterated / ctx=131072）があるので、モ�
 - **2026-05-26 #3**: `dry_multiplier=0` をリクエスト側で送ると path が完全再現できることを確認、DRY サーバ default を **完全無効化** (`--dry-multiplier 0`)。thinking ループ抑制は `presence_penalty 0.5` 単独で対応。
 - **2026-05-26 #4** (現行): ytdlor セッションで Active Storage 文脈の段落 verbatim ループ再発 (同一段落 10 回以上反復) を観測。`presence_penalty=0.5` 単独では数百〜数千トークン規模の長距離段落反復に抑制不足と判断し、`presence_penalty` を **1.0** へ引き上げ。`fed12136` 時の URL 副作用は DRY=0.8 が原因 (greedy decoding で再現済) であり、`presence_penalty` 単独 1.0 では URL/path リグレッションは観測されない。それでも再発する場合は、クライアント側で `dry_multiplier=0.4` 程度を送る運用に切り替える。
 
+**⚠️ グローバル plugin 版は古い（2026-09-19 確認）**: `install-global.sh` で配置した
+`~/.claude/plugins/cache/claude-plugins-official/llama-server/1.0.0/` は **2026-05-13 時点のコピー**で、
+以降の変更（上記の `--presence-penalty 1.0` / `--dry-multiplier 0`、RPC 分散スタック、mi25 Vulkan の
+GPU 自動検出、`ttyd-up.sh` など）を含まない。`git pull` では更新されないので、**plugin 経由で起動せず
+このリポジトリの `start.sh` を使う**。plugin 側を更新する場合は
+`.claude/skills/llama-server/scripts/install-global.sh` を再実行する（`cp -r` で上書き配置される）。
+
 ## fitモード（MoE CPUオフロード）
 
 モデルサイズがVRAMを超えるMoEモデル向けのモード。ctx-size引数に `fit` を指定するとMoEエキスパート重みの一部を CPU (RAM) にオフロードし、アテンション・ルーティング層はGPUに残す。
@@ -538,6 +545,29 @@ MI25_BACKEND=hip .claude/skills/llama-server/scripts/start.sh mi25 "<model>" 131
 - **ROCm (fallback, `MI25_BACKEND=hip`)**: `update_and_build-mi25.sh` で gfx900 ビルド可能コミット (`0fac87b15`, v8533) に **pin**（master は `__hip_fp8_e4m3` を gfx900 で参照しビルド不能）。起動パラメータは上表のとおり ub=2048。**2026-07-20 実測で long ctx (32k/100k) の pp が退行**（1k は健全 254 t/s、32k -19%、100k -35%）、原因未解明のまま fallback 用途で残置。
 - **Vulkan の GPU 可視性（自動検出）**: `start.sh` は**起動前に `vulkaninfo --summary` で RADV 物理 GPU の index のみを検出**し（`deviceType=PHYSICAL_DEVICE_TYPE_CPU` の llvmpipe/lavapipe を除外）、`GGML_VK_VISIBLE_DEVICES` に設定する（実効3枚→`0,1,2`／4枚→`0,1,2,3`）。mi25 は SLOT4 等の PCIe 物理層障害で**実効枚数が間欠的に変動**する（[原因究明レポート](../../../report/2026-06-14_131713_mi25_gpu4_pcie_dropout.md)）ため、旧来の固定値 `0,1,2,3` は3枚構成時に index 3 の llvmpipe(CPU) を拾い `ErrorOutOfDeviceMemory` で破綻していた（[param sweep レポート](../../../report/2026-06-18_084557_mi25_vulkan_param_sweep.md)）。検出した index は vulkaninfo の `GPUn` 順 = ggml-vulkan の `Vulkann` 順と一致する（`--list-devices` で確認済み・ICD 列挙順に依存するためドライバ更新時は要再確認）。vulkaninfo が使えない等で検出に失敗した場合は `GGML_VK_VISIBLE_DEVICES` を**未設定**で起動し警告する（現行 master の ggml は未設定時に llvmpipe を自動除外する）。
 - **GPU 枚数チェック**: `start.sh` は起動時に実効 GPU 枚数（mi25 Vulkan=RADV 検出数／mi25 ROCm=`rocminfo` の gfx900 Agent 数／t120h-p100=`nvidia-smi` 枚数）が**期待枚数（mi25=4／p100=4）を下回ると stderr に警告**を出す。ただし**起動は中断しない**（実効枚数で VRAM が足りなければモデルロード時に llama-server 自体が失敗するため、それに委ねる）。ROCm/CUDA は可視性を触らず（auto で実効枚数のみ使用）、警告のみ。
+
+### 既知の問題: aws-gpu01 の `--split-mode tensor` が NCCL で起動ハング（2026-09-14 特定）
+
+`start.sh` は常に `--split-mode layer` で起動するので、**tensor 分割を手動で試すときだけ**の注意。
+
+- **症状**: 起動直後の最初の GPU 実行（`common_init_from_params` のウォームアップ `llama_decode`）で
+  確率的にハングし、`listening on` に到達しない。徴候は**使用中の GPU が利用率 100% かつ
+  memory 利用率 0%**（帯域を使わないスピン）。`ncclCommInitAll` は成功しており、初期化ハングではない。
+  MTP の有無・枚数には依存しない。
+- **範囲**: **aws-gpu01（P100 ×7）で既定の NCCL 経路は起動 1/15**。一方 **t120h-p100（P100 ×4）では
+  既定の NCCL で起動 3/3・本計測も完走**しており（2026-09-18）、同じ sm_60 でも再現しない。
+- **回避策**: **`GGML_CUDA_ALLREDUCE=none`**（ggml meta バックエンドの AllReduce を使う）。
+  受け付ける値は `nccl` / `internal` / `none` のみ（`ggml/src/ggml-cuda/ggml-cuda.cu` の `getenv("GGML_CUDA_ALLREDUCE")`）。
+  - **`butterfly` は存在しない値**。未知の値は `unknown GGML_CUDA_ALLREDUCE value:` を警告して `none` に
+    落ちるので動いてしまうが、正しくは `none` と書く（2026-09-14 レポートの推奨値は誤りで、2026-09-16 に訂正）
+  - **`internal` は使わない**。`allreduce.cu` のランデブー待ちの `__nanosleep` は sm_70 以上限定で、
+    sm_60 では待ちに入った瞬間に `__trap()` で落ちる（起動できたのは待たずに済んだ偶然）
+- **コスト**: `none` は NCCL 比で **decode -25%（18.34→13.81 t/s）/ prefill -78〜-80%**（aws-gpu01 7 枚）。
+  さらに aws-gpu01 の `none` + MTP では tensor 腕だけ採択率が低かった（実プロンプト 0.462）が、
+  t120h-p100 の NCCL + MTP では低下しなかったため、**`none` 経路か 7 枚構成のどちらかが原因**で未切り分け。
+- 詳細: [NCCL 起動ハング](../../../report/2026-09-14_142115_aws_gpu01_tensor_split_nccl_hang.md) /
+  [`none` のコストと butterfly の訂正](../../../report/2026-09-16_103619_aws_gpu01_split_mode_mtp_3arm.md) /
+  [t120h-p100 ×4 では NCCL で両立](../../../report/2026-09-18_155438_t120h_p100_split_mode_qwen38_27b_mtp.md)
 
 ### 既知の問題: llama.cpp `-ub 8192` の CUDA OOM (2026-06-02 master リグレッション)
 

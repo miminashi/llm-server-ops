@@ -13,6 +13,7 @@
 ## ソースコード
 
 - llama.cpp の完全なソースツリーが `src/llama.cpp/` にある（コードリーディング用）。`.gitignore` で `src/` は git 追跡対象外。ビルドは GPU サーバ側の `~/llama.cpp/` で行う（`llama-server` スキル参照）ため、`src/` はローカル参照専用。
+- **llama.cpp の `llama-finetune` は modern LLM に対して壊れている**（2026-07-25 確認）。fine-tune の調査は別プロジェクト `~/projects/llama.cpp-fine-tuning` へ移管済みなので、fine-tune の依頼はそちらへ誘導し、実用上は HF Trainer + LoRA を案内する。経緯は [2026-07-25 fine-tune 経緯レポート](report/2026-07-25_200322_llama-cpp-finetune-history.md)。
 
 ---
 
@@ -224,6 +225,7 @@ git config core.hooksPath .githooks
 |------|------|
 | GPUサーバ使用 | **必ず Skill `gpu-server` を使用**（ロック管理のため） |
 | スクリプト実行 | **プロジェクトルートからの相対パス**（`.claude/skills/...`）で実行すること。フルパス（`/home/ubuntu/projects/...`）は使用しない |
+| `pkill -f` の自殺 | Bash ツールで `pkill -f '<pat>'` / `pgrep -f` を使うと、**コマンド全文に `<pat>` が含まれるため実行中のシェル自身がマッチして kill される**（exit 144 だけが返り、後続のコマンドが無言でスキップされる）。`[f]oo` のブラケットでは防げない。**バックグラウンド起動時に PID を pidfile に書いて `kill $(cat pidfile)` で止める**か、`pgrep -af '<pat>' \| grep -v $$` で PID を取って個別に kill する。どうしても pkill を使うならパターンを分割する（`'boot-qui''et'`） |
 | レポート作成 | plan mode で計画を立ててまとまった作業を行った場合は、完了時に**必ず**対になるレポートを作成すること（ユーザから明示的に不要と指示された場合を除く）。フォーマット・必須セクション（**概要**必須ほか）は [REPORT.md](REPORT.md) に従う |
 | sudo実行 | **原則 Claudeはsudoを直接実行しない**。sudo権限が必要な操作が発生した場合は、コマンドをユーザに提示して実行を依頼すること（sshリモート先のsudoも同様）。**例外1**: mi25 では `sudo dmidecode`（GPU SMBIOS スロット番号確認等の読み出し用途）は Claude が直接実行してよい（NOPASSWD 設定済み・副作用なし）。**例外2**: **aws-gpu02 ではすべての sudo を Claude が直接実行してよい**（2026-09-05 にユーザが許可） |
 | OSクラッシュ時の証跡保全 | OSハング/クラッシュ（SSH・ping不通）検知時は、**電源リセットの前に必ず** `bmc-screenshot.sh` で KVM スクショを取得し、**あわせて `ipmitool sel elist` で BMC の SEL を読む**こと。`journalctl` が空でも SEL には残っていることがある（2026-09-05 の aws-gpu02 の実例）。詳細は「GPUサーバとLLM」節 |

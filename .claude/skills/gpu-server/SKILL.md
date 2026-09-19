@@ -15,7 +15,7 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu0
 
 | ホスト名 | GPU | 枚数 | VRAM合計 | プラットフォーム | IPアドレス |
 |---------|-----|------|---------|-----------------|-----------|
-| `mi25` | AMD MI25 | 4 | 64GB | ROCm | 10.1.4.13 |
+| `mi25` | AMD MI25 | 4 | 64GB | Vulkan（既定）/ ROCm | 10.1.4.13 |
 | `t120h-p100` | NVIDIA Tesla P100 | 4 | 64GB | CUDA | 10.1.4.14 |
 | `t120h-m10` | NVIDIA Tesla M10 | 16 (15使用可) | 128GB | CUDA | 10.1.4.15 |
 | `aws-gpu01` | NVIDIA Tesla P100 16GB | 7 | 112GB | CUDA | 10.8.2.1 |
@@ -26,11 +26,31 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu0
 - CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14 を指定する必要あり
 - 他サーバより低速だが、大きなVRAMを活用可能
 
+**mi25 の注意事項**:
+- **GPU の物理配置（2026-07-20 時点の記録）**: BDF `04:00.0`=`card-c3164` / `07:00.0`=`card-448c4` /
+  **`84:00.0`=`card-c48c4`（SLOT8。過去に GPUVM/TDR fault が集中した個体）** / `87:00.0`=`card-a48e4`。
+  個体は `rocm-smi --showuniqueid` の Unique ID で識別する（GUID は不変ではない。CLAUDE.md の「mi25 GPU 個体識別」節）
+- **常用は 4 枚 64GB**（ROCm は `HIP_VISIBLE_DEVICES=0,1,2,3`、Vulkan は `start.sh` が RADV を自動検出）。
+  c48c4 は SLOT8 に移してから 4 枚同時運用で 99 trial / 0 fault（2026-07-19）。**fault が再発したら
+  c48c4（HIP index 2）を除いた `0,1,3` に落とす**。物理配置を変えたら index が変わるので Unique ID で再確認する
+- **4 枚認識は BIOS の MMIO High Size = 512GB に依存**（256GB だと 4 枚目の Large-BAR が入らず 3 枚になる）。
+  `ssh mi25 'lspci | grep -c "Instinct MI25"'` が 4 でなければ BIOS を疑う
+- **power cap は `/etc/rc.local` が起動時に 160W に設定する**（HW 既定は 220W）。**BACO reset（GPU の
+  fault 復旧）の後は 220W に戻り、rc.local は再実行されない**。160W に戻すには
+  `sudo rocm-smi --setpoweroverdrive` が要る（sudo なのでユーザに依頼する）
+- **重い I/O を同時にかけない**。2026-06-13 に `rm -rf build` + 並列コンパイル + 22GB コピーの最中に
+  ルート FS が `aborted journal` で read-only 化し SSH 不能になった（NVMe は健全、再起動の fsck で復旧）。
+  ビルド並列度を抑え、大容量コピーは分散する
+- 詳細: [4 枚同時運用 24h](../../../report/2026-07-19_053651_mi25_c48c4_slot8_4card_24h_r1.md) /
+  [power cap の永続化と BACO](../../../report/2026-07-04_012209_mi25_c48c4_slot8_24h_x2.md) /
+  [ext4 破損の前例](../../../report/2026-06-13_112006_mi25_qwen36_128k.md)
+
 **aws-gpu01 / aws-gpu02 の注意事項**:
 - **起動時にファンが爆音になるため、ユーザの明確な指示なしにリブート・電源投入・電源断を行わない**
   （`bmc-power.sh` / `power-ctl.sh` が `ALLOW_FAN_NOISE=1` なしの電源操作を exit 20 で拒否する）。
-  2026-08-17 に静音化を実施し**定常運転は 6,500→2,900rpm** になったが、
-  **POST 中の爆音は BMC が制御を手放さないため消せていない**のでガードは維持する
+  2026-08-17 に静音化を実施し**定常運転は 6,500→2,900rpm** になった。**起動 (POST) 中も
+  `bmc-power.sh` が `boot-quiet.sh` を自動併走させることで 2,900rpm 台に収まる**（2026-08-18 のコールドブートで実測）。
+  ただし抑制が効かない状況では従来どおり爆音になるため、**ガードは維持する**
 - **温度連動ファン制御 `smc-fanctl` が両機に常設されている**（fan mode = Full 固定 + duty 制御）。
   fan mode を手で Optimal に戻すとデーモンが Full に戻す。停止したいときは
   `sudo systemctl stop smc-fanctl`（停止時に自動で Optimal に復帰する）。
