@@ -83,7 +83,7 @@ do_install() {
   cat > "${INSTALL_BASE}/.claude-plugin/plugin.json" <<EOF
 {
   "name": "${PLUGIN_NAME}",
-  "description": "GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu02）の管理。排他制御、リモートブラウザ、電源制御、セットアップ。",
+  "description": "GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu02、aws-v100）の管理。排他制御、リモートブラウザ、電源制御、セットアップ。",
   "version": "${PLUGIN_VERSION}"
 }
 EOF

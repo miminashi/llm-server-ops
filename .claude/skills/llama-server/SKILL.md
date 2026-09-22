@@ -307,6 +307,7 @@ tmux split-window -v -b -d -l 3 \
 | t120h-m10 | `CUDA_VISIBLE_DEVICES=0..14 -b 4096 -ub 4096` | GPU 15は使用不可 |
 | aws-gpu01 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**（P100 16GB×7=112GB、t120h-p100 実績値を踏襲した推定値）。RPC 分散では下記の実績値を使う |
 | aws-gpu02 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**。P100 16GB×4 + **12GB×2** = 88GB。VRAM 不均等だが、**RPC 分散での実測では `--tensor-split` 不要**（自動配分が 12GB 枚を適切に扱う） |
+| aws-v100 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | V100-SXM2 16GB ×2 = 32GB（sm_70）の単体機。P100 系と同じ値を初期値にした。NVLink は非活性で GPU1 は Gen2 x8。BMC が無いので `llama-down.sh` は電源 OFF を飛ばす |
 | **aws-gpu01 + aws-gpu02（RPC 分散）= 両機のデフォルト構成** | `--rpc 192.168.100.2:50052 --flash-attn 1 --poll 0 -b 2048 -ub 512` | **実績あり**（2026-08-16）。13 GPU / 200 GiB。DeepSeek-V4-Flash UD-Q4_K_XL（144.4 GiB）を ctx=131072 で起動、pp 89.7 t/s / tg 13.6 t/s。`-ub` の引き上げは未検証（最小空き 1,058 MiB、abliterated 版では 460 MiB）。起動は `llama-up.sh aws-gpu01`（→ `rpc-stack-up.sh`） |
 
 **aws-gpu01 / aws-gpu02 の電源**: 起動時にファンが爆音になるため、`llama-up.sh` が内部で呼ぶ
@@ -610,6 +611,7 @@ ssh t120h-p100 "ps aux | grep llama-server | grep -v grep"
 ssh t120h-m10 "ps aux | grep llama-server | grep -v grep"
 ssh aws-gpu01 "ps aux | grep llama-server | grep -v grep"
 ssh aws-gpu02 "ps aux | grep llama-server | grep -v grep"
+ssh aws-v100 "ps aux | grep llama-server | grep -v grep"
 ```
 
 **注意**: 既存のllama-serverが起動している場合、**勝手に終了しないでください**。人間や他のエージェントが使用中の可能性があります。自分で起動していないllama-serverを終了する必要がある場合は、必ずユーザに確認を取ってください。
@@ -617,11 +619,12 @@ ssh aws-gpu02 "ps aux | grep llama-server | grep -v grep"
 ## VRAM確認
 
 ```bash
-# NVIDIA (P100/M10)
+# NVIDIA (P100/M10/V100)
 ssh t120h-p100 "nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv"
 ssh t120h-m10 "nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv"
 ssh aws-gpu01 "nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv"
 ssh aws-gpu02 "nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv"
+ssh aws-v100 "nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv"
 
 # AMD (MI25)
 ssh mi25 "rocm-smi --showmeminfo vram"

@@ -10,7 +10,7 @@ usage() {
 Usage: stop.sh <server>
 
 Arguments:
-  server     GPUサーバ名 (mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02)
+  server     GPUサーバ名 (mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02, aws-v100)
 
 Examples:
   stop.sh t120h-p100
@@ -27,10 +27,10 @@ SERVER="$1"
 
 # --- サーバ名バリデーション ---
 case "$SERVER" in
-  mi25|t120h-p100|t120h-m10|aws-gpu01|aws-gpu02) ;;
+  mi25|t120h-p100|t120h-m10|aws-gpu01|aws-gpu02|aws-v100) ;;
   *)
     echo "ERROR: 不明なサーバ: $SERVER" >&2
-    echo "有効なサーバ: mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02" >&2
+    echo "有効なサーバ: mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02, aws-v100" >&2
     exit 1
     ;;
 esac

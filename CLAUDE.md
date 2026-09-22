@@ -21,7 +21,7 @@
 
 **重要**: GPUサーバを使用する場合は、**必ず Skill `gpu-server` を使用してください**。このスキルはサーバのロック管理を行い、複数のClaudeセッションが同時にサーバを使用することを防ぎます。
 
-- GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu02）の管理、リモートブラウザの管理に関する情報は `.claude/skills/gpu-server/` にあります。
+- GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu02、aws-v100）の管理、リモートブラウザの管理に関する情報は `.claude/skills/gpu-server/` にあります。
 - llama-serverの起動・管理、モデル選択に関する情報は `.claude/skills/llama-server/` にあります。
 
 ### ロックが必要なケース
@@ -43,6 +43,7 @@
 | t120h-p100 | 10.1.4.14 | `http://10.1.4.14:8000/v1` | 10.1.4.8（iLO5） |
 | aws-gpu01 | 10.8.2.1 | `http://10.8.2.1:8000/v1` | 10.11.12.1（IPMI） |
 | aws-gpu02 | 10.8.2.2 | （RPC ワーカー。8000 番では待ち受けない） | 10.11.12.2（IPMI） |
+| aws-v100 | 10.22.5.2 | `http://10.22.5.2:8000/v1` | なし（民生マザーボード） |
 
 **aws-gpu01 / aws-gpu02 のデフォルト構成（2026-08-18 制定）**: この 2 台は
 **RPC 分散で 1 つの llama-server を動かす**のが既定。aws-gpu01 がメインホスト、
@@ -88,6 +89,14 @@ POST 画面に **`No memory DIMM detected` / `P1-DIMMA2` `P2-DIMME1` / POST コ�
 **復旧には `P1_DIMMA2` の物理抜去が必要**（`P2_DIMME1` も同時に抜いてよい。抜去後は 2 枚 約 62 GiB）。
 **それまで aws-gpu02 は使えず、RPC 分散が既定の aws-gpu01 も実質使えない**（146 GiB のモデルが 7 GPU / 112 GiB に載らない）。
 詳細は [2026-09-11 レポート](report/2026-09-11_055337_aws_gpu02_dimma2_failure_glm53flash_upstream.md)。
+
+**aws-v100（2026-09-23 追加）**: ASRock X99 Taichi（民生マザーボード）に **Tesla V100-SXM2 16GB ×2**
+（sm_70、計 32GB）を PCIe 変換基板で載せた**単体機**。NVLink は非活性で、GPU1 は Gen2 x8 に落ちている。
+**BMC が無いので電源操作もハング時の証跡保全（KVM スクショ・SEL）もできず、復旧は現地で行うしかない**
+（`power-ctl.sh` は `status` を SSH 疎通で代用し、`on`/`off` は拒否する）。**sudo はパスワードが要る**ので
+ユーザに依頼する。**GPU1 の上流ルートポート `00:03.0` から PCIe AER の Correctable `RxErr` が大量に出てログが膨らみ、
+2026-09-23 にルート FS が満杯になった**ので、作業前に `df -h /` を確認すること。詳細は
+[gpu-server SKILL.md](.claude/skills/gpu-server/SKILL.md) の「aws-v100 の注意事項」。
 
 **mi25 デフォルトバックエンド**: Vulkan (RADV, 4 枚 x16GB)。
 `MI25_BACKEND=hip` を明示すると ROCm fallback。詳細は
@@ -142,7 +151,7 @@ mi25 (MI25 4枚) では `rocm-smi -i` が表示する **GUID は KFD ランタ�
 - **WS ↔ GPU マシン間の通信は遅い**（1 MB/s 程度まで落ちることもある）。大きなファイルの `scp` / `rsync` は時間がかかる前提で計画すること。
 - **GPU マシンから HuggingFace への直接アクセスはさらに遅い**。GPU マシン上で直接 `hf download` / `curl` するのは避ける。
 
-**(b) aws-gpu01 / aws-gpu02 — 同一拠点（速い）**
+**(b) aws-gpu01 / aws-gpu02 / aws-v100 — 同一拠点（速い）**
 
 ワークステーションと**同じ拠点**にあり、上記の制約は当てはまらない（2026-08-16 実測）:
 
@@ -155,6 +164,8 @@ mi25 (MI25 4枚) では `rocm-smi -i` が表示する **GUID は KFD ランタ�
 
 **サーバから HF を直接叩くほうが WS 経由より速い**ため、モデル取得は直接ダウンロードが原則（下記参照）。
 
+aws-v100 は WS からの RTT 0.3 ms を実測済みで同一拠点と判断した（帯域と HF 直の速度は未測定）。
+
 ### モデルダウンロード (HuggingFace)
 
 - **aws-gpu01 / aws-gpu02 は例外: サーバから直接ダウンロードする**（2026-08-16 実測で HF 直が 27〜37 MB/s、WS 経由 18 MB/s より速いため）。下記の 2 段階ルールは適用しない。
@@ -163,6 +174,7 @@ mi25 (MI25 4枚) では `rocm-smi -i` が表示する **GUID は KFD ランタ�
   ssh aws-gpu01 "~/.local/bin/hf download <repo> --include '*Q4_K_M*.gguf' --token $HF_TOKEN"
   ```
   aws-gpu02 には `hf` CLI が未導入なので、初回は `pip install --user huggingface_hub` 等で導入が要る。
+  aws-v100 の `hf` は `~/.venv/bin/hf`（PATH に無い）。aws-v100 も同じく直接ダウンロードの扱いとする。
 - **原則（t120h-p100 / mi25 / t120h-m10）: 2 段階で取得する**
   1. **まずワークステーション（現在のマシン）にダウンロード**する（HF への回線が最も速いのは WS）。
   2. その後 **GPU マシンへ転送**する（`scp` / `rsync`）。

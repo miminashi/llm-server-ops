@@ -69,7 +69,7 @@ usage() {
 Usage: start.sh <server> <hf-model> [ctx-size|fit] [fit-ctx]
 
 Arguments:
-  server     GPUサーバ名 (mi25, t120h-p100, t120h-m10)
+  server     GPUサーバ名 (mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02, aws-v100)
   hf-model   HuggingFaceモデル (例: unsloth/gpt-oss-20b-GGUF:Q8_0)
   ctx-size   コンテキストサイズ or "fit" (省略時: 65536)
   fit-ctx    fitモード時のctx-size ("fit"指定時のみ有効)
@@ -133,10 +133,10 @@ fi
 
 # --- サーバ名バリデーション ---
 case "$SERVER" in
-  mi25|t120h-p100|t120h-m10|aws-gpu01|aws-gpu02) ;;
+  mi25|t120h-p100|t120h-m10|aws-gpu01|aws-gpu02|aws-v100) ;;
   *)
     echo "ERROR: 不明なサーバ: $SERVER" >&2
-    echo "有効なサーバ: mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02" >&2
+    echo "有効なサーバ: mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02, aws-v100" >&2
     exit 1
     ;;
 esac
@@ -300,6 +300,15 @@ case "$SERVER" in
     AWS_GPU02_COUNT=$(ssh "$SERVER" "nvidia-smi --query-gpu=index --format=csv,noheader 2>/dev/null | wc -l" 2>/dev/null | tr -dc '0-9' || true)
     warn_gpu_degraded "$SERVER" "${AWS_GPU02_COUNT:-}" 6
     ;;
+  aws-v100)
+    # ASRock X99 Taichi + Tesla V100-SXM2 16GB x2 = 32GB (sm_70)。SXM2→PCIe 変換基板のため
+    # NVLink は非活性 (topo PHB)。リンクは GPU0 Gen3 x8 / GPU1 Gen2 x8 (00:03.0 配下で
+    # Correctable AER RxErr が多発し Gen2 に落ちている、2026-09-23 確認)。
+    # -b/-ub は P100 系と同じ 4096 を初期値にした。初回起動時に VRAM 実測を取り、必要なら調整すること。
+    SERVER_OPTS="--flash-attn 1 --poll 0 -b 4096 -ub 4096"
+    AWS_V100_COUNT=$(ssh "$SERVER" "nvidia-smi --query-gpu=index --format=csv,noheader 2>/dev/null | wc -l" 2>/dev/null | tr -dc '0-9' || true)
+    warn_gpu_degraded "$SERVER" "${AWS_V100_COUNT:-}" 2
+    ;;
 esac
 
 # --- モデルプロファイル上書き (サーバ別 default を上書き) ---
@@ -387,11 +396,12 @@ else
     echo "    ローカルキャッシュなし、huggingface-cli でダウンロードします"
     HF_TOKEN_OPT="${HF_TOKEN:+--token $HF_TOKEN}"
     # hf CLI のパスはサーバのログインユーザによって異なる (既存3台は llm ユーザで
-    # /home/llm/.local/bin/hf、aws-gpu01/02 は ubuntu ユーザで ~/.local/bin/hf)。
-    # PATH 上 → $HOME/.local/bin → /home/llm/.local/bin の順に解決する。
-    HF_BIN=$(ssh "$SERVER" 'for c in "$(command -v hf 2>/dev/null)" "$HOME/.local/bin/hf" /home/llm/.local/bin/hf; do if [ -n "$c" ] && [ -x "$c" ]; then echo "$c"; break; fi; done' 2>/dev/null || true)
+    # /home/llm/.local/bin/hf、aws-gpu01/02 は ubuntu ユーザで ~/.local/bin/hf、
+    # aws-v100 は venv 内の ~/.venv/bin/hf)。
+    # PATH 上 → $HOME/.local/bin → $HOME/.venv/bin → /home/llm/.local/bin の順に解決する。
+    HF_BIN=$(ssh "$SERVER" 'for c in "$(command -v hf 2>/dev/null)" "$HOME/.local/bin/hf" "$HOME/.venv/bin/hf" /home/llm/.local/bin/hf; do if [ -n "$c" ] && [ -x "$c" ]; then echo "$c"; break; fi; done' 2>/dev/null || true)
     if [ -z "$HF_BIN" ]; then
-      echo "ERROR: $SERVER に hf CLI が見つかりません（PATH / ~/.local/bin / /home/llm/.local/bin を確認）" >&2
+      echo "ERROR: $SERVER に hf CLI が見つかりません（PATH / ~/.local/bin / ~/.venv/bin / /home/llm/.local/bin を確認）" >&2
       echo "       pip install --user huggingface_hub 等で導入してください。" >&2
       exit 1
     fi

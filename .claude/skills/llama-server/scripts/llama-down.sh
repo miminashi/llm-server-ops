@@ -120,9 +120,17 @@ else
 fi
 
 # --- Step 4: 電源 OFF ---
-echo "==> [4/4] $SERVER の電源を OFF にします（グレースフル）..."
-if ! "$GPU_SCRIPTS_DIR/power-ctl.sh" "$SERVER" off; then
-  echo "WARNING: 電源 OFF に失敗しました。" >&2
-fi
+case "$SERVER" in
+  aws-v100)
+    # BMC が無く、落とすと現地でしか電源を入れ直せないため OFF にしない。
+    echo "==> [4/4] $SERVER は BMC なしのため電源 OFF をスキップします"
+    ;;
+  *)
+    echo "==> [4/4] $SERVER の電源を OFF にします（グレースフル）..."
+    if ! "$GPU_SCRIPTS_DIR/power-ctl.sh" "$SERVER" off; then
+      echo "WARNING: 電源 OFF に失敗しました。" >&2
+    fi
+    ;;
+esac
 
 echo "==> 停止完了"

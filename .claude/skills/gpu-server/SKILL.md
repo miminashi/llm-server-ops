@@ -1,6 +1,6 @@
 ---
 name: gpu-server
-description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu02）の管理。排他制御（ロック）、リモートブラウザの管理、エンドポイント情報。GPUサーバ、リモートブラウザ、VRAM、サーバー切り替えに関する作業で使用。
+description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu02、aws-v100）の管理。排他制御（ロック）、リモートブラウザの管理、エンドポイント情報。GPUサーバ、リモートブラウザ、VRAM、サーバー切り替えに関する作業で使用。
 ---
 
 # GPUサーバ管理
@@ -20,6 +20,7 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu0
 | `t120h-m10` | NVIDIA Tesla M10 | 16 (15使用可) | 128GB | CUDA | 10.1.4.15 |
 | `aws-gpu01` | NVIDIA Tesla P100 16GB | 7 | 112GB | CUDA | 10.8.2.1 |
 | `aws-gpu02` | NVIDIA Tesla P100 16GB×4 + 12GB×2 | 6 | 88GB | CUDA | 10.8.2.2 |
+| `aws-v100` | NVIDIA Tesla V100-SXM2 16GB | 2 | 32GB | CUDA (sm_70) | 10.22.5.2 |
 
 **t120h-m10の注意事項**:
 - nvidia-smiでは16個のGPUが見えるが、llama-cppでは15個のみ使用可能
@@ -73,6 +74,24 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu0
 - 単体運用（1 台だけで llama-server）は未検証
 - 詳細は [aws-gpu.md](./aws-gpu.md) を参照
 
+**aws-v100 の注意事項**（2026-09-23 登録）:
+- **民生マザーボード（ASRock X99 Taichi / i7-6800K / RAM 31 GiB）で BMC が無い**。
+  `power-ctl.sh aws-v100 status` は SSH 疎通で代用し、`on` / `off` は exit 2 で拒否する。
+  `llama-down.sh` も電源 OFF を飛ばす。**ハングしたら KVM スクショも SEL も取れず、復旧は現地で行うしかない**
+- **V100-SXM2 を PCIe 変換基板で載せているため NVLink は非活性**（`nvidia-smi topo -m` は PHB）。
+  リンクは **GPU0 = Gen3 x8、GPU1 = Gen2 x8**
+- **GPU1 の上流ルートポート `00:03.0` で PCIe AER の Correctable `RxErr`（Physical Layer）が毎秒のように出ており**、
+  syslog / kern.log が 2.5 日で約 2.8 GB 増える。2026-09-23 にはこれでルート FS が満杯になった
+  （116 GB 中 空き 109 MB）。**作業前に `df -h /` で空きを確認すること**
+- **単体運用**（RPC 分散には入れていない）。llama-server は通常どおり `start.sh aws-v100 ...` / `llama-up.sh aws-v100`
+- SSH ユーザは `ubuntu`。**sudo はパスワードが要る**ので Claude は実行せずユーザに依頼する
+- docker は入っているが ubuntu は docker グループ外で、リモートブラウザは未整備
+- ワークステーションとは RTT 0.3 ms で、aws-gpu01/02 と**同一拠点**
+- CUDA は `/usr/local/cuda-12.9`（nvcc は PATH に無い）、ドライバは 580.65.06
+- **ufw が有効**。2026-09-23 に `10.0.0.0/8` からの **8000（API）/ 7681 / 7682（ttyd）** を許可した。
+  22 と 8080 は Anywhere 許可のまま。別ポートを使う場合は `sudo ufw allow ...` が要る
+- `hf` CLI は **`~/.venv/bin/hf`**（PATH には無い。`start.sh` は探索先に含んでいる）
+
 SSH経由でコマンドを実行できます。
 
 **llama-serverの起動・管理は [`llama-server` スキル](../llama-server/SKILL.md) を参照してください。**
@@ -97,8 +116,10 @@ SSH経由でコマンドを実行できます。
 | t120h-m10 | `10.1.4.15` | `http://10.1.4.15:8000/v1` | `http://10.1.4.15:9222` | `http://10.1.4.15:9221` |
 | aws-gpu01 | `10.8.2.1` | `http://10.8.2.1:8000/v1` | （未整備） | （未整備） |
 | aws-gpu02 | `10.8.2.2` | `http://10.8.2.2:8000/v1` | （未整備） | （未整備） |
+| aws-v100 | `10.22.5.2` | `http://10.22.5.2:8000/v1` | （未整備） | （未整備） |
 
 aws-gpu01/02 は docker 未導入のためリモートブラウザ（CDP 9222 / 再起動API 9221）は未整備。
+aws-v100 は docker はあるが ubuntu が docker グループ外で、同じく未整備。
 
 **IPアドレスの動的取得**:
 ```bash
@@ -107,6 +128,7 @@ ssh -G t120h-p100 | grep ^hostname
 ssh -G t120h-m10 | grep ^hostname
 ssh -G aws-gpu01 | grep ^hostname
 ssh -G aws-gpu02 | grep ^hostname
+ssh -G aws-v100 | grep ^hostname
 ```
 
 ## サーバー切り替え
@@ -138,7 +160,9 @@ GPUサーバーを使用する際は、以下の優先順位で選択してく�
    要する大規模モデル用。ただし**電源が入っている場合に限る** —
    これらは爆音のためユーザ指示なしに電源投入できず、`Off` なら選択肢から外す
    （`bmc-power.sh aws-gpu01 status` で確認できる）
-5. **全て使用中ならランダム**: どれもロックされている場合はランダムに選択（待機が必要な場合あり）
+5. **aws-v100 は小〜中型モデル用**: VRAM 32GB（V100 ×2）の単体機。電源が常時入っていて
+   aws-gpu01/02 のような電源投入の制約は無い。27B 級の Q4 程度までが目安
+6. **全て使用中ならランダム**: どれもロックされている場合はランダムに選択（待機が必要な場合あり）
 
 ```bash
 # ロック状態を確認してサーバーを選択
@@ -209,6 +233,7 @@ Supermicro機（mi25）は Redfish が DCMS ライセンス未活性で使えな
 | t120h-p100 | `10.1.4.8` | Redfish（HPE iLO5） | `power.sh` |
 | aws-gpu01 | `10.11.12.1` | IPMI（Supermicro X10DRG-OT+、Redfish も可だが IPMI を正とする） | `bmc-power.sh` ※爆音ガードあり |
 | aws-gpu02 | `10.11.12.2` | IPMI（同上） | `bmc-power.sh` ※爆音ガードあり |
+| aws-v100 | （なし） | 民生マザーボード（ASRock X99 Taichi）で BMC が無い | 電源操作不可。`power-ctl.sh` の `status` のみ（SSH 疎通で判定） |
 
 **aws-gpu01 / aws-gpu02 の爆音ガード**: `on` / `off` / `soft` / `reset` / `cycle` は
 `ALLOW_FAN_NOISE=1` が無ければ **exit 20** で拒否される（`status` は常に可）。
@@ -232,6 +257,7 @@ Supermicro機（mi25）は Redfish が DCMS ライセンス未活性で使えな
 - `status`: 標準出力に **`On`/`Off`/`Unknown` の1語だけ**を正規化して返す（下位の生出力は stderr）。
 - `off`: **グレースフル**。HPE=`power.sh off`（Redfish GracefulShutdown）、Supermicro=`bmc-power.sh soft`（ACPI）。Supermicro のハード即時断（`bmc-power.sh off`）は使わない。
 - サーバ種別の真実源は `power-ctl.sh` の `server_type()`。サーバ追加時はここを更新する。
+- BMC の無いサーバ（`none` 型、aws-v100）: `status` は SSH が通れば `On`、通らなければ `Unknown`。`on` / `off` は exit 2。
 
 ## 排他制御（重要）
 
@@ -247,7 +273,7 @@ Supermicro機（mi25）は Redfish が DCMS ライセンス未活性で使えな
 .claude/skills/gpu-server/scripts/lock-status.sh
 
 # ロック取得（GPUサーバ使用前）
-.claude/skills/gpu-server/scripts/lock.sh t120h-p100   # または mi25, t120h-m10, aws-gpu01, aws-gpu02
+.claude/skills/gpu-server/scripts/lock.sh t120h-p100   # または mi25, t120h-m10, aws-gpu01, aws-gpu02, aws-v100
 
 # ロック解放（GPUサーバ使用後）
 .claude/skills/gpu-server/scripts/unlock.sh t120h-p100

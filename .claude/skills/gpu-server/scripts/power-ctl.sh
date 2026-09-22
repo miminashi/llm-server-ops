@@ -27,6 +27,10 @@
 # 終了コード: 下位スクリプトの終了コードをそのまま伝播する。
 #   10 = 認証情報未設定 / 3 = IPMI接続失敗(Supermicro) / 1 = その他エラー / 2 = 引数エラー
 #   20 = 爆音ガードによる拒否
+#
+# BMC なし（none）:
+#   status は SSH 疎通で代用し、通れば "On"、通らなければ "Unknown" を返す（Off とは断定できない）。
+#   on/off は操作手段が無いので exit 2 で拒否する。
 
 set -euo pipefail
 
@@ -55,6 +59,8 @@ server_type() {
         # 既存 Supermicro 運用と揃えて IPMI (bmc-power.sh) を正とする。
         aws-gpu01)   echo "supermicro" ;;
         aws-gpu02)   echo "supermicro" ;;
+        # ASRock X99 Taichi（民生マザーボード）で BMC が無い。電源操作は不可能。
+        aws-v100)    echo "none" ;;
         *)           echo "hpe" ;;
     esac
 }
@@ -120,6 +126,25 @@ case "$TYPE" in
                 ;;
             on)   "$SCRIPT_DIR/bmc-power.sh" "$SERVER" on ;;
             off)  "$SCRIPT_DIR/bmc-power.sh" "$SERVER" soft ;;  # グレースフル相当へマップ
+            *)    echo "エラー: 不明なアクション '$ACTION'（status|on|off）" >&2; exit 2 ;;
+        esac
+        ;;
+    none)
+        case "$ACTION" in
+            status)
+                if ssh -o ConnectTimeout=5 -o BatchMode=yes "$SERVER" true 2>/dev/null; then
+                    echo "${SERVER}: BMC なしのため SSH 疎通で判定 → 応答あり" >&2
+                    echo "On"
+                else
+                    echo "${SERVER}: BMC なしのため SSH 疎通で判定 → 応答なし（電源断かハングかは区別できない）" >&2
+                    echo "Unknown"
+                fi
+                ;;
+            on|off)
+                echo "エラー: ${SERVER} は BMC が無い（民生マザーボード）ため電源操作できません。" >&2
+                echo "電源投入・リセットは現地で行う必要があります。" >&2
+                exit 2
+                ;;
             *)    echo "エラー: 不明なアクション '$ACTION'（status|on|off）" >&2; exit 2 ;;
         esac
         ;;

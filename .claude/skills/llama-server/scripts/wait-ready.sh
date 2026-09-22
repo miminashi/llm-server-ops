@@ -12,7 +12,7 @@ Usage: wait-ready.sh <server> <hf-model> [ctx-size|fit] [fit-ctx]
 start.sh をバックグラウンドで実行した後、ヘルスチェックとDiscord通知を行う。
 
 Arguments:
-  server     GPUサーバ名 (mi25, t120h-p100, t120h-m10)
+  server     GPUサーバ名 (mi25, t120h-p100, t120h-m10, aws-gpu01, aws-gpu02, aws-v100)
   hf-model   HuggingFaceモデル (例: unsloth/gpt-oss-20b-GGUF:Q8_0)
   ctx-size   コンテキストサイズ or "fit" (省略時: 65536)
   fit-ctx    fitモード時のctx-size ("fit"指定時のみ有効)
