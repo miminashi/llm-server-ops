@@ -64,16 +64,16 @@ aws-gpu01 の `/home` には `myzk` / `sizumita` がある。**この 2 ユー�
 mi25 の Unique ID 運用（[CLAUDE.md](../../../CLAUDE.md) 参照）に相当するもの。NVIDIA では
 `nvidia-smi --query-gpu=serial` が個体不変の識別子になる。
 
-**aws-gpu01**（BDF / シリアル / ECC）
+**aws-gpu01**（BDF / シリアル / ECC。ECC は 2026-09-24 に全 7 枚 Enabled へ統一）
 
 | idx | BDF | Serial | ECC |
 |---|---|---|---|
-| 0 | 05:00.0 | 0320318031972 | **Disabled** |
+| 0 | 05:00.0 | 0320318031972 | Enabled（2026-09-24 まで Disabled） |
 | 1 | 07:00.0 | 0323818055114 | Enabled |
 | 2 | 08:00.0 | 0323817102181 | Enabled |
 | 3 | 0C:00.0 | 0322818134388 | Enabled |
 | 4 | 0D:00.0 | 0320318067792 | Enabled |
-| 5 | 0E:00.0 | 0320318033253 | **Disabled** |
+| 5 | 0E:00.0 | 0320318033253 | Enabled（2026-09-24 まで Disabled） |
 | 6 | 0F:00.0 | 0324218044774 | Enabled |
 
 **aws-gpu02**
@@ -91,8 +91,16 @@ mi25 の Unique ID 運用（[CLAUDE.md](../../../CLAUDE.md) 参照）に相当�
 
 ### 既知の個体差・注意事項
 
-- **aws-gpu01: GPU0 と GPU5 のみ ECC Disabled**（他 5 枚は Enabled）。揃えるには
-  `nvidia-smi -i 0 -e 1` 相当の操作＋**再起動が必要**なので、爆音制約により保留中。
+- **aws-gpu01: ECC は 2026-09-24 に全 7 枚 Enabled へ統一済み**（それまでは GPU0 と GPU5 だけ
+  Disabled だった）。**`nvidia-smi -e 1` の後に電源を入れ直すだけでは反映されず、Disabled に戻った**。
+  反映させるには GPU リセットが要り、そのためにはヘッドレス機でもロードされている
+  `nvidia_drm` / `nvidia_modeset` を先に外す必要がある（`nvidia-persistenced` を止めるだけでは
+  `in use by another process` で拒否される）。手順は
+  `sudo systemctl stop nvidia-persistenced; sudo modprobe -r nvidia_drm nvidia_modeset;
+  sudo nvidia-smi -i <idx> -e <0|1>; sudo nvidia-smi -i <idx> -r` で、終わったら
+  `sudo modprobe nvidia_drm; sudo systemctl start nvidia-persistenced` で元に戻す。一度 current に
+  反映させた設定は、電源を入れ直しても保たれる。詳細は
+  [2026-09-24 レポート](../../../report/2026-09-24_211644_aws_gpu01_ecc_enable.md)。
 - **aws-gpu01: SEL に PSU 故障履歴**（2026-02-23 に PS #0xc4-0xc7 が Asserted → 数分で
   Deasserted）。登録時点では 4 台とも `ok`。再発時はこの履歴と突き合わせること。
 - **aws-gpu02: FAN7 が `No Reading` (ns)**。他 7 個は 4700-5200 RPM で正常。ファン未実装か

@@ -1,0 +1,45 @@
+Enabled ECC support for GPU 00000000:05:00.0.
+All done.
+Reboot required.
+rc=0
+0, 0320318031972, Disabled, Enabled
+GPU 00000000:05:00.0 is currently in use by another process.
+
+1 device is currently being used by one or more other processes (e.g., Fabric Manager, CUDA application, graphics application such as an X server, or a monitoring application such as another instance of nvidia-smi). Please first kill all processes using this device and all compute applications running in the system.
+rc=255
+index, serial, ecc.mode.current, ecc.mode.pending
+0, 0320318031972, Disabled, Enabled
+1, 0323818055114, Enabled, Enabled
+2, 0323817102181, Enabled, Enabled
+3, 0322818134388, Enabled, Enabled
+4, 0320318067792, Enabled, Enabled
+5, 0320318033253, Disabled, Disabled
+6, 0324218044774, Enabled, Enabled
+stop=0
+GPU 00000000:05:00.0 is currently in use by another process.
+
+1 device is currently being used by one or more other processes (e.g., Fabric Manager, CUDA application, graphics application such as an X server, or a monitoring application such as another instance of nvidia-smi). Please first kill all processes using this device and all compute applications running in the system.
+reset_rc=255
+index, serial, ecc.mode.current, ecc.mode.pending, memory.total [MiB]
+0, 0320318031972, Disabled, Enabled, 16384 MiB
+1, 0323818055114, Enabled, Enabled, 16384 MiB
+2, 0323817102181, Enabled, Enabled, 16384 MiB
+3, 0322818134388, Enabled, Enabled, 16384 MiB
+4, 0320318067792, Enabled, Enabled, 16384 MiB
+5, 0320318033253, Disabled, Disabled, 16384 MiB
+6, 0324218044774, Enabled, Enabled, 16384 MiB
+rmmod=0
+nvidia_uvm           1781760  0
+nvidia_peermem         16384  0
+nvidia              56930304  2 nvidia_uvm,nvidia_peermem
+GPU 00000000:05:00.0 was successfully reset.
+All done.
+reset_rc=0
+index, serial, ecc.mode.current, ecc.mode.pending
+0, 0320318031972, Enabled, Enabled
+1, 0323818055114, Enabled, Enabled
+2, 0323817102181, Enabled, Enabled
+3, 0322818134388, Enabled, Enabled
+4, 0320318067792, Enabled, Enabled
+5, 0320318033253, Disabled, Disabled
+6, 0324218044774, Enabled, Enabled
