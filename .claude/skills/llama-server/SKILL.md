@@ -75,12 +75,11 @@ Huihui-DeepSeek-V4-Flash-0731-abliterated / ctx=131072）があるので、モ�
 - **2026-05-26 #3**: `dry_multiplier=0` をリクエスト側で送ると path が完全再現できることを確認、DRY サーバ default を **完全無効化** (`--dry-multiplier 0`)。thinking ループ抑制は `presence_penalty 0.5` 単独で対応。
 - **2026-05-26 #4** (現行): ytdlor セッションで Active Storage 文脈の段落 verbatim ループ再発 (同一段落 10 回以上反復) を観測。`presence_penalty=0.5` 単独では数百〜数千トークン規模の長距離段落反復に抑制不足と判断し、`presence_penalty` を **1.0** へ引き上げ。`fed12136` 時の URL 副作用は DRY=0.8 が原因 (greedy decoding で再現済) であり、`presence_penalty` 単独 1.0 では URL/path リグレッションは観測されない。それでも再発する場合は、クライアント側で `dry_multiplier=0.4` 程度を送る運用に切り替える。
 
-**⚠️ グローバル plugin 版は古い（2026-09-19 確認）**: `install-global.sh` で配置した
-`~/.claude/plugins/cache/claude-plugins-official/llama-server/1.0.0/` は **2026-05-13 時点のコピー**で、
-以降の変更（上記の `--presence-penalty 1.0` / `--dry-multiplier 0`、RPC 分散スタック、mi25 Vulkan の
-GPU 自動検出、`ttyd-up.sh` など）を含まない。`git pull` では更新されないので、**plugin 経由で起動せず
-このリポジトリの `start.sh` を使う**。plugin 側を更新する場合は
-`.claude/skills/llama-server/scripts/install-global.sh` を再実行する（`cp -r` で上書き配置される）。
+**⚠️ グローバル plugin 版はインストール時点のスナップショット**: `.claude/skills/install-all-global.sh` で
+`~/.claude/plugins/cache/llm-server-ops-local/llm-server-ops/1.0.0/` に配置した plugin
+（他プロジェクトからは `llm-server-ops:llama-server`）は、`git pull` しても更新されない。
+スキルを変更したら `install-all-global.sh` を再実行して入れ直すこと。
+（旧 `install-global.sh` は `claude-plugins-official` に偽装して登録しており、2026-09-26 時点の Claude Code では「not found in marketplace」で読み込まれていなかった。同日に作り直した）
 
 ## fitモード（MoE CPUオフロード）
 

@@ -80,44 +80,45 @@ curl http://10.1.4.14:8000/v1/chat/completions \
 
 ## グローバルインストール（オプション）
 
-通常はプロジェクトルートから `.claude/skills/...` の相対パスでスクリプトを実行しますが、複数プロジェクトや他の Claude Code セッションからも同じ Skill を呼び出したい場合は、グローバル Claude Code プラグインとして `~/.claude/plugins/` に登録できます。
+通常はプロジェクトルートから `.claude/skills/...` の相対パスでスクリプトを実行しますが、複数プロジェクトや他の Claude Code セッションからも同じ Skill を呼び出したい場合は、グローバル Claude Code プラグインとして登録できます。
 
 ### 前提条件
 
 - `jq` がインストール済み（未インストールの場合: `sudo apt install jq`）
-- Claude Code が `~/.claude` にインストール済み
+- `claude` CLI が PATH にある
 
-### インストール
+### インストール / 更新
 
 ```bash
-# プロジェクトルートから実行（gpu-server と llama-server をまとめて登録）
+# プロジェクトルートから実行（再実行すると最新のスキルで入れ直す）
 .claude/skills/install-all-global.sh
 ```
 
 実行すると以下が行われます:
 
-- `gpu-server` / `llama-server` スキルを `~/.claude/plugins/cache/` 配下にコピー
-- SKILL.md 内の相対パス参照を絶対パスに書き換え
+- ローカルマーケットプレース `llm-server-ops-local` を `~/.local/share/claude-marketplaces/llm-server-ops/` に生成し、`claude plugin marketplace add` / `claude plugin install` で正規に登録
+- プラグイン `llm-server-ops` に `gpu-server` / `llama-server` / `discord-notify` の 3 スキルを兄弟として収める（スクリプト間の `../gpu-server/scripts` 等の相対参照がそのまま解決する）
+- インストール先（`~/.claude/plugins/cache/llm-server-ops-local/llm-server-ops/1.0.0/`）の文書内の相対パス参照を絶対パスに書き換え
 - `~/.claude/settings.json` に各スクリプトの実行パーミッションを登録
 - プロジェクトの `.env` を `~/.config/gpu-server/.env` に冪等マージ（HF_TOKEN 等）
+- 旧版が `claude-plugins-official` に偽装して書き込んだ登録（`gpu-server@claude-plugins-official` 等）を削除
+
+他プロジェクトからは **`llm-server-ops:gpu-server`** / **`llm-server-ops:llama-server`** / **`llm-server-ops:discord-notify`** という名前で見えます。このリポジトリ内では従来どおり project skill（`gpu-server` 等）が使われます。
+
+インストールしたプラグインは**実行時点のスナップショット**です。スキルを変更したら再実行してください。gpu-server の BMC スクショ用 `.venv` はコピーしないので、プラグイン側で使う場合はインストール先で `setup-bmc-venv.sh` を実行してください。
 
 インストール完了後、**Claude Code を再起動してください**（`/exit` で終了し再度起動）。
+
+確認:
+
+```bash
+claude plugin list   # llm-server-ops@llm-server-ops-local が ✔ enabled であること
+```
 
 ### アンインストール
 
 ```bash
 .claude/skills/install-all-global.sh --uninstall
-```
-
-### 個別インストール / ヘルプ
-
-```bash
-# ヘルプ表示
-.claude/skills/install-all-global.sh --help
-
-# Skill 単位でインストール（一括ではなく個別に入れたい場合）
-.claude/skills/gpu-server/scripts/install-global.sh
-.claude/skills/llama-server/scripts/install-global.sh
 ```
 
 ## ディレクトリ構成
@@ -127,13 +128,12 @@ llm-server-ops/
 ├── CLAUDE.md
 ├── README.md
 └── .claude/skills/
-    ├── install-all-global.sh           # 全スキルを一括グローバル登録
+    ├── install-all-global.sh           # 全スキルをグローバルプラグイン llm-server-ops として登録
     ├── gpu-server/
     │   ├── SKILL.md
     │   ├── lock.md
     │   ├── remote-browser.md
     │   └── scripts/
-    │       ├── install-global.sh       # gpu-server を単独でグローバル登録
     │       ├── lock.sh / unlock.sh / lock-status.sh
     │       ├── setup-llama-cpp.sh
     │       ├── setup-remote-browser.sh
@@ -141,7 +141,6 @@ llm-server-ops/
     ├── llama-server/
     │   ├── SKILL.md
     │   ├── scripts/
-    │   │   ├── install-global.sh                # llama-server を単独でグローバル登録
     │   │   ├── llama-up.sh / llama-down.sh      # 統合スクリプト（電源+起動/停止、推奨）
     │   │   ├── start.sh / stop.sh / wait-ready.sh
     │   │   ├── rpc-stack-up.sh / rpc-stack-down.sh  # aws-gpu01+02 の RPC 分散（既定構成）
