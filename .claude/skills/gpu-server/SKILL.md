@@ -231,6 +231,7 @@ Supermicro機（mi25）は Redfish が DCMS ライセンス未活性で使えな
 |--------|--------------|----------------|----------------|
 | mi25 | `10.1.4.7` | IPMI（Supermicro X10DRG-Q、Redfish不可） | `bmc-power.sh` |
 | t120h-p100 | `10.1.4.8` | Redfish（HPE iLO5） | `power.sh` |
+| t120h-m10 | `10.1.4.17` | Redfish（HPE iLO5 v2.90。IPMI over LAN は不可） | `power.sh` |
 | aws-gpu01 | `10.11.12.1` | IPMI（Supermicro X10DRG-OT+、Redfish も可だが IPMI を正とする） | `bmc-power.sh` ※爆音ガードあり |
 | aws-gpu02 | `10.11.12.2` | IPMI（同上） | `bmc-power.sh` ※爆音ガードあり |
 | aws-v100 | （なし） | 民生マザーボード（ASRock X99 Taichi）で BMC が無い | 電源操作不可。`power-ctl.sh` の `status` のみ（SSH 疎通で判定） |

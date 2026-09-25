@@ -52,8 +52,8 @@ server_type() {
     case "$1" in
         t120h-p100)  echo "hpe" ;;
         mi25)        echo "supermicro" ;;
-        # t120h-m10 の BMC 方式は未確認。判明するまで既定の hpe(Redfish/power.sh)に倒す。
-        # power.sh は認証情報未設定なら exit 10 で setup を案内するため、誤判定でも安全側。
+        # NEC Express5800/T120h。BMC は HPE iLO 5 (10.1.4.17, FW v2.90) で Redfish を使う
+        # (2026-09-26 確認)。IPMI over LAN は無効で ipmitool のセッションは張れない。
         t120h-m10)   echo "hpe" ;;
         # Supermicro X10DRG-OT+ (SYS-4028GR-TRT2 / TRT)。Redfish も応答するが、
         # 既存 Supermicro 運用と揃えて IPMI (bmc-power.sh) を正とする。

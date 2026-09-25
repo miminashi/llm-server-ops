@@ -67,6 +67,7 @@ $IPMI sel get 0x82                   # 個別エントリの raw（Event Data / 
 |------|-----|----------|--------------------|-----------|
 | **mi25**（Supermicro X10DRG-Q） | ATEN/AMI, FW 3.94 | **IPMI**（`ipmitool`） | HTML5 KVM canvas | `bmc-power.sh` / `bmc-screenshot.sh` |
 | **t120h-p100**（HPE） | iLO5 | **Redfish**（`power.sh`） | （未整備） | `power.sh` |
+| **t120h-m10**（NEC Express5800/T120h） | iLO5, FW 2.90（`10.1.4.17`） | **Redfish**（`power.sh`）。IPMI over LAN は不可 | （未整備） | `power.sh` |
 | **aws-gpu01**（Supermicro X10DRG-OT+） | ASPEED, FW 3.86 | **IPMI**（`ipmitool`）※爆音ガード | HTML5 KVM canvas | `bmc-power.sh` / `bmc-screenshot.sh` |
 | **aws-gpu02**（Supermicro X10DRG-OT+） | ASPEED, FW 3.86 | **IPMI**（`ipmitool`）※爆音ガード | HTML5 KVM canvas | `bmc-power.sh` / `bmc-screenshot.sh` |
 
