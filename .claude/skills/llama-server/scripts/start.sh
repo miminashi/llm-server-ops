@@ -81,6 +81,7 @@ Examples:
   start.sh mi25 "unsloth/gpt-oss-20b-GGUF:Q8_0"
   start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit         # 128k default
   start.sh t120h-p100 "unsloth/Qwen3.5-122B-A10B-GGUF:Q4_K_M" fit 32768   # 短 ctx 指定
+  start.sh t120h-p100 "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL" 131072        # tensor 分割 + MTP
 EOF
   exit 1
 }
@@ -117,6 +118,15 @@ MODEL_PROFILE="generic"
 case "$HF_MODEL" in
   *Qwen3.5-122B-A10B*)
     MODEL_PROFILE="qwen3_122b"
+    ;;
+  *Qwen3.8-27B*)
+    # t120h-p100 (P100 ×4) 専用: --split-mode tensor + GGUF 同梱の MTP ヘッドで投機デコード。
+    # 2026-09-18 に起動 3/3・計測完走、2026-10-15 に本スクリプト経由で decode 41.6 t/s を確認
+    # (layer・MTP なしは 11.2 t/s)。report/2026-09-18_155438_t120h_p100_split_mode_qwen38_27b_mtp.md。
+    # aws-gpu01 (P100 ×7) では tensor が NCCL で起動ハングするため他サーバには適用しない。
+    if [ "$SERVER" = "t120h-p100" ]; then
+      MODEL_PROFILE="qwen38_27b_p100"
+    fi
     ;;
 esac
 
@@ -341,7 +351,7 @@ fi
 # それでも verbatim ループが再発した場合は、クライアント側で dry_multiplier=0.4 程度を送る運用に
 # 切り替える (SKILL.md 参照)。
 case "$HF_MODEL" in
-  *Qwen3.5*|*Qwen3.6*)
+  *Qwen3.5*|*Qwen3.6*|*Qwen3.8*)
     SAMPLING_OPTS="--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0 --presence-penalty 1.0 --dry-multiplier 0"
     ;;
   *)
@@ -356,6 +366,10 @@ esac
 # サーバデフォルトの -b 8192 -ub 8192 だと P100 単体 (16 GiB) で OOM。
 # batch を縮小して fit させる。
 SPEC_OPTS=""
+if [ "$MODEL_PROFILE" = "qwen38_27b_p100" ]; then
+  # n-max は計測時の値 (2)。-b/-ub はサーバ既定 (4096) のままで VRAM 9.5/16 GiB に収まる
+  SPEC_OPTS="--spec-type draft-mtp --spec-draft-n-max 2"
+fi
 case "$HF_MODEL" in
   *MTP*)
     SPEC_OPTS="--spec-type draft-mtp --spec-draft-n-max 6"
@@ -387,8 +401,12 @@ else
   HF_QUANT="${HF_MODEL##*:}"   # quantization部分
 
   echo "==> $SERVER でモデルのローカルキャッシュを確認中..."
-  # huggingface-cliのキャッシュからGGUFファイルを検索
-  MODEL_PATH=$(ssh "$SERVER" "find ~/.cache/huggingface/hub/models--${HF_REPO//\//--}/ -name '*${HF_QUANT}*.gguf' -not -name '*.incomplete' 2>/dev/null | sort | head -1" || true)
+  # 手動配置 (~/models/<repo名>/) を優先し、無ければ huggingface-cli のキャッシュを検索する。
+  # ~/models は直下のみ探す (MTP/ 等のサブディレクトリにある補助 GGUF を拾わないため)。
+  MODEL_PATH=$(ssh "$SERVER" "find ~/models/${HF_REPO##*/}/ -maxdepth 1 -name '*${HF_QUANT}*.gguf' 2>/dev/null | sort | head -1" || true)
+  if [ -z "$MODEL_PATH" ]; then
+    MODEL_PATH=$(ssh "$SERVER" "find ~/.cache/huggingface/hub/models--${HF_REPO//\//--}/ -name '*${HF_QUANT}*.gguf' -not -name '*.incomplete' 2>/dev/null | sort | head -1" || true)
+  fi
 
   if [ -n "$MODEL_PATH" ]; then
     echo "    ローカルキャッシュを使用: $MODEL_PATH"
@@ -434,7 +452,11 @@ if [ "$FIT_MODE" = true ]; then
   fi
   CTX_OPTS="--ctx-size $FIT_CTX"
 else
-  NGL_OPTS="--n-gpu-layers 99 --split-mode layer"
+  if [ "$MODEL_PROFILE" = "qwen38_27b_p100" ]; then
+    NGL_OPTS="--n-gpu-layers 99 --split-mode tensor"
+  else
+    NGL_OPTS="--n-gpu-layers 99 --split-mode layer"
+  fi
   CTX_OPTS="--ctx-size $CTX_SIZE"
 fi
 

@@ -1,0 +1,5 @@
+{"request": "POST /v1/chat/completions, messages=[{user: 'Pythonでクイックソートを書いて'}], max_tokens=600",
+ "launch": "start.sh t120h-p100 <local gguf> 131072 + EXTRA_LLAMA_OPTS='--split-mode tensor --spec-type draft-mtp --spec-draft-n-max 2'",
+ "timings": {"cache_n": 0, "prompt_n": 60, "prompt_ms": 1315.579, "prompt_per_second": 45.607295342963056, "predicted_n": 590, "predicted_ms": 14171.462, "predicted_per_second": 41.56240195965667, "draft_n": 436, "draft_n_accepted": 372},
+ "finish_reason": "stop",
+ "vram_mib_after_load": {"layer_noMTP_ub4096": [10563, 10633, 10871, 11605], "tensor_MTP_ub4096": [9497, 9497, 9497, 9497]}}

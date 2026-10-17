@@ -1,0 +1,4 @@
+== t120h-p100
+-m '/home/llm/models/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf' --split-mode tensor -ub 4096 --temp 0.6 --spec-type draft-mtp --spec-draft-n-max 2 --alias 'unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL'
+== mi25
+-m '/home/llm/models/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf' --split-mode layer -ub 2048 --temp 0.6 --alias 'unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL'

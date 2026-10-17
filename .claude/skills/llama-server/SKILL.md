@@ -26,6 +26,7 @@ Huihui-DeepSeek-V4-Flash-0731-abliterated / ctx=131072）があるので、モ�
 6. unsloth/Qwen3.6-27B-GGUF:UD-Q4_K_XL — dense 27B、262k native ctx、thinking対応（P100×4 では 131072 ctx で OOM、65536 推奨）
 7. unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL — Qwen3.6-27B + MTP（speculative decoding、~1.5-2x高速）
 8. unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL — Qwen3.6-35B-A3B + MTP（tool-heavyワークロードではMTP無効化が多く非MTP推奨）
+9. unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL — dense 27B、**t120h-p100 では tensor 分割 + MTP を自動適用**（decode 41.6 t/s、131072 ctx）
 ```
 
 ## モデル一覧
@@ -40,6 +41,7 @@ Huihui-DeepSeek-V4-Flash-0731-abliterated / ctx=131072）があるので、モ�
 | `unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_XL` | 131072 | t120h-p100, mi25 | thinking対応MoE、UD最適4bit |
 | `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` | 131072 | t120h-p100 | MTP有効、`--spec-type draft-mtp` 自動適用 |
 | `unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL` | 131072 | t120h-p100 | MoE+MTP、`--spec-type draft-mtp` 自動適用 |
+| `unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL` | 131072 | t120h-p100 | dense 27B（16.35 GiB）。p100 では下記「Qwen3.8-27B プロファイル」を自動適用。モデルは `~/models/Qwen3.8-27B-GGUF/` に配置済み |
 | `unsloth/DeepSeek-V4-Flash-0731-GGUF:UD-Q4_K_XL` | 131072 | **aws-gpu01 + aws-gpu02（RPC 分散必須）** | **144.4 GiB。1 台では載らない**。native ctx 1M、DSA で長 ctx 劣化が小さい。サンプリングは unsloth 公式値（下記） |
 | `huihui-ai/Huihui-DeepSeek-V4-Flash-0731-abliterated-GGUF:Q4_K` | 131072 | **aws-gpu01 + aws-gpu02（RPC 分散必須）** | **aws-gpu01/02 のデフォルトモデル**（2026-08-18 制定）。**153.3 GiB**。上記の abliterated 版。サンプリングは同じ unsloth 公式値。ctx=131072 で最小空き 460 MiB |
 
@@ -93,6 +95,22 @@ Huihui-DeepSeek-V4-Flash-0731-abliterated / ctx=131072）があるので、モ�
 | その他 MoE | `ffn_.*_exps.weight=CPU` (全層) | 8192 | サーバ共通設定のみ |
 
 > **OT 表現の実装ノート**: 意味的には `blk\.([2-3]|2[0-3]|3[1-8])\.ffn_.*_exps\.weight=CPU` と等価だが、 `ssh ... bash -c '$CMD'` 経由で渡す際に `()` / `|` が bash のメタキャラとして解釈されて syntax error になるため、llama.cpp 側の `parse_tensor_buffer_overrides` がサポートするカンマ列挙表現 (`pat1,pat2,...`) に分解している。各パターンの `.` は std::regex で「任意 1 文字」となるが、対象テンソル名 (`blk.N.ffn_{gate,up,down}_exps.weight`) では誤マッチしない。
+
+### Qwen3.8-27B プロファイル (t120h-p100 専用、2026-10-16 制定)
+
+モデル名に `Qwen3.8-27B` を含み、サーバが **t120h-p100** のときに `start.sh` が自動適用する。
+
+```bash
+.claude/skills/llama-server/scripts/llama-up.sh t120h-p100 "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL" 131072
+```
+
+- **`--split-mode tensor`**（既定の layer を置き換える）+ **`--spec-type draft-mtp --spec-draft-n-max 2`**（GGUF 同梱の MTP ヘッド `blk.64.nextn.*` を使う。`MTP/mtp-Qwen3.8-27B-Q4_0.gguf` は使わない）
+- `-b/-ub` はサーバ既定の 4096 のまま。ctx=131072 / KV q8_0 で **VRAM 9,497 MiB × 4 枚**（均等）
+- 実測（2026-10-15）: decode **41.6 t/s**、ドラフト採択 0.85（layer・MTP なしは 11.2 t/s）
+- AllReduce は既定の NCCL。P100 ×4 では起動ハングしない（aws-gpu01 の 7 枚では起動ハングするので、**このプロファイルは t120h-p100 以外には適用しない**）
+- 既知の警告: `backend sampling not supported with SPLIT_MODE_TENSOR; using CPU`（害なし）
+- モデル解決は `~/models/<repo名>/` 直下を HF キャッシュより優先する（p100 から HF 直 DL を避けるため）
+- 詳細: [2026-09-18 tensor × MTP 計測](../../../report/2026-09-18_155438_t120h_p100_split_mode_qwen38_27b_mtp.md)
 
 ### Qwen3.5-122B-A10B プロファイル (Phase U-6 確定、2026-04-24)
 
@@ -302,6 +320,7 @@ tmux split-window -v -b -d -l 3 \
 | mi25 (Vulkan/RADV, 既定) | `--flash-attn 1 --poll 0 -b 2048 -ub 2048`（同値）／ `GGML_VK_VISIBLE_DEVICES` は**起動時に vulkaninfo で RADV 物理 GPU を自動検出**（llvmpipe 除外、実効3枚→`0,1,2`/4枚→`0,1,2,3`） | Vulkan は ub が VRAM/速度にほぼ無影響（ub=4096 でも OOM せず）だが ROCm と同値を踏襲。2026-07-20 実測で pp / tg とも ROCm を上回る（pp 1k=541 t/s / 32k=372 t/s / 100k=191 t/s、tg=39.5 t/s）。FA=0+q8_0 不可、本番は KV q8_0 固定。詳細は下記「mi25 のバックエンド切替」 |
 | mi25 (ROCm/hip, `MI25_BACKEND=hip`) | `--flash-attn 1 --poll 0 -b 2048 -ub 2048` | gfx900 では ub=2048 が速度・VRAM 両面の最適点。ub=4096 は GPU0 が 16GiB を超え OOM（ub を上げると遅くもなる）。`--flash-attn 1` を明示し auto 挙動に依存しない。`start.sh` が自動適用。2026-07-20 実測で long ctx (32k/100k) の pp が退行（1k 254 t/s は健全、32k -19%、100k -35%）、fallback 用途で残置 |
 | t120h-p100 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | Flash Attention有効、マルチGPUポーリング無効。**`-ub 8192` は CUDA OOM**（下記参照） |
+| t120h-p100 × Qwen3.8-27B | `--split-mode tensor --spec-type draft-mtp --spec-draft-n-max 2`（`-b/-ub 4096` はサーバ既定のまま） | tensor 分割 + MTP。上記「Qwen3.8-27B プロファイル」 |
 | t120h-p100 × Qwen3.5-122B-A10B | `--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 --threads 40` + `numactl --cpunodebind=1 --membind=1` | Phase U-6 確定 128k fit プロファイル |
 | t120h-m10 | `CUDA_VISIBLE_DEVICES=0..14 -b 4096 -ub 4096` | GPU 15は使用不可 |
 | aws-gpu01 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**（P100 16GB×7=112GB、t120h-p100 実績値を踏襲した推定値）。RPC 分散では下記の実績値を使う |
