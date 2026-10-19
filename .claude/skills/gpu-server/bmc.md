@@ -61,6 +61,32 @@ $IPMI sel get 0x82                   # 個別エントリの raw（Event Data / 
 ハング 0）。確率的なハードウェア事象として扱い、**負荷をかけて再現させようとしない**。
 詳細は [負荷再現キャンペーンのレポート](../../../report/2026-06-24_161909_mi25_hang_repro_load_campaign.md)。
 
+## POST コードを読む（Supermicro）
+
+POST で止まって起動しないときは、KVM スクショに加えて **BMC が記録している POST コード**を見る。
+**`ipmitool` の標準コマンドには POST コードを読むものが無い**ので、BMC Web の
+BIOS POST Snooping（`/cgi/ipmi.cgi` の `SNOOPING.XML`）を `curl` で叩く。読み取り専用でロックは不要。
+
+```bash
+source ~/.config/gpu-server/.env
+S=AWS_GPU02   # MI25 / AWS_GPU01 / AWS_GPU02 など
+H=$(eval echo \$BMC_${S}_HOST); U=$(eval echo \$BMC_${S}_USER); P=$(eval echo \$BMC_${S}_PASS)
+J=$(mktemp)
+curl -sk -c $J --data-urlencode "name=$U" --data-urlencode "pwd=$P" https://$H/cgi/login.cgi -o /dev/null
+curl -sk -b $J -H "Referer: https://$H/cgi/url_redirect.cgi?url_name=mainmenu" \
+  --data "SNOOPING.XML=(0,0)&time_stamp=$(date +%s)" https://$H/cgi/ipmi.cgi
+# => <IPMI>  <SNOOPING>  <POST CODE="bb"/>  </SNOOPING>  </IPMI>
+curl -sk -b $J https://$H/cgi/logout.cgi -o /dev/null; rm -f $J
+```
+
+- **電源 OFF 後も最後のコードが残る**。値が出ても「今 POST が進行中」とは限らないので、`bmc-power.sh <server> status` と併せて読む。
+- 2026-10-19 に aws-gpu02 / aws-gpu01（X10DRG-OT+）で確認。aws-gpu02 は POST 停止後にハード電源 OFF した
+  直後でも `bb` を返し、2026-09-10 に KVM で見た `No memory DIMM detected` 停止時の `BB` と一致した。
+  電源 OFF のままの aws-gpu01 は `ff` を返した（電源 OFF 中の値とみられる）。同じ Web UI の mi25（X10DRG-Q）
+  でも使えるはずだが未確認。
+- 参考: CMOS 電池の電圧は IPMI センサーで読める（`$IPMI sensor get VBAT`）。電源 ON の aws-gpu02 は 3.13 V
+  （Lower Non-Critical は 2.581 V）。電源 OFF の aws-gpu01 は `No Reading` だった（電源 OFF 中は読めないとみられる）。
+
 ## トランスポートの使い分け（重要）
 
 | 機種 | BMC | 電源制御 | スクリーンショット | スクリプト |
