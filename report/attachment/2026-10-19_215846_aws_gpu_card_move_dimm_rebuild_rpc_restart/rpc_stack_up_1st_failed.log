@@ -1,0 +1,36 @@
+==> aws-gpu01 は RPC 分散構成（aws-gpu01 + aws-gpu02）で起動します
+==> [1/5] aws-gpu01 / aws-gpu02 の電源状態を確認中...
+aws-gpu01: System Power: on
+    aws-gpu01: On
+aws-gpu02: System Power: on
+    aws-gpu02: On
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+==> [2/5] llama-server の起動状態を確認中...
+    /health 応答なし。起動を開始します。
+==> [3/5] RPC ワーカー (aws-gpu02) を確認中...
+==> aws-gpu02 の既存 ggml-rpc-server を確認中...
+==> aws-gpu02 で build/bin/ggml-rpc-server を起動中... (192.168.100.2:50052)
+ERROR: 192.168.100.2:50052 が LISTEN しませんでした。
+ggml_cuda_init: found 4 CUDA devices (Total VRAM: 56940 MiB):
+  Device 0: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16276 MiB
+  Device 1: Tesla P100-PCIE-12GB, compute capability 6.0, VMM: yes, VRAM: 12193 MiB
+  Device 2: Tesla P100-PCIE-12GB, compute capability 6.0, VMM: yes, VRAM: 12193 MiB
+  Device 3: Tesla P100-PCIE-16GB, compute capability 6.0, VMM: yes, VRAM: 16276 MiB
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+WARNING: Host ('192.168.100.2') is != '127.0.0.1'
+         Never expose the RPC server to an open network!
+         This is an experimental feature and is not secure!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Failed to create server socket
+Starting RPC server v6.0.0
+  endpoint       : 192.168.100.2:50052
+  local cache    : n/a
+Devices:
+  CUDA0: Tesla P100-PCIE-16GB (16276 MiB, 16020 MiB free)
+  CUDA1: Tesla P100-PCIE-12GB (12193 MiB, 11937 MiB free)
+  CUDA2: Tesla P100-PCIE-12GB (12193 MiB, 11937 MiB free)
+  CUDA3: Tesla P100-PCIE-16GB (16276 MiB, 16020 MiB free)
+  transport      : TCP (RDMA auto-negotiate enabled)
+exit=1

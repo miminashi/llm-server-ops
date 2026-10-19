@@ -1,0 +1,47 @@
+==> aws-gpu01 は RPC 分散構成（aws-gpu01 + aws-gpu02）で起動します
+==> [1/5] aws-gpu01 / aws-gpu02 の電源状態を確認中...
+aws-gpu01: System Power: on
+    aws-gpu01: On
+aws-gpu02: System Power: on
+    aws-gpu02: On
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+==> [2/5] llama-server の起動状態を確認中...
+    /health 応答なし。起動を開始します。
+==> [3/5] RPC ワーカー (aws-gpu02) を確認中...
+==> aws-gpu02 の既存 ggml-rpc-server を確認中...
+==> aws-gpu02 で build/bin/ggml-rpc-server を起動中... (192.168.100.2:50052)
+==> LISTEN を確認しました: 192.168.100.2:50052
+
+--- 公開デバイス ---
+
+メインホスト側では --rpc 192.168.100.2:50052 を指定してください。
+ログ: ssh aws-gpu02 'tail -f /tmp/rpc-server.log'
+==> [4/5] llama-server を起動中（cold ロードは 15 分程度かかる）...
+[rpc-llama-up] server=aws-gpu01 rpc=192.168.100.2:50052 ctx=131072
+[rpc-llama-up] model=~/models/Huihui-DeepSeek-V4-Flash-0731-abliterated-GGUF/DeepSeek-V4-Flash-Q4_K-0731.gguf
+[rpc-llama-up] alias=DeepSeek-V4-Flash-0731-abliterated-Q4_K log=aws-gpu01:/tmp/llama-server.log
+[rpc-llama-up] 起動完了を待機中 (最大 2400s)...
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+[rpc-llama-up] OK: listening on http://10.8.2.1:8000
+==> [5/5] 監視 UI を起動中...
+==> ttyd を aws-gpu01 で起動中 (port 7681 GPU監視 / 7682 ログ閲覧)...
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+    [OK] GPU監視  : http://10.8.2.1:7681
+    [OK] ログ閲覧 : http://10.8.2.1:7682
+==> ttyd 起動完了（7681/7682 とも LISTEN）
+==> ttyd を aws-gpu02 で起動中 (port 7681 GPU監視 / 7682 ログ閲覧)...
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+    [OK] GPU監視  : http://10.8.2.2:7681
+    [OK] ログ閲覧 : http://10.8.2.2:7682
+==> ttyd 起動完了（7681/7682 とも LISTEN）
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Discord通知を送信しました
+  メッセージ: llama-server 起動完了 (RPC 分散)
+- 構成: aws-gpu01 (メイン) + aws-gpu02 (RPC ワーカー) / 13 GPU / 200 GiB
+- モデル: （デフォルト構成モデル）
+- ctx-size: 131072
+- エンドポイント: http://10.8.2.1:8000/v1
+- GPU監視: http://10.8.2.1:7681 (メイン) / http://10.8.2.2:7681 (ワーカー)
+- サーバログ: http://10.8.2.1:7682
+==> 起動完了: http://10.8.2.1:8000/v1
+exit=0

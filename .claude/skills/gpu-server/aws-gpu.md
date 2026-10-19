@@ -200,7 +200,7 @@ SKILL.md](../llama-server/SKILL.md) の「RPC 分散構成」節）。
 | 項目 | aws-gpu01 | aws-gpu02 |
 |---|---|---|
 | IP アドレス | **192.168.100.1** | **192.168.100.2** |
-| インタフェース | `enp11s0np0` | `enp4s0np0` |
+| インタフェース | `enp11s0np0` | `ens1np0`（2026-10-19 に NIC が 01:00.0 へ移り `enp4s0np0` から変わった） |
 | NIC | Mellanox ConnectX-4 (MT27700) | 同左 |
 | リンク速度 | 100000 Mb/s (Full) | 同左 |
 | MTU | 9000 | 9000 |
@@ -217,11 +217,20 @@ llama.cpp は cmake 時に `libibverbs` を検出すると **`RDMA transport ena
 `/etc/netplan/60-rpc-100gbe.yaml` を両機に置いて永続化済み（既存の `50-cloud-init.yaml`
 ＝管理系 10.8.2.x は触っていない）。gpu01 の再起動で自動復帰を検証した。
 
+**2026-10-19: aws-gpu02 は MAC アドレス一致に変更**。GPU の挿し直しで NIC が 04:00.0 → 01:00.0 に
+移り、インタフェース名が `enp4s0np0` → `ens1np0` に変わって、名前指定の netplan が外れた
+（RPC ワーカーが `Failed to create server socket` で起動しない）。aws-gpu02 の
+`60-rpc-100gbe.yaml` は `match: macaddress: "50:6b:4b:0b:aa:e2"` で一致させる形に書き換えた
+（旧ファイルは `.bak-20261019`）。**aws-gpu01 は名前指定（`enp11s0np0`）のまま**なので、
+スロットを動かしたら同じ確認が要る。症状は `ip -br addr` に 192.168.100.x が無いこと
+（リンク自体は `ip link set <if> up` で上がる）。詳細は
+[2026-10-19 レポート](../../../report/2026-10-19_215846_aws_gpu_card_move_dimm_rebuild_rpc_restart.md)。
+
 ```bash
 # 永続化の確認
 ssh aws-gpu01 "sudo cat /etc/netplan/60-rpc-100gbe.yaml; ip -br addr show enp11s0np0"
 # 万一消えていた場合の手動復旧
-ssh aws-gpu02 "sudo ip link set enp4s0np0 mtu 9000; sudo ip addr add 192.168.100.2/24 dev enp4s0np0; sudo ip link set enp4s0np0 up"
+ssh aws-gpu02 "sudo ip link set ens1np0 mtu 9000; sudo ip addr add 192.168.100.2/24 dev ens1np0; sudo ip link set ens1np0 up"
 ```
 
 ## ソフトウェア導入状況（2026-08-16 時点）

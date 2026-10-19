@@ -374,6 +374,10 @@ tmux split-window -v -b -d -l 3 \
 - ロックは取らない。事前に `lock.sh aws-gpu01` と `lock.sh aws-gpu02` を両方取ること
 - 既定モデルは **ctx=131072 で最小空き 460 MiB** しか残らない（2026-08-16 実測）。
   これより大きいモデルを同一設定で載せる余地は無い
+- **2026-10-19 の GPU 組み替え（9 + 4 枚）後は pipeline parallelism が無効で起動している**。
+  ロード末尾に `failed to allocate RPC1[192.168.100.2:50052] buffer` →
+  `retrying without pipeline parallelism` が出て、pp が 8 月比 −21〜29%（54〜56 t/s）、
+  tg は −2〜7%。対策は未検証（[2026-10-19 レポート](../../../report/2026-10-19_215846_aws_gpu_card_move_dimm_rebuild_rpc_restart.md)）
 - **7681 の常駐 ttyd は無効化済み**（2026-08-18）。両機には Ubuntu の ttyd パッケージが
   入れる `ttyd.service`（`/usr/bin/ttyd -i lo -p 7681 -O login`）が enabled で常駐しており、
   7681 を占有して nvtop 用 ttyd の起動を妨げていた。`sudo systemctl disable --now ttyd` で

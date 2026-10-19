@@ -1,0 +1,53 @@
+### chungpu Mon Oct 19 21:58:47 JST 2026
+index, pci.bus_id, name, memory.total [MiB], memory.used [MiB], memory.free [MiB], serial, pcie.link.gen.current, pcie.link.width.current, ecc.mode.current, ecc.errors.uncorrected.aggregate.total
+0, 00000000:04:00.0, Tesla P100-PCIE-16GB, 16384 MiB, 11832 MiB, 4444 MiB, 0323818055058, 3, 16, Enabled, 0
+1, 00000000:05:00.0, Tesla P100-PCIE-16GB, 16384 MiB, 15658 MiB, 618 MiB, 0320318031972, 3, 16, Enabled, 0
+2, 00000000:06:00.0, Tesla P100-PCIE-16GB, 16384 MiB, 12048 MiB, 4228 MiB, 0320319086127, 3, 16, Enabled, 0
+3, 00000000:07:00.0, Tesla P100-PCIE-16GB, 16384 MiB, 15658 MiB, 618 MiB, 0323818055114, 3, 16, Enabled, 0
+4, 00000000:08:00.0, Tesla P100-PCIE-16GB, 16384 MiB, 11832 MiB, 4444 MiB, 0323817102181, 3, 16, Enabled, 0
+5, 00000000:0C:00.0, Tesla P100-PCIE-16GB, 16384 MiB, 15658 MiB, 618 MiB, 0322818134388, 3, 16, Enabled, 0
+6, 00000000:0D:00.0, Tesla P100-PCIE-16GB, 16384 MiB, 12048 MiB, 4228 MiB, 0320318067792, 3, 16, Enabled, 0
+7, 00000000:0E:00.0, Tesla P100-PCIE-16GB, 16384 MiB, 15658 MiB, 618 MiB, 0320318033253, 3, 16, Enabled, 0
+8, 00000000:0F:00.0, Tesla P100-PCIE-16GB, 16384 MiB, 8758 MiB, 7518 MiB, 0324218044774, 3, 16, Enabled, 0
+
+	[4mGPU0	GPU1	GPU2	GPU3	GPU4	GPU5	GPU6	GPU7	GPU8	NIC0	CPU Affinity	NUMA Affinity	GPU NUMA ID[0m
+GPU0	 X 	PIX	PIX	PIX	PIX	PHB	PHB	PHB	PHB	PHB	0-11,24-35	0		N/A
+GPU1	PIX	 X 	PIX	PIX	PIX	PHB	PHB	PHB	PHB	PHB	0-11,24-35	0		N/A
+GPU2	PIX	PIX	 X 	PIX	PIX	PHB	PHB	PHB	PHB	PHB	0-11,24-35	0		N/A
+GPU3	PIX	PIX	PIX	 X 	PIX	PHB	PHB	PHB	PHB	PHB	0-11,24-35	0		N/A
+GPU4	PIX	PIX	PIX	PIX	 X 	PHB	PHB	PHB	PHB	PHB	0-11,24-35	0		N/A
+GPU5	PHB	PHB	PHB	PHB	PHB	 X 	PIX	PIX	PIX	PIX	0-11,24-35	0		N/A
+GPU6	PHB	PHB	PHB	PHB	PHB	PIX	 X 	PIX	PIX	PIX	0-11,24-35	0		N/A
+GPU7	PHB	PHB	PHB	PHB	PHB	PIX	PIX	 X 	PIX	PIX	0-11,24-35	0		N/A
+GPU8	PHB	PHB	PHB	PHB	PHB	PIX	PIX	PIX	 X 	PIX	0-11,24-35	0		N/A
+NIC0	PHB	PHB	PHB	PHB	PHB	PIX	PIX	PIX	PIX	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+
+
+               total        used        free      shared  buff/cache   available
+Mem:             157           4           1           0         152         152
+Swap:              7           0           7
+available: 2 nodes (0-1)
+node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 24 25 26 27 28 29 30 31 32 33 34 35
+node 0 size: 96540 MB
+node 0 free: 1134 MB
+node 1 cpus: 12 13 14 15 16 17 18 19 20 21 22 23 36 37 38 39 40 41 42 43 44 45 46 47
+node 1 size: 64500 MB
+node 1 free: 135 MB
+node distances:
+node   0   1 
+  0:  10  21 
+  1:  21  10 

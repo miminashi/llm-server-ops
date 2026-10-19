@@ -1,0 +1,34 @@
+Size: 32 GB | Locator: P1_DIMMA1 | Bank Locator: P1_Node0_Channel0_Dimm1 | Manufacturer: Micron | Serial Number: 0FEDE995 | Part Number: 36ASF4G72PZ-2G3A1    | Configured Memory Speed: 2133 MT/s | 
+Size: 32 GB | Locator: P2_DIMME1 | Bank Locator: P2_Node1_Channel0_Dimm1 | Manufacturer: Micron | Serial Number: 0FEDE991 | Part Number: 36ASF4G72PZ-2G3A1    | Configured Memory Speed: 2133 MT/s | 
+Size: 32 GB | Locator: P2_DIMMF1 | Bank Locator: P2_Node1_Channel1_Dimm1 | Manufacturer: Micron | Serial Number: 15CD38B2 | Part Number: 36ASF4G72PZ-2G3D1    | Configured Memory Speed: 2133 MT/s | 
+
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+enp129s0f0       UP             192.168.39.169/24 metric 100 fde2:e820:600e::db0/128 fde2:e820:600e:0:ec4:7aff:febc:acc6/64 fe80::ec4:7aff:febc:acc6/64 
+ens1np0          UP             192.168.100.2/24 fe80::526b:4bff:fe0b:aae2/64 
+enp129s0f1       UP             10.8.2.2/8 fe80::ec4:7aff:febc:acc7/64 
+
+# aws-gpu01 ↔ aws-gpu02 の 100GbE 直結リンク（llama.cpp RPC 分散用）
+# 2026-08-17: 再起動で手動設定が失われたため netplan で永続化した。
+# 2026-10-19: GPU の挿し直しで NIC が 01:00.0 に移りインタフェース名が enp4s0np0 → ens1np0 に
+#             変わって設定が外れたため、名前ではなく MAC アドレスで一致させるようにした。
+# 既存の 50-cloud-init.yaml（管理系 10.8.2.x / DHCP）は変更しないこと。
+network:
+  version: 2
+  ethernets:
+    rpc100g:
+      match:
+        macaddress: "50:6b:4b:0b:aa:e2"
+      addresses:
+        - "192.168.100.2/24"
+      mtu: 9000
+--- old (60-rpc-100gbe.yaml.bak-20261019)
+# aws-gpu01 ↔ aws-gpu02 の 100GbE 直結リンク（llama.cpp RPC 分散用）
+# 2026-08-17: 再起動で手動設定が失われたため netplan で永続化した。
+# 既存の 50-cloud-init.yaml（管理系 10.8.2.x / DHCP）は変更しないこと。
+network:
+  version: 2
+  ethernets:
+    enp4s0np0:
+      addresses:
+        - "192.168.100.2/24"
+      mtu: 9000
