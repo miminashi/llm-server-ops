@@ -47,9 +47,9 @@ aws-gpu01 の `/home` には `myzk` / `sizumita` がある。**この 2 ユー�
 | シャーシ | CSE-418GTS-R4000BP | CSE-418GTS-R3200BP |
 | 製品シリアル | S240241X8731725 | S188918X6107112 |
 | ボードシリアル | VM185S038801 | VM158S006353 |
-| GPU | Tesla P100-PCIE **16GB × 9 = 144GB**（2026-10-19 に aws-gpu02 から 2 枚移設。以前は 7 枚 112GB） | 16GB × 2 + **12GB × 2 = 56GB**（2026-10-19 に 16GB 2 枚を aws-gpu01 へ移設、移設後の OS 確認は未実施。以前は 16GB × 4 + 12GB × 2 = 88GB） |
+| GPU | Tesla P100-PCIE **16GB × 9 = 144GB**（2026-10-19 に aws-gpu02 から 2 枚移設。以前は 7 枚 112GB） | 16GB × 2 + **12GB × 2 = 56GB**（2026-10-19 に 16GB 2 枚を aws-gpu01 へ移設。以前は 16GB × 4 + 12GB × 2 = 88GB） |
 | CPU | Xeon E5-2687W v4 × 2（24C/48T, 3.0GHz） | Xeon E5-2640 v4 × 2（20C/40T, 2.4GHz） |
-| RAM | 157 GiB | 94 GiB |
+| RAM | 157 GiB | 94 GiB（2026-10-19 に再構成。Micron 32GB × 3、node0 32GB / node1 64GB） |
 | ディスク | / に 1.1T（空き 707GB） | / に 457G（空き 141GB） |
 | OS | Ubuntu 24.04.3 LTS | 同左 |
 | driver / CUDA | 535.288.01 / nvcc 12.0（`/usr/bin/nvcc`） | 同左 |
@@ -85,17 +85,39 @@ PCIe スイッチ配下で、全枚が NUMA 0（CPU1 側）につながる。
 | 7 | 0E:00.0 | 0320318033253 | Enabled | 2026-09-24 まで Disabled（旧 idx5） |
 | 8 | 0F:00.0 | 0324218044774 | Enabled | 旧 idx6 |
 
-**aws-gpu02**（2026-08-16 時点の 6 枚構成。2026-10-19 に idx1 / idx2 を aws-gpu01 へ移設したため、
-現在は残り 4 枚の想定。移設後の OS からの確認は未実施で、移設後の idx / BDF は未確定）
+**aws-gpu02**（2026-10-19 更新。GPU 4 枚 / 56GB）
 
-| idx | BDF | Serial | VRAM | ECC | 現状 |
+2026-10-19 に 16GB 2 枚（旧 idx1 `0320319086127` / 旧 idx2 `0323818055058`）を aws-gpu01 へ移設し、
+**残り 4 枚はすべて CPU1 側のスロット（04〜09:00.0）に挿し直した**。以前 CPU2 側（84/88/89:00.0）に
+あった 3 枚も CPU1 側に移ったので、全 GPU が NUMA node 0 につながる。トポロジは GPU0-1 と GPU2-3 が
+それぞれ同じ PCIe スイッチ配下（PIX）。4 枚とも PCIe Gen3 x16 / ECC Enabled、uncorrectable ECC は 0。
+
+| idx | BDF | Serial | VRAM | ECC | 備考 |
 |---|---|---|---|---|---|
-| 0 | 05:00.0 | 0322818006546 | 16GB | Enabled | 残留 |
-| 1 | 08:00.0 | 0320319086127 | 16GB | Enabled | **aws-gpu01 へ移設** |
-| 2 | 09:00.0 | 0323818055058 | 16GB | Enabled | **aws-gpu01 へ移設** |
-| 3 | 84:00.0 | 0322718237913 | **12GB** | Enabled | 残留 |
-| 4 | 88:00.0 | 0322818133689 | 16GB | Enabled | 残留 |
-| 5 | 89:00.0 | 0322718237810 | **12GB** | Enabled | 残留 |
+| 0 | 04:00.0 | 0322818133689 | 16GB | Enabled | 旧 idx4（88:00.0） |
+| 1 | 05:00.0 | 0322718237810 | **12GB** | Enabled | 旧 idx5（89:00.0） |
+| 2 | 08:00.0 | 0322718237913 | **12GB** | Enabled | 旧 idx3（84:00.0） |
+| 3 | 09:00.0 | 0322818006546 | 16GB | Enabled | 旧 idx0（05:00.0） |
+
+**aws-gpu02 のメモリ**（2026-10-19 に再構成して確定。Micron 32GB × 3 = 94 GiB）
+
+| スロット | 型番 | Serial | NUMA | 経歴 |
+|---|---|---|---|---|
+| P1_DIMMA1 | Micron 36ASF4G72PZ-2G3A1 | 0FEDE995 | node 0 | 旧 `P1_DIMMA3` |
+| P2_DIMME1 | Micron 36ASF4G72PZ-2G3A1 | 0FEDE991 | node 1 | **旧 `P1_DIMMA2`（2026-09-10 に POST で故障と名指しされた個体）** |
+| P2_DIMMF1 | Micron 36ASF4G72PZ-2G3D1 | 15CD38B2 | node 1 | 旧 `P2_DIMME2`（当時は BIOS がアドレスマップから除外していた） |
+
+- 3 枚とも 2133 MT/s で動作し、SPD も正常に読める。2026-10-19 の起動時点で EDAC の CE/UE は 0、
+  MCE なし、SEL の `Uncorrectable ECC` は 11 件（2026-09-05 以前の分）のまま。
+- **SPD が読めない（`<BAD INDEX>`、Redfish のシリアルが `\x14#…` に化ける）2 枚は外した**。これは旧
+  `P1_DIMMA1`（Kingston）と、**2026-09-05 に uncorrectable ECC で故障と特定した旧 `P2_DIMME1`** である。
+  両者はシリアルが化けていて個体を区別できないので、**手元に残った `<BAD INDEX>` の DIMM は
+  どちらも使わないこと**。なお、再構成の途中で `<BAD INDEX>` の 1 枚を E1 や F2 に挿して起動したときは、
+  POST が `P1-DIMMA1` を故障として外した回もあった。
+- **`0FEDE991` は 2026-09-10 の `No memory DIMM detected / P1-DIMMA2` で名指しされた個体**で、
+  2026-09-05 の Redfish でも `Health: Critical` だった。今回は E1 で正常に動いているので、当時の
+  障害はこの個体そのものではなく、挿さり方か同じチャネルの `<BAD INDEX>` 個体の巻き添えだった可能性がある。
+  ただし確証は無いので、**ハングや ECC が再発したら最初にこの個体を疑う**こと。
 
 全 GPU が PCIe Gen3 x16 でリンクしている（登録時点）。
 
@@ -115,7 +137,8 @@ PCIe スイッチ配下で、全枚が NUMA 0（CPU1 側）につながる。
   Deasserted）。登録時点では 4 台とも `ok`。再発時はこの履歴と突き合わせること。
 - **aws-gpu02: FAN7 が `No Reading` (ns)**。他 7 個は 4700-5200 RPM で正常。ファン未実装か
   センサー故障かは未確認。BMC の温度は全系統正常値。ファン fail 検知による全開化は起きていない。
-- **aws-gpu02: `P2_DIMME1` が実際に故障している（連続ハングの原因、2026-09-05 に特定）**。
+- **（履歴）aws-gpu02: 旧 `P2_DIMME1` の DIMM が故障していた（連続ハングの原因、2026-09-05 に特定。
+  2026-10-19 に抜去済みで、現在の E1 は別の健全な個体）**。
   POST 画面の `Failing DIMM:DIMM location(Uncorrectable memory component found) / P2-DIMME1`
   は**現に起きている故障の表示**であって、過去の残骸ではない。BMC SEL と BIOS の
   SMBIOS Event Log の両方が `Uncorrectable ECC @ P2_DIMME1` を記録しており、**発生時刻は
@@ -132,20 +155,20 @@ PCIe スイッチ配下で、全枚が NUMA 0（CPU1 側）につながる。
   （`Patrol Scrub`、既定 Enable / 24 時間周期）だけが読みに行って fatal MCE を起こしていた**。
   BIOS の `Advanced → Chipset Configuration → North Bridge → Memory Configuration →
   Memory RAS Configuration` で `Patrol Scrub` を `Disable` にした（`Demand Scrub` は Enable のまま）。
-  **`Restore Optimized Defaults` を実行するとこの設定が既定の Enable に戻り、さらに故障 DIMM が
-  アドレスマップに復帰しうるので実行しないこと。**
-  **恒久対策は `P2_DIMME1` の物理的な抜去**（現在 1 バイトも使われていないので容量の損失はゼロ）。
-- **aws-gpu02 は CPU2 側のメモリが使えず NUMA が片寄っている**: 上記の帰結で
+  **2026-10-19 に故障 DIMM を抜去したので、回避策としての必要は無くなった**。ただし設定は Disable の
+  まま残してある（BIOS setup に入る機会があれば Enable に戻してよい）。`Restore Optimized Defaults`
+  を実行しても故障 DIMM の問題は再発しないが、他の BIOS 設定まで既定に戻るので安易に実行しないこと。
+- **（履歴、2026-10-19 に解消）aws-gpu02 は CPU2 側のメモリが使えず NUMA が片寄っていた**: 上記の帰結で
   `numactl --hardware` の **node1 size = 0 MB**（gpu01 は node0 96,540MB / node1 64,500MB）。
   OS から見える RAM は 94 GiB（`P1_DIMMA1/A2/A3` の 32GB × 3）。
   GPU のうち `84/88/89:00.0` の 3 枚は CPU2 側にぶら下がるため、ホスト↔デバイス転送が
-  QPI 経由になる。既存の性能実測はすべてこの構成での値。
+  QPI 経由になる。2026-10-19 以前の性能実測はすべてこの構成（GPU 6 枚）での値。
   なお **`P1_DIMMA1` だけ Kingston 製**で A2/A3 の Micron `36ASF4G72PZ-2G3A1` と混在しており、
   `dmidecode` の Manufacturer / Serial / Part Number が `<BAD INDEX>` になる（実害は未確認）。
 - **aws-gpu01 は Legacy BIOS ブートで、ブートディスクは SAS HBA（拡張カード）経由**。BIOS で
   **`CPU2 Slot6` の OPROM** を無効化すると起動しなくなる（下記「BIOS 設定」参照）。
   aws-gpu02 は UEFI ブート + オンボード SATA。
-- **aws-gpu02 の VRAM は不均等**（16/16/16/12/16/12 GB）。t120h-p100 の
+- **aws-gpu02 の VRAM は不均等**（16/12/12/16 GB。2026-10-19 以前は 16/16/16/12/16/12 GB）。t120h-p100 の
   `--tensor-split 11,12,13,14` 系プロファイルはそのまま流用できない。
 
 ## ネットワーク（既存 3 台との決定的な差）

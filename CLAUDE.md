@@ -73,23 +73,17 @@ BMC の fan mode を **Full 固定 + duty 制御**に切り替えた（**アイ�
 [2026-08-17 静音化レポート](report/2026-08-17_234403_aws_gpu_fan_noise_reduction.md)、
 [2026-08-18 HBA スロット特定レポート](report/2026-08-18_185344_aws_gpu01_sas_hba_slot_id.md)。
 
-**aws-gpu02 の `P2_DIMME1` は故障している（2026-09-05 特定）**: 2026-09-02 以降に 5 回続いた
-痕跡なしのハングは、**`P2_DIMME1` の uncorrectable memory ECC** が原因だった。この DIMM は
-BIOS がアドレスマップから外しているので OS は触らないが、**iMC の `Patrol Scrub`（既定 Enable /
-24 時間周期）だけが読みに行って fatal MCE を起こしていた**。BIOS で `Patrol Scrub` を
-**Disable** にして回避済み。**`Restore Optimized Defaults` は実行しないこと**。
-恒久対策は `P2_DIMME1` の物理的な抜去。詳細は
-[2026-09-05 uncorrectable ECC レポート](report/2026-09-05_221831_aws_gpu02_uncorrectable_ecc.md)。
-
-**【重要】aws-gpu02 は現在起動しない（2026-09-10 発生）**: **別の DIMM `P1_DIMMA2` が新たに故障**し、
-POST 画面に **`No memory DIMM detected` / `P1-DIMMA2` `P2-DIMME1` / POST コード `BB`** を出したまま
-**System Initializing... から先へ進まない**。`P1_DIMMA2` は **OS が実際に使っていた 3 枚（94 GiB）の 1 枚**で、
-アドレスマップ外の `P2_DIMME1` とは別個体である。**SEL の `Uncorrectable ECC` は 11 件のまま増えておらず、
-`Patrol Scrub` 無効化の回避策は破れていない** — 今回は ECC 経路ではなく **DIMM の検出・訓練段階**の障害。
-**ハード電源 OFF → 30 秒 → ON の電源サイクルでは復旧せず、BIOS setup にも到達できない**ため設定で逃げられない。
-**復旧には `P1_DIMMA2` の物理抜去が必要**（`P2_DIMME1` も同時に抜いてよい。抜去後は 2 枚 約 62 GiB）。
-**それまで aws-gpu02 は使えず、RPC 分散が既定の aws-gpu01 も実質使えない**（146 GiB のモデルが aws-gpu01 単体に載らない。2026-10-19 の移設後も 9 GPU / 144 GiB で足りない）。
-詳細は [2026-09-11 レポート](report/2026-09-11_055337_aws_gpu02_dimma2_failure_glm53flash_upstream.md)。
+**aws-gpu02 のメモリ障害は 2026-10-19 の再構成で解消した**: 2026-09-05 に 5 回のハングの原因と特定した
+**旧 `P2_DIMME1`（uncorrectable ECC）**と、SPD が読めない旧 `P1_DIMMA1`（Kingston）の 2 枚を外し、
+**Micron 32GB × 3 = 94 GiB（`P1_DIMMA1` / `P2_DIMME1` / `P2_DIMMF1`）で確定**した。2026-09-10 から続いていた
+「POST が `No memory DIMM detected` で止まって起動しない」状態も解消している。
+**`<BAD INDEX>`（SPD が読めない）の DIMM はシリアルが化けて個体を区別できないので、どれも使わないこと**。
+現在の E1 に入っている `0FEDE991` は、2026-09-10 に POST が故障として名指しした旧 `P1_DIMMA2` である。
+今回は正常に動いているが、**ハングや ECC が再発したら最初にこの個体を疑う**。`Patrol Scrub` は Disable のまま
+（回避策としては不要になった）。経緯は
+[2026-09-05 レポート](report/2026-09-05_221831_aws_gpu02_uncorrectable_ecc.md) /
+[2026-09-11 レポート](report/2026-09-11_055337_aws_gpu02_dimma2_failure_glm53flash_upstream.md)、
+現構成は [gpu-server/aws-gpu.md](.claude/skills/gpu-server/aws-gpu.md) の「GPU 個体 baseline」。
 
 **aws-v100（2026-09-23 追加）**: ASRock X99 Taichi（民生マザーボード）に **Tesla V100-SXM2 16GB ×2**
 （sm_70、計 32GB）を PCIe 変換基板で載せた**単体機**。NVLink は非活性で、GPU1 は Gen2 x8 に落ちている。
@@ -244,8 +238,7 @@ git config core.hooksPath .githooks
 | OSクラッシュ時の証跡保全 | OSハング/クラッシュ（SSH・ping不通）検知時は、**電源リセットの前に必ず** `bmc-screenshot.sh` で KVM スクショを取得し、**あわせて `ipmitool sel elist` で BMC の SEL を読む**こと。`journalctl` が空でも SEL には残っていることがある（2026-09-05 の aws-gpu02 の実例）。詳細は「GPUサーバとLLM」節 |
 | aws-gpu01 の他ユーザデータ | `/home/myzk` `/home/sizumita` は**現在未使用だがデータを削除しない**。ディスクを空ける場合も自分（`ubuntu`）の `~/models` / `~/.cache/huggingface` に留めること |
 | aws-gpu01/02 の電源操作 | **ユーザの明確な指示なしにリブート・電源投入・電源断を行わない**（起動時にファンが爆音になるため）。`bmc-power.sh` の `on`/`off`/`soft`/`reset`/`cycle` と `power-ctl.sh` の `on`/`off` は `ALLOW_FAN_NOISE=1` が無いと exit 20 で拒否される。`status` とスクショは常に可。詳細は [gpu-server/aws-gpu.md](.claude/skills/gpu-server/aws-gpu.md) |
-| aws-gpu02 が起動しない | **`P1_DIMMA2` が 2026-09-10 に新規故障**し、POST の `No memory DIMM detected` / コード `BB` で停止して**起動しない**。電源サイクルでは復旧せず BIOS setup にも入れない。**復旧には物理抜去が必要**で、それまで **aws-gpu02 も（RPC 分散が既定の）aws-gpu01 も実質使えない**。SEL の ECC は 11 件のまま＝`Patrol Scrub` 回避策とは別事象。詳細は [2026-09-11 レポート](report/2026-09-11_055337_aws_gpu02_dimma2_failure_glm53flash_upstream.md) |
-| aws-gpu02 の故障 DIMM | **`P2_DIMME1` が uncorrectable ECC で故障中**（2026-09-05 特定。通算 5 回のハングの原因）。BIOS の `Patrol Scrub` を **Disable** にして回避しているので、**`Restore Optimized Defaults` を実行しないこと**（既定の Enable に戻り再発する。故障 DIMM がアドレスマップに復帰する危険もある）。恒久対策は `P2_DIMME1` の物理的な抜去（現在未使用なので容量の損失はゼロ）。詳細は [2026-09-05 レポート](report/2026-09-05_221831_aws_gpu02_uncorrectable_ecc.md) |
+| aws-gpu02 の DIMM | **2026-10-19 に故障 DIMM（旧 `P2_DIMME1`）と SPD 不良の Kingston を外し、Micron 32GB × 3 = 94 GiB で確定**（2026-09-10 からの起動不能も解消）。**`<BAD INDEX>` の DIMM はどれも使わない**。E1 の `0FEDE991` は 09-10 に故障と名指しされた旧 `P1_DIMMA2` なので、ハング・ECC 再発時は最初に疑う。詳細は [gpu-server/aws-gpu.md](.claude/skills/gpu-server/aws-gpu.md) |
 | aws-gpu01/02 の構成 | この 2 台は **RPC 分散（aws-gpu01 メイン + aws-gpu02 ワーカー）が既定**で、単体運用は未検証。起動 `llama-up.sh aws-gpu01` / 停止 `llama-down.sh aws-gpu01`。既定モデルは Huihui-DeepSeek-V4-Flash-0731-abliterated（Q4_K、153.3 GiB）/ ctx=131072。**ロックは両機に対して取る**。詳細は「GPUサーバとLLM」節 |
 | 添付ファイルと LFS | `report/attachment/` 配下は **Git LFS を使わず通常の git 管理**とする（テキストログは zlib で 1〜7% に縮むが LFS は無圧縮保存のため無料枠に不利）。**LFS の再導入は検討しない**。clone 直後に `git config core.hooksPath .githooks` で巨大ファイル検出 hook を有効化すること。100 MB 超は GitHub が push を拒否するため長時間ログは `gzip` する。詳細は「リポジトリ運用」節 |
 | モデルダウンロード | **必ずワークステーション（現在のマシン）に先にダウンロードし、その後 GPU マシンへ転送する**。GPU マシンから HF への直接ダウンロードはしない。HF トークンは `~/.config/gpu-server/.env` の `HF_TOKEN` を使う。詳細は「モデルダウンロード」節 |

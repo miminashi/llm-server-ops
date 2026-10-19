@@ -65,7 +65,7 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu0
 - SSH ユーザは `ubuntu`（既存3台は `llm`）
 - aws-gpu01 の `/home` には他ユーザ（myzk, sizumita）がいるが**現在は未使用**なので競合は気にしなくてよい。
   ただし**それらのホームディレクトリのデータは削除しないこと**（ディスクを空けるときも自分の `~/models` 等に留める）
-- aws-gpu02 は VRAM が不均等（16/16/16/12/16/12 GB）なので tensor-split の流用に注意
+- aws-gpu02 は VRAM が不均等（16/12/12/16 GB）なので tensor-split の流用に注意
 - **2 台セットで 1 つの llama-server を動かす RPC 分散がデフォルト構成**（2026-08-18 制定）。
   aws-gpu01 がメインホスト、aws-gpu02 が RPC ワーカーで、API は `http://10.8.2.1:8000/v1` のみ。
   起動は `.claude/skills/llama-server/scripts/llama-up.sh aws-gpu01`。**どちらを使う場合も

@@ -302,7 +302,7 @@ case "$SERVER" in
     ;;
   aws-gpu02)
     # Supermicro SYS-4028GR-TRT。Tesla P100-PCIE 16GB x4 + 12GB x2 = 88GB (全 Gen3 x16)。
-    # 注意: VRAM 容量が不均等 (16/16/16/12/16/12 GB) なので、t120h-p100 の
+    # 注意: VRAM 容量が不均等 (16/12/12/16 GB) なので、t120h-p100 の
     #       --tensor-split 11,12,13,14 系プロファイルはそのまま流用できない。
     #       大きなモデルを載せる場合は 12GB 枚 (index 3, 5) に合わせた split が必要。
     # 未検証: 本サーバでの llama-server 起動は 2026-08-16 時点で未実施。
