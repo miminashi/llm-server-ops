@@ -323,8 +323,8 @@ tmux split-window -v -b -d -l 3 \
 | t120h-p100 × Qwen3.8-27B | `--split-mode tensor --spec-type draft-mtp --spec-draft-n-max 2`（`-b/-ub 4096` はサーバ既定のまま） | tensor 分割 + MTP。上記「Qwen3.8-27B プロファイル」 |
 | t120h-p100 × Qwen3.5-122B-A10B | `--flash-attn 1 --poll 0 -b 2048 -ub 512 --tensor-split 11,12,13,14 --threads 40` + `numactl --cpunodebind=1 --membind=1` | Phase U-6 確定 128k fit プロファイル |
 | t120h-m10 | `CUDA_VISIBLE_DEVICES=0..14 -b 4096 -ub 4096` | GPU 15は使用不可 |
-| aws-gpu01 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**（P100 16GB×7=112GB、t120h-p100 実績値を踏襲した推定値）。RPC 分散では下記の実績値を使う |
-| aws-gpu02 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**。P100 16GB×4 + **12GB×2** = 88GB。VRAM 不均等だが、**RPC 分散での実測では `--tensor-split` 不要**（自動配分が 12GB 枚を適切に扱う） |
+| aws-gpu01 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**（P100 16GB×9=144GB。2026-10-19 に 7→9 枚。t120h-p100 実績値を踏襲した推定値）。RPC 分散では下記の実績値を使う |
+| aws-gpu02 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | **単体運用は未検証**。P100 16GB×2 + **12GB×2** = 56GB（2026-10-19 に 16GB 2 枚を aws-gpu01 へ移設。以前は 16GB×4 + 12GB×2 = 88GB）。VRAM 不均等だが、**RPC 分散での実測（移設前）では `--tensor-split` 不要**（自動配分が 12GB 枚を適切に扱う） |
 | aws-v100 | `--flash-attn 1 --poll 0 -b 4096 -ub 4096` | V100-SXM2 16GB ×2 = 32GB（sm_70）の単体機。P100 系と同じ値を初期値にした。NVLink は非活性で GPU1 は Gen2 x8。BMC が無いので `llama-down.sh` は電源 OFF を飛ばす |
 | **aws-gpu01 + aws-gpu02（RPC 分散）= 両機のデフォルト構成** | `--rpc 192.168.100.2:50052 --flash-attn 1 --poll 0 -b 2048 -ub 512` | **実績あり**（2026-08-16）。13 GPU / 200 GiB。DeepSeek-V4-Flash UD-Q4_K_XL（144.4 GiB）を ctx=131072 で起動、pp 89.7 t/s / tg 13.6 t/s。`-ub` の引き上げは未検証（最小空き 1,058 MiB、abliterated 版では 460 MiB）。起動は `llama-up.sh aws-gpu01`（→ `rpc-stack-up.sh`） |
 
@@ -336,7 +336,7 @@ tmux split-window -v -b -d -l 3 \
 ## RPC 分散構成（aws-gpu01 + aws-gpu02）— 両機のデフォルト構成
 
 1 台の VRAM に収まらないモデルを、llama.cpp の **RPC バックエンド**で 2 台の GPU サーバに
-またがって載せる構成。aws-gpu01（112 GiB）+ aws-gpu02（88 GiB）= **合計 200 GiB** を
+またがって載せる構成。aws-gpu01（144 GiB）+ aws-gpu02（56 GiB）= **合計 200 GiB**（2026-10-19 に GPU 2 枚を移設するまでは 112 + 88 GiB。移設後の RPC 構成は未検証） を
 1 プロセスから使える。両機は 100GbE（ConnectX-4）で直結されており、**RDMA (RoCEv2) が
 自動で有効になる**（[gpu-server/aws-gpu.md](../gpu-server/aws-gpu.md) の「100GbE 直結リンク」節）。
 

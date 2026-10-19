@@ -56,7 +56,7 @@ API は `http://10.8.2.1:8000/v1` のみ。**単体運用は未検証**なので
 詳細は [llama-server SKILL.md](.claude/skills/llama-server/SKILL.md) の「RPC 分散構成」節。
 
 **aws-gpu01 / aws-gpu02（2026-08-16 追加）**: Supermicro SYS-4028GR-TRT2 / TRT。
-Tesla P100 を 7 枚（112GB）/ 6 枚（88GB）搭載。**起動時にファンが爆音になるため、
+Tesla P100 を 9 枚（144GB）/ 4 枚（56GB）搭載（2026-10-19 に aws-gpu02 の 16GB 2 枚を aws-gpu01 へ移設。以前は 7 枚 112GB / 6 枚 88GB で、合計 13 枚 200GB は不変。idx の対応は [gpu-server/aws-gpu.md](.claude/skills/gpu-server/aws-gpu.md) の「GPU 個体 baseline」）。**起動時にファンが爆音になるため、
 ユーザの明確な指示なしにリブート・電源投入・電源断を行わないこと**（スクリプト側で
 `ALLOW_FAN_NOISE=1` を要求するガードあり）。ワークステーションと同一拠点で通信が速く、
 モデルは HF から直接ダウンロードするのが原則。詳細は
@@ -88,7 +88,7 @@ POST 画面に **`No memory DIMM detected` / `P1-DIMMA2` `P2-DIMME1` / POST コ�
 `Patrol Scrub` 無効化の回避策は破れていない** — 今回は ECC 経路ではなく **DIMM の検出・訓練段階**の障害。
 **ハード電源 OFF → 30 秒 → ON の電源サイクルでは復旧せず、BIOS setup にも到達できない**ため設定で逃げられない。
 **復旧には `P1_DIMMA2` の物理抜去が必要**（`P2_DIMME1` も同時に抜いてよい。抜去後は 2 枚 約 62 GiB）。
-**それまで aws-gpu02 は使えず、RPC 分散が既定の aws-gpu01 も実質使えない**（146 GiB のモデルが 7 GPU / 112 GiB に載らない）。
+**それまで aws-gpu02 は使えず、RPC 分散が既定の aws-gpu01 も実質使えない**（146 GiB のモデルが aws-gpu01 単体に載らない。2026-10-19 の移設後も 9 GPU / 144 GiB で足りない）。
 詳細は [2026-09-11 レポート](report/2026-09-11_055337_aws_gpu02_dimma2_failure_glm53flash_upstream.md)。
 
 **aws-v100（2026-09-23 追加）**: ASRock X99 Taichi（民生マザーボード）に **Tesla V100-SXM2 16GB ×2**

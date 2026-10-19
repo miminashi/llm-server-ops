@@ -18,8 +18,8 @@ description: GPUサーバ（mi25、t120h-p100、t120h-m10、aws-gpu01、aws-gpu0
 | `mi25` | AMD MI25 | 4 | 64GB | Vulkan（既定）/ ROCm | 10.1.4.13 |
 | `t120h-p100` | NVIDIA Tesla P100 | 4 | 64GB | CUDA | 10.1.4.14 |
 | `t120h-m10` | NVIDIA Tesla M10 | 16 (15使用可) | 128GB | CUDA | 10.1.4.15 |
-| `aws-gpu01` | NVIDIA Tesla P100 16GB | 7 | 112GB | CUDA | 10.8.2.1 |
-| `aws-gpu02` | NVIDIA Tesla P100 16GB×4 + 12GB×2 | 6 | 88GB | CUDA | 10.8.2.2 |
+| `aws-gpu01` | NVIDIA Tesla P100 16GB | 9 | 144GB | CUDA | 10.8.2.1 |
+| `aws-gpu02` | NVIDIA Tesla P100 16GB×2 + 12GB×2 | 4 | 56GB | CUDA | 10.8.2.2 |
 | `aws-v100` | NVIDIA Tesla V100-SXM2 16GB | 2 | 32GB | CUDA (sm_70) | 10.22.5.2 |
 
 **t120h-m10の注意事項**:

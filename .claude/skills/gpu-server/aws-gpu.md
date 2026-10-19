@@ -47,7 +47,7 @@ aws-gpu01 の `/home` には `myzk` / `sizumita` がある。**この 2 ユー�
 | シャーシ | CSE-418GTS-R4000BP | CSE-418GTS-R3200BP |
 | 製品シリアル | S240241X8731725 | S188918X6107112 |
 | ボードシリアル | VM185S038801 | VM158S006353 |
-| GPU | Tesla P100-PCIE **16GB × 7 = 112GB** | 16GB × 4 + **12GB × 2 = 88GB** |
+| GPU | Tesla P100-PCIE **16GB × 9 = 144GB**（2026-10-19 に aws-gpu02 から 2 枚移設。以前は 7 枚 112GB） | 16GB × 2 + **12GB × 2 = 56GB**（2026-10-19 に 16GB 2 枚を aws-gpu01 へ移設、移設後の OS 確認は未実施。以前は 16GB × 4 + 12GB × 2 = 88GB） |
 | CPU | Xeon E5-2687W v4 × 2（24C/48T, 3.0GHz） | Xeon E5-2640 v4 × 2（20C/40T, 2.4GHz） |
 | RAM | 157 GiB | 94 GiB |
 | ディスク | / に 1.1T（空き 707GB） | / に 457G（空き 141GB） |
@@ -64,35 +64,45 @@ aws-gpu01 の `/home` には `myzk` / `sizumita` がある。**この 2 ユー�
 mi25 の Unique ID 運用（[CLAUDE.md](../../../CLAUDE.md) 参照）に相当するもの。NVIDIA では
 `nvidia-smi --query-gpu=serial` が個体不変の識別子になる。
 
-**aws-gpu01**（BDF / シリアル / ECC。ECC は 2026-09-24 に全 7 枚 Enabled へ統一）
+**aws-gpu01**（2026-10-19 更新。BDF / シリアル / ECC）
 
-| idx | BDF | Serial | ECC |
-|---|---|---|---|
-| 0 | 05:00.0 | 0320318031972 | Enabled（2026-09-24 まで Disabled） |
-| 1 | 07:00.0 | 0323818055114 | Enabled |
-| 2 | 08:00.0 | 0323817102181 | Enabled |
-| 3 | 0C:00.0 | 0322818134388 | Enabled |
-| 4 | 0D:00.0 | 0320318067792 | Enabled |
-| 5 | 0E:00.0 | 0320318033253 | Enabled（2026-09-24 まで Disabled） |
-| 6 | 0F:00.0 | 0324218044774 | Enabled |
+2026-10-19 に aws-gpu02 の 16GB 2 枚（旧 aws-gpu02 idx1 / idx2）を 04:00.0 / 06:00.0 に移設し、
+**9 枚構成**になった。新しく入った 2 枚が前に来るため、**既存 7 枚の idx はすべてずれている**
+（旧 idx0 → 現 idx1、旧 idx1〜6 → 現 idx3〜8）。idx を前提にした `CUDA_VISIBLE_DEVICES` /
+`--tensor-split` を使うときは注意すること。9 枚とも PCIe Gen3 x16 / ECC Enabled、移設直後の
+uncorrectable ECC は 0。トポロジは GPU0〜4（04〜08）と GPU5〜8（0C〜0F）がそれぞれ別の
+PCIe スイッチ配下で、全枚が NUMA 0（CPU1 側）につながる。
 
-**aws-gpu02**
-
-| idx | BDF | Serial | VRAM | ECC |
+| idx | BDF | Serial | ECC | 備考 |
 |---|---|---|---|---|
-| 0 | 05:00.0 | 0322818006546 | 16GB | Enabled |
-| 1 | 08:00.0 | 0320319086127 | 16GB | Enabled |
-| 2 | 09:00.0 | 0323818055058 | 16GB | Enabled |
-| 3 | 84:00.0 | 0322718237913 | **12GB** | Enabled |
-| 4 | 88:00.0 | 0322818133689 | 16GB | Enabled |
-| 5 | 89:00.0 | 0322718237810 | **12GB** | Enabled |
+| 0 | 04:00.0 | 0323818055058 | Enabled | **2026-10-19 に aws-gpu02（旧 idx2 / 09:00.0）から移設** |
+| 1 | 05:00.0 | 0320318031972 | Enabled | 2026-09-24 まで Disabled（旧 idx0） |
+| 2 | 06:00.0 | 0320319086127 | Enabled | **2026-10-19 に aws-gpu02（旧 idx1 / 08:00.0）から移設** |
+| 3 | 07:00.0 | 0323818055114 | Enabled | 旧 idx1 |
+| 4 | 08:00.0 | 0323817102181 | Enabled | 旧 idx2 |
+| 5 | 0C:00.0 | 0322818134388 | Enabled | 旧 idx3 |
+| 6 | 0D:00.0 | 0320318067792 | Enabled | 旧 idx4 |
+| 7 | 0E:00.0 | 0320318033253 | Enabled | 2026-09-24 まで Disabled（旧 idx5） |
+| 8 | 0F:00.0 | 0324218044774 | Enabled | 旧 idx6 |
+
+**aws-gpu02**（2026-08-16 時点の 6 枚構成。2026-10-19 に idx1 / idx2 を aws-gpu01 へ移設したため、
+現在は残り 4 枚の想定。移設後の OS からの確認は未実施で、移設後の idx / BDF は未確定）
+
+| idx | BDF | Serial | VRAM | ECC | 現状 |
+|---|---|---|---|---|---|
+| 0 | 05:00.0 | 0322818006546 | 16GB | Enabled | 残留 |
+| 1 | 08:00.0 | 0320319086127 | 16GB | Enabled | **aws-gpu01 へ移設** |
+| 2 | 09:00.0 | 0323818055058 | 16GB | Enabled | **aws-gpu01 へ移設** |
+| 3 | 84:00.0 | 0322718237913 | **12GB** | Enabled | 残留 |
+| 4 | 88:00.0 | 0322818133689 | 16GB | Enabled | 残留 |
+| 5 | 89:00.0 | 0322718237810 | **12GB** | Enabled | 残留 |
 
 全 GPU が PCIe Gen3 x16 でリンクしている（登録時点）。
 
 ### 既知の個体差・注意事項
 
-- **aws-gpu01: ECC は 2026-09-24 に全 7 枚 Enabled へ統一済み**（それまでは GPU0 と GPU5 だけ
-  Disabled だった）。**`nvidia-smi -e 1` の後に電源を入れ直すだけでは反映されず、Disabled に戻った**。
+- **aws-gpu01: ECC は 2026-09-24 に全 7 枚 Enabled へ統一済み**（それまでは当時の GPU0 と GPU5
+  ＝現 idx1 / idx7 だけ Disabled だった。2026-10-19 に移設した 2 枚も Enabled）。**`nvidia-smi -e 1` の後に電源を入れ直すだけでは反映されず、Disabled に戻った**。
   反映させるには GPU リセットが要り、そのためにはヘッドレス機でもロードされている
   `nvidia_drm` / `nvidia_modeset` を先に外す必要がある（`nvidia-persistenced` を止めるだけでは
   `in use by another process` で拒否される）。手順は
